@@ -1,6 +1,6 @@
 [package]
 edition = "2021"
-name = "proc_macro_derive_template"
+name = "generate_postgresql_crud"
 version = "0.1.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -8,4 +8,11 @@ version = "0.1.0"
 proc-macro = true
 
 [dependencies]
+proc-macro2 = {version = "=1.0.60"}
+quote = {version = "=1.0.28"}
+syn = {version = "=1.0.107"}
+strum = {version = "=0.24.1"}
+strum_macros = {version = "=0.24.3"}
+convert_case = {version = "=0.6.0"}
 proc_macro_helpers = {path = "../proc_macro_helpers"}
+enum_extension = {path = "../enum_extension"}

@@ -1,8 +1,8 @@
-#[proc_macro_derive()]
-pub fn (input: proc_macro::TokenStream) -> proc_macro::TokenStream {
-    proc_macro_helpers::panic_location::panic_location();//panic_location function from https://github.com/kuqmua/proc_macro_helpers
-    let ast: syn::DeriveInput =
-        syn::parse(input).unwrap_or_else(|_| panic!("let ast: syn::DeriveInput = syn::parse(input) failed"));
+#[proc_macro_derive(GeneratePostgresqlCrud)]
+pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+    proc_macro_helpers::panic_location::panic_location(); //panic_location function from https://github.com/kuqmua/proc_macro_helpers
+    let ast: syn::DeriveInput = syn::parse(input)
+        .unwrap_or_else(|_| panic!("let ast: syn::DeriveInput = syn::parse(input) failed"));
     let ident = &ast.ident;
     match ast.data {
         syn::Data::Union(_) => panic!("does not work on union!"),
