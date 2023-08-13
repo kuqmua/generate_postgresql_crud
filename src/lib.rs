@@ -1,3 +1,7 @@
+use std::collections::HashMap;
+
+use convert_case::Casing;
+
 #[proc_macro_derive(GeneratePostgresqlCrud)]
 pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     proc_macro_helpers::panic_location::panic_location();
@@ -40,6 +44,40 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #(#fields_options),*
         }
     };
+    let s = {
+        let fields_named_len =  fields_named.len();
+        let mut hashmap_prep_invariants: std::collections::HashMap<std::string::String, Vec<&std::string::String>> = HashMap::with_capacity(fields_named_len);
+        let fields_named_stringified = fields_named.iter().map(|field|{
+            field.ident.clone().unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} field.ident is None")).to_string()
+        }).collect::<Vec<std::string::String>>();
+        fields_named.iter().for_each(|field|{
+            let field_ident_stringified = field.ident.clone().unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} field.ident is None")).to_string();
+            // let filtered_vec = Vec::with_capacity(fields_named_len);
+            // let filtered_vec = fields_named_stringified.c
+//
+            let filtered_vec = fields_named_stringified.iter().fold(Vec::with_capacity(fields_named_len), |mut acc, elem| {
+                if let false = &field_ident_stringified == elem {
+                    acc.push(elem);
+                }
+                acc
+            });
+//
+            hashmap_prep_invariants.insert(field_ident_stringified, filtered_vec);
+        });
+        println!("{hashmap_prep_invariants:#?}");
+        let mut vec_variants = Vec::with_capacity(fields_named_len * fields_named_len);
+
+        hashmap_prep_invariants.iter().for_each(|(key, value)|{
+            let key_first_upper = key.to_case(convert_case::Case::Camel);
+            if let false = vec_variants.contains(&key_first_upper) {
+                vec_variants.push(key_first_upper);
+            }
+            // value.iter().for_each(|v|{
+            //     let 
+            // });
+        });
+    };
+
     // println!("{struct_options_tokenstream}");
     let gen = quote::quote! {
         // pub struct Cat {
