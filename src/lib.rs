@@ -208,7 +208,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-
 // fn factorial(original_input: Vec<String>, input: Vec<String>, output: Vec<String>) -> Vec<String> {
 //     let len = input.len();
 //     match len {
@@ -222,8 +221,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 //             original_input.iter().for_each(|or| {
 //                 output_handle.push(or.clone());
 //             });
-//             output.iter().for_each(|o| {
-//                 output_handle.push(format!("{}{o}", input[0]));
+//             let input_zero = input[0].clone();
+//             output.iter().for_each(|o| match o == &input_zero {
+//                 true => (),
+//                 false => {
+//                     output_handle.push(format!("{}{o}", input[0]));
+//                 }
 //             });
 //             output_handle
 //         }
@@ -235,9 +238,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 //             println!("1 output_handle {output_handle:#?}");
 //             let inp = input[0].clone();
 //             println!("inp {inp}");
-//             output
-//                 .iter()
-//                 .for_each(|out| output_handle.push(format!("{inp}{out}")));
+//             output.iter().for_each(|out| match &inp == out {
+//                 true => (),
+//                 false => {
+//                     output_handle.push(format!("{inp}{out}"));
+//                 }
+//             });
 //             println!("2 output_handle {output_handle:#?}");
 
 //             let mut new_input_vec = Vec::new();
@@ -254,46 +260,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 //     }
 // }
 
-// // 1
-// // 2
-// // 3
-// // 11
-// // 12
-// // 13
-// // 21
-// // 22
-// // 23
-// // 31
-// // 32
-// // 33
-// // 111
-// // 112
-// // 113
-// // 121
-// // 122
-// // 123
-// // 131
-// // 132
-// // 133
-// // 211
-// // 212
-// // 213
-// // 221
-// // 222
-// // 223
-// // 231
-// // 232
-// // 233
-// // 311
-// // 312
-// // 313
-// // 321
-// // 322
-// // 323
-// // 331
-// // 332
-// // 333
-
 // fn main() {
 //     let mut vec = vec![
 //         String::from("id"),
@@ -302,42 +268,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 //         // String::from("4"),
 //         // String::from("5"),
 //     ];
-//     vec.reverse();
 //     let f = factorial(vec.clone(), vec.clone(), vec);
 //     println!("--------------------");
 //     println!("{f:#?}");
 //     println!("{}", f.len());
 // }
-
-// "id",+
-// "name",+
-// "color",+
-// "colorid",+
-// "colorname",+
-// "colorcolor",
-// "coloridid",
-// "coloridname",
-// "coloridcolor",
-// "colornameid",
-// "colornamename",
-// "colornamecolor",
-// "colornameidid",
-// "colornameidname",
-// "colornameidcolor",
-// [
-//     "color",+
-//     "name",+
-//     "id",+
-//     "idcolor",+
-//     "idname",+
-//     "idid",
-//     "idcolorcolor",
-//     "idcolorname",
-//     "idcolorid",
-//     "idnamecolor",
-//     "idnamename",
-//     "idnameid",
-//     "idnamecolorcolor",
-//     "idnamecolorname",
-//     "idnamecolorid",
-// ]
