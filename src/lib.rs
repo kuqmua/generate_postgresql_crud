@@ -1,7 +1,3 @@
-use std::collections::HashMap;
-
-use convert_case::Casing;
-
 #[proc_macro_derive(GeneratePostgresqlCrud)]
 pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     proc_macro_helpers::panic_location::panic_location();
@@ -45,39 +41,127 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     let s = {
-        let fields_named_len =  fields_named.len();
-        let mut hashmap_prep_invariants: std::collections::HashMap<std::string::String, Vec<&std::string::String>> = HashMap::with_capacity(fields_named_len);
-        let fields_named_stringified = fields_named.iter().map(|field|{
-            field.ident.clone().unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} field.ident is None")).to_string()
+        let fields_named_clone = fields_named.clone();
+        let fields_named_clone_len =  fields_named_clone.len();
+        // let mut hashmap_prep_invariants: std::collections::HashMap<std::string::String, Vec<&std::string::String>> = std::collections::HashMap::with_capacity(fields_named_clone_len);
+        let mut vec_prep_invariants: Vec<(std::string::String, Vec<&std::string::String>)> = Vec::with_capacity(fields_named_clone_len);
+        let mut fields_named_clone_stringified = fields_named_clone.iter().map(|field|{
+            let f = field.ident.clone().unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} field.ident is None")).to_string();
+            println!("111{f}");
+            f
         }).collect::<Vec<std::string::String>>();
-        fields_named.iter().for_each(|field|{
+        println!("{fields_named_clone_stringified:#?}");
+        // let mut hashmap_enumeration: std::collections::HashMap<&std::string::String, usize> = std::collections::HashMap::with_capacity(fields_named_clone_len);
+        let mut vec_enumeration = Vec::new();
+        fields_named_clone_stringified.iter().enumerate().for_each(|(index, field)|{
+            // hashmap_enumeration.insert(field, index);
+             vec_enumeration.push((field, index));
+        });
+        // println!("{hashmap_enumeration:#?}");
+        println!("{vec_enumeration:#?}");
+        
+        // fields_named_clone_stringified.sort();
+        fields_named_clone.iter().for_each(|field|{
+            let field_ident = &field.ident.clone().unwrap();
+            println!("222{field_ident}");
             let field_ident_stringified = field.ident.clone().unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} field.ident is None")).to_string();
-            // let filtered_vec = Vec::with_capacity(fields_named_len);
-            // let filtered_vec = fields_named_stringified.c
-//
-            let filtered_vec = fields_named_stringified.iter().fold(Vec::with_capacity(fields_named_len), |mut acc, elem| {
+            let mut filtered_vec = fields_named_clone_stringified.iter().fold(Vec::with_capacity(fields_named_clone_len), |mut acc, elem| {
                 if let false = &field_ident_stringified == elem {
                     acc.push(elem);
                 }
                 acc
             });
+            // filtered_vec.sort();
+
+            // hashmap_prep_invariants.insert(field_ident_stringified, filtered_vec);
+            vec_prep_invariants.push((field_ident_stringified, filtered_vec));
+        });
+        // println!("before reverse {hashmap_prep_invariants:#?}");
+        println!("before reverse {vec_prep_invariants:#?}");
+        // hashmap_prep_invariants.reserve(0);
+        // println!("after reverse {hashmap_prep_invariants:#?}");
+        let mut vec_variants = Vec::with_capacity(fields_named_clone_len * fields_named_clone_len);
+
+        println!("stage 1 {vec_variants:#?}");
+        vec_prep_invariants.iter().for_each(|(key, value)|{
+            vec_variants.push(format!("{key}"));
+        });
+        vec_prep_invariants.iter().for_each(|(key, value)|{
+
+            println!("333{key}");
+            
+            let mut g = Vec::new();
+            g.push(key.clone());
+            value.iter().for_each(|v|{
+                g.push(v.to_string());
+            });
+            g.sort();
+            g.iter().for_each(|v|{
+                if let true = key != v {
+                    let (_, key_index) = vec_enumeration.iter().find(|(keyy, index)|{
+                        *keyy == key
+                    }).unwrap();
+                    let (_, v_index) = vec_enumeration.iter().find(|(keyy, index)|{
+                        *keyy == v
+                    }).unwrap();
+                    // let key_index = hashmap_enumeration.get(key).unwrap_or_else(||panic!("{proc_macro_name_ident_stringified} hashmap_enumeration.get(key) is None"));
+                    // let v_index = hashmap_enumeration.get(v).unwrap_or_else(||panic!("{proc_macro_name_ident_stringified} hashmap_enumeration.get(v) is None"));
+                    if key_index < v_index {//todo maybe use .enumerate for compare index and not alphabet
+                        let r = format!("{key}{v}");
+                        if !vec_variants.contains(&r) {
+                            vec_variants.push(r);
+                        }
+                    }
+                    
+                }
+            });
+        });
+        let keys_merged = fields_named_clone.iter().fold(std::string::String::from(""), |mut acc, field| {
+                acc.push_str(&field.ident.clone().unwrap().to_string());
+                acc
+            });
+        vec_variants.push(keys_merged);
+        println!("{vec_variants:#?}");
+
 //
-            hashmap_prep_invariants.insert(field_ident_stringified, filtered_vec);
-        });
-        println!("{hashmap_prep_invariants:#?}");
-        let mut vec_variants = Vec::with_capacity(fields_named_len * fields_named_len);
-
-        hashmap_prep_invariants.iter().for_each(|(key, value)|{
-            let key_first_upper = key.to_case(convert_case::Case::Camel);
-            if let false = vec_variants.contains(&key_first_upper) {
-                vec_variants.push(key_first_upper);
-            }
-            // value.iter().for_each(|v|{
-            //     let 
-            // });
-        });
+// [
+//     "idnamecolor",
+//     "name",
+//     "namecolor",
+//     "color",
+//     "id",
+//     "idcolor",
+//     "idname",
+// ]
+// [
+//     "idnamecolor",
+//     "name",
+//     "namecolor",
+//     "color",
+//     "id",
+//     "idcolor",
+//     "idname",
+// ]
+// [
+//     "idnamecolor",
+//     "name",
+//     "namecolor",
+//     "color",
+//     "id",
+//     "idcolor",
+//     "idname",
+// ]
+// [
+//     "idnamecolor",
+//     "color",
+//     "id",
+//     "idcolor",
+//     "idname",
+//     "name",
+//     "namecolor",
+// ]
     };
-
+    
     // println!("{struct_options_tokenstream}");
     let gen = quote::quote! {
         // pub struct Cat {
