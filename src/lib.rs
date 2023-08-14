@@ -41,39 +41,55 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     let s = {
-        // 1
-        // 2
-        // 3
-        // 4
-        // 5
-        // 6
-        // 7
-        let len = fields_named.len();
-        println!("{len}");
-        let mut test: Vec<(String, Vec<String>)> = Vec::new();
-        let mut test_second: Vec<(String, Vec<String>)> = Vec::new();
-        let mut test_third: Vec<(String, String)> = Vec::new();
+        let mut fields_named_enumerated_cloned_stringified = fields_named.clone().iter().enumerate().map(|(index, field)|{
+            let f = field.ident.clone().unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} field.ident is None")).to_string();
+            // println!("111{f}");
+            (index, f)
+        }).collect::<Vec<(usize, std::string::String)>>();
+        //
+        let mut fields_named_clone_stringified = fields_named.clone().iter().map(|field|{
+            let f = field.ident.clone().unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} field.ident is None")).to_string();
+            println!("111{f}");
+            f
+        }).collect::<Vec<std::string::String>>();
+    let veced_vec = fields_named_clone_stringified.iter().map(|v| vec![v.clone()]).collect();
+    let f = factorial(
+        // fields_named_clone_stringified.clone(), 
+        fields_named_enumerated_cloned_stringified,
+        fields_named_clone_stringified.clone(), 
+        veced_vec
+    );
+    println!("--------------------");
+    println!("{f:#?}");
+    println!("{}", f.len());
 
-        fields_named.clone().iter().for_each(|field|{
-            test.push((field.ident.clone().unwrap().to_string(), vec![]));
-        });
-        println!("{test:#?}");
-        fields_named.clone().iter().for_each(|field|{
-            let ident_stringified = field.ident.clone().unwrap().to_string();
-            let (kk, mut vv) = test.clone().into_iter().find(|(keyy, vec)|{
-                        *keyy == ident_stringified
-                    }).unwrap();
-// 
-            vv = test.iter().filter_map(|(key, value)|match *key == ident_stringified{
-                true => None,
-                false => Some(key.clone()),
-            }).collect();
-            test_second.push((kk.clone(), vv));
-        });
-        println!("{test_second:#?}");
-        // test_second.iter().for_each(||){
 
-        // }
+//         let len = fields_named.len();
+//         println!("{len}");
+//         let mut test: Vec<(String, Vec<String>)> = Vec::new();
+//         let mut test_second: Vec<(String, Vec<String>)> = Vec::new();
+//         let mut test_third: Vec<(String, String)> = Vec::new();
+
+//         fields_named.clone().iter().for_each(|field|{
+//             test.push((field.ident.clone().unwrap().to_string(), vec![]));
+//         });
+//         println!("{test:#?}");
+//         fields_named.clone().iter().for_each(|field|{
+//             let ident_stringified = field.ident.clone().unwrap().to_string();
+//             let (kk, mut vv) = test.clone().into_iter().find(|(keyy, vec)|{
+//                         *keyy == ident_stringified
+//                     }).unwrap();
+// // 
+//             vv = test.iter().filter_map(|(key, value)|match *key == ident_stringified{
+//                 true => None,
+//                 false => Some(key.clone()),
+//             }).collect();
+//             test_second.push((kk.clone(), vv));
+//         });
+//         println!("{test_second:#?}");
+//         // test_second.iter().for_each(||){
+
+//         // }
 
 
         // let fields_named_clone = fields_named.clone();
@@ -208,83 +224,100 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-// fn factorial(
-//     original_input: Vec<String>,
-//     input: Vec<String>,
-//     output: Vec<Vec<String>>,
-// ) -> Vec<Vec<String>> {
-//     let len = input.len();
-//     match len {
-//         0 => {
-//             println!("0");
-//             output.to_vec()
-//         }
-//         1 => {
-//             println!("1");
-//             let mut output_handle = vec![];
-//             original_input.iter().for_each(|or| {
-//                 output_handle.push(vec![or.clone()]);
-//             });
-//             let input_zero = input[0].clone();
-//             output.iter().for_each(
-//                 |o| match o.contains(&input_zero) {
-//                     true => (),
-//                     false => {
-//                         //
-//                         let mut cl = o.clone();
-//                         cl.push(format!("{}", input[0]));
-//                         output_handle.push(cl);
-//                         //
-//                         // output_handle.push(format!("{}{o}", input[0]));
-//                         // output_handle.push(vec![input[0].clone()]);
-//                     }
-//                 }, // match o == &input_zero {
-//                    //     true => (),
-//                    //     false => {
-//                    //         output_handle.push(format!("{}{o}", input[0]));
-//                    //     }
-//                    // }
-//             );
-//             output_handle
-//         }
-//         _ => {
-//             println!("____________________");
-//             println!("original_input {original_input:#?}");
-//             println!("input {input:#?}");
-//             let mut output_handle = output.clone();
-//             println!("1 output_handle {output_handle:#?}");
-//             let inp = input[0].clone();
-//             println!("inp {inp}");
-//             output.iter().for_each(
-//                 |out| match out.contains(&inp) {
-//                     true => (),
-//                     false => {
-//                         let mut cl = out.clone();
-//                         cl.push(format!("{inp}"));
-//                         output_handle.push(cl);
-//                     }
-//                 }, // match &inp == out {
-//                    //     true => (),
-//                    //     false => {
-//                    //         output_handle.push(format!("{inp}{out}"));
-//                    //     }
-//                    // }
-//             );
-//             println!("2 output_handle {output_handle:#?}");
+fn factorial(
+    original_input: Vec<(usize, String)>,
+    input: Vec<String>,
+    output: Vec<Vec<String>>,
+) -> Vec<Vec<String>> {
+    let len = input.len();
+    match len {
+        0 => {
+            // println!("0");
+            output.to_vec()
+        }
+        1 => {
+            // println!("1");
+            let mut output_handle = vec![];
+            original_input.iter().for_each(|(index, element)| {
+                output_handle.push(vec![element.clone()]);
+            });
+            let input_zero = input[0].clone();
+            output.iter().for_each(
+                |o| match o.contains(&input_zero) {
+                    true => (),
+                    false => {
+                        //
+                        let mut cl = o.clone();
+                        cl.push(format!("{}", input[0]));
+                        cl.sort_by(|a,b|{
+                            let (index_a, a_field_handle) = original_input.iter().find(|(index, field)|{a == field}).unwrap();
+                            let (index_b, b_field_handle) = original_input.iter().find(|(index, field)|{b == field}).unwrap();
+                            // let index_a = 
+                            // todo!()
+                            // index_a > index_b
+                            index_a.partial_cmp(index_b).unwrap()
+                        });
+                        output_handle.push(cl);
+                        //
+                        // output_handle.push(format!("{}{o}", input[0]));
+                        // output_handle.push(vec![input[0].clone()]);
+                    }
+                }, // match o == &input_zero {
+                   //     true => (),
+                   //     false => {
+                   //         output_handle.push(format!("{}{o}", input[0]));
+                   //     }
+                   // }
+            );
+            output_handle
+        }
+        _ => {
+            // println!("____________________");
+            // println!("original_input {original_input:#?}");
+            // println!("input {input:#?}");
+            let mut output_handle = output.clone();
+            // println!("1 output_handle {output_handle:#?}");
+            let inp = input[0].clone();
+            // println!("inp {inp}");
+            output.iter().for_each(
+                |out| match out.contains(&inp) {
+                    true => (),
+                    false => {
+                        let mut cl = out.clone();
+                        cl.push(format!("{inp}"));
+                        // cl.sort();
+                        cl.sort_by(|a,b|{
+                            let (index_a, a_field_handle) = original_input.iter().find(|(index, field)|{a == field}).unwrap();
+                            let (index_b, b_field_handle) = original_input.iter().find(|(index, field)|{b == field}).unwrap();
+                            // let index_a = 
+                            // todo!()
+                            // index_a > index_b
+                            index_a.partial_cmp(index_b).unwrap()
+                        });
+                        output_handle.push(cl);
+                    }
+                }, // match &inp == out {
+                   //     true => (),
+                   //     false => {
+                   //         output_handle.push(format!("{inp}{out}"));
+                   //     }
+                   // }
+            );
+            // println!("2 output_handle {output_handle:#?}");
 
-//             let mut new_input_vec = Vec::new();
-//             input.iter().enumerate().for_each(|(index, value)| {
-//                 if index != 0 {
-//                     let f = value.clone();
-//                     new_input_vec.push(f);
-//                 }
-//             });
-//             println!("3 output_handle{output_handle:#?}");
-//             println!("new_input_vec{new_input_vec:#?}");
-//             factorial(original_input, new_input_vec, output_handle)
-//         }
-//     }
-// }
+            let mut new_input_vec = Vec::new();
+            input.iter().enumerate().for_each(|(index, value)| {
+                if index != 0 {
+                    let f = value.clone();
+                    new_input_vec.push(f);
+                }
+            });
+            // println!("3 output_handle{output_handle:#?}");
+            // println!("new_input_vec{new_input_vec:#?}");
+            factorial(original_input, new_input_vec, output_handle)
+        }
+    }
+}
 
 // fn main() {
 //     let mut vec = vec![
