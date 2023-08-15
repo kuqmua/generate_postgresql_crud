@@ -52,12 +52,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             println!("111{f}");
             f
         }).collect::<Vec<std::string::String>>();
-    let veced_vec = fields_named_clone_stringified.iter().map(|v| vec![v.clone()]).collect();
+        
+    let mut veced_vec: Vec<Vec<String>> = fields_named_clone_stringified.clone().iter().map(|v| vec![v.clone()]).collect();
     let f = factorial(
         // fields_named_clone_stringified.clone(), 
         fields_named_enumerated_cloned_stringified,
         fields_named_clone_stringified.clone(), 
-        veced_vec
+        &mut veced_vec
     );
     println!("--------------------");
     println!("{f:#?}");
@@ -227,109 +228,119 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 fn factorial(
     original_input: Vec<(usize, String)>,
     input: Vec<String>,
-    output: Vec<Vec<String>>,
+    output: &mut Vec<Vec<String>>,
 ) -> Vec<Vec<String>> {
     let len = input.len();
     match len {
         0 => {
-            // println!("0");
-            output.to_vec()
-        }
-        1 => {
-            // println!("1");
-            let mut output_handle = vec![];
-            original_input.iter().for_each(|(index, element)| {
-                output_handle.push(vec![element.clone()]);
-            });
-            let input_zero = input[0].clone();
-            output.iter().for_each(
-                |o| match o.contains(&input_zero) {
-                    true => (),
-                    false => {
-                        //
-                        let mut cl = o.clone();
-                        cl.push(format!("{}", input[0]));
-                        cl.sort_by(|a,b|{
-                            let (index_a, a_field_handle) = original_input.iter().find(|(index, field)|{a == field}).unwrap();
-                            let (index_b, b_field_handle) = original_input.iter().find(|(index, field)|{b == field}).unwrap();
-                            // let index_a = 
-                            // todo!()
-                            // index_a > index_b
-                            index_a.partial_cmp(index_b).unwrap()
-                        });
-                        output_handle.push(cl);
-                        //
-                        // output_handle.push(format!("{}{o}", input[0]));
-                        // output_handle.push(vec![input[0].clone()]);
-                    }
-                }, // match o == &input_zero {
-                   //     true => (),
-                   //     false => {
-                   //         output_handle.push(format!("{}{o}", input[0]));
-                   //     }
-                   // }
-            );
-            output_handle
-        }
-        _ => {
-            // println!("____________________");
-            // println!("original_input {original_input:#?}");
-            // println!("input {input:#?}");
-            let mut output_handle = output.clone();
-            // println!("1 output_handle {output_handle:#?}");
-            let inp = input[0].clone();
-            // println!("inp {inp}");
-            output.iter().for_each(
-                |out| match out.contains(&inp) {
-                    true => (),
-                    false => {
-                        let mut cl = out.clone();
-                        cl.push(format!("{inp}"));
-                        // cl.sort();
-                        cl.sort_by(|a,b|{
-                            let (index_a, a_field_handle) = original_input.iter().find(|(index, field)|{a == field}).unwrap();
-                            let (index_b, b_field_handle) = original_input.iter().find(|(index, field)|{b == field}).unwrap();
-                            // let index_a = 
-                            // todo!()
-                            // index_a > index_b
-                            index_a.partial_cmp(index_b).unwrap()
-                        });
-                        output_handle.push(cl);
-                    }
-                }, // match &inp == out {
-                   //     true => (),
-                   //     false => {
-                   //         output_handle.push(format!("{inp}{out}"));
-                   //     }
-                   // }
-            );
-            // println!("2 output_handle {output_handle:#?}");
+            let mut end_out = {
+                let output_len = output.len();
+                output.iter_mut().fold(Vec::with_capacity(output_len), |mut acc, element| {
+                    element.sort_by(|a,b|{
+                        let (index_a, _) = original_input.iter().find(|(_, field)|{a == field}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                        let (index_b, _) = original_input.iter().find(|(_, field)|{b == field}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                        index_a.partial_cmp(index_b).unwrap_or_else(||panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"))
+                    });
+                    acc.push(element.to_vec());
+                    acc
+                })
+            };
+            end_out.sort_by(|a,b|match a.len() == b.len() {
+                true => {
+                    let mut order = std::cmp::Ordering::Equal;
+                    for a_elem in a {
+                        let mut is_order_found = false;
+                        for b_elem in a {
+                            if let Some(or) = a_elem.partial_cmp(b_elem) {
+                                match or {
+                                    std::cmp::Ordering::Less => {
+                                        order = or;
+                                        is_order_found = true;
+                                        break;
+                                    },
+                                    std::cmp::Ordering::Equal => (),
+                                    std::cmp::Ordering::Greater => {
+                                        order = or;
+                                        is_order_found = true;
+                                        break;
+                                    },
+                                }
+                            }
+                        }
+                        if let true = is_order_found {
+                            break;
+                        }
+                    } 
+                    order
 
-            let mut new_input_vec = Vec::new();
-            input.iter().enumerate().for_each(|(index, value)| {
-                if index != 0 {
-                    let f = value.clone();
-                    new_input_vec.push(f);
-                }
+                },
+                false => std::cmp::Ordering::Equal,
             });
-            // println!("3 output_handle{output_handle:#?}");
-            // println!("new_input_vec{new_input_vec:#?}");
-            factorial(original_input, new_input_vec, output_handle)
+            end_out.sort_by(|a,b|{
+                a.len().partial_cmp(&b.len()).unwrap_or_else(||panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"))
+            });
+            end_out
+        }
+        // 1 => {
+        //     let mut output_handle = vec![];
+        //     original_input.iter().for_each(|(_, element)| {
+        //         output_handle.push(vec![element.clone()]);
+        //     });
+        //     let first_element = input.get(0).unwrap_or_else(||panic!("GeneratePostgresqlCrud input.get(0) is None"));
+        //     output.iter().for_each(
+        //         |o| {
+        //             if let false = o.contains(first_element) {
+        //                 let mut cl = o.clone();
+        //                 cl.push(format!("{}", input[0]));
+        //                 cl.sort_by(|a,b|{
+        //                     let (index_a, _) = original_input.iter().find(|(_, field)|{a == field}).unwrap();
+        //                     let (index_b, _) = original_input.iter().find(|(_, field)|{b == field}).unwrap();
+        //                     index_a.partial_cmp(index_b).unwrap()
+        //                 });
+        //                 output_handle.push(cl);
+        //             }
+        //         },
+        //     );
+        //     output_handle
+        // }
+        _ => {
+            let mut output_handle = {
+                let first_element = input.get(0).unwrap_or_else(||panic!("GeneratePostgresqlCrud input.get(0) is None"));
+                let output_len = output.len();
+                output.iter_mut().fold(Vec::with_capacity(output_len * 2), |mut acc, out| {
+                    if !acc.contains(out) {
+                        out.sort_by(|a,b|{
+                            let (index_a, _) = original_input.iter().find(|(_, field)|{a == field}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                            let (index_b, _) = original_input.iter().find(|(_, field)|{b == field}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                            index_a.partial_cmp(index_b).unwrap_or_else(||panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"))
+                        });
+                        acc.push(out.clone());
+                    }
+                    if let false = out.contains(first_element) {
+                        let mut cl = out.clone();
+                        cl.push(first_element.to_string());
+                        cl.sort_by(|a,b|{
+                            let (index_a, _) = original_input.iter().find(|(_, field)|{a == field}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                            let (index_b, _) = original_input.iter().find(|(_, field)|{b == field}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                            index_a.partial_cmp(index_b).unwrap_or_else(||panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"))
+                        });
+                        if !acc.contains(&cl) {
+                            acc.push(cl);
+                        }
+                    }
+                    acc
+                })
+            };
+            let new_input_vec = {
+                let input_len = input.len();
+                input.into_iter().enumerate().fold(Vec::with_capacity(input_len), |mut acc, (index, value)| {
+                    if let true = index != 0 {
+                        acc.push(value);
+                    }
+                    acc
+                })
+            };
+            factorial(original_input, new_input_vec, &mut output_handle)
         }
     }
 }
-
-// fn main() {
-//     let mut vec = vec![
-//         String::from("id"),
-//         String::from("name"),
-//         String::from("color"),
-//         // String::from("4"),
-//         // String::from("5"),
-//     ];
-//     let veced_vec = vec.iter().map(|v| vec![v.clone()]).collect();
-//     let f = factorial(vec.clone(), vec.clone(), veced_vec);
-//     println!("--------------------");
-//     println!("{f:#?}");
-//     println!("{}", f.len());
-// }
