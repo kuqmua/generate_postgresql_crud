@@ -35,7 +35,7 @@
 //         }
 //     });
 //     let struct_options_tokenstream = quote::quote! {
-//         #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+//         #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
 //         pub struct #struct_options_ident_token_stream {
 //             #(#fields_options),*
 //         }
@@ -69,34 +69,34 @@
 //         // }
 //         // #struct_options_tokenstream
 
-//     // #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
+//     // #[derive(serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
 //     // pub struct CatId {
 //     //     pub id: i64,
 //     // }
-//     // #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
+//     // #[derive(serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
 //     // pub struct CatName {
 //     //     pub name: String,
 //     // }
-//     // #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
+//     // #[derive(serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
 //     // pub struct CatColor {
 //     //     pub color: String,
 //     // }
-//     // #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
+//     // #[derive(serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
 //     // pub struct CatIdName {
 //     //     pub id: i64,
 //     //     pub name: String,
 //     // }
-//     // #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
+//     // #[derive(serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
 //     // pub struct CatIdColor {
 //     //     pub id: i64,
 //     //     pub color: String,
 //     // }
-//     // #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
+//     // #[derive(serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
 //     // pub struct CatNameColor {
 //     //     pub name: String,
 //     //     pub color: String,
 //     // }
-//     // #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
+//     // #[derive(serde_derive::Serialize, serde_derive::Deserialize, sqlx::FromRow)]
 //     // pub struct CatIdNameColor {
 //     //     pub id: i64,
 //     //     pub name: String,
