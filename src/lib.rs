@@ -50,19 +50,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .collect::<Vec<(usize, &syn::Field)>>();
         let fields_named_clone_stringified = fields_named
             .iter()
-            .map(|field| {
-                field
-                    .ident
-                    .clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                    })
-                    .to_string()
-            })
-            .collect::<Vec<std::string::String>>();
+            .map(|field| field)
+            .collect::<Vec<&syn::Field>>();
         let mut veced_vec = fields_named_clone_stringified
             .iter()
-            .map(|v| vec![v.clone()])
+            .map(|field| {
+                vec![{
+                    field
+                        .ident
+                        .clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        })
+                        .to_string()
+                }]
+            })
             .collect();
         let column_variants = column_names_factorial(
             fields_named_enumerated_cloned_stringified,
@@ -142,7 +144,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 
 fn column_names_factorial(
     original_input: Vec<(usize, &syn::Field)>,
-    input: Vec<String>,
+    input: Vec<&syn::Field>,
     output: &mut Vec<Vec<String>>,
 ) -> Vec<Vec<String>> {
     let len = input.len();
@@ -282,9 +284,17 @@ fn column_names_factorial(
                         });
                         acc.push(out.clone());
                     }
-                    if let false = out.contains(first_element) {
+                    if let false = out.contains(&first_element.ident.clone()
+                                        .unwrap_or_else(|| {
+                                            panic!("GeneratePostgresqlCrud field.ident is None")
+                                        })
+                                        .to_string()) {
                         let mut cl = out.clone();
-                        cl.push(first_element.to_string());
+                        cl.push(first_element.ident.clone()
+                                        .unwrap_or_else(|| {
+                                            panic!("GeneratePostgresqlCrud field.ident is None")
+                                        })
+                                        .to_string());
                         cl.sort_by(|a,b|{
                             let (index_a, _) = original_input.iter().find(|(_, field)|{a == &field
                                         .ident
