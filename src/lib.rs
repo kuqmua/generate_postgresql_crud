@@ -48,30 +48,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .enumerate()
             .map(|(index, field)| (index, field))
             .collect::<Vec<(usize, &syn::Field)>>();
-        let fields_named_clone_stringified = fields_named
-            .iter()
-            .map(|field| field)
-            .collect::<Vec<&syn::Field>>();
+        let fields_named_clone_stringified = fields_named.iter().collect::<Vec<&syn::Field>>();
         let mut veced_vec = fields_named_clone_stringified
             .iter()
-            .map(|field| {
-                vec![{
-                    field
-                        .ident
-                        .clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        })
-                        .to_string()
-                }]
-            })
+            .map(|field| vec![field.clone().clone()])
             .collect();
         let column_variants = column_names_factorial(
             fields_named_enumerated_cloned_stringified,
             fields_named_clone_stringified,
             &mut veced_vec,
         );
-        println!("{column_variants:#?}\n{}", column_variants.len());
+        let h = column_variants.iter().for_each(|vec_field| {
+            vec_field.iter().for_each(|field| {
+                println!("{}", field.ident.clone().unwrap());
+            });
+            println!("--------------------");
+        });
+        // println!("{column_variants:#?}\n{}", column_variants.len());
+        println!("{}", column_variants.len());
         column_variants
     };
     let structs_variants = {
@@ -80,7 +74,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .map(|variant_columns| {
                 let mut struct_name_stringified = format!("{ident}");
                 variant_columns.iter().for_each(|variant_column| {
-                    let column_title_cased = variant_column.to_case(convert_case::Case::Title);
+                    let column_title_cased = variant_column.ident
+                                        .clone()
+                                        .unwrap_or_else(|| {
+                                            panic!("GeneratePostgresqlCrud field.ident is None")
+                                        })
+                                        .to_string().to_case(convert_case::Case::Title);
                     struct_name_stringified.push_str(&column_title_cased);
                 });
                 let struct_name_token_stream = struct_name_stringified.parse::<proc_macro2::TokenStream>()
@@ -142,11 +141,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-fn column_names_factorial(
+fn column_names_factorial<'a>(
     original_input: Vec<(usize, &syn::Field)>,
     input: Vec<&syn::Field>,
-    output: &mut Vec<Vec<String>>,
-) -> Vec<Vec<String>> {
+    output: &mut Vec<Vec<syn::Field>>,
+) -> Vec<Vec<syn::Field>> {
     let len = input.len();
     match len {
         0 => {
@@ -159,13 +158,19 @@ fn column_names_factorial(
                             let (index_a, _) = original_input
                                 .iter()
                                 .find(|(_, field)| {
-                                    a == &field
-                                        .ident
+                                    a.ident
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
                                         })
                                         .to_string()
+                                        == field
+                                            .ident
+                                            .clone()
+                                            .unwrap_or_else(|| {
+                                                panic!("GeneratePostgresqlCrud field.ident is None")
+                                            })
+                                            .to_string()
                                 })
                                 .unwrap_or_else(|| {
                                     panic!(
@@ -175,13 +180,19 @@ fn column_names_factorial(
                             let (index_b, _) = original_input
                                 .iter()
                                 .find(|(_, field)| {
-                                    b == &field
-                                        .ident
+                                    b.ident
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
                                         })
                                         .to_string()
+                                        == field
+                                            .ident
+                                            .clone()
+                                            .unwrap_or_else(|| {
+                                                panic!("GeneratePostgresqlCrud field.ident is None")
+                                            })
+                                            .to_string()
                                 })
                                 .unwrap_or_else(|| {
                                     panic!(
@@ -204,7 +215,23 @@ fn column_names_factorial(
                     for a_elem in a {
                         let mut is_order_found = false;
                         for b_elem in a {
-                            if let Some(or) = a_elem.partial_cmp(b_elem) {
+                            if let Some(or) = a_elem
+                                .ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                })
+                                .to_string()
+                                .partial_cmp(
+                                    &b_elem
+                                        .ident
+                                        .clone()
+                                        .unwrap_or_else(|| {
+                                            panic!("GeneratePostgresqlCrud field.ident is None")
+                                        })
+                                        .to_string(),
+                                )
+                            {
                                 match or {
                                     std::cmp::Ordering::Less => {
                                         order = or;
@@ -266,14 +293,24 @@ fn column_names_factorial(
                 output.iter_mut().fold(Vec::with_capacity(output_len * 2), |mut acc, out| {
                     if !acc.contains(out) {
                         out.sort_by(|a,b|{
-                            let (index_a, _) = original_input.iter().find(|(_, field)|{a == &field
+                            let (index_a, _) = original_input.iter().find(|(_, field)|{a.ident
+                                        .clone()
+                                        .unwrap_or_else(|| {
+                                            panic!("GeneratePostgresqlCrud field.ident is None")
+                                        })
+                                        .to_string() == field
                                         .ident
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
                                         })
                                         .to_string()}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
-                            let (index_b, _) = original_input.iter().find(|(_, field)|{b == &field
+                            let (index_b, _) = original_input.iter().find(|(_, field)|{b.ident
+                                        .clone()
+                                        .unwrap_or_else(|| {
+                                            panic!("GeneratePostgresqlCrud field.ident is None")
+                                        })
+                                        .to_string() == field
                                         .ident
                                         .clone()
                                         .unwrap_or_else(|| {
@@ -284,26 +321,28 @@ fn column_names_factorial(
                         });
                         acc.push(out.clone());
                     }
-                    if let false = out.contains(&first_element.ident.clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })
-                                        .to_string()) {
+                    if let false = out.contains(&first_element) {
                         let mut cl = out.clone();
-                        cl.push(first_element.ident.clone()
+                        cl.push(first_element.clone().clone());
+                        cl.sort_by(|a,b|{
+                            let (index_a, _) = original_input.iter().find(|(_, field)|{a.ident
+                                        .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
                                         })
-                                        .to_string());
-                        cl.sort_by(|a,b|{
-                            let (index_a, _) = original_input.iter().find(|(_, field)|{a == &field
+                                        .to_string() == field
                                         .ident
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
                                         })
                                         .to_string()}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
-                            let (index_b, _) = original_input.iter().find(|(_, field)|{b == &field
+                            let (index_b, _) = original_input.iter().find(|(_, field)|{b.ident
+                                        .clone()
+                                        .unwrap_or_else(|| {
+                                            panic!("GeneratePostgresqlCrud field.ident is None")
+                                        })
+                                        .to_string() == field
                                         .ident
                                         .clone()
                                         .unwrap_or_else(|| {
