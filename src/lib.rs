@@ -1,3 +1,5 @@
+use convert_case::Casing;
+
 #[proc_macro_derive(GeneratePostgresqlCrud)]
 pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     proc_macro_helpers::panic_location::panic_location();
@@ -79,7 +81,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         println!("{column_variants:#?}\n{}", column_variants.len());
         column_variants
     };
-
+    let structs_variants = {
+        column_variants
+            .iter()
+            .map(|variant_columns| {
+                let mut struct_name_stringified = format!("{ident}");
+                variant_columns.iter().for_each(|variant_column| {
+                    let column_title_cased = variant_column.to_case(convert_case::Case::Title);
+                    struct_name_stringified.push_str(&column_title_cased);
+                });
+                let struct_name_token_stream = struct_name_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+                quote::quote! {
+                    pub struct #struct_name_token_stream {
+                    //    pub id: i64,
+                    //    pub name: String,
+                    }
+                }
+            })
+            .collect::<proc_macro2::TokenStream>()
+    };
     // println!("{struct_options_tokenstream}");
     let gen = quote::quote! {
         // pub struct Cat {
