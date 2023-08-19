@@ -49,7 +49,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let fields_named_clone_stringified = fields_named.iter().collect::<Vec<&syn::Field>>();
         let mut veced_vec = fields_named_clone_stringified
             .iter()
-            .map(|field| vec![field.clone().clone()])
+            .map(|field| vec![(*field).clone()])
             .collect();
         column_names_factorial(
             fields_named_enumerated,
@@ -324,7 +324,7 @@ fn column_names_factorial(
                     }
                     if let false = out.contains(first_element) {
                         let mut cl = out.clone();
-                        cl.push(first_element.clone().clone());
+                        cl.push((*first_element).clone());
                         cl.sort_by(|a,b|{
                             let (index_a, _) = original_input.iter().find(|(_, field)|{a.ident
                                         .clone()
