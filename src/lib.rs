@@ -1,5 +1,3 @@
-use convert_case::Casing;
-
 #[proc_macro_derive(GeneratePostgresqlCrud)]
 pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     proc_macro_helpers::panic_location::panic_location();
@@ -13,7 +11,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let ident = &ast.ident;
     let proc_macro_name_ident_stringified = format!("{proc_macro_name} {ident}");
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
-        // println!("{data_struct:#?}");
         data_struct
     } else {
         panic!("does not work on structs!");
@@ -23,10 +20,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     } else {
         panic!("{proc_macro_name_ident_stringified} supports only syn::Fields::Named");
     };
-    let struct_options_ident_stringified = format!("{ident}Options");
-    let struct_options_ident_token_stream =
-    struct_options_ident_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_options_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+    let struct_options_ident_token_stream = {
+        let struct_options_ident_stringified = format!("{ident}Options");
+        struct_options_ident_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_options_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let fields_options = fields_named.iter().map(|field| {
         let field_vis = &field.vis;
         let field_ident = &field.ident;
@@ -36,14 +34,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #field_vis #field_ident: Option<#field_type_path>
         }
     });
-    let struct_options_tokenstream = quote::quote! {
-        #[derive(serde_derive::Serialize, serde_derive::Deserialize)]
+    let struct_options_token_stream = quote::quote! {
+        #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
         pub struct #struct_options_ident_token_stream {
             #(#fields_options),*
         }
     };
     let column_variants = {
-        let fields_named_enumerated_cloned_stringified = fields_named
+        let fields_named_enumerated = fields_named
             .iter()
             .enumerate()
             .map(|(index, field)| (index, field))
@@ -53,110 +51,106 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .iter()
             .map(|field| vec![field.clone().clone()])
             .collect();
-        let column_variants = column_names_factorial(
-            fields_named_enumerated_cloned_stringified,
+        column_names_factorial(
+            fields_named_enumerated,
             fields_named_clone_stringified,
             &mut veced_vec,
-        );
-        let h = column_variants.iter().for_each(|vec_field| {
-            vec_field.iter().for_each(|field| {
-                println!("{}", field.ident.clone().unwrap());
-            });
-            println!("--------------------");
-        });
-        // println!("{column_variants:#?}\n{}", column_variants.len());
-        println!("{}", column_variants.len());
-        column_variants
+        )
     };
-    let structs_variants = {
+    let structs_variants_token_stream = {
         column_variants
             .iter()
             .map(|variant_columns| {
-                let mut struct_name_stringified = format!("{ident}");
-                variant_columns.iter().for_each(|variant_column| {
-                    let column_title_cased = variant_column.ident
-                                        .clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })
-                                        .to_string().to_case(convert_case::Case::Title);
-                    struct_name_stringified.push_str(&column_title_cased);
-                });
-                let struct_name_token_stream = struct_name_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+                let struct_name_token_stream = {
+                    let mut struct_name_stringified = format!("{ident}");
+                    variant_columns.iter().for_each(|variant_column| {
+                        use convert_case::Casing;
+                        let column_title_cased = variant_column.ident
+                            .clone()
+                            .unwrap_or_else(|| {
+                                panic!("GeneratePostgresqlCrud field.ident is None")
+                            })
+                            .to_string().to_case(convert_case::Case::Title);
+                        struct_name_stringified.push_str(&column_title_cased);
+                    });
+                    struct_name_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
                 let genereted_fields = variant_columns.iter().map(|variant_column|{
                     let variant_column_ident = variant_column.ident.clone()
                         .unwrap_or_else(|| {
                             panic!("GeneratePostgresqlCrud field.ident is None")
                         });
-                        // println!("{variant_column:#?}");
                     let variant_column_type = &variant_column.ty;
                     quote::quote! {
                         pub #variant_column_ident: #variant_column_type,
                     }
                 });
-                println!("1");
-                let f =quote::quote! {
+                quote::quote! {
                     pub struct #struct_name_token_stream {
                         #(#genereted_fields)*
-                    //    pub id: i64,
-                    //    pub name: String,
                     }
-                };
-                println!("{f}");
-                f
+                }
             })
-            .collect::<proc_macro2::TokenStream>()
+            .collect::<Vec<proc_macro2::TokenStream>>()
     };
-    // println!("{struct_options_tokenstream}");
+    let structs_variants_impl_from_token_stream = {
+        column_variants
+            .iter()
+            .map(|variant_columns| {
+                let struct_name_token_stream = {
+                    let mut struct_name_stringified = format!("{ident}");
+                    variant_columns.iter().for_each(|variant_column| {
+                        use convert_case::Casing;
+                        let column_title_cased = variant_column.ident
+                            .clone()
+                            .unwrap_or_else(|| {
+                                panic!("GeneratePostgresqlCrud field.ident is None")
+                            })
+                            .to_string().to_case(convert_case::Case::Title);
+                        struct_name_stringified.push_str(&column_title_cased);
+                    });
+                    struct_name_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                let value_token_stream = quote::quote! {value};
+                let fields_options_token_stream = fields_named.iter().map(|field|{
+                    let field_ident = field.ident.clone().unwrap_or_else(|| {
+                        panic!("GeneratePostgresqlCrud field.ident is None")
+                    });
+                    match variant_columns.contains(field) {
+                        true => {
+                            quote::quote! {
+                                #field_ident: Some(#value_token_stream.#field_ident)
+                            }
+                        },
+                        false => quote::quote! {
+                            #field_ident: None
+                        },
+                    }   
+                });
+                quote::quote! {
+                    impl std::convert::From<#struct_name_token_stream> for #struct_options_ident_token_stream {
+                        fn from(#value_token_stream: #struct_name_token_stream) -> Self {
+                            #struct_options_ident_token_stream {
+                                #(#fields_options_token_stream),*
+                            }
+                        }
+                    }
+                }
+            })
+            .collect::<Vec<proc_macro2::TokenStream>>()
+    };
     let gen = quote::quote! {
-        // pub struct Cat {
-        //     pub id: i64, //todo - if using js JSON.parse() - must be two variants - for usage and deserialization - coz json number type capacity less than i64::MAX
-        //     pub name: String,
-        //     pub color: String,
-        // }
-        #struct_options_tokenstream
-
-
-    // pub struct CatId {
-    //     pub id: i64,
-    // }
-
-    // pub struct CatName {
-    //     pub name: String,
-    // }
-
-    // pub struct CatColor {
-    //     pub color: String,
-    // }
-
-    // pub struct CatIdName {
-    //     pub id: i64,
-    //     pub name: String,
-    // }
-
-    // pub struct CatIdColor {
-    //     pub id: i64,
-    //     pub color: String,
-    // }
-
-    // pub struct CatNameColor {
-    //     pub name: String,
-    //     pub color: String,
-    // }
-
-    // pub struct CatIdNameColor {
-    //     pub id: i64,
-    //     pub name: String,
-    //     pub color: String,
-    // }
-
-            };
+        #struct_options_token_stream
+        #(#structs_variants_token_stream)*
+        #(#structs_variants_impl_from_token_stream)*
+    };
     // println!("{gen}");
     gen.into()
 }
 
-fn column_names_factorial<'a>(
+fn column_names_factorial(
     original_input: Vec<(usize, &syn::Field)>,
     input: Vec<&syn::Field>,
     output: &mut Vec<Vec<syn::Field>>,
