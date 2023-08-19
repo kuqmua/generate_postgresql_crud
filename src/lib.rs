@@ -84,12 +84,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 });
                 let struct_name_token_stream = struct_name_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-                quote::quote! {
+                let genereted_fields = variant_columns.iter().map(|variant_column|{
+                    let variant_column_ident = variant_column.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("GeneratePostgresqlCrud field.ident is None")
+                        });
+                        // println!("{variant_column:#?}");
+                    let variant_column_type = &variant_column.ty;
+                    quote::quote! {
+                        pub #variant_column_ident: #variant_column_type,
+                    }
+                });
+                println!("1");
+                let f =quote::quote! {
                     pub struct #struct_name_token_stream {
+                        #(#genereted_fields)*
                     //    pub id: i64,
                     //    pub name: String,
                     }
-                }
+                };
+                println!("{f}");
+                f
             })
             .collect::<proc_macro2::TokenStream>()
     };
