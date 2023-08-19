@@ -172,14 +172,12 @@ fn column_names_factorial(
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
                                         })
-                                        .to_string()
                                         == field
                                             .ident
                                             .clone()
                                             .unwrap_or_else(|| {
                                                 panic!("GeneratePostgresqlCrud field.ident is None")
                                             })
-                                            .to_string()
                                 })
                                 .unwrap_or_else(|| {
                                     panic!(
@@ -194,14 +192,12 @@ fn column_names_factorial(
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
                                         })
-                                        .to_string()
                                         == field
                                             .ident
                                             .clone()
                                             .unwrap_or_else(|| {
                                                 panic!("GeneratePostgresqlCrud field.ident is None")
                                             })
-                                            .to_string()
                                 })
                                 .unwrap_or_else(|| {
                                     panic!(
@@ -306,31 +302,27 @@ fn column_names_factorial(
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })
-                                        .to_string() == field
+                                        }) == field
                                         .ident
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })
-                                        .to_string()}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                                        })}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
                             let (index_b, _) = original_input.iter().find(|(_, field)|{b.ident
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })
-                                        .to_string() == field
+                                        }) == field
                                         .ident
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })
-                                        .to_string()}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                                        })}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
                             index_a.partial_cmp(index_b).unwrap_or_else(||panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"))
                         });
                         acc.push(out.clone());
                     }
-                    if let false = out.contains(&first_element) {
+                    if let false = out.contains(first_element) {
                         let mut cl = out.clone();
                         cl.push(first_element.clone().clone());
                         cl.sort_by(|a,b|{
@@ -338,26 +330,22 @@ fn column_names_factorial(
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })
-                                        .to_string() == field
+                                        }) == field
                                         .ident
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })
-                                        .to_string()}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                                        })}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
                             let (index_b, _) = original_input.iter().find(|(_, field)|{b.ident
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })
-                                        .to_string() == field
+                                        }) == field
                                         .ident
                                         .clone()
                                         .unwrap_or_else(|| {
                                             panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })
-                                        .to_string()}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                                        })}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
                             index_a.partial_cmp(index_b).unwrap_or_else(||panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"))
                         });
                         if !acc.contains(&cl) {
