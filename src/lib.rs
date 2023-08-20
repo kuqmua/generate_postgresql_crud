@@ -237,11 +237,74 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #variant_ident_token_stream
             }
         });
+        //
+        let select_impl_display_token_stream = column_variants.iter().map(|column_variant|{
+            let write_ident_token_stream = {
+                let mut write_ident_stringified_handle = column_variant.iter()
+                    .fold(std::string::String::from(""), |mut acc, field| {
+                        let field_ident_stringified = field.ident
+                            .clone()
+                            .unwrap_or_else(|| {
+                                panic!("GeneratePostgresqlCrud field.ident is None")
+                            });
+                        acc.push_str(&format!("{field_ident_stringified},"));
+                        acc
+                    });
+                write_ident_stringified_handle.pop();
+                format!("\"{write_ident_stringified_handle}\"").parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {write_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            let variant_ident_token_stream = {
+                let variant_ident_stringified_handle = column_variant.iter()
+                    .fold(std::string::String::from(""), |mut acc, field| {
+                        use convert_case::Casing;
+                        let field_ident_stringified = field.ident
+                            .clone()
+                            .unwrap_or_else(|| {
+                                panic!("GeneratePostgresqlCrud field.ident is None")
+                            }).to_string().to_case(convert_case::Case::Title);
+                        acc.push_str(&field_ident_stringified);
+                        acc
+                    });
+                variant_ident_stringified_handle.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            quote::quote! {
+                #select_ident_token_stream::#variant_ident_token_stream => write!(f, #write_ident_token_stream)
+            }
+        });
+        //
         quote::quote! {
             #[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
             pub enum #select_ident_token_stream {
                 #(#select_variants_token_stream),*
             }
+
+            impl std::fmt::Display for #select_ident_token_stream {
+                fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                    match self {
+                        #(#select_impl_display_token_stream),*
+                    }
+                }
+            }
+            // impl std::default::Default for #select_ident_token_stream {
+            //     fn default() -> Self {
+            //         Self::IdNameColor
+            //     }
+            // }
+            // impl std::convert::From<Option<Self>> for #select_ident_token_stream {
+            //     fn from(option_value: Option<Self>) -> Self {
+            //         match option_value {
+            //             Some(value) => value,
+            //             None => Self::default(),
+            //         }
+            //     }
+            // }
+            // impl crate::common::url_encode::UrlEncode for #select_ident_token_stream {
+            //     fn url_encode(&self) -> std::string::String {
+            //         urlencoding::encode(&self.to_string()).to_string()
+            //     }
+            // }
         }
     };
     let gen = quote::quote! {
