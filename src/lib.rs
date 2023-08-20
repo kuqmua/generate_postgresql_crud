@@ -141,10 +141,57 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             })
             .collect::<Vec<proc_macro2::TokenStream>>()
     };
+    let select_field_token_stream = {
+        let select_field_ident_token_stream = {
+            let select_field_ident_stringified = format!("{ident}SelectField");
+            select_field_ident_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {select_field_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let select_field_variants = fields_named
+            .iter()
+            .map(|field| {
+                let field_ident_stringified = field.ident
+                    .clone()
+                    .unwrap_or_else(|| {
+                        panic!("GeneratePostgresqlCrud field.ident is None")
+                    })
+                    .to_string();
+                let field_ident_token_stream = format!("\"{field_ident_stringified}\"").parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+                let variant_ident_token_stream = {
+                    use convert_case::Casing;
+                    let variant_ident_stringified = field_ident_stringified.to_case(convert_case::Case::Title);
+                    variant_ident_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote! {
+                    #[serde(rename(serialize = #field_ident_token_stream, deserialize = #field_ident_token_stream))]
+                    #variant_ident_token_stream
+                }
+            })
+            .collect::<Vec<proc_macro2::TokenStream>>();
+        quote::quote! {
+            #[derive(
+                Debug,
+                serde::Serialize,
+                serde::Deserialize,
+                enum_extension::EnumExtension,
+                strum_macros::EnumIter,
+                PartialEq,
+                Eq,
+            )]
+            pub enum #select_field_ident_token_stream {
+                #(#select_field_variants),*
+            }
+        }
+    };
+    println!("select_field_token_stream {select_field_token_stream}");
     let gen = quote::quote! {
         #struct_options_token_stream
         #(#structs_variants_token_stream)*
         #(#structs_variants_impl_from_token_stream)*
+        #select_field_token_stream
+
     };
     // println!("{gen}");
     gen.into()
