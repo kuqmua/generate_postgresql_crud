@@ -57,7 +57,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote! {
             impl std::convert::From<#ident> for #struct_options_ident_token_stream {
                 fn from(value: #ident) -> Self {
-                    CatOptions {                        
+                    #struct_options_ident_token_stream {                        
                         #(#ident_option_variants_token_stream),*
                     }
                 }
