@@ -311,60 +311,87 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             default_select_variant_ident_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {default_select_variant_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let assignment_token_stream = column_variants.iter().map(|column_variant|{
-            let write_ident_token_stream = column_variant.iter().map(|field|{
-                let field_ident = field.ident.clone()
-                .unwrap_or_else(|| {
-                    panic!("GeneratePostgresqlCrud field.ident is None")
+        let options_try_from_sqlx_row = {
+            let declaration_token_stream = fields_named.iter().map(|field|{
+                let field_ident = field.ident
+                    .clone()
+                    .unwrap_or_else(|| {
+                        panic!("GeneratePostgresqlCrud field.ident is None")
+                    });
+                let field_type = &field.ty;
+                quote::quote! {
+                    let mut #field_ident: Option<#field_type> = None;
+                }
+            });
+            let assignment_token_stream = column_variants.iter().map(|column_variant|{
+                let write_ident_token_stream = column_variant.iter().map(|field|{
+                    let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("GeneratePostgresqlCrud field.ident is None")
+                    });
+                    let field_ident_string_quotes_token_stream = {
+                        let field_ident_string_quotes = format!("\"{field_ident}\"");
+                        field_ident_string_quotes.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_string_quotes} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    quote::quote! {
+                        #field_ident = row.try_get(#field_ident_string_quotes_token_stream)?;
+                    }  
                 });
-                let field_ident_string_quotes_token_stream = {
-                    let field_ident_string_quotes = format!("\"{field_ident}\"");
-                    field_ident_string_quotes.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_string_quotes} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                let variant_ident_token_stream = {
+                    let variant_ident_stringified_handle = column_variant.iter()
+                        .fold(std::string::String::from(""), |mut acc, field| {
+                            use convert_case::Casing;
+                            let field_ident_stringified = field.ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                }).to_string().to_case(convert_case::Case::Title);
+                            acc.push_str(&field_ident_stringified);
+                            acc
+                        });
+                    variant_ident_stringified_handle.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote! {
-                    #field_ident = row.try_get(#field_ident_string_quotes_token_stream)?;
-                }  
+                    #select_ident_token_stream::#variant_ident_token_stream => {
+                        #(#write_ident_token_stream)*
+                    }
+                }
             });
-            let variant_ident_token_stream = {
-                let variant_ident_stringified_handle = column_variant.iter()
-                    .fold(std::string::String::from(""), |mut acc, field| {
-                        use convert_case::Casing;
-                        let field_ident_stringified = field.ident
-                            .clone()
-                            .unwrap_or_else(|| {
-                                panic!("GeneratePostgresqlCrud field.ident is None")
-                            }).to_string().to_case(convert_case::Case::Title);
-                        acc.push_str(&field_ident_stringified);
-                        acc
-                    });
-                variant_ident_stringified_handle.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let option_fields_initiation_token_stream = fields_named.iter().map(|field|{
+                field.ident
+                    .clone()
+                    .unwrap_or_else(|| {
+                        panic!("GeneratePostgresqlCrud field.ident is None")
+                    })
+            });
             quote::quote! {
-                #select_ident_token_stream::#variant_ident_token_stream => {
-                    #(#write_ident_token_stream)*
+                impl #select_ident_token_stream {
+                    fn options_try_from_sqlx_row<'a, R: ::sqlx::Row>(
+                        &self,
+                        row: &'a R,
+                    ) -> ::sqlx::Result<#struct_options_ident_token_stream>
+                    where
+                        &'a ::std::primitive::str: ::sqlx::ColumnIndex<R>,
+                        Option<i64>: ::sqlx::decode::Decode<'a, R::Database>,
+                        Option<i64>: ::sqlx::types::Type<R::Database>,
+                        Option<String>: ::sqlx::decode::Decode<'a, R::Database>,
+                        Option<String>: ::sqlx::types::Type<R::Database>,
+                        Option<String>: ::sqlx::decode::Decode<'a, R::Database>,
+                        Option<String>: ::sqlx::types::Type<R::Database>,
+                    {
+                        #(#declaration_token_stream)*
+                        match self {
+                            #(#assignment_token_stream)*
+                        }
+                        Ok(#struct_options_ident_token_stream { 
+                            #(#option_fields_initiation_token_stream),*
+                        })
+                    }
                 }
             }
-        });
-        let declaration_token_stream = fields_named.iter().map(|field|{
-            let field_ident = field.ident
-                .clone()
-                .unwrap_or_else(|| {
-                    panic!("GeneratePostgresqlCrud field.ident is None")
-                });
-            let field_type = &field.ty;
-            quote::quote! {
-                let mut #field_ident: Option<#field_type> = None;
-            }
-        });
-        let option_fields_initiation_token_stream = fields_named.iter().map(|field|{
-            field.ident
-                .clone()
-                .unwrap_or_else(|| {
-                    panic!("GeneratePostgresqlCrud field.ident is None")
-                })
-        });
+        };
         quote::quote! {
             #[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
             pub enum #select_ident_token_stream {
@@ -395,29 +422,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     urlencoding::encode(&self.to_string()).to_string()
                 }
             }
-            impl #select_ident_token_stream {
-                fn options_try_from_sqlx_row<'a, R: ::sqlx::Row>(
-                    &self,
-                    row: &'a R,
-                ) -> ::sqlx::Result<#struct_options_ident_token_stream>
-                where
-                    &'a ::std::primitive::str: ::sqlx::ColumnIndex<R>,
-                    Option<i64>: ::sqlx::decode::Decode<'a, R::Database>,
-                    Option<i64>: ::sqlx::types::Type<R::Database>,
-                    Option<String>: ::sqlx::decode::Decode<'a, R::Database>,
-                    Option<String>: ::sqlx::types::Type<R::Database>,
-                    Option<String>: ::sqlx::decode::Decode<'a, R::Database>,
-                    Option<String>: ::sqlx::types::Type<R::Database>,
-                {
-                    #(#declaration_token_stream)*
-                    match self {
-                        #(#assignment_token_stream)*
-                    }
-                    Ok(#struct_options_ident_token_stream { 
-                        #(#option_fields_initiation_token_stream),*
-                    })
-                }
-            }
+            #options_try_from_sqlx_row
         }
     };
     let gen = quote::quote! {
