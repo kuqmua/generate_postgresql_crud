@@ -40,6 +40,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #(#fields_options),*
         }
     };
+    let from_ident_for_ident_options_token_stream = {
+        let ident_option_variants_token_stream = {
+            fields_named.iter()
+                .map(|field| {
+                    let field_ident = field.ident
+                        .clone()
+                        .unwrap_or_else(|| {
+                            panic!("GeneratePostgresqlCrud field.ident is None")
+                        });
+                    quote::quote! {
+                        #field_ident: Some(value.#field_ident)
+                    }
+                })
+        };
+        quote::quote! {
+            impl std::convert::From<#ident> for #struct_options_ident_token_stream {
+                fn from(value: #ident) -> Self {
+                    CatOptions {                        
+                        #(#ident_option_variants_token_stream),*
+                    }
+                }
+            }
+        }
+    };
     let column_variants = {
         let fields_named_enumerated = fields_named
             .iter()
@@ -273,13 +297,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #select_ident_token_stream::#variant_ident_token_stream => write!(f, #write_ident_token_stream)
             }
         });
-        //
+        let default_select_variant_ident_token_stream = {
+            let default_select_variant_ident_stringified = fields_named.iter()
+            .fold(std::string::String::from(""), |mut acc, field| {
+                use convert_case::Casing;
+                let field_ident_stringified = field.ident
+                    .clone()
+                    .unwrap_or_else(|| {
+                        panic!("GeneratePostgresqlCrud field.ident is None")
+                    }).to_string().to_case(convert_case::Case::Title);
+                acc.push_str(&field_ident_stringified);
+                acc
+            });
+            default_select_variant_ident_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {default_select_variant_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote! {
             #[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
             pub enum #select_ident_token_stream {
                 #(#select_variants_token_stream),*
             }
-
             impl std::fmt::Display for #select_ident_token_stream {
                 fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                     match self {
@@ -287,28 +324,29 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             }
-            // impl std::default::Default for #select_ident_token_stream {
-            //     fn default() -> Self {
-            //         Self::IdNameColor
-            //     }
-            // }
-            // impl std::convert::From<Option<Self>> for #select_ident_token_stream {
-            //     fn from(option_value: Option<Self>) -> Self {
-            //         match option_value {
-            //             Some(value) => value,
-            //             None => Self::default(),
-            //         }
-            //     }
-            // }
-            // impl crate::common::url_encode::UrlEncode for #select_ident_token_stream {
-            //     fn url_encode(&self) -> std::string::String {
-            //         urlencoding::encode(&self.to_string()).to_string()
-            //     }
-            // }
+            impl std::default::Default for #select_ident_token_stream {
+                fn default() -> Self {
+                    Self::#default_select_variant_ident_token_stream
+                }
+            }
+            impl std::convert::From<Option<Self>> for #select_ident_token_stream {
+                fn from(option_value: Option<Self>) -> Self {
+                    match option_value {
+                        Some(value) => value,
+                        None => Self::default(),
+                    }
+                }
+            }
+            impl crate::common::url_encode::UrlEncode for #select_ident_token_stream {
+                fn url_encode(&self) -> std::string::String {
+                    urlencoding::encode(&self.to_string()).to_string()
+                }
+            }
         }
     };
     let gen = quote::quote! {
         #struct_options_token_stream
+        #from_ident_for_ident_options_token_stream
         #(#structs_variants_token_stream)*
         #(#structs_variants_impl_from_token_stream)*
         #select_field_token_stream
