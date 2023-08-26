@@ -111,6 +111,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 });
                 quote::quote! {
+                    #[derive(Debug)]
                     pub struct #struct_name_token_stream {
                         #(#genereted_fields)*
                     }
