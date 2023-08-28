@@ -166,13 +166,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             })
             .collect::<Vec<proc_macro2::TokenStream>>()
     };
-    let select_field_token_stream = {
-        let select_field_ident_token_stream = {
-            let select_field_ident_stringified = format!("{ident}SelectField");
-            select_field_ident_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {select_field_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    let column_token_stream = {
+        let column_ident_token_stream = {
+            let column_ident_stringified = format!("{ident}Column");
+            column_ident_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {column_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let select_field_variants = fields_named
+        let column_variants = fields_named
             .iter()
             .map(|field| {
                 let field_ident_stringified = field.ident
@@ -204,16 +204,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 strum_macros::EnumIter,
                 PartialEq,
                 Eq,
+                from_str::FromStr,
             )]
-            pub enum #select_field_ident_token_stream {
-                #(#select_field_variants),*
+            pub enum #column_ident_token_stream {
+                #(#column_variants),*
             }
-            impl std::fmt::Display for #select_field_ident_token_stream {
+            impl std::fmt::Display for #column_ident_token_stream {
                 fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
                     write!(f, "{}", Self::to_lower_snake_case(self))
                 }
             }
-            impl crate::common::url_encode::UrlEncode for #select_field_ident_token_stream {
+            impl crate::common::url_encode::UrlEncode for #column_ident_token_stream {
                 fn url_encode(&self) -> std::string::String {
                     urlencoding::encode(&self.to_string()).to_string()
                 }
@@ -454,7 +455,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #from_ident_for_ident_options_token_stream
         #(#structs_variants_token_stream)*
         #(#structs_variants_impl_from_token_stream)*
-        #select_field_token_stream
+        #column_token_stream
         #select_token_stream
 
     };
