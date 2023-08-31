@@ -1,4 +1,9 @@
-#[proc_macro_derive(GeneratePostgresqlCrud)]
+#[proc_macro_derive(
+    GeneratePostgresqlCrud,
+    attributes(
+        generate_postgresql_crud_id,
+    )
+)]
 pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     proc_macro_helpers::panic_location::panic_location();
     let proc_macro_name = "GeneratePostgresqlCrud";
@@ -265,55 +270,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote! {
-                #[derive(Debug, serde::Serialize, serde::Deserialize, Clone)]
+                #[derive(Debug, serde::Serialize, serde::Deserialize, Clone, strum_macros::Display)]
                 pub enum #select_ident_token_stream {
                     #(#select_variants_token_stream),*
-                }
-            }
-        };
-        let impl_display_token_stream = {
-            let select_impl_display_token_stream = column_variants.iter().map(|column_variant|{
-                let write_ident_token_stream = {
-                    let mut write_ident_stringified_handle = column_variant.iter()
-                        .fold(std::string::String::from(""), |mut acc, field| {
-                            let field_ident_stringified = field.ident
-                                .clone()
-                                .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
-                                });
-                            acc.push_str(&format!("{field_ident_stringified},"));
-                            acc
-                        });
-                    write_ident_stringified_handle.pop();
-                    format!("\"{write_ident_stringified_handle}\"").parse::<proc_macro2::TokenStream>()
-                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {write_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
-                let variant_ident_token_stream = {
-                    let variant_ident_stringified_handle = column_variant.iter()
-                        .fold(std::string::String::from(""), |mut acc, field| {
-                            use convert_case::Casing;
-                            let field_ident_stringified = field.ident
-                                .clone()
-                                .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
-                                }).to_string().to_case(convert_case::Case::Title);
-                            acc.push_str(&field_ident_stringified);
-                            acc
-                        });
-                    variant_ident_stringified_handle.parse::<proc_macro2::TokenStream>()
-                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
-                quote::quote! {
-                    #select_ident_token_stream::#variant_ident_token_stream => write!(f, #write_ident_token_stream)
-                }
-            });
-            quote::quote! {
-                impl std::fmt::Display for #select_ident_token_stream {
-                    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        match self {
-                            #(#select_impl_display_token_stream),*
-                        }
-                    }
                 }
             }
         };
@@ -353,10 +312,50 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        let url_encode_token_stream = quote::quote! {
-            impl crate::common::url_encode::UrlEncode for #select_ident_token_stream {
-                fn url_encode(&self) -> std::string::String {
-                    urlencoding::encode(&self.to_string()).to_string()
+        let url_encode_token_stream = {
+            let url_encode_variants_token_stream = column_variants.iter().map(|column_variant|{
+                let write_ident_token_stream = {
+                    let mut write_ident_stringified_handle = column_variant.iter()
+                        .fold(std::string::String::from(""), |mut acc, field| {
+                            let field_ident_stringified = field.ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                });
+                            acc.push_str(&format!("{field_ident_stringified},"));
+                            acc
+                        });
+                    write_ident_stringified_handle.pop();
+                    format!("\"{write_ident_stringified_handle}\"").parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {write_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                let variant_ident_token_stream = {
+                    let variant_ident_stringified_handle = column_variant.iter()
+                        .fold(std::string::String::from(""), |mut acc, field| {
+                            use convert_case::Casing;
+                            let field_ident_stringified = field.ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                }).to_string().to_case(convert_case::Case::Title);
+                            acc.push_str(&field_ident_stringified);
+                            acc
+                        });
+                    variant_ident_stringified_handle.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote! {
+                    #select_ident_token_stream::#variant_ident_token_stream => std::string::String::from(#write_ident_token_stream)
+                }
+            });
+            quote::quote! {
+                impl crate::common::url_encode::UrlEncode for #select_ident_token_stream {
+                    fn url_encode(&self) -> std::string::String {
+                        let value = match self {
+                            #(#url_encode_variants_token_stream),*
+                        };
+                        urlencoding::encode(&value).to_string()
+                    }
                 }
             }
         };
@@ -443,7 +442,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         quote::quote! {
             #select_struct_token_stream
-            #impl_display_token_stream
             #impl_default_token_stream
             #from_option_self_token_stream
             #url_encode_token_stream
@@ -614,25 +612,27 @@ fn column_names_factorial(
                     if !acc.contains(out) {
                         out.sort_by(|a,b|{
                             let (index_a, _) = original_input.iter().find(|(_, field)|{a.ident
-                                        .clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
-                                        }) == field
-                                        .ident
-                                        .clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                }) == field
+                                .ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                })
+                            }).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
                             let (index_b, _) = original_input.iter().find(|(_, field)|{b.ident
-                                        .clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
-                                        }) == field
-                                        .ident
-                                        .clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                }) == field
+                                .ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                })
+                            }).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
                             index_a.partial_cmp(index_b).unwrap_or_else(||panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"))
                         });
                         acc.push(out.clone());
@@ -642,25 +642,27 @@ fn column_names_factorial(
                         cl.push((*first_element).clone());
                         cl.sort_by(|a,b|{
                             let (index_a, _) = original_input.iter().find(|(_, field)|{a.ident
-                                        .clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
-                                        }) == field
-                                        .ident
-                                        .clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                }) == field
+                                .ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                })
+                            }).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
                             let (index_b, _) = original_input.iter().find(|(_, field)|{b.ident
-                                        .clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
-                                        }) == field
-                                        .ident
-                                        .clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
-                                        })}).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                }) == field
+                                .ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                })
+                            }).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
                             index_a.partial_cmp(index_b).unwrap_or_else(||panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"))
                         });
                         if !acc.contains(&cl) {
@@ -686,3 +688,19 @@ fn column_names_factorial(
         }
     }
 }
+
+// #[derive(strum_macros::Display)]//strum_macros::EnumIter, 
+// enum Attribute {
+//     GeneratePostgresqlCrudId,
+// }
+
+// impl Attribute {
+//     pub fn to_str(&self) -> &str {
+//         match self {
+//             Attribute::GeneratePostgresqlCrudId => "generate_postgresql_crud_id",
+//         }
+//     }
+//     pub fn attribute_view(&self) -> String {
+//         self.to_str().to_string()
+//     }
+// }
