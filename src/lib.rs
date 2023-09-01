@@ -227,13 +227,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     let select_token_stream = {
-        let select_url_ident_token_stream = {
-            let select_url_ident_stringified = format!("{ident}SelectUrl");
-            select_url_ident_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {select_url_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let column_select_url_ident_token_stream = {
+            let column_select_url_ident_stringified = format!("{ident}ColumnSelectUrl");
+            column_select_url_ident_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {column_select_url_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let select_url_struct_token_stream = {
-            let select_url_variants_token_stream = column_variants.iter().map(|column_variant|{
+        let column_select_url_struct_token_stream = {
+            let column_select_url_variants_token_stream = column_variants.iter().map(|column_variant|{
                 let serialize_deserialize_ident_token_stream = {
                     let mut serialize_deserialize_ident_stringified_handle = column_variant.iter()
                         .fold(std::string::String::from(""), |mut acc, field| {
@@ -271,8 +271,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote! {
                 #[derive(Debug, serde::Serialize, serde::Deserialize, Clone, strum_macros::Display)]
-                pub enum #select_url_ident_token_stream {
-                    #(#select_url_variants_token_stream),*
+                pub enum #column_select_url_ident_token_stream {
+                    #(#column_select_url_variants_token_stream),*
                 }
             }
         };
@@ -293,7 +293,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {default_select_variant_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote! {
-                impl std::default::Default for #select_url_ident_token_stream {
+                impl std::default::Default for #column_select_url_ident_token_stream {
                     fn default() -> Self {
                         Self::#default_select_variant_ident_token_stream
                     }
@@ -302,7 +302,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let from_option_self_token_stream = {
             quote::quote! {
-                impl std::convert::From<Option<Self>> for #select_url_ident_token_stream {
+                impl std::convert::From<Option<Self>> for #column_select_url_ident_token_stream {
                     fn from(option_value: Option<Self>) -> Self {
                         match option_value {
                             Some(value) => value,
@@ -349,7 +349,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote! {
-                impl crate::common::url_encode::UrlEncode for #select_url_ident_token_stream {
+                impl crate::common::url_encode::UrlEncode for #column_select_url_ident_token_stream {
                     fn url_encode(&self) -> std::string::String {
                         let value = match self {
                             #(#url_encode_variants_token_stream),*
@@ -415,19 +415,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     })
             });
             quote::quote! {
-                impl #select_url_ident_token_stream {
-                    fn options_try_from_sqlx_row<'a, R: ::sqlx::Row>(
+                impl #column_select_url_ident_token_stream {
+                    fn options_try_from_sqlx_row<'a, R: sqlx::Row>(
                         &self,
                         row: &'a R,
-                    ) -> ::sqlx::Result<#struct_options_ident_token_stream>
+                    ) -> sqlx::Result<#struct_options_ident_token_stream>
                     where
-                        &'a ::std::primitive::str: ::sqlx::ColumnIndex<R>,
-                        Option<i64>: ::sqlx::decode::Decode<'a, R::Database>,
-                        Option<i64>: ::sqlx::types::Type<R::Database>,
-                        Option<String>: ::sqlx::decode::Decode<'a, R::Database>,
-                        Option<String>: ::sqlx::types::Type<R::Database>,
-                        Option<String>: ::sqlx::decode::Decode<'a, R::Database>,
-                        Option<String>: ::sqlx::types::Type<R::Database>,
+                        &'a std::primitive::str: sqlx::ColumnIndex<R>,
+                        Option<i64>: sqlx::decode::Decode<'a, R::Database>,
+                        Option<i64>: sqlx::types::Type<R::Database>,
+                        Option<String>: sqlx::decode::Decode<'a, R::Database>,
+                        Option<String>: sqlx::types::Type<R::Database>,
+                        Option<String>: sqlx::decode::Decode<'a, R::Database>,
+                        Option<String>: sqlx::types::Type<R::Database>,
                     {
                         #(#declaration_token_stream)*
                         match self {
@@ -441,7 +441,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         quote::quote! {
-            #select_url_struct_token_stream
+            #column_select_url_struct_token_stream
             #impl_default_token_stream
             #from_option_self_token_stream
             #url_encode_token_stream
