@@ -456,21 +456,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let column_select_json_struct_token_stream = {
             let column_select_json_variants_token_stream = column_variants.iter().map(|column_variant|{
-                let serialize_deserialize_ident_token_stream = {
-                    let mut serialize_deserialize_ident_stringified_handle = column_variant.iter()
-                        .fold(std::string::String::from(""), |mut acc, field| {
-                            let field_ident_stringified = field.ident
-                                .clone()
-                                .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
-                                });
-                            acc.push_str(&format!("{field_ident_stringified},"));
-                            acc
-                        });
-                    serialize_deserialize_ident_stringified_handle.pop();
-                    format!("\"{serialize_deserialize_ident_stringified_handle}\"").parse::<proc_macro2::TokenStream>()
-                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {serialize_deserialize_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
                 let variant_ident_token_stream = {
                     let variant_ident_stringified_handle = column_variant.iter()
                         .fold(std::string::String::from(""), |mut acc, field| {
@@ -487,7 +472,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote! {
-                    #[serde(rename(serialize = #serialize_deserialize_ident_token_stream, deserialize = #serialize_deserialize_ident_token_stream))]
                     #variant_ident_token_stream
                 }
             });
