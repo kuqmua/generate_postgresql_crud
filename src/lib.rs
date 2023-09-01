@@ -18,13 +18,39 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
         data_struct
     } else {
-        panic!("does not work on structs!");
+        panic!("{proc_macro_name_ident_stringified} does not work on structs!");
     };
     let fields_named = if let syn::Fields::Named(fields_named) = data_struct.fields {
         fields_named.named
     } else {
         panic!("{proc_macro_name_ident_stringified} supports only syn::Fields::Named");
     };
+    let id_field = {
+        let id_attr_name = "generate_postgresql_crud_id";
+        let mut id_field_option = None;
+        for field_named in &fields_named {
+            let attrs = &field_named.attrs;
+            if let 1 = attrs.len() {
+                match attrs.get(0) {
+                    Some(attr) => match proc_macro_helpers::error_occurence::generate_path_from_segments::generate_path_from_segments(&attr.path.segments) == id_attr_name {
+                        true => match id_field_option {
+                            Some(_) => panic!("{proc_macro_name_ident_stringified} must have one id attribute"),
+                            None => {
+                                id_field_option = Some(field_named.clone());
+                            },
+                        },
+                        false => (),
+                    },
+                    None => panic!("{proc_macro_name_ident_stringified} field_named.attrs.len() == 1, but attrs.get(0) == None"),
+                }
+            }
+        }
+        match id_field_option {
+            Some(id_field) => id_field,
+            None => panic!("{proc_macro_name_ident_stringified} no {id_attr_name} attribute"),
+        }
+    };
+    println!("{id_field:#?}");
     let struct_options_ident_token_stream = {
         let struct_options_ident_stringified = format!("{ident}Options");
         struct_options_ident_stringified.parse::<proc_macro2::TokenStream>()
