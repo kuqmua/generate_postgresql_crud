@@ -364,8 +364,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        let serde_urlencoded_wrapper_token_stream = {
-            let serde_urlencoded_wrapper_variants_token_stream = column_variants.iter().map(|column_variant|{
+        let serde_urlencoded_parameters_token_stream = {
+            let serde_urlencoded_parameters_variants_token_stream = column_variants.iter().map(|column_variant|{
                 let variant_ident_token_stream = {
                     let variant_ident_stringified_handle = column_variant.iter()
                         .fold(std::string::String::from(""), |mut acc, field| {
@@ -402,13 +402,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote! {
-                impl crate::common::serde_urlencoded_wrapper::SerdeUrlencodedWrapper for #column_select_ident_token_stream {
-                    fn serde_urlencoded_wrapper(&self) -> std::string::String {
+                impl crate::common::serde_urlencoded::SerdeUrlencodedParameter for #column_select_ident_token_stream {
+                    fn serde_urlencoded_parameter(&self) -> Result<std::string::String, crate::common::serde_urlencoded::SerdeUrlencodedParameterErrorNamed> {
                         // serde_urlencoded::to_string(self).unwrap()//todo handle error
                         let value = match self {
-                            #(#serde_urlencoded_wrapper_variants_token_stream),*
+                            #(#serde_urlencoded_parameters_variants_token_stream),*
                         };
-                        urlencoding::encode(&value).to_string()
+                        match serde_urlencoded::to_string(value) {
+                            Ok(ok_value) => Ok(ok_value), 
+                            Err(e) => Err(
+                                crate::common::serde_urlencoded::SerdeUrlencodedParameterErrorNamed::UrlEncode { 
+                                    url_encode: e, 
+                                    code_occurence: crate::code_occurence_tufa_common!(), 
+                                }
+                            )
+                        }
                     }
                 }
             }
@@ -499,7 +507,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #generate_get_query_token_stream
             #impl_default_token_stream
             #from_option_self_token_stream
-            #serde_urlencoded_wrapper_token_stream
+            #serde_urlencoded_parameters_token_stream
             #options_try_from_sqlx_row_token_stream
         }
     };
