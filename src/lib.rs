@@ -78,7 +78,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let field_ident = field.ident
                         .clone()
                         .unwrap_or_else(|| {
-                            panic!("GeneratePostgresqlCrud field.ident is None")
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
                     quote::quote! {
                         #field_ident: Some(value.#field_ident)
@@ -110,6 +110,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             fields_named_enumerated,
             fields_named_clone_stringified,
             &mut veced_vec,
+            &proc_macro_name_ident_stringified
         )
     };
     let structs_variants_token_stream = {
@@ -123,7 +124,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let column_title_cased = variant_column.ident
                             .clone()
                             .unwrap_or_else(|| {
-                                panic!("GeneratePostgresqlCrud field.ident is None")
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             })
                             .to_string().to_case(convert_case::Case::Title);
                         struct_name_stringified.push_str(&column_title_cased);
@@ -134,7 +135,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let genereted_fields = variant_columns.iter().map(|variant_column|{
                     let variant_column_ident = variant_column.ident.clone()
                         .unwrap_or_else(|| {
-                            panic!("GeneratePostgresqlCrud field.ident is None")
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
                     let variant_column_type = &variant_column.ty;
                     quote::quote! {
@@ -161,7 +162,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let column_title_cased = variant_column.ident
                             .clone()
                             .unwrap_or_else(|| {
-                                panic!("GeneratePostgresqlCrud field.ident is None")
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             })
                             .to_string().to_case(convert_case::Case::Title);
                         struct_name_stringified.push_str(&column_title_cased);
@@ -172,7 +173,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let value_token_stream = quote::quote! {value};
                 let fields_options_token_stream = fields_named.iter().map(|field|{
                     let field_ident = field.ident.clone().unwrap_or_else(|| {
-                        panic!("GeneratePostgresqlCrud field.ident is None")
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                     match variant_columns.contains(field) {
                         true => {
@@ -209,7 +210,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let field_ident_stringified = field.ident
                     .clone()
                     .unwrap_or_else(|| {
-                        panic!("GeneratePostgresqlCrud field.ident is None")
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     })
                     .to_string();
                 let serialize_deserialize_ident_token_stream = format!("\"{field_ident_stringified}\"").parse::<proc_macro2::TokenStream>()
@@ -247,14 +248,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
-    let column_select_url_token_stream = {
-        let column_select_url_ident_token_stream = {
-            let column_select_url_ident_stringified = format!("{ident}ColumnSelect");
-            column_select_url_ident_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {column_select_url_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    let column_select_token_stream = {
+        let column_select_ident_token_stream = {
+            let column_select_ident_stringified = format!("{ident}ColumnSelect");
+            column_select_ident_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {column_select_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let column_select_url_struct_token_stream = {
-            let column_select_url_variants_token_stream = column_variants.iter().map(|column_variant|{
+        let column_select_struct_token_stream = {
+            let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
                 let variant_ident_token_stream = {
                     let variant_ident_stringified_handle = column_variant.iter()
                         .fold(std::string::String::from(""), |mut acc, field| {
@@ -262,7 +263,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let field_ident_stringified = field.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 }).to_string().to_case(convert_case::Case::Title);
                             acc.push_str(&field_ident_stringified);
                             acc
@@ -276,8 +277,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote! {
                 #[derive(Debug, serde::Serialize, serde::Deserialize, Clone, strum_macros::Display)]
-                pub enum #column_select_url_ident_token_stream {
-                    #(#column_select_url_variants_token_stream),*
+                pub enum #column_select_ident_token_stream {
+                    #(#column_select_variants_token_stream),*
                 }
             }
         };
@@ -289,7 +290,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let field_ident_stringified = field.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 });
                             acc.push_str(&format!("{field_ident_stringified},"));
                             acc
@@ -305,7 +306,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let field_ident_stringified = field.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 }).to_string().to_case(convert_case::Case::Title);
                             acc.push_str(&field_ident_stringified);
                             acc
@@ -318,7 +319,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                impl crate::server::postgres::generate_get_query::GenerateGetQuery for #column_select_url_ident_token_stream {
+                impl crate::server::postgres::generate_get_query::GenerateGetQuery for #column_select_ident_token_stream {
                     fn generate_get_query(&self) -> std::string::String {
                         match self {
                             #(#generate_get_query_variants_token_stream),*
@@ -335,7 +336,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let field_ident_stringified = field.ident
                         .clone()
                         .unwrap_or_else(|| {
-                            panic!("GeneratePostgresqlCrud field.ident is None")
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         }).to_string().to_case(convert_case::Case::Title);
                     acc.push_str(&field_ident_stringified);
                     acc
@@ -344,7 +345,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {default_select_variant_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote! {
-                impl std::default::Default for #column_select_url_ident_token_stream {
+                impl std::default::Default for #column_select_ident_token_stream {
                     fn default() -> Self {
                         Self::#default_select_variant_ident_token_stream
                     }
@@ -353,7 +354,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let from_option_self_token_stream = {
             quote::quote! {
-                impl std::convert::From<Option<Self>> for #column_select_url_ident_token_stream {
+                impl std::convert::From<Option<Self>> for #column_select_ident_token_stream {
                     fn from(option_value: Option<Self>) -> Self {
                         match option_value {
                             Some(value) => value,
@@ -363,8 +364,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        let url_encode_token_stream = {
-            let url_encode_variants_token_stream = column_variants.iter().map(|column_variant|{
+        let serde_urlencoded_wrapper_token_stream = {
+            let serde_urlencoded_wrapper_variants_token_stream = column_variants.iter().map(|column_variant|{
                 let variant_ident_token_stream = {
                     let variant_ident_stringified_handle = column_variant.iter()
                         .fold(std::string::String::from(""), |mut acc, field| {
@@ -372,7 +373,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let field_ident_stringified = field.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 }).to_string().to_case(convert_case::Case::Title);
                             acc.push_str(&field_ident_stringified);
                             acc
@@ -387,7 +388,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let field_ident_stringified = field.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 }).to_string().to_case(convert_case::Case::Title);
                             acc.push_str(&field_ident_stringified);
                             acc
@@ -401,11 +402,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote! {
-                impl crate::common::url_encode::UrlEncode for #column_select_url_ident_token_stream {
-                    fn url_encode(&self) -> std::string::String {
+                impl crate::common::serde_urlencoded_wrapper::SerdeUrlencodedWrapper for #column_select_ident_token_stream {
+                    fn serde_urlencoded_wrapper(&self) -> std::string::String {
                         // serde_urlencoded::to_string(self).unwrap()//todo handle error
                         let value = match self {
-                            #(#url_encode_variants_token_stream),*
+                            #(#serde_urlencoded_wrapper_variants_token_stream),*
                         };
                         urlencoding::encode(&value).to_string()
                     }
@@ -417,7 +418,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let field_ident = field.ident
                     .clone()
                     .unwrap_or_else(|| {
-                        panic!("GeneratePostgresqlCrud field.ident is None")
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 let field_type = &field.ty;
                 quote::quote! {
@@ -428,7 +429,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let write_ident_token_stream = column_variant.iter().map(|field|{
                     let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
-                        panic!("GeneratePostgresqlCrud field.ident is None")
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                     let field_ident_string_quotes_token_stream = {
                         let field_ident_string_quotes = format!("\"{field_ident}\"");
@@ -446,7 +447,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let field_ident_stringified = field.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 }).to_string().to_case(convert_case::Case::Title);
                             acc.push_str(&field_ident_stringified);
                             acc
@@ -464,11 +465,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 field.ident
                     .clone()
                     .unwrap_or_else(|| {
-                        panic!("GeneratePostgresqlCrud field.ident is None")
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     })
             });
             quote::quote! {
-                impl #column_select_url_ident_token_stream {
+                impl #column_select_ident_token_stream {
                     fn options_try_from_sqlx_row<'a, R: sqlx::Row>(
                         &self,
                         row: &'a R,
@@ -494,11 +495,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         quote::quote! {
-            #column_select_url_struct_token_stream
+            #column_select_struct_token_stream
             #generate_get_query_token_stream
             #impl_default_token_stream
             #from_option_self_token_stream
-            #url_encode_token_stream
+            #serde_urlencoded_wrapper_token_stream
             #options_try_from_sqlx_row_token_stream
         }
     };
@@ -526,7 +527,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #(#structs_variants_token_stream)*
         #(#structs_variants_impl_from_token_stream)*
         #column_token_stream
-        #column_select_url_token_stream
+        #column_select_token_stream
     };
     // if ident == "" {
     //      println!("{gen}");
@@ -538,6 +539,7 @@ fn column_names_factorial(
     original_input: Vec<(usize, &syn::Field)>,
     input: Vec<&syn::Field>,
     output: &mut Vec<Vec<syn::Field>>,
+    proc_macro_name_ident_stringified: &std::string::String
 ) -> Vec<Vec<syn::Field>> {
     let len = input.len();
     match len {
@@ -554,18 +556,18 @@ fn column_names_factorial(
                                     a.ident
                                         .clone()
                                         .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
+                                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                         })
                                         == field
                                             .ident
                                             .clone()
                                             .unwrap_or_else(|| {
-                                                panic!("GeneratePostgresqlCrud field.ident is None")
+                                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                             })
                                 })
                                 .unwrap_or_else(|| {
                                     panic!(
-                                        "GeneratePostgresqlCrud cannot find original input index"
+                                        "{proc_macro_name_ident_stringified} cannot find original input index"
                                     )
                                 });
                             let (index_b, _) = original_input
@@ -574,23 +576,23 @@ fn column_names_factorial(
                                     b.ident
                                         .clone()
                                         .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
+                                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                         })
                                         == field
                                             .ident
                                             .clone()
                                             .unwrap_or_else(|| {
-                                                panic!("GeneratePostgresqlCrud field.ident is None")
+                                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                             })
                                 })
                                 .unwrap_or_else(|| {
                                     panic!(
-                                        "GeneratePostgresqlCrud cannot find original input index"
+                                        "{proc_macro_name_ident_stringified} cannot find original input index"
                                     )
                                 });
                             index_a.partial_cmp(index_b).unwrap_or_else(|| {
                                 panic!(
-                                    "GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"
+                                    "{proc_macro_name_ident_stringified} index_a.partial_cmp(index_b) is None"
                                 )
                             })
                         });
@@ -608,7 +610,7 @@ fn column_names_factorial(
                                 .ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 })
                                 .to_string()
                                 .partial_cmp(
@@ -616,7 +618,7 @@ fn column_names_factorial(
                                         .ident
                                         .clone()
                                         .unwrap_or_else(|| {
-                                            panic!("GeneratePostgresqlCrud field.ident is None")
+                                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                         })
                                         .to_string(),
                                 )
@@ -646,7 +648,7 @@ fn column_names_factorial(
             });
             end_out.sort_by(|a, b| {
                 a.len().partial_cmp(&b.len()).unwrap_or_else(|| {
-                    panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None")
+                    panic!("{proc_macro_name_ident_stringified} index_a.partial_cmp(index_b) is None")
                 })
             });
             end_out
@@ -656,7 +658,7 @@ fn column_names_factorial(
         //     original_input.iter().for_each(|(_, element)| {
         //         output_handle.push(vec![element.clone()]);
         //     });
-        //     let first_element = input.get(0).unwrap_or_else(||panic!("GeneratePostgresqlCrud input.get(0) is None"));
+        //     let first_element = input.get(0).unwrap_or_else(||panic!("{proc_macro_name_ident_stringified} input.get(0) is None"));
         //     output.iter().for_each(
         //         |o| {
         //             if let false = o.contains(first_element) {
@@ -677,7 +679,7 @@ fn column_names_factorial(
             let mut output_handle = {
                 let first_element = input
                     .get(0)
-                    .unwrap_or_else(|| panic!("GeneratePostgresqlCrud input.get(0) is None"));
+                    .unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} input.get(0) is None"));
                 let output_len = output.len();
                 output.iter_mut().fold(Vec::with_capacity(output_len * 2), |mut acc, out| {
                     if !acc.contains(out) {
@@ -685,26 +687,26 @@ fn column_names_factorial(
                             let (index_a, _) = original_input.iter().find(|(_, field)|{a.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 }) == field
                                 .ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 })
-                            }).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                            }).unwrap_or_else(||panic!("{proc_macro_name_ident_stringified} cannot find original input index"));
                             let (index_b, _) = original_input.iter().find(|(_, field)|{b.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 }) == field
                                 .ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 })
-                            }).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
-                            index_a.partial_cmp(index_b).unwrap_or_else(||panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"))
+                            }).unwrap_or_else(||panic!("{proc_macro_name_ident_stringified} cannot find original input index"));
+                            index_a.partial_cmp(index_b).unwrap_or_else(||panic!("{proc_macro_name_ident_stringified} index_a.partial_cmp(index_b) is None"))
                         });
                         acc.push(out.clone());
                     }
@@ -715,26 +717,26 @@ fn column_names_factorial(
                             let (index_a, _) = original_input.iter().find(|(_, field)|{a.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 }) == field
                                 .ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 })
-                            }).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
+                            }).unwrap_or_else(||panic!("{proc_macro_name_ident_stringified} cannot find original input index"));
                             let (index_b, _) = original_input.iter().find(|(_, field)|{b.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 }) == field
                                 .ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 })
-                            }).unwrap_or_else(||panic!("GeneratePostgresqlCrud cannot find original input index"));
-                            index_a.partial_cmp(index_b).unwrap_or_else(||panic!("GeneratePostgresqlCrud index_a.partial_cmp(index_b) is None"))
+                            }).unwrap_or_else(||panic!("{proc_macro_name_ident_stringified} cannot find original input index"));
+                            index_a.partial_cmp(index_b).unwrap_or_else(||panic!("{proc_macro_name_ident_stringified} index_a.partial_cmp(index_b) is None"))
                         });
                         if !acc.contains(&cl) {
                             acc.push(cl);
@@ -755,7 +757,7 @@ fn column_names_factorial(
                     },
                 )
             };
-            column_names_factorial(original_input, new_input_vec, &mut output_handle)
+            column_names_factorial(original_input, new_input_vec, &mut output_handle, &proc_macro_name_ident_stringified)
         }
     }
 }
