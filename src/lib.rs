@@ -245,11 +245,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     write!(f, "{}", Self::to_lower_snake_case(self))
                 }
             }
-            impl crate::common::url_encode::UrlEncode for #column_ident_token_stream {
-                fn url_encode(&self) -> std::string::String {
-                    urlencoding::encode(&self.to_string()).to_string()
-                }
-            }
         }
     };
     let column_select_url_token_stream = {
