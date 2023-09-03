@@ -50,7 +50,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             None => panic!("{proc_macro_name_ident_stringified} no {id_attr_name} attribute"),
         }
     };
-    println!("{id_field:#?}");
+    // println!("{id_field:#?}");
     let struct_options_ident_token_stream = {
         let struct_options_ident_stringified = format!("{ident}Options");
         struct_options_ident_stringified.parse::<proc_macro2::TokenStream>()
@@ -302,6 +302,52 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        let generate_get_query_token_stream = {
+            let generate_get_query_variants_token_stream = column_variants.iter().map(|column_variant|{
+                let write_ident_token_stream = {
+                    let mut write_ident_stringified_handle = column_variant.iter()
+                        .fold(std::string::String::from(""), |mut acc, field| {
+                            let field_ident_stringified = field.ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                });
+                            acc.push_str(&format!("{field_ident_stringified},"));
+                            acc
+                        });
+                    write_ident_stringified_handle.pop();
+                    format!("\"{write_ident_stringified_handle}\"").parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {write_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                let variant_ident_token_stream = {
+                    let variant_ident_stringified_handle = column_variant.iter()
+                        .fold(std::string::String::from(""), |mut acc, field| {
+                            use convert_case::Casing;
+                            let field_ident_stringified = field.ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("GeneratePostgresqlCrud field.ident is None")
+                                }).to_string().to_case(convert_case::Case::Title);
+                            acc.push_str(&field_ident_stringified);
+                            acc
+                        });
+                    variant_ident_stringified_handle.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote! {
+                    Self::#variant_ident_token_stream => std::string::String::from(#write_ident_token_stream)
+                }
+            });
+            quote::quote!{
+                impl crate::server::postgres::generate_get_query::GenerateGetQuery for #column_select_url_ident_token_stream {
+                    fn generate_get_query(&self) -> std::string::String {
+                        match self {
+                            #(#generate_get_query_variants_token_stream),*
+                        }
+                    }
+                }
+            }
+        };
         let impl_default_token_stream = {
             let default_select_variant_ident_token_stream = {
                 let default_select_variant_ident_stringified = fields_named.iter()
@@ -468,6 +514,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         quote::quote! {
             #column_select_url_struct_token_stream
+            #generate_get_query_token_stream
             #impl_default_token_stream
             #from_option_self_token_stream
             #url_encode_token_stream
@@ -545,7 +592,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                impl crate::server::postgres::generate_get_query::GenerateGetQuery for CatColumnSelectJson {
+                impl crate::server::postgres::generate_get_query::GenerateGetQuery for #column_select_json_ident_token_stream {
                     fn generate_get_query(&self) -> std::string::String {
                         match self {
                             #(#generate_get_query_variants_token_stream),*
@@ -679,6 +726,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #options_try_from_sqlx_row_token_stream
         }
     };
+    // let read_by_id_token_stream = {
+    //     let read_by_id_name_stringified = "ReadById";
+    //     quote::quote!{
+    //         #[derive(Debug, serde::Deserialize)]
+    //         pub struct ReadByIdParameters {
+    //             pub path: ReadByIdPath,
+    //             pub query: ReadByIdQuery,
+    //         }
+    //         // #[derive(Debug, serde::Deserialize)]
+    //         // pub struct ReadByIdPath {
+    //         //     pub id: crate::server::postgres::bigserial::Bigserial,
+    //         // }
+    //         // #[derive(Debug, serde::Deserialize)]
+    //         // pub struct ReadByIdQuery {
+    //         //     pub select: Option<CatColumnSelectUrl>,
+    //         // }
+    //     }
+    // };
+    println!("{column_select_url_token_stream}");
+    println!("--------------------------------");
+    println!("{column_select_json_token_stream}");
     let gen = quote::quote! {
         #struct_options_token_stream
         #from_ident_for_ident_options_token_stream
