@@ -500,7 +500,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        let id_field_type = &id_field.ty;
+        // let id_field_type = &id_field.ty;
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #read_by_id_parameters_camel_case_token_stream {
@@ -574,7 +574,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        let id_field_type = &id_field.ty;
+        // let id_field_type = &id_field.ty;
         let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
             true => None,
             false => {
