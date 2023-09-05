@@ -604,7 +604,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
-    println!("{create_or_update_by_id_token_stream}");
     let gen = quote::quote! {
         #struct_options_token_stream
         #from_ident_for_ident_options_token_stream
