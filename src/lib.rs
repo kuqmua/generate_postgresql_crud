@@ -655,6 +655,34 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    let delete_by_id_token_stream = {
+        let delete_by_id_name_stringified = "DeleteById";
+        let delete_by_id_parameters_camel_case_token_stream = {
+            let delete_by_id_parameters_camel_case_stringified = format!("{delete_by_id_name_stringified}{parameters_camel_case_stringified}");
+            delete_by_id_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_by_id_parameters_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let delete_by_id_path_camel_case_token_stream = {
+            let delete_by_id_path_camel_case_stringified = format!("{delete_by_id_name_stringified}{path_camel_case_stringified}");
+            delete_by_id_path_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_by_id_path_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let id_field_ident = id_field.ident.clone()
+            .unwrap_or_else(|| {
+                panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
+            });
+        // let id_field_type = &id_field.ty;
+        quote::quote!{
+            #[derive(Debug, serde::Deserialize)]
+            pub struct #delete_by_id_parameters_camel_case_token_stream {
+                pub path: #delete_by_id_path_camel_case_token_stream,
+            }
+            #[derive(Debug, serde::Deserialize)]
+            pub struct #delete_by_id_path_camel_case_token_stream {
+                pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
+            }
+        }
+    };
     let gen = quote::quote! {
         #struct_options_token_stream
         #from_ident_for_ident_options_token_stream
@@ -666,6 +694,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #create_token_stream
         #create_or_update_by_id_token_stream
         #update_by_id_token_stream
+        #delete_by_id_token_stream
     };
     // if ident == "" {
     //      println!("{gen}");
