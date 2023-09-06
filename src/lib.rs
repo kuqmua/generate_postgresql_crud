@@ -282,8 +282,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        let generate_get_query_token_stream = {
-            let generate_get_query_variants_token_stream = column_variants.iter().map(|column_variant|{
+        let generate_query_token_stream = {
+            let generate_query_variants_token_stream = column_variants.iter().map(|column_variant|{
                 let write_ident_token_stream = {
                     let mut write_ident_stringified_handle = column_variant.iter()
                         .fold(std::string::String::from(""), |mut acc, field| {
@@ -319,10 +319,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                impl crate::server::postgres::generate_get_query::GenerateGetQuery for #column_select_ident_token_stream {
-                    fn generate_get_query(&self) -> std::string::String {
+                impl crate::server::postgres::generate_query::GenerateQuery for #column_select_ident_token_stream {
+                    fn generate_query(&self) -> std::string::String {
                         match self {
-                            #(#generate_get_query_variants_token_stream),*
+                            #(#generate_query_variants_token_stream),*
                         }
                     }
                 }
@@ -456,7 +456,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         quote::quote! {
             #column_select_struct_token_stream
-            #generate_get_query_token_stream
+            #generate_query_token_stream
             #impl_default_token_stream
             #from_option_self_token_stream
             #serde_urlencoded_parameter_token_stream
@@ -963,7 +963,7 @@ fn column_names_factorial(
                     },
                 )
             };
-            column_names_factorial(original_input, new_input_vec, &mut output_handle, &proc_macro_name_ident_stringified)
+            column_names_factorial(original_input, new_input_vec, &mut output_handle, proc_macro_name_ident_stringified)
         }
     }
 }
