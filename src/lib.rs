@@ -367,7 +367,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let serde_urlencoded_parameter_token_stream = {
             quote::quote! {
                 impl crate::common::serde_urlencoded::SerdeUrlencodedParameter for #column_select_ident_token_stream {
-                    fn serde_urlencoded_parameter(&self) -> std::string::String {
+                    fn serde_urlencoded_parameter(self) -> std::string::String {
                         self.to_string()
                     }
                 }
