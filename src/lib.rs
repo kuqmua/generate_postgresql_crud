@@ -785,58 +785,51 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
-    //
-    // let read_with_body_token_stream = {
-    //     let read_with_body_name_stringified = "ReadWithBody";
-    //     let read_with_body_parameters_camel_case_token_stream = {
-    //         let read_with_body_parameters_camel_case_stringified = format!("{read_with_body_name_stringified}{parameters_camel_case_stringified}");
-    //         read_with_body_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-    //         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_with_body_parameters_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    //     };
-    //     let read_with_body_payload_camel_case_token_stream = {
-    //         let read_with_body_payload_camel_case_stringified = format!("{read_with_body_name_stringified}{payload_camel_case_stringified}");
-    //         read_with_body_payload_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-    //         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_with_body_payload_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    //     };
-    //     let id_field_ident = id_field.ident.clone()
-    //         .unwrap_or_else(|| {
-    //             panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
-    //         });
-    //     // let id_field_type = &id_field.ty;
-    //     let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
-    //         true => None,
-    //         false => {
-    //             let field_ident = field.ident.clone()
-    //                 .unwrap_or_else(|| {
-    //                     panic!("{proc_macro_name_ident_stringified} field.ident is None")
-    //                 });
-    //             let field_type = field.ty;
-    //             Some(quote::quote!{
-    //                 pub #field_ident: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>,
-    //             })
-    //         },
-    //     });
-    //     quote::quote!{
-    //         #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
-    //         pub struct #read_with_body_parameters_camel_case_token_stream {
-    //             pub payload: #read_with_body_payload_camel_case_token_stream,
-    //         }
+    let read_with_body_token_stream = {
+        let read_with_body_name_stringified = "ReadWithBody";
+        let read_with_body_parameters_camel_case_token_stream = {
+            let read_with_body_parameters_camel_case_stringified = format!("{read_with_body_name_stringified}{parameters_camel_case_stringified}");
+            read_with_body_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_with_body_parameters_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let read_with_body_payload_camel_case_token_stream = {
+            let read_with_body_payload_camel_case_stringified = format!("{read_with_body_name_stringified}{payload_camel_case_stringified}");
+            read_with_body_payload_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_with_body_payload_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let id_field_ident = id_field.ident.clone()
+            .unwrap_or_else(|| {
+                panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
+            });
+        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                Some(quote::quote!{
+                    pub #field_ident: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>,
+                })
+            },
+        });
+        quote::quote!{
+            #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+            pub struct #read_with_body_parameters_camel_case_token_stream {
+                pub payload: #read_with_body_payload_camel_case_token_stream,
+            }
 
-    //         #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
-    //         pub struct #read_with_body_payload_camel_case_token_stream {
-    //             pub select: #column_select_ident_token_stream,
-    //             pub id: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,
-    //             // pub name: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>,
-    //             // pub color: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>,
-                
-
-    //             pub order_by: crate::server::postgres::order_by::OrderBy<CatColumn>,
-    //             pub limit: crate::server::postgres::postgres_number::PostgresNumber,
-    //             pub offset: crate::server::postgres::postgres_number::PostgresNumber,
-    //         }
-    //     }
-    // };
-    //
+            #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+            pub struct #read_with_body_payload_camel_case_token_stream {
+                pub select: #column_select_ident_token_stream,
+                pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,
+                #(#fields_with_excluded_id_token_stream)*
+                pub order_by: crate::server::postgres::order_by::OrderBy<CatColumn>,
+                pub limit: crate::server::postgres::postgres_number::PostgresNumber,
+                pub offset: crate::server::postgres::postgres_number::PostgresNumber,
+            }
+        }
+    };
     let update_by_id_token_stream = {
         let update_by_id_name_stringified = "UpdateById";
         let update_by_id_parameters_camel_case_token_stream = {
@@ -904,7 +897,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #delete_with_body_token_stream
         #delete_token_stream
         #read_by_id_token_stream
-        // #read_with_body_token_stream
+        #read_with_body_token_stream
         #update_by_id_token_stream
     };
     // if ident == "" {
