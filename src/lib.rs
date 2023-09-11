@@ -928,6 +928,47 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    let update_token_stream = {
+        let update_name_stringified = "Update";
+        let update_parameters_camel_case_token_stream = {
+            let update_parameters_camel_case_stringified = format!("{update_name_stringified}{parameters_camel_case_stringified}");
+            update_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_parameters_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let update_payload_element_camel_case_token_stream = {
+            let update_payload_element_camel_case_stringified = format!("{update_name_stringified}{payload_element_camel_case_stringified}");
+            update_payload_element_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_payload_element_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let id_field_ident = id_field.ident.clone()
+            .unwrap_or_else(|| {
+                panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
+            });
+        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                let field_type = field.ty;
+                Some(quote::quote!{
+                    pub #field_ident: #field_type
+                })
+            },
+        });
+        quote::quote!{
+            #[derive(Debug, serde :: Deserialize)]
+            pub struct #update_parameters_camel_case_token_stream {
+                pub payload: Vec<#update_payload_element_camel_case_token_stream>,
+            }
+            #[derive(Debug, serde_derive :: Serialize, serde_derive :: Deserialize)]
+            pub struct #update_payload_element_camel_case_token_stream {
+                pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,
+                #(#fields_with_excluded_id_token_stream),*
+            }
+        }
+    };
     let gen = quote::quote! {
         #struct_options_token_stream
         #from_ident_for_ident_options_token_stream
@@ -947,6 +988,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #read_with_body_token_stream
         #read_token_stream
         #update_by_id_token_stream
+        #update_token_stream
     };
     // if ident == "" {
     //      println!("{gen}");
