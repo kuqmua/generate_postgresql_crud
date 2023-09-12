@@ -475,7 +475,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let payload_camel_case_stringified = "Payload";
     // let payload_camel_case_token_stream = payload_camel_case_stringified.parse::<proc_macro2::TokenStream>()
     //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {payload_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)); 
+    let for_url_encoding_camel_case_stringified = "ForUrlEncoding";
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
+    
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
     // let payload_lower_case_token_stream= quote::quote!{payload};
@@ -723,6 +725,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             delete_query_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_query_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let delete_query_for_url_encoding_camel_case_token_stream = {
+            let delete_query_for_url_encoding_camel_case_stringified = format!("{delete_name_stringified}{query_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
+            delete_query_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_query_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
             true => None,
             false => {
@@ -736,6 +743,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                Some(quote::quote!{
+                    pub #field_ident: Option<std::string::String>
+                })
+            },
+        });
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #delete_parameters_camel_case_token_stream {
@@ -744,6 +763,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[derive(Debug, serde::Serialize, serde::Deserialize)]
             pub struct #delete_query_camel_case_token_stream {
                 #(#fields_with_excluded_id_token_stream),*
+            }
+            #[derive(Debug, serde::Serialize, serde::Deserialize)]
+            struct #delete_query_for_url_encoding_camel_case_token_stream {
+                #(#fields_for_url_encoding_with_excluded_id_token_stream),*
             }
         }
     };
