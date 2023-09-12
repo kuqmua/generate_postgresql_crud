@@ -850,6 +850,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             struct #read_by_id_query_for_url_encoding_camel_case_token_stream {
                 select: Option<std::string::String>,
             }
+            impl #read_by_id_query_camel_case_token_stream {
+                fn into_url_encoding_version(self) -> #read_by_id_query_for_url_encoding_camel_case_token_stream {
+                    let select = self.select.map(|value| {
+                        crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                            value,
+                        )
+                    });
+                    #read_by_id_query_for_url_encoding_camel_case_token_stream {
+                        select
+                    }
+                }
+            }
         }
     };
     let read_with_body_token_stream = {
@@ -909,17 +921,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             read_query_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_query_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)) 
         };
-        //
         let read_query_for_url_encoding_camel_case_token_stream = {
             let read_query_for_url_encoding_camel_case_stringified = format!("{read_name_stringified}{query_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
             read_query_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_query_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)) 
         };
-        //
-        let id_field_ident = id_field.ident.clone()
-            .unwrap_or_else(|| {
-                panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
-            });
         let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
             true => None,
             false => {
@@ -944,6 +950,32 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let fields_into_url_encoding_version_with_excluded_id_token_stream = fields_named.clone().into_iter().map(|field| {
+            let field_ident = field.ident.clone()
+                .unwrap_or_else(|| {
+                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                });
+            quote::quote!{
+                let #field_ident = self.#field_ident.map(|value| {
+                    crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                        value,
+                    )
+                });
+            }
+        });
+        let fields_into_url_encoding_version_constract_with_excluded_id_token_stream = fields_named.clone().into_iter().map(|field|{
+            let field_ident = field.ident.clone()
+                .unwrap_or_else(|| {
+                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                });
+            quote::quote!{
+                #field_ident,
+            }
+        });
+        let id_field_ident = id_field.ident.clone()
+            .unwrap_or_else(|| {
+                panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
+            });
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #read_parameters_camel_case_token_stream {
@@ -967,8 +999,39 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 limit: std::string::String,
                 offset: Option<std::string::String>,
             }
+            impl #read_query_camel_case_token_stream {
+                fn into_url_encoding_version(self) -> #read_query_for_url_encoding_camel_case_token_stream {
+                    let select = self.select.map(|value| {
+                        crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                            value,
+                        )
+                    });
+                    #(#fields_into_url_encoding_version_with_excluded_id_token_stream)*
+                    let order_by = self.order_by.map(|value| {
+                        crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                            value,
+                        )
+                    });
+                    let limit = crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                        self.limit,
+                    );
+                    let offset = self.offset.map(|value| {
+                        crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                            value,
+                        )
+                    });
+                    #read_query_for_url_encoding_camel_case_token_stream {
+                        select,
+                        #(#fields_into_url_encoding_version_constract_with_excluded_id_token_stream)*
+                        order_by,
+                        limit,
+                        offset,
+                    }
+                }
+            }
         }
     };
+    println!("{read_token_stream}");
     let update_by_id_token_stream = {
         let update_by_id_name_stringified = "UpdateById";
         let update_by_id_parameters_camel_case_token_stream = {
