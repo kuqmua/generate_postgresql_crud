@@ -755,6 +755,34 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let fields_into_url_encoding_version_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                Some(quote::quote!{
+                    let #field_ident = self.#field_ident.map(|value| {
+                        crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                            value,
+                        )
+                    });
+                })
+            },
+        });
+        let fields_into_url_encoding_version_constract_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                Some(quote::quote!{
+                    #field_ident
+                })
+            },
+        });
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #delete_parameters_camel_case_token_stream {
@@ -767,6 +795,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[derive(Debug, serde::Serialize, serde::Deserialize)]
             struct #delete_query_for_url_encoding_camel_case_token_stream {
                 #(#fields_for_url_encoding_with_excluded_id_token_stream),*
+            }
+            impl #delete_query_camel_case_token_stream {
+                fn into_url_encoding_version(self) -> #delete_query_for_url_encoding_camel_case_token_stream {
+                    #(#fields_into_url_encoding_version_with_excluded_id_token_stream)*
+                    #delete_query_for_url_encoding_camel_case_token_stream {
+                        #(#fields_into_url_encoding_version_constract_with_excluded_id_token_stream),*
+                    }
+                }
             }
         }
     };
