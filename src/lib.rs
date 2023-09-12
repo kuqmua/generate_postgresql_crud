@@ -787,11 +787,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             read_by_id_query_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_by_id_query_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        //
+        let read_by_id_query_for_url_encoding_camel_case_token_stream = {
+            let read_by_id_query_for_url_encoding_camel_case_stringified = format!("{read_by_id_name_stringified}{query_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
+            read_by_id_query_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_by_id_query_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         let id_field_ident = id_field.ident.clone()
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        // let id_field_type = &id_field.ty;
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #read_by_id_parameters_camel_case_token_stream {
@@ -805,6 +810,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[derive(Debug, serde::Serialize, serde::Deserialize)]
             pub struct #read_by_id_query_camel_case_token_stream {
                 pub select: Option<#column_select_ident_token_stream>,
+            }
+            #[derive(Debug, serde::Serialize, serde::Deserialize)]
+            struct #read_by_id_query_for_url_encoding_camel_case_token_stream {
+                select: Option<std::string::String>,
             }
         }
     };
