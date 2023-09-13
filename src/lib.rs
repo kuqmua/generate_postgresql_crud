@@ -258,7 +258,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
                 let variant_ident_token_stream = {
                     let variant_ident_stringified_handle = column_variant.iter()
-                        .fold(std::string::String::from(""), |mut acc, field| {
+                        .fold(std::string::String::default(), |mut acc, field| {
                             use convert_case::Casing;
                             let field_ident_stringified = field.ident
                                 .clone()
@@ -286,7 +286,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let generate_query_variants_token_stream = column_variants.iter().map(|column_variant|{
                 let write_ident_token_stream = {
                     let mut write_ident_stringified_handle = column_variant.iter()
-                        .fold(std::string::String::from(""), |mut acc, field| {
+                        .fold(std::string::String::default(), |mut acc, field| {
                             let field_ident_stringified = field.ident
                                 .clone()
                                 .unwrap_or_else(|| {
@@ -301,7 +301,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 let variant_ident_token_stream = {
                     let variant_ident_stringified_handle = column_variant.iter()
-                        .fold(std::string::String::from(""), |mut acc, field| {
+                        .fold(std::string::String::default(), |mut acc, field| {
                             use convert_case::Casing;
                             let field_ident_stringified = field.ident
                                 .clone()
@@ -331,7 +331,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let impl_default_token_stream = {
             let default_select_variant_ident_token_stream = {
                 let default_select_variant_ident_stringified = fields_named.iter()
-                .fold(std::string::String::from(""), |mut acc, field| {
+                .fold(std::string::String::default(), |mut acc, field| {
                     use convert_case::Casing;
                     let field_ident_stringified = field.ident
                         .clone()
@@ -402,7 +402,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 });
                 let variant_ident_token_stream = {
                     let variant_ident_stringified_handle = column_variant.iter()
-                        .fold(std::string::String::from(""), |mut acc, field| {
+                        .fold(std::string::String::default(), |mut acc, field| {
                             use convert_case::Casing;
                             let field_ident_stringified = field.ident
                                 .clone()
