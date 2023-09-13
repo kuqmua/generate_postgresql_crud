@@ -554,7 +554,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #create_or_update_payload_element_camel_case_token_stream {
-                #id_field_ident: crate::server::postgres::bigserial::Bigserial,
+                pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,
                 #(#fields_with_excluded_id_token_stream),*
             }
         }
@@ -993,7 +993,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[derive(Debug, serde::Serialize, serde::Deserialize)]
             struct #read_query_for_url_encoding_camel_case_token_stream {
                 select: Option<std::string::String>,
-                id: Option<std::string::String>,
+                pub #id_field_ident: Option<std::string::String>,
                 #(#fields_for_url_encoding_with_excluded_id_token_stream)*
                 order_by: Option<std::string::String>,
                 limit: std::string::String,
@@ -1031,7 +1031,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
-    println!("{read_token_stream}");
     let update_by_id_token_stream = {
         let update_by_id_name_stringified = "UpdateById";
         let update_by_id_parameters_camel_case_token_stream = {
@@ -1146,7 +1145,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #update_token_stream
     };
     // if ident == "" {
-    //      println!("{gen}");
+    //     println!("{gen}");
     // }
     gen.into()
 }
