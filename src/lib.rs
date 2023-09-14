@@ -481,7 +481,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let try_camel_case_stringified = "Try";
     let response_variants_camel_case_stringified = "ResponseVariants";
     let path_to_crud = "crate::repositories_types::tufa_server::routes::api::cats::";
-    let app_info_state_path = "crate::repositories_types::tufa_server::routes::api::cats::DynArcGetConfigGetPostgresPoolSendSync";
+    let app_info_state_path = quote::quote!{crate::repositories_types::tufa_server::routes::api::cats::DynArcGetConfigGetPostgresPoolSendSync};
     
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -512,12 +512,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_batch_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{create_batch_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let create_batch_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_batch_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{create_batch_name_lower_case_stringified}::{try_camel_case_stringified}{create_batch_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        //
+// crate::repositories_types::tufa_server::routes::api::cats::create_batch::TryCreateBatch
+        //
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #create_batch_parameters_camel_case_token_stream {
@@ -530,8 +533,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // impl #create_batch_parameters_camel_case_token_stream {
             //     pub async fn #prepare_and_execute_query_token_stream(
             //         self,
-            //         app_info_state: &crate::repositories_types::tufa_server::routes::api::cats::DynArcGetConfigGetPostgresPoolSendSync,
-            //     ) -> crate::repositories_types::tufa_server::routes::api::cats::create_batch::TryCreateBatchResponseVariants
+            //         app_info_state: &#app_info_state_path,
+            //     ) -> #prepare_and_execute_query_response_variants_token_stream
             //     {
             //         let bind_increments = {
             //             let mut increment: u64 = 0;
@@ -546,7 +549,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             //                             ));
             //                         },
             //                         Err(e) => {
-            //                             return crate::repositories_types::tufa_server::routes::api::cats::create_batch::TryCreateBatchResponseVariants::BindQuery { 
+            //                             return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
             //                                 checked_add: e.into_serialize_deserialize_version(), 
             //                                 code_occurence: crate::code_occurence_tufa_common!(),
             //                             };
@@ -557,7 +560,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             //                             element_bind_increments.push_str(&value);
             //                         },
             //                         Err(e) => {
-            //                             return crate::repositories_types::tufa_server::routes::api::cats::create_batch::TryCreateBatchResponseVariants::BindQuery { 
+            //                             return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
             //                                 checked_add: e.into_serialize_deserialize_version(), 
             //                                 code_occurence: crate::code_occurence_tufa_common!(),
             //                             };
@@ -593,7 +596,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             //         {
             //             Ok(_) => {
             //                 //todo - is need to return rows affected?
-            //                 crate::repositories_types::tufa_server::routes::api::cats::create_batch::TryCreateBatchResponseVariants::Desirable(())
+            //                 #prepare_and_execute_query_response_variants_token_stream::Desirable(())
             //             }
             //             Err(e) => {
             //                 let error = crate::repositories_types::tufa_server::routes::api::cats::create_batch::TryCreateBatch::from(e);
@@ -601,7 +604,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             //                     &error,
             //                     app_info_state.as_ref(),
             //                 );
-            //                 crate::repositories_types::tufa_server::routes::api::cats::create_batch::TryCreateBatchResponseVariants::from(error)
+            //                 #prepare_and_execute_query_response_variants_token_stream::from(error)
             //             }
             //         }
             //     }
@@ -637,9 +640,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_or_update_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{create_or_update_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let create_or_update_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_or_update_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{create_or_update_name_lower_case_stringified}::{try_camel_case_stringified}{create_or_update_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -689,9 +692,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_or_update_by_id_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{create_or_update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let create_or_update_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_or_update_by_id_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{create_or_update_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{create_or_update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -736,9 +739,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{create_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let create_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{create_name_lower_case_stringified}::{try_camel_case_stringified}{create_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -770,9 +773,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
         // let id_field_type = &id_field.ty;
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_by_id_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{delete_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let delete_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_by_id_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{delete_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{delete_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -815,9 +818,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_with_body_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{delete_with_body_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let delete_with_body_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_with_body_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{delete_with_body_name_lower_case_stringified}::{try_camel_case_stringified}{delete_with_body_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -903,9 +906,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{delete_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let delete_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{delete_name_lower_case_stringified}::{try_camel_case_stringified}{delete_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -958,9 +961,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_by_id_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{read_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let read_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_by_id_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{read_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{read_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -1024,9 +1027,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_with_body_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{read_with_body_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let read_with_body_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_with_body_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{read_with_body_name_lower_case_stringified}::{try_camel_case_stringified}{read_with_body_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -1114,9 +1117,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{read_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let read_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{read_name_lower_case_stringified}::{try_camel_case_stringified}{read_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -1210,9 +1213,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_by_id_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let update_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_by_id_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{update_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -1261,9 +1264,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let prepare_and_execute_query_error_token_stream = {
-            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_name_camel_case_stringified);
-            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{update_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+        let update_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_name_camel_case_stringified);
+        let prepare_and_execute_query_response_variants_token_stream = {
+            let try_response_variants_path_stringified = format!("{path_to_crud}{update_name_lower_case_stringified}::{try_camel_case_stringified}{update_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
