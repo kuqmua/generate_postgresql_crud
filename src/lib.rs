@@ -478,7 +478,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let for_url_encoding_camel_case_stringified = "ForUrlEncoding";
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
     let prepare_and_execute_query_token_stream = quote::quote!{prepare_and_execute_query};
+    let try_camel_case_stringified = "Try";
     let response_variants_camel_case_stringified = "ResponseVariants";
+    let path_to_crud = "crate::repositories_types::tufa_server::routes::api::cats::";
+    let app_info_state_path = "crate::repositories_types::tufa_server::routes::api::cats::DynArcGetConfigGetPostgresPoolSendSync";
     
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -486,7 +489,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     // let select_lower_case_token_stream= quote::quote!{select};
     let create_batch_token_stream = {
         let create_batch_name_camel_case_stringified = "CreateBatch";
-        let create_batch_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_batch_name_camel_case_stringified);
         let create_batch_parameters_camel_case_token_stream = {
             let create_batch_parameters_camel_case_stringified = format!("{create_batch_name_camel_case_stringified}{parameters_camel_case_stringified}");
             create_batch_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -510,6 +512,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_batch_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{create_batch_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #create_batch_parameters_camel_case_token_stream {
@@ -602,7 +610,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let create_or_update_token_stream = {
         let create_or_update_name_camel_case_stringified = "CreateOrUpdate";
-        let create_or_update_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_or_update_name_camel_case_stringified);
         let create_or_update_parameters_camel_case_token_stream = {
             let create_or_update_parameters_camel_case_stringified = format!("{create_or_update_name_camel_case_stringified}{parameters_camel_case_stringified}");
             create_or_update_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -630,6 +637,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_or_update_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{create_or_update_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #create_or_update_parameters_camel_case_token_stream {
@@ -644,7 +657,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let create_or_update_by_id_token_stream = {
         let create_or_update_by_id_name_camel_case_stringified = "CreateOrUpdateById";
-        let create_or_update_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_or_update_by_id_name_camel_case_stringified);
         let create_or_update_by_id_parameters_camel_case_token_stream = {
             let create_or_update_by_id_parameters_camel_case_stringified = format!("{create_or_update_by_id_name_camel_case_stringified}{parameters_camel_case_stringified}");
             create_or_update_by_id_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -677,6 +689,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_or_update_by_id_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{create_or_update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #create_or_update_by_id_parameters_camel_case_token_stream {
@@ -695,7 +713,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let create_token_stream = {
         let create_name_camel_case_stringified = "Create";
-        let create_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_name_camel_case_stringified);
         let create_parameters_camel_case_token_stream = {
             let create_parameters_camel_case_stringified = format!("{create_name_camel_case_stringified}{parameters_camel_case_stringified}");
             create_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -719,6 +736,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{create_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #create_parameters_camel_case_token_stream {
@@ -732,7 +755,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let delete_by_id_token_stream = {
         let delete_by_id_name_camel_case_stringified = "DeleteById";
-        let delete_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_by_id_name_camel_case_stringified);
         let delete_by_id_parameters_camel_case_token_stream = {
             let delete_by_id_parameters_camel_case_stringified = format!("{delete_by_id_name_camel_case_stringified}{parameters_camel_case_stringified}");
             delete_by_id_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -748,6 +770,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
         // let id_field_type = &id_field.ty;
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_by_id_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{delete_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #delete_by_id_parameters_camel_case_token_stream {
@@ -761,7 +789,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let delete_with_body_token_stream = {
         let delete_with_body_name_camel_case_stringified = "DeleteWithBody";
-        let delete_with_body_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_with_body_name_camel_case_stringified);
         let delete_with_body_parameters_camel_case_token_stream = {
             let delete_with_body_parameters_camel_case_stringified = format!("{delete_with_body_name_camel_case_stringified}{parameters_camel_case_stringified}");
             delete_with_body_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -788,6 +815,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_with_body_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{delete_with_body_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #delete_with_body_parameters_camel_case_token_stream {
@@ -802,7 +835,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let delete_token_stream = {
         let delete_name_camel_case_stringified = "Delete";
-        let delete_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_name_camel_case_stringified);
         let delete_parameters_camel_case_token_stream = {
             let delete_parameters_camel_case_stringified = format!("{delete_name_camel_case_stringified}{parameters_camel_case_stringified}");
             delete_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -871,6 +903,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{delete_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #delete_parameters_camel_case_token_stream {
@@ -896,7 +934,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let read_by_id_token_stream = {
         let read_by_id_name_camel_case_stringified = "ReadById";
-        let read_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_by_id_name_camel_case_stringified);
         let read_by_id_parameters_camel_case_token_stream = {
             let read_by_id_parameters_camel_case_stringified = format!("{read_by_id_name_camel_case_stringified}{parameters_camel_case_stringified}");
             read_by_id_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -921,6 +958,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_by_id_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{read_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #read_by_id_parameters_camel_case_token_stream {
@@ -955,7 +998,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let read_with_body_token_stream = {
         let read_with_body_name_camel_case_stringified = "ReadWithBody";
-        let read_with_body_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_with_body_name_camel_case_stringified);
         let read_with_body_parameters_camel_case_token_stream = {
             let read_with_body_parameters_camel_case_stringified = format!("{read_with_body_name_camel_case_stringified}{parameters_camel_case_stringified}");
             read_with_body_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -982,6 +1024,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_with_body_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{read_with_body_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #read_with_body_parameters_camel_case_token_stream {
@@ -1001,7 +1049,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let read_token_stream = {
         let read_name_camel_case_stringified = "Read";
-        let read_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_name_camel_case_stringified);
         let read_parameters_camel_case_token_stream = {
             let read_parameters_camel_case_stringified = format!("{read_name_camel_case_stringified}{parameters_camel_case_stringified}");
             read_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -1067,6 +1114,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{read_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #read_parameters_camel_case_token_stream {
@@ -1124,7 +1177,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let update_by_id_token_stream = {
         let update_by_id_name_camel_case_stringified = "UpdateById";
-        let update_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_by_id_name_camel_case_stringified);
         let update_by_id_parameters_camel_case_token_stream = {
             let update_by_id_parameters_camel_case_stringified = format!("{update_by_id_name_camel_case_stringified}{parameters_camel_case_stringified}");
             update_by_id_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -1158,6 +1210,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_by_id_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #update_by_id_parameters_camel_case_token_stream {
@@ -1176,7 +1234,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let update_token_stream = {
         let update_name_camel_case_stringified = "Update";
-        let update_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_name_camel_case_stringified);
         let update_parameters_camel_case_token_stream = {
             let update_parameters_camel_case_stringified = format!("{update_name_camel_case_stringified}{parameters_camel_case_stringified}");
             update_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -1204,6 +1261,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
+        let prepare_and_execute_query_error_token_stream = {
+            let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_name_camel_case_stringified);
+            let try_response_variants_path_stringified = format!("{path_to_crud}{name_lower_case_stringified}::{try_camel_case_stringified}{update_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde :: Deserialize)]
             pub struct #update_parameters_camel_case_token_stream {
