@@ -499,14 +499,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             create_batch_payload_element_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_batch_payload_element_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
-                let field_type = field.ty;
+                let field_type = &field.ty;
                 Some(quote::quote!{
                     pub #field_ident: #field_type
                 })
@@ -523,6 +523,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             error_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        //
+        // let element_bind_increments_modificate_token_stream = 
+        //
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #create_batch_parameters_camel_case_token_stream {
@@ -629,14 +632,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
-                let field_type = field.ty;
+                let field_type = &field.ty;
                 Some(quote::quote!{
                     pub #field_ident: #field_type
                 })
@@ -681,14 +684,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
-                let field_type = field.ty;
+                let field_type = &field.ty;
                 Some(quote::quote!{
                     pub #field_ident: #field_type
                 })
@@ -728,14 +731,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             create_payload_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_payload_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
-                let field_type = field.ty;
+                let field_type = &field.ty;
                 Some(quote::quote!{
                     pub #field_ident: #field_type
                 })
@@ -808,7 +811,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
@@ -855,20 +858,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             delete_query_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_query_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
-                let field_type = field.ty;
+                let field_type = &field.ty;
                 Some(quote::quote!{
                     pub #field_ident: Option<#field_type>
                 })
             },
         });
-        let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
@@ -880,7 +883,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let fields_into_url_encoding_version_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_into_url_encoding_version_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
@@ -896,7 +899,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let fields_into_url_encoding_version_constract_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_into_url_encoding_version_constract_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
@@ -1017,7 +1020,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
@@ -1069,7 +1072,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             read_query_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_query_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)) 
         };
-        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
@@ -1081,7 +1084,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
@@ -1093,7 +1096,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let fields_into_url_encoding_version_with_excluded_id_token_stream = fields_named.clone().into_iter().map(|field| {
+        let fields_into_url_encoding_version_with_excluded_id_token_stream = fields_named.iter().map(|field| {
             let field_ident = field.ident.clone()
                 .unwrap_or_else(|| {
                     panic!("{proc_macro_name_ident_stringified} field.ident is None")
@@ -1106,7 +1109,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 });
             }
         });
-        let fields_into_url_encoding_version_constract_with_excluded_id_token_stream = fields_named.clone().into_iter().map(|field|{
+        let fields_into_url_encoding_version_constract_with_excluded_id_token_stream = fields_named.iter().map(|field|{
             let field_ident = field.ident.clone()
                 .unwrap_or_else(|| {
                     panic!("{proc_macro_name_ident_stringified} field.ident is None")
@@ -1202,14 +1205,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
         // let id_field_type = &id_field.ty;
-        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
-                let field_type = field.ty;
+                let field_type = &field.ty;
                 Some(quote::quote!{
                     pub #field_ident: Option<#field_type>
                 })
@@ -1253,14 +1256,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        let fields_with_excluded_id_token_stream = fields_named.clone().into_iter().filter_map(|field|match field == id_field {
+        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
-                let field_type = field.ty;
+                let field_type = &field.ty;
                 Some(quote::quote!{
                     pub #field_ident: #field_type
                 })
