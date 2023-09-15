@@ -482,6 +482,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let response_variants_camel_case_stringified = "ResponseVariants";
     let path_to_crud = "crate::repositories_types::tufa_server::routes::api::cats::";
     let app_info_state_path = quote::quote!{crate::repositories_types::tufa_server::routes::api::cats::DynArcGetConfigGetPostgresPoolSendSync};
+    let error_log_call_token_stream = quote::quote!{
+        crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+            &error,
+            app_info_state.as_ref(),
+        );
+    };
     
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -526,9 +532,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let element_bind_increments_modificate_token_stream = {
             let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
             let field_named_filtered_len = fields_named_filtered.len();
-            println!("{field_named_filtered_len}");
             fields_named_filtered.iter().enumerate().map(|(index, field)|{
-                println!("{index}");
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
@@ -552,6 +556,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }).collect::<Vec<proc_macro2::TokenStream>>()
         };
+        let bind_value_to_query_modificate_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                Some(quote::quote!{
+                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(element.#field_ident, query);  
+                })
+            },
+        });
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #create_batch_parameters_camel_case_token_stream {
@@ -593,8 +609,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let binded_query = {
                         let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
                         for element in self.payload {
-                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(element.name, query);
-                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(element.color, query);
+                            #(#bind_value_to_query_modificate_token_stream)*
                         }
                         query
                     };
@@ -608,10 +623,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                         Err(e) => {
                             let error = #prepare_and_execute_query_error_token_stream::from(e);
-                            crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                &error,
-                                app_info_state.as_ref(),
-                            );
+                            #error_log_call_token_stream
                             #prepare_and_execute_query_response_variants_token_stream::from(error)
                         }
                     }
