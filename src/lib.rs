@@ -523,9 +523,35 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             error_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        //
-        // let element_bind_increments_modificate_token_stream = 
-        //
+        let element_bind_increments_modificate_token_stream = {
+            let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+            let field_named_filtered_len = fields_named_filtered.len();
+            println!("{field_named_filtered_len}");
+            fields_named_filtered.iter().enumerate().map(|(index, field)|{
+                println!("{index}");
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                });
+                let possible_dot_space_format = match index == (field_named_filtered_len - 1) {
+                    true => quote::quote!{"{value}"},
+                    false => quote::quote!{"{value}, "},
+                };
+                quote::quote!{
+                    match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(&element.#field_ident, &mut increment) {
+                        Ok(value) => {
+                            element_bind_increments.push_str(&format!(#possible_dot_space_format));
+                        },
+                        Err(e) => {
+                            return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                checked_add: e.into_serialize_deserialize_version(), 
+                                code_occurence: crate::code_occurence_tufa_common!(),
+                            };
+                        },
+                    }
+                }
+            }).collect::<Vec<proc_macro2::TokenStream>>()
+        };
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #create_batch_parameters_camel_case_token_stream {
@@ -547,30 +573,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         for element in &self.payload {
                             let element_bind_increments = {
                                 let mut element_bind_increments = std::string::String::default();
-                                match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(&element.name, &mut increment) {
-                                    Ok(value) => {
-                                        element_bind_increments.push_str(&format!(
-                                            "{value}, ",
-                                        ));
-                                    },
-                                    Err(e) => {
-                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                            checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!(),
-                                        };
-                                    },
-                                }
-                                match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(&element.color, &mut increment) {
-                                    Ok(value) => {
-                                        element_bind_increments.push_str(&value);
-                                    },
-                                    Err(e) => {
-                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                            checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!(),
-                                        };
-                                    },
-                                }
+                                #(#element_bind_increments_modificate_token_stream)*
                                 element_bind_increments
                             };
                             bind_increments.push_str(&format!("({element_bind_increments}), "));
