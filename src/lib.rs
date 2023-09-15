@@ -489,6 +489,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
     };
     let fields_named_len = fields_named.len();
+    let dot_space = ", ";
     
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -663,6 +664,39 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let query_token_stream = {
+            let (
+                column_names,
+                column_increments
+            ) = {
+                let field_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+                let field_named_len = field_named_filtered.len();
+                field_named_filtered.iter().enumerate().fold((
+                    std::string::String::default(),
+                    std::string::String::default()
+                ), |mut acc, (index, field)| {
+                    let field_ident = field.ident.clone().unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                    let incremented_index = index + 1;
+                    match incremented_index == field_named_len {
+                        true => {
+                            acc.0.push_str(&format!("{field_ident}"));
+                            acc.1.push_str(&format!("${incremented_index}"));
+                        },
+                        false => {
+                            
+                            acc.0.push_str(&format!("{field_ident}{dot_space}"));
+                            acc.1.push_str(&format!("${incremented_index}{dot_space}"));
+                        },
+                    }
+                    acc
+                })
+            };
+            let query_stringified = format!("\"{{}} {{}} {{}}({column_names}) {{}} ({column_increments})\"");
+            query_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #create_parameters_camel_case_token_stream {
@@ -671,6 +705,45 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #create_payload_camel_case_token_stream {
                 #(#fields_with_excluded_id_token_stream),*
+            }
+            impl #create_parameters_camel_case_token_stream {
+                pub async fn #prepare_and_execute_query_token_stream(
+                    self,
+                    app_info_state: &#app_info_state_path,
+                ) -> #prepare_and_execute_query_response_variants_token_stream
+                {
+                    let query_string = format!(
+                        #query_token_stream,
+                        crate::server::postgres::constants::INSERT_NAME,
+                        crate::server::postgres::constants::INTO_NAME,
+                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        crate::server::postgres::constants::VALUES_NAME
+                    );
+                    println!("{query_string}");
+                    let binded_query = {
+                        let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(self.payload.name, query);
+                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(self.payload.color, query);
+                        query
+                    };
+                    match binded_query
+                        .execute(app_info_state.get_postgres_pool())
+                        .await
+                    {
+                        Ok(_) => {
+                            //todo - is need to return rows affected?
+                            #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                        }
+                        Err(e) => {
+                            let error = crate::repositories_types::tufa_server::routes::api::cats::create::TryCreate::from(e);
+                            crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                &error,
+                                app_info_state.as_ref(),
+                            );
+                            #prepare_and_execute_query_response_variants_token_stream::from(error)
+                        }
+                    }
+                }
             }
         }
     };
