@@ -488,6 +488,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             app_info_state.as_ref(),
         );
     };
+    let fields_named_len = fields_named.len();
     
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -537,7 +538,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                 });
-                let possible_dot_space_format = match index == (field_named_filtered_len - 1) {
+                let possible_dot_space_format = match (index + 1) == field_named_filtered_len {
                     true => quote::quote!{"{value}"},
                     false => quote::quote!{"{value}, "},
                 };
@@ -628,109 +629,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }
                 }
-            }
-        }
-    };
-    let create_or_update_token_stream = {
-        let create_or_update_name_camel_case_stringified = "CreateOrUpdate";
-        let create_or_update_parameters_camel_case_token_stream = {
-            let create_or_update_parameters_camel_case_stringified = format!("{create_or_update_name_camel_case_stringified}{parameters_camel_case_stringified}");
-            create_or_update_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_update_parameters_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let create_or_update_payload_element_camel_case_token_stream = {
-            let create_or_update_payload_element_camel_case_stringified = format!("{create_or_update_name_camel_case_stringified}{payload_element_camel_case_stringified}");
-            create_or_update_payload_element_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_update_payload_element_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let id_field_ident = id_field.ident.clone()
-            .unwrap_or_else(|| {
-                panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
-            });
-        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-            true => None,
-            false => {
-                let field_ident = field.ident.clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                    });
-                let field_type = &field.ty;
-                Some(quote::quote!{
-                    pub #field_ident: #field_type
-                })
-            },
-        });
-        let create_or_update_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_or_update_name_camel_case_stringified);
-        let prepare_and_execute_query_response_variants_token_stream = {
-            let try_response_variants_path_stringified = format!("{path_to_crud}{create_or_update_name_lower_case_stringified}::{try_camel_case_stringified}{create_or_update_name_camel_case_stringified}{response_variants_camel_case_stringified}");
-            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        quote::quote!{
-            #[derive(Debug, serde::Deserialize)]
-            pub struct #create_or_update_parameters_camel_case_token_stream {
-                pub payload: Vec<#create_or_update_payload_element_camel_case_token_stream>,
-            }
-            #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
-            pub struct #create_or_update_payload_element_camel_case_token_stream {
-                pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,
-                #(#fields_with_excluded_id_token_stream),*
-            }
-        }
-    };
-    let create_or_update_by_id_token_stream = {
-        let create_or_update_by_id_name_camel_case_stringified = "CreateOrUpdateById";
-        let create_or_update_by_id_parameters_camel_case_token_stream = {
-            let create_or_update_by_id_parameters_camel_case_stringified = format!("{create_or_update_by_id_name_camel_case_stringified}{parameters_camel_case_stringified}");
-            create_or_update_by_id_parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_update_by_id_parameters_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let create_or_update_by_id_path_camel_case_token_stream = {
-            let create_or_update_by_id_path_camel_case_stringified = format!("{create_or_update_by_id_name_camel_case_stringified}{path_camel_case_stringified}");
-            create_or_update_by_id_path_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_update_by_id_path_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let create_or_update_by_id_payload_camel_case_token_stream = {
-            let create_or_update_by_id_payload_camel_case_stringified = format!("{create_or_update_by_id_name_camel_case_stringified}{payload_camel_case_stringified}");
-            create_or_update_by_id_payload_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_update_by_id_payload_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let id_field_ident = id_field.ident.clone()
-            .unwrap_or_else(|| {
-                panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
-            });
-        let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-            true => None,
-            false => {
-                let field_ident = field.ident.clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                    });
-                let field_type = &field.ty;
-                Some(quote::quote!{
-                    pub #field_ident: #field_type
-                })
-            },
-        });
-        let create_or_update_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_or_update_by_id_name_camel_case_stringified);
-        let prepare_and_execute_query_response_variants_token_stream = {
-            let try_response_variants_path_stringified = format!("{path_to_crud}{create_or_update_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{create_or_update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
-            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        quote::quote!{
-            #[derive(Debug, serde::Deserialize)]
-            pub struct #create_or_update_by_id_parameters_camel_case_token_stream {
-                pub path: #create_or_update_by_id_path_camel_case_token_stream,
-                pub payload: #create_or_update_by_id_payload_camel_case_token_stream,
-            }
-            #[derive(Debug, serde::Deserialize)]
-            pub struct #create_or_update_by_id_path_camel_case_token_stream {
-                pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type,
-            }
-            #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
-            pub struct #create_or_update_by_id_payload_camel_case_token_stream {
-                #(#fields_with_excluded_id_token_stream),*
             }
         }
     };
@@ -1311,8 +1209,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #column_select_token_stream
 
         #create_batch_token_stream
-        #create_or_update_by_id_token_stream
-        #create_or_update_token_stream
         #create_token_stream
         #delete_by_id_token_stream
         #delete_with_body_token_stream
