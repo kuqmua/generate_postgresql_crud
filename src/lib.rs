@@ -998,7 +998,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let bind_increments = {
                             let mut bind_increments = std::string::String::default();
                             for (index, element) in value.iter().enumerate() {
-                                let conjuctive_operator = &element.conjuctive_operator;
                                 match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
                                     element,
                                     &mut increment
@@ -1010,7 +1009,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 bind_increments.push_str(&format!("{handle}"));
                                             },
                                             false => {
-                                                bind_increments.push_str(&format!("{conjuctive_operator} {handle}"));
+                                                bind_increments.push_str(&format!("{} {handle}", element.conjuctive_operator));
                                             },
                                         }
                                     },
@@ -1539,6 +1538,75 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        let additional_parameters_modification_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                let handle_token_stream = {
+                    let handle_stringified = format!("\"{field_ident} ~ {{bind_increments_handle}} \"");
+                    handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                Some(quote::quote!{
+                    if let Some(value) = &self.payload.#field_ident {
+                        let prefix = match additional_parameters.is_empty() {
+                            true => crate::server::postgres::constants::WHERE_NAME.to_string(),
+                            false => format!(" {}", crate::server::postgres::constants::AND_NAME),
+                        };
+                        let bind_increments = {
+                            let mut bind_increments = std::string::String::default();
+                            for (index, element) in value.iter().enumerate() {
+                                match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                    element,
+                                    &mut increment
+                                ) {
+                                    Ok(bind_increments_handle) => {
+                                        let handle = format!(#handle_token_stream);
+                                        match index == 0 {
+                                            true => {
+                                                bind_increments.push_str(&handle);
+                                            },
+                                            false => {
+                                                bind_increments.push_str(&format!("{} {handle}", element.conjuctive_operator));
+                                            },
+                                        }
+                                    },
+                                    Err(e) => {
+                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                            checked_add: e.into_serialize_deserialize_version(), 
+                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                        };
+                                    },
+                                }
+                            }
+                            if let false = bind_increments.is_empty() {
+                                bind_increments.pop();
+                            }
+                            bind_increments
+                        };
+                        additional_parameters.push_str(&format!("{prefix} {bind_increments}"));
+                    }
+                })
+            },
+        });
+        let binded_query_modifications_token_stream = fields_named.iter().map(|field|{
+            let field_ident = field.ident.clone()
+                .unwrap_or_else(|| {
+                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                });
+            quote::quote!{
+                if let Some(values) = self.payload.#field_ident {
+                    for value in values {
+                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                            value, query,
+                        );
+                    }
+                }
+            }
+        });
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #read_with_body_parameters_camel_case_token_stream {
@@ -1579,80 +1647,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut additional_parameters = std::string::String::default();
                             let mut increment: u64 = 0;
                             #additional_parameters_id_modification_token_stream
-                            if let Some(value) = &self.payload.name {
-                                let prefix = match additional_parameters.is_empty() {
-                                    true => crate::server::postgres::constants::WHERE_NAME.to_string(),
-                                    false => format!(" {}", crate::server::postgres::constants::AND_NAME),
-                                };
-                                let column_name = "name";
-                                let bind_increments = {
-                                    let mut bind_increments = std::string::String::default();
-                                    for (index, element) in value.iter().enumerate() {
-                                        let conjuctive_operator = &element.conjuctive_operator;
-                                        match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
-                                            element,
-                                            &mut increment
-                                        ) {
-                                            Ok(bind_increments_handle) => match index == 0 {
-                                                true => {
-                                                    bind_increments.push_str(&format!("{column_name} ~ {bind_increments_handle} "));
-                                                },
-                                                false => {
-                                                    bind_increments.push_str(&format!("{conjuctive_operator} {column_name} ~ {bind_increments_handle} "));
-                                                },
-                                            },
-                                            Err(e) => {
-                                                return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                                    checked_add: e.into_serialize_deserialize_version(), 
-                                                    code_occurence: crate::code_occurence_tufa_common!(),
-                                                };
-                                            },
-                                        }
-                                    }
-                                    if let false = bind_increments.is_empty() {
-                                        bind_increments.pop();
-                                    }
-                                    bind_increments
-                                };
-                                additional_parameters.push_str(&format!("{prefix} {bind_increments}"));
-                            }
-                            if let Some(value) = &self.payload.color {
-                                let prefix = match additional_parameters.is_empty() {
-                                    true => crate::server::postgres::constants::WHERE_NAME.to_string(),
-                                    false => format!(" {}", crate::server::postgres::constants::AND_NAME),
-                                };
-                                let column_name = "color";
-                                let bind_increments = {
-                                    let mut bind_increments = std::string::String::default();
-                                    for (index, element) in value.iter().enumerate() {
-                                        let conjuctive_operator = &element.conjuctive_operator;
-                                        match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
-                                            element,
-                                            &mut increment
-                                        ) {
-                                            Ok(bind_increments_handle) => match index == 0 {
-                                                true => {
-                                                    bind_increments.push_str(&format!("{column_name} ~ {bind_increments_handle} "));
-                                                },
-                                                false => {
-                                                    bind_increments.push_str(&format!("{conjuctive_operator} {column_name} ~ {bind_increments_handle} "));
-                                                },
-                                            },
-                                            Err(e) => {
-                                                return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                                    checked_add: e.into_serialize_deserialize_version(), 
-                                                    code_occurence: crate::code_occurence_tufa_common!(),
-                                                };
-                                            },
-                                        }
-                                    }
-                                    if let false = bind_increments.is_empty() {
-                                        bind_increments.pop();
-                                    }
-                                    bind_increments
-                                };
-                                additional_parameters.push_str(&format!("{prefix} {bind_increments}"));
-                            }
+                            #(#additional_parameters_modification_token_stream)*
                             {
                                 let prefix = match additional_parameters.is_empty() {
                                     true => "",
@@ -1716,32 +1711,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             additional_parameters
                         };
                         query.push_str(&format!(" {additional_parameters}"));
-                        println!("{query}");
                         query
                     };
+                    println!("{query_string}");
                     let binded_query = {
                         let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
-                        if let Some(values) = self.payload.id {
-                            for value in values {
-                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                                    value, query,
-                                );
-                            }
-                        }
-                        if let Some(values) = self.payload.name {
-                            for value in values {
-                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                                    value, query,
-                                );
-                            }
-                        }
-                        if let Some(values) = self.payload.color {
-                            for value in values {
-                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                                    value, query,
-                                );
-                            }
-                        }
+                        #(#binded_query_modifications_token_stream)*
                         query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
                             self.payload.limit,
                             query,
