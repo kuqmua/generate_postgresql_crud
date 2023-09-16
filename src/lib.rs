@@ -1494,6 +1494,51 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             error_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let additional_parameters_id_modification_token_stream = {
+            let query_part_token_stream = {
+                let query_part_stringified = format!("\"{{prefix}} {id_field_ident} = {{}}({{}}[{{}}])\"");
+                query_part_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_part_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            quote::quote!{
+                if let Some(value) = &self.payload.#id_field_ident {
+                    let prefix = match additional_parameters.is_empty() {
+                        true => crate::server::postgres::constants::WHERE_NAME.to_string(),
+                        false => format!(" {}", crate::server::postgres::constants::AND_NAME),
+                    };
+                    let bind_increments = {
+                        let mut bind_increments = std::string::String::default();
+                        for element in value {
+                            match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                element,
+                                &mut increment
+                            ) {
+                                Ok(bind_increments_handle) => {
+                                    bind_increments.push_str(&format!("{bind_increments_handle}, "));
+                                },
+                                Err(e) => {
+                                    return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                        checked_add: e.into_serialize_deserialize_version(), 
+                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                    };
+                                },
+                            }
+                        }
+                        if let false = bind_increments.is_empty() {
+                            bind_increments.pop();
+                            bind_increments.pop();
+                        }
+                        bind_increments
+                    };
+                    additional_parameters.push_str(&format!(
+                        #query_part_token_stream,
+                        crate::server::postgres::constants::ANY_NAME,
+                        crate::server::postgres::constants::ARRAY_NAME,
+                        bind_increments
+                    ));
+                }
+            }
+        };
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #read_with_body_parameters_camel_case_token_stream {
@@ -1533,42 +1578,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let additional_parameters = {
                             let mut additional_parameters = std::string::String::default();
                             let mut increment: u64 = 0;
-                            if let Some(value) = &self.payload.id {
-                                let prefix = match additional_parameters.is_empty() {
-                                    true => crate::server::postgres::constants::WHERE_NAME.to_string(),
-                                    false => format!(" {}", crate::server::postgres::constants::AND_NAME),
-                                };
-                                let bind_increments = {
-                                    let mut bind_increments = std::string::String::default();
-                                    for element in value {
-                                        match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
-                                            element,
-                                            &mut increment
-                                        ) {
-                                            Ok(bind_increments_handle) => {
-                                                bind_increments.push_str(&format!("{bind_increments_handle}, "));
-                                            },
-                                            Err(e) => {
-                                                return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                                    checked_add: e.into_serialize_deserialize_version(), 
-                                                    code_occurence: crate::code_occurence_tufa_common!(),
-                                                };
-                                            },
-                                        }
-                                    }
-                                    if let false = bind_increments.is_empty() {
-                                        bind_increments.pop();
-                                        bind_increments.pop();
-                                    }
-                                    bind_increments
-                                };
-                                additional_parameters.push_str(&format!(
-                                    "{prefix} id = {}({}[{}])",
-                                    crate::server::postgres::constants::ANY_NAME,
-                                    crate::server::postgres::constants::ARRAY_NAME,
-                                    bind_increments
-                                ));
-                            }
+                            #additional_parameters_id_modification_token_stream
                             if let Some(value) = &self.payload.name {
                                 let prefix = match additional_parameters.is_empty() {
                                     true => crate::server::postgres::constants::WHERE_NAME.to_string(),
