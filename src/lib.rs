@@ -775,12 +775,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
             });
-        // let id_field_type = &id_field.ty;
         let delete_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_by_id_name_camel_case_stringified);
         let prepare_and_execute_query_response_variants_token_stream = {
             let try_response_variants_path_stringified = format!("{path_to_crud}{delete_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{delete_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let prepare_and_execute_query_error_token_stream = {
+            let error_path_stringified = format!("{path_to_crud}{delete_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{delete_by_id_name_camel_case_stringified}");
+            error_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let query_token_stream = {
+            let query_stringified = format!("\"{{}} {{}} {{}} {{}} {id_field_ident} = $1\"");
+            query_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let binded_query_modifications_token_stream = quote::quote!{
+            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(self.path.#id_field_ident, query);
         };
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
@@ -790,6 +802,41 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[derive(Debug, serde::Deserialize)]
             pub struct #delete_by_id_path_camel_case_token_stream {
                 pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
+            }
+            impl #delete_by_id_parameters_camel_case_token_stream {
+                pub async fn #prepare_and_execute_query_token_stream(
+                    self,
+                    app_info_state: &#app_info_state_path,
+                ) -> #prepare_and_execute_query_response_variants_token_stream
+                {
+                    let query_string = format!(
+                        #query_token_stream,
+                        crate::server::postgres::constants::DELETE_NAME,
+                        crate::server::postgres::constants::FROM_NAME,
+                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        crate::server::postgres::constants::WHERE_NAME
+                    );
+                    println!("{query_string}");
+                    let binded_query = {
+                        let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                        #binded_query_modifications_token_stream
+                        query
+                    };
+                    match binded_query
+                        .execute(app_info_state.get_postgres_pool())
+                        .await
+                    {
+                        Ok(_) => {
+                            //todo - is need to return rows affected?
+                            #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                        }
+                        Err(e) => {
+                            let error = #prepare_and_execute_query_error_token_stream::from(e);
+                            #error_log_call_token_stream
+                            #prepare_and_execute_query_response_variants_token_stream::from(error)
+                        }
+                    }
+                }
             }
         }
     };
