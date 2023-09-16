@@ -1489,12 +1489,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let prepare_and_execute_query_error_token_stream = {
+            let error_path_stringified = format!("{path_to_crud}{read_with_body_name_lower_case_stringified}::{try_camel_case_stringified}{read_with_body_name_camel_case_stringified}");
+            error_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #read_with_body_parameters_camel_case_token_stream {
                 pub payload: #read_with_body_payload_camel_case_token_stream,
             }
-
             #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
             pub struct #read_with_body_payload_camel_case_token_stream {
                 pub select: #column_select_ident_token_stream,
@@ -1504,11 +1508,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub limit: crate::server::postgres::postgres_number::PostgresNumber,
                 pub offset: crate::server::postgres::postgres_number::PostgresNumber,
             }
-            impl ReadWithBodyParameters {
-                pub async fn prepare_and_execute_query(
+            impl #read_with_body_parameters_camel_case_token_stream {
+                pub async fn #prepare_and_execute_query_token_stream(
                     self,
-                    app_info_state: &crate::repositories_types::tufa_server::routes::api::cats::DynArcGetConfigGetPostgresPoolSendSync,
-                ) -> crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBodyResponseVariants
+                    app_info_state: &#app_info_state_path,
+                ) -> #prepare_and_execute_query_response_variants_token_stream
                 {
                     let query_string = {
                         let mut query = std::string::String::default();
@@ -1545,7 +1549,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 bind_increments.push_str(&format!("{bind_increments_handle}, "));
                                             },
                                             Err(e) => {
-                                                return crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBodyResponseVariants::BindQuery { 
+                                                return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                                     checked_add: e.into_serialize_deserialize_version(), 
                                                     code_occurence: crate::code_occurence_tufa_common!(),
                                                 };
@@ -1588,7 +1592,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 },
                                             },
                                             Err(e) => {
-                                                return crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBodyResponseVariants::BindQuery { 
+                                                return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                                     checked_add: e.into_serialize_deserialize_version(), 
                                                     code_occurence: crate::code_occurence_tufa_common!(),
                                                 };
@@ -1625,7 +1629,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 },
                                             },
                                             Err(e) => {
-                                                return crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBodyResponseVariants::BindQuery { 
+                                                return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                                     checked_add: e.into_serialize_deserialize_version(), 
                                                     code_occurence: crate::code_occurence_tufa_common!(),
                                                 };
@@ -1666,7 +1670,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 ) {
                                     Ok(value) => value,
                                     Err(e) => {
-                                        return crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBodyResponseVariants::BindQuery { 
+                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                             checked_add: e.into_serialize_deserialize_version(), 
                                             code_occurence: crate::code_occurence_tufa_common!(),
                                         };
@@ -1688,7 +1692,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 ) {
                                     Ok(value) => value,
                                     Err(e) => {
-                                        return crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBodyResponseVariants::BindQuery { 
+                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                             checked_add: e.into_serialize_deserialize_version(), 
                                             code_occurence: crate::code_occurence_tufa_common!(),
                                         };
@@ -1750,12 +1754,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             {
                                 Ok(option_pg_row) => option_pg_row,
                                 Err(e) => {
-                                    let error = crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBody::from(e);
-                                    crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                        &error,
-                                        app_info_state.as_ref(),
-                                    );
-                                    return crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBodyResponseVariants::from(error);
+                                    let error = #prepare_and_execute_query_error_token_stream::from(e);
+                                    #error_log_call_token_stream
+                                    return #prepare_and_execute_query_response_variants_token_stream::from(error);
                                 }
                             }
                         } {
@@ -1764,18 +1765,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     vec_values.push(value);
                                 }
                                 Err(e) => {
-                                    let error = crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBody::from(e);
-                                    crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                        &error,
-                                        app_info_state.as_ref(),
-                                    );
-                                    return crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBodyResponseVariants::from(error);
+                                    let error = #prepare_and_execute_query_error_token_stream::from(e);
+                                    #error_log_call_token_stream
+                                    return #prepare_and_execute_query_response_variants_token_stream::from(error);
                                 }
                             }
                         }
                         vec_values
                     };
-                    crate::repositories_types::tufa_server::routes::api::cats::read_with_body::TryReadWithBodyResponseVariants::Desirable(vec_values)
+                    #prepare_and_execute_query_response_variants_token_stream::Desirable(vec_values)
                 }
             }
         }
