@@ -1159,6 +1159,60 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        let additional_parameters_modification_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                let handle_token_stream = {
+                    let handle_stringified = format!("\"{field_ident} = ${{increment}}\"");
+                    handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                Some(quote::quote!{
+                    if let Some(value) = &self.query.#field_ident {
+                        match crate::server::postgres::bind_query::BindQuery::try_increment(
+                            value,
+                            &mut increment
+                        ) {
+                            Ok(_) => {
+                                let handle = format!(#handle_token_stream);
+                                match additional_parameters.is_empty() {
+                                    true => {
+                                        additional_parameters.push_str(&handle);
+                                    },
+                                    false => {
+                                        additional_parameters.push_str(&format!(" AND {handle}"));
+                                    },
+                                }
+                            },
+                            Err(e) => {
+                                return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                    checked_add: e.into_serialize_deserialize_version(), 
+                                    code_occurence: crate::code_occurence_tufa_common!() 
+                                };
+                            },
+                        }
+                    }
+                })
+            },
+        });
+        let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                Some(quote::quote!{
+                    if let Some(value) = self.query.#field_ident {
+                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(value, query);
+                    }
+                })
+            },
+        });
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #delete_parameters_camel_case_token_stream {
@@ -1191,54 +1245,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut additional_parameters = std::string::String::default();
                             let mut increment: u64 = 0;
                             #check_for_all_none_token_stream
-                            if let Some(value) = &self.query.name {
-                                match crate::server::postgres::bind_query::BindQuery::try_increment(
-                                    value,
-                                    &mut increment
-                                ) {
-                                    Ok(_) => {
-                                        let handle = format!("name = ${increment}");
-                                        match additional_parameters.is_empty() {
-                                            true => {
-                                                additional_parameters.push_str(&handle);
-                                            },
-                                            false => {
-                                                additional_parameters.push_str(&format!(" AND {handle}"));
-                                            },
-                                        }
-                                    },
-                                    Err(e) => {
-                                        return crate::repositories_types::tufa_server::routes::api::cats::delete::TryDeleteResponseVariants::BindQuery { 
-                                            checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!() 
-                                        };
-                                    },
-                                }
-                            }
-                            if let Some(value) = &self.query.color {
-                                match crate::server::postgres::bind_query::BindQuery::try_increment(
-                                    value,
-                                    &mut increment
-                                ) {
-                                    Ok(_) => {
-                                        let handle = format!("color = ${increment}");
-                                        match additional_parameters.is_empty() {
-                                            true => {
-                                                additional_parameters.push_str(&handle);
-                                            },
-                                            false => {
-                                                additional_parameters.push_str(&format!(" AND {handle}"));
-                                            },
-                                        }
-                                    },
-                                    Err(e) => {
-                                        return crate::repositories_types::tufa_server::routes::api::cats::delete::TryDeleteResponseVariants::BindQuery { 
-                                            checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!() 
-                                        };
-                                    },
-                                }
-                            }
+                            #(#additional_parameters_modification_token_stream)*
                             additional_parameters
                         };
                         format!(
@@ -1253,12 +1260,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let binded_query = {
                         let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
                         #check_for_all_none_token_stream //todo - repeat of check - put it up with only one occurence?
-                        if let Some(value) = self.query.name {
-                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(value, query);
-                        }
-                        if let Some(value) = self.query.color {
-                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(value, query);
-                        }
+                        #(#binded_query_modifications_token_stream)*
                         query
                     };
                     match binded_query
