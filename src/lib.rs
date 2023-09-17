@@ -2395,6 +2395,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let prepare_and_execute_query_error_token_stream = {
+            let error_path_stringified = format!("{path_to_crud}{update_name_lower_case_stringified}::{try_camel_case_stringified}{update_name_camel_case_stringified}");
+            error_path_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             #[derive(Debug, serde :: Deserialize)]
             pub struct #update_parameters_camel_case_token_stream {
@@ -2404,6 +2409,107 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             pub struct #update_payload_element_camel_case_token_stream {
                 pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,
                 #(#fields_with_excluded_id_token_stream),*
+            }
+            impl #update_parameters_camel_case_token_stream {
+                pub async fn #prepare_and_execute_query_token_stream(
+                    self,
+                    app_info_state: &#app_info_state_path,
+                ) -> #prepare_and_execute_query_response_variants_token_stream
+                {
+                    let query_string = {
+                        let mut values = std::string::String::default();
+                        let mut increment: u64 = 0;
+                        for element in &self.payload {
+                            let mut element_value = std::string::String::default();
+                            match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                &element.id,
+                                &mut increment
+                            ) {
+                                Ok(value) => {
+                                    element_value.push_str(&format!("{value}, "));
+                                },
+                                Err(e) => {
+                                    return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                        checked_add: e.into_serialize_deserialize_version(), 
+                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                    };
+                                },
+                            };
+                            match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                &element.name,
+                                &mut increment
+                            ) {
+                                Ok(value) => {
+                                    element_value.push_str(&format!("{value}, "));
+                                },
+                                Err(e) => {
+                                    return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                        checked_add: e.into_serialize_deserialize_version(), 
+                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                    };
+                                },
+                            };
+                            match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                &element.color,
+                                &mut increment
+                            ) {
+                                Ok(value) => {
+                                    element_value.push_str(&value);
+                                },
+                                Err(e) => {
+                                    return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                        checked_add: e.into_serialize_deserialize_version(), 
+                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                    };
+                                },
+                            };
+                            values.push_str(&format!("({element_value}), "));
+                        }
+                        values.pop();
+                        values.pop();
+                        format!(
+                            "{} {} {} t {} name = data.name, color = data.color {} (values {values}) as data(id, name, color) where t.id = data.id",
+                            crate::server::postgres::constants::UPDATE_NAME,
+                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                            crate::server::postgres::constants::AS_NAME,
+                            crate::server::postgres::constants::SET_NAME,
+                            crate::server::postgres::constants::FROM_NAME,
+                        )
+                    };
+                    println!("{query_string}");
+                    let binded_query = {
+                        let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                        for element in self.payload {
+                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                element.id,
+                                query,
+                            );
+                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                element.name,
+                                query,
+                            );
+                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                element.color,
+                                query,
+                            );
+                        }
+                        query
+                    };
+                    match binded_query
+                        .execute(app_info_state.get_postgres_pool())
+                        .await
+                    {
+                        Ok(_) => {
+                            //todo - is need to return rows affected?
+                            #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                        }
+                        Err(e) => {
+                            let error = #prepare_and_execute_query_error_token_stream::from(e);
+                            #error_log_call_token_stream
+                            #prepare_and_execute_query_response_variants_token_stream::from(error)
+                        }
+                    }
+                }
             }
         }
     };
