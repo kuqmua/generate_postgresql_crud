@@ -2151,42 +2151,63 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        // let additional_parameters_modification_token_stream = {
-        //     let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
-        //     let fields_named_len = fields_named_filtered.len().clone();//todo remove .clone()
-        //     //todo remove .clone()
-        //     fields_named_filtered.clone().into_iter().enumerate().map(|(index, field)| {
-        //         let field_ident = field.ident.clone()
-        //             .unwrap_or_else(|| {
-        //                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
-        //             });
-        //         let f = fields_named_len.clone();//todo remove .clone()
-        //         let handle_token_stream = {
-        //             let possible_dot_space = match (index + 1) == f {
-        //                 true => "",
-        //                 false => &dot_space,
-        //             };
-        //             let handle_stringified = format!("\"{field_ident} = ${{increment}}{possible_dot_space}\"");
-        //             handle_stringified.parse::<proc_macro2::TokenStream>()
-        //             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        //         };
-        //         quote::quote!{
-        //             if let Some(value) = &self.payload.#field_ident {
-        //                 match crate::server::postgres::bind_query::BindQuery::try_increment(value, &mut increment) {
-        //                     Ok(_) => {
-        //                         query.push_str(&format!(#handle_token_stream));//add dot_space for all elements except last
-        //                     },
-        //                     Err(e) => {
-        //                         return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-        //                             checked_add: e.into_serialize_deserialize_version(), 
-        //                             code_occurence: crate::code_occurence_tufa_common!() 
-        //                         };
-        //                     },
-        //                 }
-        //             }
-        //         }
-        //     }).clone()
-        // };
+        let additional_parameters_modification_token_stream = {
+            let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+            let fields_named_len = fields_named_filtered.len();
+            fields_named_filtered.iter().enumerate().map(|(index, field)| {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                let handle_token_stream = {
+                    let possible_dot_space = match (index + 1) == fields_named_len {
+                        true => "",
+                        false => dot_space,
+                    };
+                    let handle_stringified = format!("\"{field_ident} = ${{increment}}{possible_dot_space}\"");
+                    handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote!{
+                    if let Some(value) = &self.payload.#field_ident {
+                        match crate::server::postgres::bind_query::BindQuery::try_increment(value, &mut increment) {
+                            Ok(_) => {
+                                query.push_str(&format!(#handle_token_stream));//add dot_space for all elements except last
+                            },
+                            Err(e) => {
+                                return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                    checked_add: e.into_serialize_deserialize_version(), 
+                                    code_occurence: crate::code_occurence_tufa_common!() 
+                                };
+                            },
+                        }
+                    }
+                }
+            }).collect::<Vec<proc_macro2::TokenStream>>()
+        };
+        let additional_parameters_id_modification_token_stream = {
+            let query_part_token_stream = {
+                let query_part_stringified = format!("\" {{}} {id_field_ident} = ${{increment}}\"");
+                query_part_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_part_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            quote::quote!{
+                match crate::server::postgres::bind_query::BindQuery::try_increment(&self.path.#id_field_ident, &mut increment) {
+                    Ok(_) => {
+                        query.push_str(&format!(
+                            #query_part_token_stream,
+                            crate::server::postgres::constants::WHERE_NAME,
+                        ));
+                    },
+                    Err(e) => {
+                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                            checked_add: e.into_serialize_deserialize_version(), 
+                            code_occurence: crate::code_occurence_tufa_common!(),
+                        };
+                    },
+                }
+            }
+        };
         let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
             true => None,
             false => {
@@ -2239,99 +2260,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         );
                         let mut increment: u64 = 0;
                         #check_for_all_none_token_stream //todo make it one copy
-                        // if let Some(value) = &self.payload.name {
-                        //     match crate::server::postgres::bind_query::BindQuery::try_increment(value, &mut increment) {
-                        //         Ok(_) => {
-                        //             query.push_str(&format!("name = ${increment}"));//add dot_space for all elements except last
-                        //         },
-                        //         Err(e) => {
-                        //             return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                        //                 checked_add: e.into_serialize_deserialize_version(), 
-                        //                 code_occurence: crate::code_occurence_tufa_common!() 
-                        //             };
-                        //         },
-                        //     }
-                        // }
-                        // if let Some(value) = &self.payload.color {
-                        //     match crate::server::postgres::bind_query::BindQuery::try_increment(value, &mut increment) {
-                        //         Ok(_) => {
-                        //             query.push_str(&format!("color = ${increment}"));//add dot_space for all elements except last
-                        //         },
-                        //         Err(e) => {
-                        //             return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                        //                 checked_add: e.into_serialize_deserialize_version(), 
-                        //                 code_occurence: crate::code_occurence_tufa_common!() 
-                        //             };
-                        //         },
-                        //     }
-                        // }
-                        match (&self.payload.name, &self.payload.color) {
-                            (None, None) => {
-                                return #prepare_and_execute_query_response_variants_token_stream::NoPayloadFields { 
-                                    no_payload_fields: std::string::String::from("no payload fields"), 
-                                    code_occurence: crate::code_occurence_tufa_common!()
-                                };
-                            },
-                            (None, Some(color)) => {
-                                match crate::server::postgres::bind_query::BindQuery::try_increment(color, &mut increment) {
-                                    Ok(_) => (),
-                                    Err(e) => {
-                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                            checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!() 
-                                        };
-                                    },
-                                }
-                                query.push_str(&format!("color = ${increment}"));
-                            },
-                            (Some(name), None) => {
-                                match crate::server::postgres::bind_query::BindQuery::try_increment(name, &mut increment) {
-                                    Ok(_) => (),
-                                    Err(e) => {
-                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                            checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!(),
-                                        };
-                                    },
-                                }
-                                query.push_str(&format!("name = ${increment}"));
-                            },
-                            (Some(name), Some(color)) => {
-                                match crate::server::postgres::bind_query::BindQuery::try_increment(name, &mut increment) {
-                                    Ok(_) => (),
-                                    Err(e) => {
-                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                            checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!(),
-                                        };
-                                    },
-                                }
-                                query.push_str(&format!("name = ${increment}, "));
-                                match crate::server::postgres::bind_query::BindQuery::try_increment(color, &mut increment) {
-                                    Ok(_) => (),
-                                    Err(e) => {
-                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                            checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!(),
-                                        };
-                                    },
-                                }
-                                query.push_str(&format!("color = ${increment}"));
-                            },
-                        }
-                        match crate::server::postgres::bind_query::BindQuery::try_increment(&self.path.id, &mut increment) {
-                            Ok(_) => (),
-                            Err(e) => {
-                                return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                    checked_add: e.into_serialize_deserialize_version(), 
-                                    code_occurence: crate::code_occurence_tufa_common!(),
-                                };
-                            },
-                        }
-                        query.push_str(&format!(
-                            " {} id = ${increment}",
-                            crate::server::postgres::constants::WHERE_NAME,
-                        ));
+                        #(#additional_parameters_modification_token_stream)*
+                        #additional_parameters_id_modification_token_stream
                         query
                     };
                     println!("{query_string}");
