@@ -1062,11 +1062,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
                 {
+                    #check_for_all_none_token_stream
                     let query_string = {
                         let additional_parameters = {
                             let mut additional_parameters = std::string::String::default();
                             let mut increment: u64 = 0;
-                            #check_for_all_none_token_stream //todo remove duplicate
                             #additional_parameters_id_modification_token_stream
                             #(#additional_parameters_modification_token_stream)*
                             additional_parameters
@@ -1081,7 +1081,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     println!("{query_string}");
                     let binded_query = {
                         let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
-                        #check_for_all_none_token_stream //todo remove duplicate
                         #(#binded_query_modifications_token_stream)*
                         query
                     };
@@ -1296,11 +1295,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
                 {
+                    #check_for_all_none_token_stream
                     let query_string = {
                         let additional_parameters = {
                             let mut additional_parameters = std::string::String::default();
                             let mut increment: u64 = 0;
-                            #check_for_all_none_token_stream
+                            
                             #(#additional_parameters_modification_token_stream)*
                             additional_parameters
                         };
@@ -1315,7 +1315,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     println!("{query_string}");
                     let binded_query = {
                         let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
-                        #check_for_all_none_token_stream //todo - repeat of check - put it up with only one occurence?
                         #(#binded_query_modifications_token_stream)*
                         query
                     };
@@ -2231,26 +2230,62 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 query,
             );
         };
-        quote::quote!{
-            #[derive(Debug, serde::Deserialize)]
-            pub struct #update_by_id_parameters_camel_case_token_stream {
-                pub path: #update_by_id_path_camel_case_token_stream,
-                pub payload: #update_by_id_payload_camel_case_token_stream,
-            }
-            #[derive(Debug, serde::Deserialize)]
-            pub struct #update_by_id_path_camel_case_token_stream {
-                pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
-            }
-            #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
-            pub struct #update_by_id_payload_camel_case_token_stream {
-                #(#fields_with_excluded_id_token_stream),*
-            }
+        let create_or_replace_function_token_stream = {
+            let create_or_replace_function_stringified = format!("r#\"create or replace function cats_update_by_id_name_color(cat_name varchar, cat_color varchar, cat_id bigint)
+returns void language plpgsql
+as $$
+begin
+    update cats set name = cat_name, color = cat_color where id = cat_id;
+    if not found then raise exception 'cat id % not found', cat_id;
+    end if;
+end $$\"#");
+                create_or_replace_function_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            
+//             quote::quote!{
+// r#"create or replace function cats_update_by_id_name_color(cat_name varchar, cat_color varchar, cat_id bigint)
+// returns void language plpgsql
+// as $$
+// begin
+//     update cats set name = cat_name, color = cat_color where id = cat_id;
+//     if not found then raise exception 'cat id % not found', cat_id;
+//     end if;
+// end $$"#
+//             }
+        };
+        let f = quote::quote!{
             impl #update_by_id_parameters_camel_case_token_stream {
                 pub async fn #prepare_and_execute_query_token_stream(
                     self,
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
                 {
+                    #check_for_all_none_token_stream
+                    if let Err(e) = sqlx::query::<sqlx::Postgres>(
+                        #create_or_replace_function_token_stream
+// r#"create or replace function cats_update_by_id_name_color(cat_name varchar, cat_color varchar, cat_id bigint)
+// returns void language plpgsql
+// as $$
+// begin
+//     update cats set name = cat_name, color = cat_color where id = cat_id;
+//     if not found then raise exception 'cat id % not found', cat_id;
+//     end if;
+// end $$"#//;
+                    )
+                    .execute(app_info_state.get_postgres_pool())
+                    .await
+                    {
+                        let error = crate :: repositories_types :: tufa_server ::
+                            routes :: api :: cats :: update_by_id :: TryUpdateById ::
+                            from(e) ;
+                        crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                            &error,
+                            app_info_state.as_ref(),
+                        );
+                        return crate :: repositories_types :: tufa_server :: routes :: api ::
+                            cats :: update_by_id :: TryUpdateByIdResponseVariants ::
+                            from(error);
+                    }
                     let query_string = {
                         let mut query = format!(
                             "{} {} {} ",
@@ -2259,15 +2294,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             crate::server::postgres::constants::SET_NAME,
                         );
                         let mut increment: u64 = 0;
-                        #check_for_all_none_token_stream //todo make it one copy
+                        
                         #(#additional_parameters_modification_token_stream)*
                         #additional_parameters_id_modification_token_stream
                         query
+                        // String::from("
+                        //     do $$
+                        //     begin
+                        //         update cats set name = $1, color = $2 where id = $3;
+                        //         if not found then raise exception 'id 1 in cats not found';
+                        //         end if;
+                        //     end $$;
+                        // ")
                     };
                     println!("{query_string}");
                     let binded_query = {
                         let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
-                        #check_for_all_none_token_stream //todo make only one copy
                         #(#binded_query_modifications_token_stream)*
                         #binded_query_id_modification_token_stream
                         query
@@ -2287,6 +2329,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }
                 }
+            }
+        };
+        // println!("{f}");
+        quote::quote!{
+            #[derive(Debug, serde::Deserialize)]
+            pub struct #update_by_id_parameters_camel_case_token_stream {
+                pub path: #update_by_id_path_camel_case_token_stream,
+                pub payload: #update_by_id_payload_camel_case_token_stream,
+            }
+            #[derive(Debug, serde::Deserialize)]
+            pub struct #update_by_id_path_camel_case_token_stream {
+                pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
+            }
+            #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+            pub struct #update_by_id_payload_camel_case_token_stream {
+                #(#fields_with_excluded_id_token_stream),*
             }
         }
     };
