@@ -2214,7 +2214,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let create_or_replace_function_token_stream = {
             let create_or_replace_function_name_token_stream = {
-                let create_or_replace_function_name_token_stream = quote::quote!{create_or_replace_function_name};
                 let create_or_replace_function_name_original_token_stream = {
                     let create_or_replace_function_name_original_stringified = format!("\"{ident_lower_case_stringified}_update_by_id\"");
                     create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
@@ -2234,13 +2233,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         Some(quote::quote!{
                             if &self.payload.#field_ident.is_some() {
-                                #create_or_replace_function_name_token_stream.push_str(&format!(#format_value_token_stream));
+                                value.push_str(&format!(#format_value_token_stream));
                             }
                         })
                     },
                 });
                 quote::quote!{
-                    let mut #create_or_replace_function_name_token_stream = format!(#create_or_replace_function_name_original_token_stream);
+                    let mut value = format!(#create_or_replace_function_name_original_token_stream);
                     #(#create_or_replace_function_name_additions_token_stream)*
                     // if &self.payload.name.is_some() {
                     //     create_or_replace_function_name.push_str(&format!("_name"));
@@ -2248,44 +2247,76 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     // if &self.payload.color.is_some() {
                     //     create_or_replace_function_name.push_str(&format!("_color"));
                     // }
-                    #create_or_replace_function_name_token_stream
+                    value
                 }
             };
             let create_or_replace_function_parameters_token_stream = {
-                let create_or_replace_function_parameters_token_stream = quote::quote!{create_or_replace_function_parameters};
-                let create_or_replace_function_parameters_token_stream = {
-                    let create_or_replace_function_parameters_stringified = format!("\"{ident_lower_case_stringified}_id bigint, \"");
+                let create_or_replace_function_parameters_original_token_stream = {
+                    let create_or_replace_function_parameters_stringified = format!("\"{ident_lower_case_stringified}_{id_field_ident} bigint, \"");//todo postgresql type
                     create_or_replace_function_parameters_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_parameters_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
-                // let create_or_replace_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                //     true => None,
-                //     false => {
-                //         let field_ident = field.ident.clone()
-                //             .unwrap_or_else(|| {
-                //                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                //             });
-                //         let format_value_token_stream = {
-                //             let format_value_stringified = format!("\"_{field_ident}\"");
-                //             format_value_stringified.parse::<proc_macro2::TokenStream>()
-                //             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                //         };
-                //         Some(quote::quote!{
-                //             if &self.payload.#field_ident.is_some() {
-                //                 #create_or_replace_function_name_token_stream.push_str(&format!(#format_value_token_stream));
-                //             }
-                //         })
-                //     },
-                // });
+                let create_or_replace_function_parameters_additions_token_stream = {
+//
+                    let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+                    let fields_named_len = fields_named_filtered.len();
+                    fields_named_filtered.iter().enumerate().map(|(index, field)| {
+                        let field_ident = field.ident.clone()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                            });
+                        let handle_token_stream = {
+                            let possible_dot_space = match (index + 1) == fields_named_len {
+                                true => "",
+                                false => dot_space,
+                            };
+                            let handle_stringified = format!("\"{ident_lower_case_stringified}_{field_ident} varchar{possible_dot_space}\"");//todo postgresql type attribute
+                            handle_stringified.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        };
+                            // let format_value_token_stream = {
+                            //     let format_value_stringified = format!("\", \"");
+                            //     format_value_stringified.parse::<proc_macro2::TokenStream>()
+                            //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                            // };
+                        quote::quote!{
+                            if let Some(value) = &self.payload.#field_ident {
+                                match crate::server::postgres::bind_query::BindQuery::try_increment(value, &mut increment) {
+                                    Ok(_) => {
+                                        query.push_str(&format!(#handle_token_stream));//add dot_space for all elements except last
+                                    },
+                                    Err(e) => {
+                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                            checked_add: e.into_serialize_deserialize_version(), 
+                                            code_occurence: crate::code_occurence_tufa_common!() 
+                                        };
+                                    },
+                                }
+                            }
+                        }
+                    }).collect::<Vec<proc_macro2::TokenStream>>()
+//
+                            // let field_ident = field.ident.clone()
+                            //     .unwrap_or_else(|| {
+                            //         panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                            //     });
+
+                            // Some(quote::quote!{
+                            //     if &self.payload.#field_ident.is_some() {
+                            //         value.push_str(&format!("cats_name varchar, "));
+                            //     }
+                            // })
+                
+                };
                 quote::quote!{
-                    let mut #create_or_replace_function_parameters_token_stream = std::string::String::from("cats_id bigint, ");//format!("cats_id bigint, cats_name varchar, cats_color varchar");
+                    let mut value = std::string::String::from(#create_or_replace_function_parameters_original_token_stream);//format!("cats_id bigint, cats_name varchar, cats_color varchar");
                     if &self.payload.name.is_some() {
-                        #create_or_replace_function_parameters_token_stream.push_str(&format!("cats_name varchar, "));
+                        value.push_str(&format!("cats_name varchar, "));
                     }
                     if &self.payload.color.is_some() {
-                        #create_or_replace_function_parameters_token_stream.push_str(&format!("cats_color varchar"));
+                        value.push_str(&format!("cats_color varchar"));
                     }
-                    #create_or_replace_function_parameters_token_stream
+                    value
                 }
             };
             quote::quote!{
