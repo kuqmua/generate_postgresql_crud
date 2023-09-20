@@ -2,8 +2,9 @@
     GeneratePostgresqlCrud,
     attributes(
         generate_postgresql_crud_id,
+        //todo add attributes for postgresql types
     )
-)]
+)]//todo check on postgresql max length value of type
 pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {//todo in few cases rows affected is usefull. (update delete for example). if 0 afftected -maybe its error? or maybe use select then update\delete?(rewrite query)
     proc_macro_helpers::panic_location::panic_location();
     let proc_macro_name = "GeneratePostgresqlCrud";
@@ -14,6 +15,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         )
     });
     let ident = &ast.ident;
+    let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
     let proc_macro_name_ident_stringified = format!("{proc_macro_name} {ident}");
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
         data_struct
@@ -2231,27 +2233,78 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
         };
         let create_or_replace_function_token_stream = {
-            let create_or_replace_function_stringified = format!("r#\"create or replace function cats_update_by_id_name_color(cat_name varchar, cat_color varchar, cat_id bigint)
-returns void language plpgsql
-as $$
-begin
-    update cats set name = cat_name, color = cat_color where id = cat_id;
-    if not found then raise exception 'cat id % not found', cat_id;
-    end if;
-end $$\"#");
-                create_or_replace_function_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            
-//             quote::quote!{
-// r#"create or replace function cats_update_by_id_name_color(cat_name varchar, cat_color varchar, cat_id bigint)
-// returns void language plpgsql
-// as $$
-// begin
-//     update cats set name = cat_name, color = cat_color where id = cat_id;
-//     if not found then raise exception 'cat id % not found', cat_id;
-//     end if;
-// end $$"#
-//             }
+            let create_or_replace_function_name_token_stream = quote::quote!{create_or_replace_function_name};
+            let create_or_replace_function_name_original_token_stream = {
+                let create_or_replace_function_name_original_stringified = format!("\"{ident_lower_case_stringified}_update_by_id\"");
+                create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_name_original_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            let create_or_replace_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                true => None,
+                false => {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    let format_value_token_stream = {
+                        let format_value_stringified = format!("\"_{field_ident}\"");
+                        format_value_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    Some(quote::quote!{
+                        if &self.payload.#field_ident.is_some() {
+                            #create_or_replace_function_name_token_stream.push_str(&format!(#format_value_token_stream));
+                        }
+                    })
+                },
+            });
+                // create_or_replace_function_stringified.parse::<proc_macro2::TokenStream>()
+                // .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            quote::quote!{
+                let #create_or_replace_function_name_token_stream = {
+                    let mut #create_or_replace_function_name_token_stream = format!(#create_or_replace_function_name_original_token_stream);
+                    #(#create_or_replace_function_name_additions_token_stream)*
+                    // if &self.payload.name.is_some() {
+                    //     create_or_replace_function_name.push_str(&format!("_name"));
+                    // }
+                    // if &self.payload.color.is_some() {
+                    //     create_or_replace_function_name.push_str(&format!("_color"));
+                    // }
+                    #create_or_replace_function_name_token_stream
+                };
+                let create_or_replace_function_parameters = {
+                    let mut create_or_replace_function_parameters = std::string::String::from("cat_id bigint, ");//format!("cat_id bigint, cat_name varchar, cat_color varchar");
+                    if &self.payload.name.is_some() {
+                        create_or_replace_function_parameters.push_str(&format!("cat_name varchar, "));
+                    }
+                    if &self.payload.color.is_some() {
+                        create_or_replace_function_parameters.push_str(&format!("cat_color varchar"));
+                    }
+                    create_or_replace_function_parameters
+                };
+                let create_or_replace_function_first_line_query = {
+                    let mut create_or_replace_function_first_line_query = format!(
+                        "{} {} {} ",
+                        crate::server::postgres::constants::UPDATE_NAME,
+                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        crate::server::postgres::constants::SET_NAME,
+                    );
+                    if &self.payload.name.is_some() {
+                        create_or_replace_function_first_line_query.push_str(&format!("name = cat_name, "));
+                    }
+                    if &self.payload.color.is_some() {
+                        create_or_replace_function_first_line_query.push_str(&format!("color = cat_color "));
+                    }
+                    create_or_replace_function_first_line_query.push_str(&format!(
+                        "{} id = cat_id",
+                        crate::server::postgres::constants::WHERE_NAME
+                    ));
+                    create_or_replace_function_first_line_query
+                };
+                let create_or_replace_function_second_line_query = std::string::String::from("if not found then raise exception 'cat id % not found', cat_id;");
+                let create_or_replace_function_third_line_query = std::string::String::from("end if;");
+                format!("\"create or replace function {create_or_replace_function_name}({create_or_replace_function_parameters}) returns void language plpgsql as $$ begin {create_or_replace_function_first_line_query};{create_or_replace_function_second_line_query};{create_or_replace_function_third_line_query};end $$\"")
+            }
         };
         let f = quote::quote!{
             impl #update_by_id_parameters_camel_case_token_stream {
@@ -2261,9 +2314,12 @@ end $$\"#");
                 ) -> #prepare_and_execute_query_response_variants_token_stream
                 {
                     #check_for_all_none_token_stream
+                    let query_string = {
+
+                    };
                     if let Err(e) = sqlx::query::<sqlx::Postgres>(
-                        #create_or_replace_function_token_stream
-// r#"create or replace function cats_update_by_id_name_color(cat_name varchar, cat_color varchar, cat_id bigint)
+                    // #create_or_replace_function_token_stream
+// r#"create or replace function cats_update_by_id_name_color(cat_id bigint, cat_name varchar, cat_color varchar)
 // returns void language plpgsql
 // as $$
 // begin
@@ -2275,16 +2331,10 @@ end $$\"#");
                     .execute(app_info_state.get_postgres_pool())
                     .await
                     {
-                        let error = crate :: repositories_types :: tufa_server ::
-                            routes :: api :: cats :: update_by_id :: TryUpdateById ::
-                            from(e) ;
-                        crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                            &error,
-                            app_info_state.as_ref(),
-                        );
-                        return crate :: repositories_types :: tufa_server :: routes :: api ::
-                            cats :: update_by_id :: TryUpdateByIdResponseVariants ::
-                            from(error);
+                        //todo - maybe different error
+                        let error = #prepare_and_execute_query_error_token_stream::from(e) ;
+                        #error_log_call_token_stream
+                        return #prepare_and_execute_query_response_variants_token_stream::from(error);
                     }
                     let query_string = {
                         let mut query = format!(
