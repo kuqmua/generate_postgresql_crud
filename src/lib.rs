@@ -2143,7 +2143,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 match crate::server::postgres::bind_query::BindQuery::try_increment(&self.path.#id_field_ident, &mut increment) {
                     Ok(_) => {
-                        query.push_str(#query_part_token_stream);
+                        query.push_str(&format!(#query_part_token_stream));
                     },
                     Err(e) => {
                         return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
@@ -2213,6 +2213,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         });
         //
         let create_or_replace_function_name_original_stringified = format!("{ident_lower_case_stringified}_update_by_id");
+        println!("create_or_replace_function_name_original_stringified {create_or_replace_function_name_original_stringified}");
         let create_or_replace_function_token_stream = {
             let create_or_replace_function_name_token_stream = {
                 let create_or_replace_function_name_original_token_stream = {
@@ -2303,7 +2304,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         });
                     let handle_token_stream = {
                         let possible_dot_space = match (index + 1) == fields_named_len {
-                            true => "",
+                            true => " ",
                             false => dot_space,
                         };
                         let handle_stringified = format!("\"{field_ident} = {id_field_ident}_{field_ident}{possible_dot_space}\"");//todo postgresql type attribute
@@ -2359,9 +2360,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         // ));
                         value
                     };
-                    let create_or_replace_function_second_line_query = std::string::String::from("if not found then raise exception 'cats id % not found', cats_id;");
-                    let create_or_replace_function_third_line_query = std::string::String::from("end if;");
-                    format!("\"create or replace function pg_temp.{create_or_replace_function_name}({create_or_replace_function_parameters}) returns void language plpgsql as $$ begin {create_or_replace_function_first_line_query};{create_or_replace_function_second_line_query};{create_or_replace_function_third_line_query};end $$\"")
+                    let create_or_replace_function_second_line_query = std::string::String::from("if not found then raise exception 'cats id % not found', cats_id");
+                    let create_or_replace_function_third_line_query = std::string::String::from("end if");
+                    format!("create or replace function pg_temp.{create_or_replace_function_name}({create_or_replace_function_parameters}) returns void language plpgsql as $$ begin {create_or_replace_function_first_line_query};{create_or_replace_function_second_line_query};{create_or_replace_function_third_line_query};end $$")
 // #create_or_replace_function_token_stream
 // r#"create or replace function cats_update_by_id_name_color(cat_id bigint, cat_name varchar, cat_color varchar)
 // returns void language plpgsql
@@ -2410,7 +2411,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             query_parameters
                         )
                     };
-                    println!("{query_string}");
+                    println!("query_string {query_string}");
                     let binded_query = {
                         let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
                         #binded_query_id_modification_token_stream
