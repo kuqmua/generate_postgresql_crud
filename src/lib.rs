@@ -2143,10 +2143,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 match crate::server::postgres::bind_query::BindQuery::try_increment(&self.path.#id_field_ident, &mut increment) {
                     Ok(_) => {
-                        query.push_str(&format!(
-                            #query_part_token_stream,
-                            crate::server::postgres::constants::WHERE_NAME,
-                        ));
+                        query.push_str(#query_part_token_stream);
                     },
                     Err(e) => {
                         return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
@@ -2215,11 +2212,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         });
         //
-        let create_or_replace_function_name_original_stringified = format!("\"{ident_lower_case_stringified}_update_by_id\"");
+        let create_or_replace_function_name_original_stringified = format!("{ident_lower_case_stringified}_update_by_id");
         let create_or_replace_function_token_stream = {
             let create_or_replace_function_name_token_stream = {
-                let create_or_replace_function_name_original_token_stream = create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_name_original_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+                let create_or_replace_function_name_original_token_stream = {
+                    let create_or_replace_function_name_original_stringified = format!("\"{create_or_replace_function_name_original_stringified}\"");
+                    create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_name_original_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
                 let create_or_replace_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                     true => None,
                     false => {
@@ -2233,7 +2233,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
                         Some(quote::quote!{
-                            if &self.payload.#field_ident.is_some() {
+                            if self.payload.#field_ident.is_some() {
                                 value.push_str(&format!(#format_value_token_stream));
                             }
                         })
@@ -2275,7 +2275,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
                         quote::quote!{
-                            if &self.payload.#field_ident.is_some() {
+                            if self.payload.#field_ident.is_some() {
                                 value.push_str(&format!(#handle_token_stream));
                             }
                         }
@@ -2311,7 +2311,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
                     quote::quote!{
-                        if &self.payload.#field_ident.is_some() {
+                        if self.payload.#field_ident.is_some() {
                             value.push_str(&format!(#handle_token_stream));
                         }
                     }
@@ -2332,7 +2332,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 {
-                    let create_or_replace_function_name_token_stream = {
+                    let create_or_replace_function_name = {
                         #create_or_replace_function_name_token_stream
                     };
                     let create_or_replace_function_parameters = {
@@ -2389,7 +2389,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #check_for_all_none_token_stream
                     let mut pool_connection = app_info_state.get_postgres_pool().acquire().await.unwrap();
                     let pg_connection = sqlx::Acquire::acquire(&mut pool_connection).await.unwrap();
-                    let function_creation_query = sqlx::query::<sqlx::Postgres>(&#create_or_replace_function_token_stream);
+                    let function_creation_query_stringified = #create_or_replace_function_token_stream;
+                    println!("function_creation_query_stringified {function_creation_query_stringified}");
+                    let function_creation_query = sqlx::query::<sqlx::Postgres>(&function_creation_query_stringified);
                     function_creation_query
                         .execute(pg_connection.as_mut())
                         .await
@@ -2451,6 +2453,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             pub struct #update_by_id_payload_camel_case_token_stream {
                 #(#fields_with_excluded_id_token_stream),*
             }
+            #f
         }
     };
     let update_token_stream = {

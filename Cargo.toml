@@ -8,8 +8,8 @@ version = "0.1.0"
 proc-macro = true
 
 [dependencies]
-proc-macro2 = {version = "=1.0.60"}
-quote = {version = "=1.0.28"}
+proc-macro2 = {version = "=1.0.67"}
+quote = {version = "=1.0.33"}
 syn = {version = "=1.0.107"}
 strum = {version = "=0.24.1"}
 strum_macros = {version = "=0.24.3"}
