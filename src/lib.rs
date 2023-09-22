@@ -1608,8 +1608,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,
                 #(#fields_with_excluded_id_token_stream)*
                 pub order_by: crate::server::postgres::order_by::OrderBy<CatColumn>,
-                pub limit: crate::server::postgres::postgres_number::PostgresNumber,
-                pub offset: crate::server::postgres::postgres_number::PostgresNumber,
+                pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
+                pub offset: crate::server::postgres::postgres_bigint::PostgresBigint,
             }
             impl #read_with_body_parameters_camel_case_token_stream {
                 pub async fn #prepare_and_execute_query_token_stream(
@@ -1887,8 +1887,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub #id_field_ident: Option<crate::server::postgres::bigserial_ids::BigserialIds>,
                 #(#fields_with_excluded_id_token_stream)*
                 pub order_by: Option<CatOrderByWrapper>,//todo
-                pub limit: crate::server::postgres::postgres_number::PostgresNumber,
-                pub offset: Option<crate::server::postgres::postgres_number::PostgresNumber>,
+                pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
+                pub offset: Option<crate::server::postgres::postgres_bigint::PostgresBigint>,
             }
             #[derive(Debug, serde::Serialize, serde::Deserialize)]
             struct #read_query_for_url_encoding_camel_case_token_stream {
@@ -2213,7 +2213,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         });
         //
         let create_or_replace_function_name_original_stringified = format!("{ident_lower_case_stringified}_update_by_id");
-        println!("create_or_replace_function_name_original_stringified {create_or_replace_function_name_original_stringified}");
         let create_or_replace_function_token_stream = {
             let create_or_replace_function_name_token_stream = {
                 let create_or_replace_function_name_original_token_stream = {
@@ -2454,7 +2453,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             pub struct #update_by_id_payload_camel_case_token_stream {
                 #(#fields_with_excluded_id_token_stream),*
             }
-            #f
+            // #f
         }
     };
     let update_token_stream = {
