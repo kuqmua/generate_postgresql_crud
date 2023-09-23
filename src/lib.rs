@@ -485,7 +485,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {payload_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)); 
     let for_url_encoding_camel_case_stringified = "ForUrlEncoding";
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
-    let prepare_and_execute_query_token_stream = quote::quote!{prepare_and_execute_query};
+    let prepare_and_execute_query_name_token_stream = quote::quote!{prepare_and_execute_query};
     let try_camel_case_stringified = "Try";
     let response_variants_camel_case_stringified = "ResponseVariants";
     let path_to_crud = "crate::repositories_types::tufa_server::routes::api::cats::";
@@ -613,7 +613,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #(#fields_with_excluded_id_token_stream),*
             }
             impl #create_batch_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_token_stream(
+                pub async fn #prepare_and_execute_query_name_token_stream(
                     self,
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
@@ -756,7 +756,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #(#fields_with_excluded_id_token_stream),*
             }
             impl #create_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_token_stream(
+                pub async fn #prepare_and_execute_query_name_token_stream(
                     self,
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
@@ -833,7 +833,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
             }
             impl #delete_by_id_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_token_stream(
+                pub async fn #prepare_and_execute_query_name_token_stream(
                     self,
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
@@ -1058,7 +1058,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #(#fields_with_excluded_id_token_stream),*
             }
             impl #delete_with_body_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_token_stream(
+                pub async fn #prepare_and_execute_query_name_token_stream(
                     self,
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
@@ -1291,7 +1291,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
             impl #delete_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_token_stream(
+                pub async fn #prepare_and_execute_query_name_token_stream(
                     self,
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
@@ -1411,7 +1411,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
             impl #read_by_id_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_token_stream(
+                pub async fn #prepare_and_execute_query_name_token_stream(
                     self,
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
@@ -1614,7 +1614,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub offset: crate::server::postgres::postgres_bigint::PostgresBigint,
             }
             impl #read_with_body_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_token_stream(
+                pub async fn #prepare_and_execute_query_name_token_stream(
                     self,
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
@@ -1932,7 +1932,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
             impl #read_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_token_stream(
+                pub async fn #prepare_and_execute_query_name_token_stream(
                     self, //impl crate::server::routes::helpers::bind_sqlx_query::BindSqlxQuer + crate::server::postgres::generate_query::GenerateQuery
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
@@ -2093,165 +2093,196 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             },
         });
-        let update_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_by_id_name_camel_case_stringified);
-        let prepare_and_execute_query_response_variants_token_stream = {
-            let try_response_variants_path_stringified = format!("{path_to_crud}{update_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
-            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let prepare_and_execute_query_error_token_stream = {
-            let error_path_stringified = format!("{path_to_crud}{update_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}");
-            error_path_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let check_for_all_none_token_stream = {
-            let (mut none_elements, mut match_elements) = fields_named.iter().filter(|field|*field != &id_field).fold(
-                (
-                    std::string::String::default(),
-                    std::string::String::default()
-                ), |mut acc, field| {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    acc.0.push_str(&format!("None{dot_space}"));
-                    acc.1.push_str(&format!("&self.payload.{field_ident}{dot_space}"));
-                    acc
-                });
-            none_elements.pop();
-            none_elements.pop();
-            match_elements.pop();
-            match_elements.pop();
-            let none_elements_token_stream = none_elements.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {none_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let match_elements_token_stream = match_elements.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {match_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            quote::quote!{
-                if let (#none_elements_token_stream) = (#match_elements_token_stream) {
-                    return #prepare_and_execute_query_response_variants_token_stream::NoPayloadFields {//tood make standart between all Crud error variants
-                        no_payload_fields: std::string::String::from("no payload fields"), 
-                        code_occurence: crate::code_occurence_tufa_common!()
-                    };
-                }
-            }
-        };
-        let additional_parameters_id_modification_token_stream = {
-            let query_part_token_stream = {
-                let query_part_stringified = format!("\"{ident_lower_case_stringified}_{id_field_ident} => ${{increment}}{dot_space}\"");
-                query_part_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_part_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let prepare_and_execute_query_token_stream = {
+            let update_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_by_id_name_camel_case_stringified);
+            let prepare_and_execute_query_response_variants_token_stream = {
+                let try_response_variants_path_stringified = format!("{path_to_crud}{update_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+                try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            quote::quote!{
-                match crate::server::postgres::bind_query::BindQuery::try_increment(&self.path.#id_field_ident, &mut increment) {
-                    Ok(_) => {
-                        query.push_str(&format!(#query_part_token_stream));
-                    },
-                    Err(e) => {
-                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                            checked_add: e.into_serialize_deserialize_version(), 
-                            code_occurence: crate::code_occurence_tufa_common!(),
-                        };
-                    },
-                }
-            }
-        };
-        let additional_parameters_modification_token_stream = {
-            let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
-            let fields_named_len = fields_named_filtered.len();
-            fields_named_filtered.iter().enumerate().map(|(index, field)| {
-                let field_ident = field.ident.clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                    });
-                let handle_token_stream = {
-                    let possible_dot_space = match (index + 1) == fields_named_len {
-                        true => "",
-                        false => dot_space,
-                    };
-                    let handle_stringified = format!("\"{ident_lower_case_stringified}_{field_ident} => ${{increment}}{possible_dot_space}\"");
-                    handle_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
-                quote::quote!{
-                    if let Some(value) = &self.payload.#field_ident {
-                        match crate::server::postgres::bind_query::BindQuery::try_increment(value, &mut increment) {
-                            Ok(_) => {
-                                query.push_str(&format!(#handle_token_stream));//add dot_space for all elements except last
-                            },
-                            Err(e) => {
-                                return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
-                                    checked_add: e.into_serialize_deserialize_version(), 
-                                    code_occurence: crate::code_occurence_tufa_common!() 
-                                };
-                            },
-                        }
-                    }
-                }
-            }).collect::<Vec<proc_macro2::TokenStream>>()
-        };
-        let binded_query_id_modification_token_stream = quote::quote!{
-            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                self.path.#id_field_ident,
-                query,
-            );
-        };
-        let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-            true => None,
-            false => {
-                let field_ident = field.ident.clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                    });
-                Some(quote::quote!{
-                    if let Some(value) = self.payload.#field_ident {
-                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                            value,
-                            query,
-                        );
-                    }
-                })
-            }
-        });
-        let create_or_replace_function_name_original_stringified = format!("{ident_lower_case_stringified}_update_by_id");
-        let create_or_replace_function_token_stream = {
-            let create_or_replace_function_name_token_stream = {
-                let create_or_replace_function_name_original_token_stream = {
-                    let create_or_replace_function_name_original_stringified = format!("\"{create_or_replace_function_name_original_stringified}\"");
-                    create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_name_original_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
-                let create_or_replace_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                    true => None,
-                    false => {
+            let prepare_and_execute_query_error_token_stream = {
+                let error_path_stringified = format!("{path_to_crud}{update_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}");
+                error_path_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            let check_for_all_none_token_stream = {
+                let (mut none_elements, mut match_elements) = fields_named.iter().filter(|field|*field != &id_field).fold(
+                    (
+                        std::string::String::default(),
+                        std::string::String::default()
+                    ), |mut acc, field| {
                         let field_ident = field.ident.clone()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
-                        let format_value_token_stream = {
-                            let format_value_stringified = format!("\"_{field_ident}\"");
-                            format_value_stringified.parse::<proc_macro2::TokenStream>()
-                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                        };
-                        Some(quote::quote!{
-                            if self.payload.#field_ident.is_some() {
-                                value.push_str(&format!(#format_value_token_stream));
-                            }
-                        })
-                    },
-                });
+                        acc.0.push_str(&format!("None{dot_space}"));
+                        acc.1.push_str(&format!("&self.payload.{field_ident}{dot_space}"));
+                        acc
+                    });
+                none_elements.pop();
+                none_elements.pop();
+                match_elements.pop();
+                match_elements.pop();
+                let none_elements_token_stream = none_elements.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {none_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+                let match_elements_token_stream = match_elements.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {match_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
                 quote::quote!{
-                    let mut value = format!(#create_or_replace_function_name_original_token_stream);
-                    #(#create_or_replace_function_name_additions_token_stream)*
-                    value
+                    if let (#none_elements_token_stream) = (#match_elements_token_stream) {
+                        return #prepare_and_execute_query_response_variants_token_stream::NoPayloadFields {//tood make standart between all Crud error variants
+                            no_payload_fields: std::string::String::from("no payload fields"), 
+                            code_occurence: crate::code_occurence_tufa_common!()
+                        };
+                    }
                 }
             };
-            let create_or_replace_function_parameters_token_stream = {
-                let create_or_replace_function_parameters_original_token_stream = {
-                    let create_or_replace_function_parameters_stringified = format!("\"{ident_lower_case_stringified}_{id_field_ident} bigint, \"");//todo postgresql type
-                    create_or_replace_function_parameters_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_parameters_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            let additional_parameters_id_modification_token_stream = {
+                let query_part_token_stream = {
+                    let query_part_stringified = format!("\"{ident_lower_case_stringified}_{id_field_ident} => ${{increment}}{dot_space}\"");
+                    query_part_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_part_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
-                let create_or_replace_function_parameters_additions_token_stream = {
+                quote::quote!{
+                    match crate::server::postgres::bind_query::BindQuery::try_increment(&self.path.#id_field_ident, &mut increment) {
+                        Ok(_) => {
+                            query.push_str(&format!(#query_part_token_stream));
+                        },
+                        Err(e) => {
+                            return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                checked_add: e.into_serialize_deserialize_version(), 
+                                code_occurence: crate::code_occurence_tufa_common!(),
+                            };
+                        },
+                    }
+                }
+            };
+            let additional_parameters_modification_token_stream = {
+                let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+                let fields_named_len = fields_named_filtered.len();
+                fields_named_filtered.iter().enumerate().map(|(index, field)| {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    let handle_token_stream = {
+                        let possible_dot_space = match (index + 1) == fields_named_len {
+                            true => "",
+                            false => dot_space,
+                        };
+                        let handle_stringified = format!("\"{ident_lower_case_stringified}_{field_ident} => ${{increment}}{possible_dot_space}\"");
+                        handle_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    quote::quote!{
+                        if let Some(value) = &self.payload.#field_ident {
+                            match crate::server::postgres::bind_query::BindQuery::try_increment(value, &mut increment) {
+                                Ok(_) => {
+                                    query.push_str(&format!(#handle_token_stream));//add dot_space for all elements except last
+                                },
+                                Err(e) => {
+                                    return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                        checked_add: e.into_serialize_deserialize_version(), 
+                                        code_occurence: crate::code_occurence_tufa_common!() 
+                                    };
+                                },
+                            }
+                        }
+                    }
+                }).collect::<Vec<proc_macro2::TokenStream>>()
+            };
+            let binded_query_id_modification_token_stream = quote::quote!{
+                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                    self.path.#id_field_ident,
+                    query,
+                );
+            };
+            let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                true => None,
+                false => {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    Some(quote::quote!{
+                        if let Some(value) = self.payload.#field_ident {
+                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                value,
+                                query,
+                            );
+                        }
+                    })
+                }
+            });
+            let create_or_replace_function_name_original_stringified = format!("{ident_lower_case_stringified}_update_by_id");
+            let create_or_replace_function_token_stream = {
+                let create_or_replace_function_name_token_stream = {
+                    let create_or_replace_function_name_original_token_stream = {
+                        let create_or_replace_function_name_original_stringified = format!("\"{create_or_replace_function_name_original_stringified}\"");
+                        create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_name_original_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    let create_or_replace_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                        true => None,
+                        false => {
+                            let field_ident = field.ident.clone()
+                                .unwrap_or_else(|| {
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                                });
+                            let format_value_token_stream = {
+                                let format_value_stringified = format!("\"_{field_ident}\"");
+                                format_value_stringified.parse::<proc_macro2::TokenStream>()
+                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                            };
+                            Some(quote::quote!{
+                                if self.payload.#field_ident.is_some() {
+                                    value.push_str(&format!(#format_value_token_stream));
+                                }
+                            })
+                        },
+                    });
+                    quote::quote!{
+                        let mut value = format!(#create_or_replace_function_name_original_token_stream);
+                        #(#create_or_replace_function_name_additions_token_stream)*
+                        value
+                    }
+                };
+                let create_or_replace_function_parameters_token_stream = {
+                    let create_or_replace_function_parameters_original_token_stream = {
+                        let create_or_replace_function_parameters_stringified = format!("\"{ident_lower_case_stringified}_{id_field_ident} bigint, \"");//todo postgresql type
+                        create_or_replace_function_parameters_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_parameters_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    let create_or_replace_function_parameters_additions_token_stream = {
+                        let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+                        let fields_named_len = fields_named_filtered.len();
+                        fields_named_filtered.iter().enumerate().map(|(index, field)| {
+                            let field_ident = field.ident.clone()
+                                .unwrap_or_else(|| {
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                                });
+                            let handle_token_stream = {
+                                let possible_dot_space = match (index + 1) == fields_named_len {
+                                    true => "",
+                                    false => dot_space,
+                                };
+                                let handle_stringified = format!("\"{ident_lower_case_stringified}_{field_ident} varchar{possible_dot_space}\"");//todo postgresql type attribute
+                                handle_stringified.parse::<proc_macro2::TokenStream>()
+                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                            };
+                            quote::quote!{
+                                if self.payload.#field_ident.is_some() {
+                                    value.push_str(&format!(#handle_token_stream));
+                                }
+                            }
+                        }).collect::<Vec<proc_macro2::TokenStream>>()
+                    };
+                    quote::quote!{
+                        let mut value = std::string::String::from(#create_or_replace_function_parameters_original_token_stream);//format!("cats_id bigint, cats_name varchar, cats_color varchar");
+                        #(#create_or_replace_function_parameters_additions_token_stream)*
+                        value
+                    }
+                };
+                let create_or_replace_function_additional_parameters_modification_token_stream = {
                     let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
                     let fields_named_len = fields_named_filtered.len();
                     fields_named_filtered.iter().enumerate().map(|(index, field)| {
@@ -2261,10 +2292,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             });
                         let handle_token_stream = {
                             let possible_dot_space = match (index + 1) == fields_named_len {
-                                true => "",
+                                true => " ",
                                 false => dot_space,
                             };
-                            let handle_stringified = format!("\"{ident_lower_case_stringified}_{field_ident} varchar{possible_dot_space}\"");//todo postgresql type attribute
+
+                            let handle_stringified = format!("\"{field_ident} = {ident_lower_case_stringified}_{field_ident}{possible_dot_space}\"");//todo postgresql type attribute
                             handle_stringified.parse::<proc_macro2::TokenStream>()
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
@@ -2275,146 +2307,116 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<Vec<proc_macro2::TokenStream>>()
                 };
-                quote::quote!{
-                    let mut value = std::string::String::from(#create_or_replace_function_parameters_original_token_stream);//format!("cats_id bigint, cats_name varchar, cats_color varchar");
-                    #(#create_or_replace_function_parameters_additions_token_stream)*
-                    value
-                }
-            };
-            let create_or_replace_function_additional_parameters_modification_token_stream = {
-                let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
-                let fields_named_len = fields_named_filtered.len();
-                fields_named_filtered.iter().enumerate().map(|(index, field)| {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
+                let create_or_replace_function_additional_parameters_id_modification_token_stream = {
                     let handle_token_stream = {
-                        let possible_dot_space = match (index + 1) == fields_named_len {
-                            true => " ",
-                            false => dot_space,
-                        };
-                        
-                        let handle_stringified = format!("\"{field_ident} = {ident_lower_case_stringified}_{field_ident}{possible_dot_space}\"");//todo postgresql type attribute
+                        let handle_stringified = format!("\"{{}} {id_field_ident} = {ident_lower_case_stringified}_{id_field_ident}\"");//todo postgresql type
                         handle_stringified.parse::<proc_macro2::TokenStream>()
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
                     quote::quote!{
-                        if self.payload.#field_ident.is_some() {
-                            value.push_str(&format!(#handle_token_stream));
-                        }
+                        value.push_str(&format!(
+                            #handle_token_stream,
+                            crate::server::postgres::constants::WHERE_NAME
+                        ));
                     }
-                }).collect::<Vec<proc_macro2::TokenStream>>()
-            };
-            let create_or_replace_function_additional_parameters_id_modification_token_stream = {
-                let handle_token_stream = {
-                    let handle_stringified = format!("\"{{}} {id_field_ident} = {ident_lower_case_stringified}_{id_field_ident}\"");//todo postgresql type
-                    handle_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote!{
-                    value.push_str(&format!(
-                        #handle_token_stream,
-                        crate::server::postgres::constants::WHERE_NAME
-                    ));
+                    {
+                        let create_or_replace_function_name = {
+                            #create_or_replace_function_name_token_stream
+                        };
+                        let create_or_replace_function_parameters = {
+                            #create_or_replace_function_parameters_token_stream
+                        };
+                        let create_or_replace_function_first_line_query = {
+                            let mut value = format!(
+                                "{} {} {} ",
+                                crate::server::postgres::constants::UPDATE_NAME,
+                                crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                                crate::server::postgres::constants::SET_NAME,
+                            );
+                            #(#create_or_replace_function_additional_parameters_modification_token_stream)*
+                            #create_or_replace_function_additional_parameters_id_modification_token_stream
+                            value
+                        };
+                        let create_or_replace_function_second_line_query = std::string::String::from("if not found then raise exception 'cats id % not found', cats_id");
+                        let create_or_replace_function_third_line_query = std::string::String::from("end if");
+                        format!("create or replace function pg_temp.{create_or_replace_function_name}({create_or_replace_function_parameters}) returns void language plpgsql as $$ begin {create_or_replace_function_first_line_query};{create_or_replace_function_second_line_query};{create_or_replace_function_third_line_query};end $$")
+                    }
                 }
             };
+            let query_token_stream = {
+                let query_stringified = format!("\"{{}} {pg_temp_stringified}.{{function_name}}({{}})\"");
+                query_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
-                {
-                    let create_or_replace_function_name = {
-                        #create_or_replace_function_name_token_stream
-                    };
-                    let create_or_replace_function_parameters = {
-                        #create_or_replace_function_parameters_token_stream
-                    };
-                    let create_or_replace_function_first_line_query = {
-                        let mut value = format!(
-                            "{} {} {} ",
-                            crate::server::postgres::constants::UPDATE_NAME,
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
-                            crate::server::postgres::constants::SET_NAME,
-                        );
-                        #(#create_or_replace_function_additional_parameters_modification_token_stream)*
-                        #create_or_replace_function_additional_parameters_id_modification_token_stream
-                        value
-                    };
-                    let create_or_replace_function_second_line_query = std::string::String::from("if not found then raise exception 'cats id % not found', cats_id");
-                    let create_or_replace_function_third_line_query = std::string::String::from("end if");
-                    format!("create or replace function pg_temp.{create_or_replace_function_name}({create_or_replace_function_parameters}) returns void language plpgsql as $$ begin {create_or_replace_function_first_line_query};{create_or_replace_function_second_line_query};{create_or_replace_function_third_line_query};end $$")
-                }
-            }
-        };
-        let query_token_stream = {
-            let query_stringified = format!("\"{{}} {pg_temp_stringified}.{{function_name}}({{}})\"");
-            query_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let f = quote::quote!{
-            impl #update_by_id_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_token_stream(
-                    self,
-                    app_info_state: &#app_info_state_path,
-                ) -> #prepare_and_execute_query_response_variants_token_stream
-                {
-                    #check_for_all_none_token_stream
-                    let mut pool_connection = app_info_state.get_postgres_pool().acquire().await.unwrap();
-                    let pg_connection = sqlx::Acquire::acquire(&mut pool_connection).await.unwrap();
-                    let function_creation_query_stringified = #create_or_replace_function_token_stream;
-                    println!("function_creation_query_stringified {function_creation_query_stringified}");
-                    let function_creation_query = sqlx::query::<sqlx::Postgres>(&function_creation_query_stringified);
-                    function_creation_query
-                        .execute(pg_connection.as_mut())
-                        .await
-                        .unwrap();
-                    let query_string = {
-                        let mut increment: u64 = 0;
-                        let function_name = {
-                            let mut function_name = std::string::String::from("cat_update_by_id");
-                            if self.payload.name.is_some() {
-                                function_name.push_str("_name");
-                            }
-                            if self.payload.color.is_some() {
-                                function_name.push_str("_color");
-                            }
-                            function_name
+                impl #update_by_id_parameters_camel_case_token_stream {
+                    pub async fn #prepare_and_execute_query_name_token_stream(
+                        self,
+                        app_info_state: &#app_info_state_path,
+                    ) -> #prepare_and_execute_query_response_variants_token_stream
+                    {
+                        #check_for_all_none_token_stream
+                        let mut pool_connection = app_info_state.get_postgres_pool().acquire().await.unwrap();
+                        let pg_connection = sqlx::Acquire::acquire(&mut pool_connection).await.unwrap();
+                        let function_creation_query_stringified = #create_or_replace_function_token_stream;
+                        println!("function_creation_query_stringified {function_creation_query_stringified}");
+                        let function_creation_query = sqlx::query::<sqlx::Postgres>(&function_creation_query_stringified);
+                        function_creation_query
+                            .execute(pg_connection.as_mut())
+                            .await
+                            .unwrap();
+                        let query_string = {
+                            let mut increment: u64 = 0;
+                            let function_name = {
+                                let mut function_name = std::string::String::from("cat_update_by_id");
+                                if self.payload.name.is_some() {
+                                    function_name.push_str("_name");
+                                }
+                                if self.payload.color.is_some() {
+                                    function_name.push_str("_color");
+                                }
+                                function_name
+                            };
+                            let query_parameters = {
+                                let mut query = std::string::String::from("");
+                                #additional_parameters_id_modification_token_stream
+                                #(#additional_parameters_modification_token_stream)*
+                                query
+                            };
+                            format!(
+                                #query_token_stream,//cats_id => $1, cats_name => $2, cats_color => $3
+                                crate::server::postgres::constants::SELECT_NAME,
+                                query_parameters
+                            )
                         };
-                        let query_parameters = {
-                            let mut query = std::string::String::from("");
-                            #additional_parameters_id_modification_token_stream
-                            #(#additional_parameters_modification_token_stream)*
+                        println!("query_string {query_string}");
+                        let binded_query = {
+                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            #binded_query_id_modification_token_stream
+                            #(#binded_query_modifications_token_stream)*
                             query
                         };
-                        format!(
-                            #query_token_stream,//cats_id => $1, cats_name => $2, cats_color => $3
-                            crate::server::postgres::constants::SELECT_NAME,
-                            query_parameters
-                        )
-                    };
-                    println!("query_string {query_string}");
-                    let binded_query = {
-                        let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
-                        #binded_query_id_modification_token_stream
-                        #(#binded_query_modifications_token_stream)*
-                        query
-                    };
-                    match binded_query
-                        .execute(pg_connection.as_mut())
-                        .await
-                    {
-                        Ok(_) => {
-                            //todo - is need to return rows affected?
-                            #prepare_and_execute_query_response_variants_token_stream::Desirable(())
-                        }
-                        Err(e) => {
-                            let error = #prepare_and_execute_query_error_token_stream::from(e);
-                            #error_log_call_token_stream
-                            #prepare_and_execute_query_response_variants_token_stream::from(error)
+                        match binded_query
+                            .execute(pg_connection.as_mut())
+                            .await
+                        {
+                            Ok(_) => {
+                                //todo - is need to return rows affected?
+                                #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                            }
+                            Err(e) => {
+                                let error = #prepare_and_execute_query_error_token_stream::from(e);
+                                #error_log_call_token_stream
+                                #prepare_and_execute_query_response_variants_token_stream::from(error)
+                            }
                         }
                     }
                 }
             }
         };
-        println!("{f}");
+        // println!("{prepare_and_execute_query_token_stream}");
         quote::quote!{
             #[derive(Debug, serde::Deserialize)]
             pub struct #update_by_id_parameters_camel_case_token_stream {
@@ -2429,7 +2431,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             pub struct #update_by_id_payload_camel_case_token_stream {
                 #(#fields_with_excluded_id_token_stream),*
             }
-            #f
+            #prepare_and_execute_query_token_stream
         }
     };
     let update_token_stream = {
@@ -2545,7 +2547,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #(#fields_with_excluded_id_token_stream),*
             }
             impl #update_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_token_stream(
+                pub async fn #prepare_and_execute_query_name_token_stream(
                     self,
                     app_info_state: &#app_info_state_path,
                 ) -> #prepare_and_execute_query_response_variants_token_stream
