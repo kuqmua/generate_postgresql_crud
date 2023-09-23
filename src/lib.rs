@@ -2133,7 +2133,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        //cats_id => $1, cats_name => $2, cats_color => $3
         let additional_parameters_id_modification_token_stream = {
             let query_part_token_stream = {
                 let query_part_stringified = format!("\"{ident_lower_case_stringified}_{id_field_ident} => ${{increment}}{dot_space}\"");
@@ -2306,7 +2305,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             true => " ",
                             false => dot_space,
                         };
-                        let handle_stringified = format!("\"{field_ident} = {id_field_ident}_{field_ident}{possible_dot_space}\"");//todo postgresql type attribute
+                        let handle_stringified = format!("\"{field_ident} = {ident}_{field_ident}{possible_dot_space}\"");//todo postgresql type attribute
                         handle_stringified.parse::<proc_macro2::TokenStream>()
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
@@ -2375,7 +2374,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         let query_token_stream = {
-            let query_stringified = format!("\"{{}} {pg_temp_stringified}.{create_or_replace_function_name_original_stringified}({{}})\"");
+            let query_stringified = format!("\"{{}} {pg_temp_stringified}.{{function_name}}({{}})\"");
             query_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -2398,6 +2397,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap();
                     let query_string = {
                         let mut increment: u64 = 0;
+                        let function_name = {
+                            let mut function_name = std::string::String::from("cat_update_by_id");
+                            if self.payload.name.is_some() {
+                                function_name.push_str("_name");
+                            }
+                            if self.payload.color.is_some() {
+                                function_name.push_str("_color");
+                            }
+                            function_name
+                        };
                         let query_parameters = {
                             let mut query = std::string::String::from("");
                             #additional_parameters_id_modification_token_stream
@@ -2415,10 +2424,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
                         #binded_query_id_modification_token_stream
                         #(#binded_query_modifications_token_stream)*
-// query = query.bind(17);
-// query = query.bind("name4");
-// query = query.bind("color4");
-// query.execute(pg_connection).await.unwrap();
                         query
                     };
                     match binded_query
@@ -2453,7 +2458,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             pub struct #update_by_id_payload_camel_case_token_stream {
                 #(#fields_with_excluded_id_token_stream),*
             }
-            // #f
+            #f
         }
     };
     let update_token_stream = {
@@ -2872,6 +2877,8 @@ fn column_names_factorial(
         }
     }
 }
+
+// `DO` blocks cannot use bound parameters.  If you need to pass in values then you can create a temporary function and call that instead, though it's a bit more of a hassle.
 
 // #[derive(strum_macros::Display)]//strum_macros::EnumIter, 
 // enum Attribute {
