@@ -2290,6 +2290,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &prepare_and_execute_query_response_variants_token_stream,
                 crate::check_for_all_none::QueryPart::Payload
             );
+            let additional_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                true => None,
+                false => {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    let handle_token_stream = {
+                        let handle_stringified = format!("\"_{field_ident}\"");
+                        handle_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    Some(quote::quote!{
+                        if self.payload.#field_ident.is_some() {
+                            additional_function_name.push_str(#handle_token_stream);
+                        }
+                    })
+                }
+            });
+            let function_name_handle_token_stream = {
+                let handle_stringified = format!("\"{ident_lower_case_stringified}_update_by_id{{additional_function_name}}\"");
+                handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let additional_parameters_id_modification_token_stream = {
                 let query_part_token_stream = {
                     let query_part_stringified = format!("\"{ident_lower_case_stringified}_{id_field_ident} => ${{increment}}{dot_space}\"");
@@ -2515,7 +2539,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let mut pool_connection = app_info_state.get_postgres_pool().acquire().await.unwrap();
                         let pg_connection = sqlx::Acquire::acquire(&mut pool_connection).await.unwrap();
                         let function_creation_query_stringified = #create_or_replace_function_token_stream;
-                        println!("function_creation_query_stringified {function_creation_query_stringified}");
+                        println!("{function_creation_query_stringified}");
                         let function_creation_query = sqlx::query::<sqlx::Postgres>(&function_creation_query_stringified);
                         function_creation_query
                             .execute(pg_connection.as_mut())
@@ -2524,14 +2548,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let query_string = {
                             let mut increment: u64 = 0;
                             let function_name = {
-                                let mut function_name = std::string::String::from("cat_update_by_id");
-                                if self.payload.name.is_some() {
-                                    function_name.push_str("_name");
-                                }
-                                if self.payload.color.is_some() {
-                                    function_name.push_str("_color");
-                                }
-                                function_name
+                                let additional_function_name = {
+                                    let mut additional_function_name = std::string::String::default();
+                                    #(#additional_function_name_additions_token_stream)*
+                                    additional_function_name
+                                };
+                                format!(#function_name_handle_token_stream)
                             };
                             let query_parameters = {
                                 let mut query = std::string::String::from("");
@@ -2540,12 +2562,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 query
                             };
                             format!(
-                                #query_token_stream,//cats_id => $1, cats_name => $2, cats_color => $3
+                                #query_token_stream,
                                 crate::server::postgres::constants::SELECT_NAME,
                                 query_parameters
                             )
                         };
-                        println!("query_string {query_string}");
+                        println!("{query_string}");
                         let binded_query = {
                             let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
                             #binded_query_id_modification_token_stream
