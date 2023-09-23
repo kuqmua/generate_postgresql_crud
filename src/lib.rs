@@ -504,6 +504,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let pg_temp_stringified = "pg_temp";
     let pg_connection_token_stream = quote::quote!{pg_connection};
     let desirable_token_stream = quote::quote!{Desirable};
+    let query_string_name_token_stream = quote::quote!{query_string};
     
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -658,16 +659,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             bind_increments.pop();
                             bind_increments
                         };
-                        let query_string = format!(
+                        let #query_string_name_token_stream = format!(
                             #query_token_stream,
                             crate::server::postgres::constants::INSERT_NAME,
                             crate::server::postgres::constants::INTO_NAME,
                             crate::repositories_types::tufa_server::routes::api::cats::CATS,
                             crate::server::postgres::constants::VALUES_NAME
                         );
-                        println!("{query_string}");
+                        // println!("{query_string}");
                         let binded_query = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             for element in self.payload {
                                 #(#bind_value_to_query_modificate_token_stream)*
                             }
@@ -813,16 +814,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         app_info_state: &#app_info_state_path,
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
-                        let query_string = format!(
+                        let #query_string_name_token_stream = format!(
                             #query_token_stream,
                             crate::server::postgres::constants::INSERT_NAME,
                             crate::server::postgres::constants::INTO_NAME,
                             crate::repositories_types::tufa_server::routes::api::cats::CATS,
                             crate::server::postgres::constants::VALUES_NAME
                         );
-                        println!("{query_string}");
+                        // println!("{query_string}");
                         let binded_query = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
                             query
                         };
@@ -917,16 +918,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         app_info_state: &#app_info_state_path,
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
-                        let query_string = format!(
+                        let #query_string_name_token_stream = format!(
                             #query_token_stream,
                             crate::server::postgres::constants::DELETE_NAME,
                             crate::server::postgres::constants::FROM_NAME,
                             crate::repositories_types::tufa_server::routes::api::cats::CATS,
                             crate::server::postgres::constants::WHERE_NAME
                         );
-                        println!("{query_string}");
+                        // println!("{query_string}");
                         let binded_query = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #binded_query_modifications_token_stream
                             query
                         };
@@ -1147,7 +1148,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         #check_for_all_none_token_stream
-                        let query_string = {
+                        let #query_string_name_token_stream = {
                             let additional_parameters = {
                                 let mut additional_parameters = std::string::String::default();
                                 let mut increment: u64 = 0;
@@ -1162,9 +1163,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 crate::repositories_types::tufa_server::routes::api::cats::CATS
                             )
                         };
-                        println!("{query_string}");
+                        // println!("{query_string}");
                         let binded_query = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
                             query
                         };
@@ -1394,7 +1395,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         #check_for_all_none_token_stream
-                        let query_string = {
+                        let #query_string_name_token_stream = {
                             let additional_parameters = {
                                 let mut additional_parameters = std::string::String::default();
                                 let mut increment: u64 = 0;
@@ -1410,9 +1411,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 crate::server::postgres::constants::WHERE_NAME
                             )
                         };
-                        println!("{query_string}");
+                        // println!("{query_string}");
                         let binded_query = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
                             query
                         };
@@ -1558,7 +1559,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         let select = self.query.select.unwrap_or_default();
-                        let query_string = format!(
+                        let #query_string_name_token_stream = format!(
                             #query_token_stream,
                             crate::server::postgres::constants::SELECT_NAME,
                             crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
@@ -1566,9 +1567,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             crate::repositories_types::tufa_server::routes::api::cats::CATS,
                             crate::server::postgres::constants::WHERE_NAME,
                         );
-                        println!("{query_string}");
+                        // println!("{query_string}");
                         let binded_query = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #binded_query_modifications_token_stream
                             query
                         };
@@ -1788,7 +1789,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         app_info_state: &#app_info_state_path,
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
-                        let query_string = {
+                        let #query_string_name_token_stream = {
                             let mut query = std::string::String::default();
                             {
                                 query.push_str(&format!(
@@ -1874,9 +1875,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             query.push_str(&format!(" {additional_parameters}"));
                             query
                         };
-                        println!("{query_string}");
+                        // println!("{query_string}");
                         let binded_query = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
                             query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
                                 self.payload.limit,
@@ -2142,7 +2143,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         let select = #column_select_ident_token_stream::from(self.query.select.clone());
-                        let query_string = {
+                        let #query_string_name_token_stream = {
                             let additional_parameters = {
                                 let mut additional_parameters = std::string::String::default();
                                 let mut increment: u64 = 0;
@@ -2216,9 +2217,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 crate::repositories_types::tufa_server::routes::api::cats::CATS
                             )
                         };
-                        println!("{query_string}");
+                        // println!("{query_string}");
                         let binded_query = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
                             query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
                                 self.query.limit,
@@ -2503,7 +2504,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 });
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                     #binded_query_id_modification_token_stream
                     #(#binded_query_modifications_token_stream)*
                     query
@@ -2650,7 +2651,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let function_creation_query_string = {
                             #create_or_replace_function_token_stream
                         };
-                        println!("{function_creation_query_string}");
+                        // println!("{function_creation_query_string}");
                         let function_creation_query = sqlx::query::<sqlx::Postgres>(&function_creation_query_string);
                         #acquire_pool_and_connection_token_stream
                         if let Err(e) = function_creation_query
@@ -2658,10 +2659,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .await {
                             #from_log_and_return_error_token_stream;
                         }
-                        let query_string = {
+                        let #query_string_name_token_stream = {
                             #query_string_token_stream
                         };
-                        println!("{query_string}");
+                        // println!("{query_string}");
                         let binded_query = {
                             #binded_query_token_stream
                         };
@@ -2828,7 +2829,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         app_info_state: &#app_info_state_path,
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
-                        let query_string = {
+                        let #query_string_name_token_stream = {
                             let mut values = std::string::String::default();
                             let mut increment: u64 = 0;
                             for element in &self.payload {
@@ -2849,9 +2850,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 crate::server::postgres::constants::FROM_NAME,
                             )
                         };
-                        println!("{query_string}");
+                        // println!("{query_string}");
                         let binded_query = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             for element in self.payload {
                                 #(#binded_query_modifications_token_stream)*
                             }
