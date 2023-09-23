@@ -2439,35 +2439,37 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }).collect::<Vec<proc_macro2::TokenStream>>()
             };
-
-            let binded_query_id_modification_token_stream = quote::quote!{
-                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                    self.path.#id_field_ident,
-                    query,
-                );
-            };
-            let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    Some(quote::quote!{
-                        if let Some(value) = self.payload.#field_ident {
-                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                                value,
-                                query,
-                            );
-                        }
-                    })
+            let binded_query_token_stream = {
+                let binded_query_id_modification_token_stream = quote::quote!{
+                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                        self.path.#id_field_ident,
+                        query,
+                    );
+                };
+                let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                    true => None,
+                    false => {
+                        let field_ident = field.ident.clone()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                            });
+                        Some(quote::quote!{
+                            if let Some(value) = self.payload.#field_ident {
+                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                    value,
+                                    query,
+                                );
+                            }
+                        })
+                    }
+                });
+                quote::quote!{
+                    let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                    #binded_query_id_modification_token_stream
+                    #(#binded_query_modifications_token_stream)*
+                    query
                 }
-            });
-            // let binded_query_token_stream = {
-            //     quote::quote!{
-
-            //     }
-            // };
+            };
             let create_or_replace_function_name_original_stringified = format!("{ident_lower_case_stringified}_update_by_id");
             let create_or_replace_function_token_stream = {
                 let create_or_replace_function_name_token_stream = {
@@ -2646,10 +2648,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         println!("{query_string}");
                         let binded_query = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
-                            #binded_query_id_modification_token_stream
-                            #(#binded_query_modifications_token_stream)*
-                            query
+                            #binded_query_token_stream
                         };
                         match binded_query
                             .execute(#pg_connection_token_stream.as_mut())
