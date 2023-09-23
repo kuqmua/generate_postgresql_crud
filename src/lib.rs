@@ -657,18 +657,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 }
             };
-            let bind_value_to_query_modificate_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    Some(quote::quote!{
-                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(element.#field_ident, query);  
-                    })
-                },
-            });
+            let binded_query_token_stream = {
+                let bind_value_to_query_modificate_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                    true => None,
+                    false => {
+                        let field_ident = field.ident.clone()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                            });
+                        Some(quote::quote!{
+                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(element.#field_ident, query);  
+                        })
+                    },
+                });
+                quote::quote!{
+                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    for element in self.payload {
+                        #(#bind_value_to_query_modificate_token_stream)*
+                    }
+                    query
+                }
+            };
             quote::quote!{
                 impl #create_batch_parameters_camel_case_token_stream {
                     pub async fn #prepare_and_execute_query_name_token_stream(
@@ -679,11 +688,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #query_string_name_token_stream = #query_string_token_stream;
                         // println!("{query_string}");
                         let #binded_query_name_token_stream = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
-                            for element in self.payload {
-                                #(#bind_value_to_query_modificate_token_stream)*
-                            }
-                            query
+                            #binded_query_token_stream
                         };
                         #acquire_pool_and_connection_token_stream
                         match #binded_query_name_token_stream
