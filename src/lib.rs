@@ -2080,6 +2080,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             update_by_id_payload_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_by_id_payload_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let parameters_token_stream = {
+            quote::quote!{
+                #[derive(Debug, serde::Deserialize)]
+                pub struct #update_by_id_parameters_camel_case_token_stream {
+                    pub path: #update_by_id_path_camel_case_token_stream,
+                    pub payload: #update_by_id_payload_camel_case_token_stream,
+                }
+            }
+        };
+        // println!("{parameters_token_stream}");
+        let path_token_stream = {
+            quote::quote!{
+                #[derive(Debug, serde::Deserialize)]
+                pub struct #update_by_id_path_camel_case_token_stream {
+                    pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
+                }
+            }
+        };
+        // println!("{path_token_stream}");
         let payload_token_stream = {
             let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -2101,6 +2120,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        // println!("{payload_token_stream}");
         let prepare_and_execute_query_token_stream = {
             let update_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_by_id_name_camel_case_stringified);
             let prepare_and_execute_query_response_variants_token_stream = {
@@ -2426,15 +2446,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         quote::quote!{
-            #[derive(Debug, serde::Deserialize)]
-            pub struct #update_by_id_parameters_camel_case_token_stream {
-                pub path: #update_by_id_path_camel_case_token_stream,
-                pub payload: #update_by_id_payload_camel_case_token_stream,
-            }
-            #[derive(Debug, serde::Deserialize)]
-            pub struct #update_by_id_path_camel_case_token_stream {
-                pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
-            }
+            #parameters_token_stream
+            #path_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
         }
