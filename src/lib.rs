@@ -503,6 +503,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
     let pg_connection_token_stream = quote::quote!{pg_connection};
+    let desirable_token_stream = quote::quote!{Desirable};
     
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -679,7 +680,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(_) => {
                                 //todo - is need to return rows affected?
-                                #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                                #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(())
                             }
                             Err(e) => {
                                 #from_log_and_return_error_token_stream
@@ -832,7 +833,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(_) => {
                                 //todo - is need to return rows affected?
-                                #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                                #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(())
                             }
                             Err(e) => {
                                 #from_log_and_return_error_token_stream
@@ -936,7 +937,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(_) => {
                                 //todo - is need to return rows affected?
-                                #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                                #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(())
                             }
                             Err(e) => {
                                 #from_log_and_return_error_token_stream
@@ -1174,7 +1175,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(_) => {
                                 //todo - is need to return rows affected?
-                                #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                                #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(())
                             }
                             Err(e) => {
                                 #from_log_and_return_error_token_stream
@@ -1422,7 +1423,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(_) => {
                                 //todo - is need to return rows affected?
-                                #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                                #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(())
                             }
                             Err(e) => {
                                 #from_log_and_return_error_token_stream
@@ -1574,7 +1575,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #acquire_pool_and_connection_token_stream
                         match binded_query.fetch_one(#pg_connection_token_stream.as_mut()).await {
                             Ok(row) => match select.options_try_from_sqlx_row(&row) {
-                                Ok(value) => #prepare_and_execute_query_response_variants_token_stream::Desirable(value),
+                                Ok(value) => #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(value),
                                 Err(e) => {
                                     #from_log_and_return_error_token_stream
                                 },
@@ -1915,7 +1916,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                             vec_values
                         };
-                        #prepare_and_execute_query_response_variants_token_stream::Desirable(vec_values)
+                        #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(vec_values)
                     }
                 }
             }
@@ -2258,7 +2259,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                             vec_values
                         };
-                        #prepare_and_execute_query_response_variants_token_stream::Desirable(vec_values)
+                        #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(vec_values)
                     }
                 }
             }
@@ -2438,6 +2439,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }).collect::<Vec<proc_macro2::TokenStream>>()
             };
+
             let binded_query_id_modification_token_stream = quote::quote!{
                 query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
                     self.path.#id_field_ident,
@@ -2461,6 +2463,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     })
                 }
             });
+            // let binded_query_token_stream = {
+            //     quote::quote!{
+
+            //     }
+            // };
             let create_or_replace_function_name_original_stringified = format!("{ident_lower_case_stringified}_update_by_id");
             let create_or_replace_function_token_stream = {
                 let create_or_replace_function_name_token_stream = {
@@ -2569,28 +2576,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 quote::quote!{
-                    {
-                        let create_or_replace_function_name = {
-                            #create_or_replace_function_name_token_stream
-                        };
-                        let create_or_replace_function_parameters = {
-                            #create_or_replace_function_parameters_token_stream
-                        };
-                        let create_or_replace_function_first_line_query = {
-                            let mut value = format!(
-                                "{} {} {} ",
-                                crate::server::postgres::constants::UPDATE_NAME,
-                                crate::repositories_types::tufa_server::routes::api::cats::CATS,
-                                crate::server::postgres::constants::SET_NAME,
-                            );
-                            #(#create_or_replace_function_additional_parameters_modification_token_stream)*
-                            #create_or_replace_function_additional_parameters_id_modification_token_stream
-                            value
-                        };
-                        let create_or_replace_function_second_line_query = std::string::String::from("if not found then raise exception 'cats id % not found', cats_id");
-                        let create_or_replace_function_third_line_query = std::string::String::from("end if");
-                        format!("create or replace function pg_temp.{create_or_replace_function_name}({create_or_replace_function_parameters}) returns void language plpgsql as $$ begin {create_or_replace_function_first_line_query};{create_or_replace_function_second_line_query};{create_or_replace_function_third_line_query};end $$")
-                    }
+                    let create_or_replace_function_name = {
+                        #create_or_replace_function_name_token_stream
+                    };
+                    let create_or_replace_function_parameters = {
+                        #create_or_replace_function_parameters_token_stream
+                    };
+                    let create_or_replace_function_first_line_query = {
+                        let mut value = format!(
+                            "{} {} {} ",
+                            crate::server::postgres::constants::UPDATE_NAME,
+                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                            crate::server::postgres::constants::SET_NAME,
+                        );
+                        #(#create_or_replace_function_additional_parameters_modification_token_stream)*
+                        #create_or_replace_function_additional_parameters_id_modification_token_stream
+                        value
+                    };
+                    let create_or_replace_function_second_line_query = std::string::String::from("if not found then raise exception 'cats id % not found', cats_id");
+                    let create_or_replace_function_third_line_query = std::string::String::from("end if");
+                    format!("create or replace function pg_temp.{create_or_replace_function_name}({create_or_replace_function_parameters}) returns void language plpgsql as $$ begin {create_or_replace_function_first_line_query};{create_or_replace_function_second_line_query};{create_or_replace_function_third_line_query};end $$")
                 }
             };
             let query_token_stream = {
@@ -2606,9 +2611,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         #check_for_all_none_token_stream
-                        let function_creation_query_stringified = #create_or_replace_function_token_stream;
-                        println!("{function_creation_query_stringified}");
-                        let function_creation_query = sqlx::query::<sqlx::Postgres>(&function_creation_query_stringified);
+                        let function_creation_query_string = {
+                            #create_or_replace_function_token_stream
+                        };
+                        println!("{function_creation_query_string}");
+                        let function_creation_query = sqlx::query::<sqlx::Postgres>(&function_creation_query_string);
                         #acquire_pool_and_connection_token_stream
                         if let Err(e) = function_creation_query
                             .execute(#pg_connection_token_stream.as_mut())
@@ -2650,7 +2657,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(_) => {
                                 //todo - is need to return rows affected?
-                                #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                                #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(())
                             }
                             Err(e) => {
                                 #from_log_and_return_error_token_stream
@@ -2843,7 +2850,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(_) => {
                                 //todo - is need to return rows affected?
-                                #prepare_and_execute_query_response_variants_token_stream::Desirable(())
+                                #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(())
                             }
                             Err(e) => {
                                 #from_log_and_return_error_token_stream;
