@@ -666,6 +666,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    // println!("{create_batch_token_stream}");
     let create_token_stream = {
         let create_name_camel_case_stringified = "Create";
         let create_parameters_camel_case_token_stream = {
@@ -792,6 +793,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    // println!("{create_token_stream}");
     let delete_by_id_token_stream = {
         let delete_by_id_name_camel_case_stringified = "DeleteById";
         let delete_by_id_parameters_camel_case_token_stream = {
@@ -869,6 +871,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    // println!("{delete_by_id_token_stream}");
     let delete_with_body_token_stream = {
         let delete_with_body_name_camel_case_stringified = "DeleteWithBody";
         let delete_with_body_parameters_camel_case_token_stream = {
@@ -1103,6 +1106,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    // println!("{delete_with_body_token_stream}");
     let delete_token_stream = {
         let delete_name_camel_case_stringified = "Delete";
         let delete_parameters_camel_case_token_stream = {
@@ -1337,6 +1341,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    // println!("{delete_token_stream}");
     let read_by_id_token_stream = {
         let read_by_id_name_camel_case_stringified = "ReadById";
         let read_by_id_parameters_camel_case_token_stream = {
@@ -1359,97 +1364,134 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             read_by_id_query_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_by_id_query_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let read_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_by_id_name_camel_case_stringified);
-        let prepare_and_execute_query_response_variants_token_stream = {
-            let try_response_variants_path_stringified = format!("{path_to_crud}{read_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{read_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
-            try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let parameters_token_stream = {
+            quote::quote!{
+                #[derive(Debug, serde::Deserialize)]
+                pub struct #read_by_id_parameters_camel_case_token_stream {
+                    pub path: #read_by_id_path_camel_case_token_stream,
+                    pub query: #read_by_id_query_camel_case_token_stream,
+                }
+            }
         };
-        let prepare_and_execute_query_error_token_stream = {
-            let error_path_stringified = format!("{path_to_crud}{read_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{read_by_id_name_camel_case_stringified}");
-            error_path_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        // println!("{parameters_token_stream}");
+        let path_token_stream = {
+            quote::quote!{
+                #[derive(Debug, serde::Deserialize)]
+                pub struct #read_by_id_path_camel_case_token_stream {
+                    pub #id_field_ident: crate::server::postgres::bigserial::Bigserial//#id_field_type,
+                }
+            }
         };
+        // println!("{path_token_stream}");
         let query_token_stream = {
-            let query_stringified = format!("\"{{}} {{}} {{}} {{}} {{}} {id_field_ident} = $1\"");
-            query_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            quote::quote!{
+                #[derive(Debug, serde::Serialize, serde::Deserialize)]
+                pub struct #read_by_id_query_camel_case_token_stream {
+                    pub select: Option<#column_select_ident_token_stream>,
+                }
+            }
         };
-        let binded_query_modifications_token_stream = quote::quote!{
-            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                self.path.#id_field_ident, query,
-            );
+        // println!("{query_token_stream}");
+        let query_for_url_encoding_token_stream = {
+            quote::quote!{
+                #[derive(Debug, serde::Serialize, serde::Deserialize)]
+                struct #read_by_id_query_for_url_encoding_camel_case_token_stream {
+                    select: Option<std::string::String>,
+                } 
+            }
         };
-        quote::quote!{
-            #[derive(Debug, serde::Deserialize)]
-            pub struct #read_by_id_parameters_camel_case_token_stream {
-                pub path: #read_by_id_path_camel_case_token_stream,
-                pub query: #read_by_id_query_camel_case_token_stream,
-            }
-            #[derive(Debug, serde::Deserialize)]
-            pub struct #read_by_id_path_camel_case_token_stream {
-                pub #id_field_ident: crate::server::postgres::bigserial::Bigserial//#id_field_type,
-            }
-            #[derive(Debug, serde::Serialize, serde::Deserialize)]
-            pub struct #read_by_id_query_camel_case_token_stream {
-                pub select: Option<#column_select_ident_token_stream>,
-            }
-            #[derive(Debug, serde::Serialize, serde::Deserialize)]
-            struct #read_by_id_query_for_url_encoding_camel_case_token_stream {
-                select: Option<std::string::String>,
-            }
-            impl #read_by_id_query_camel_case_token_stream {
-                fn into_url_encoding_version(self) -> #read_by_id_query_for_url_encoding_camel_case_token_stream {
-                    let select = self.select.map(|value| {
-                        crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
-                            value,
-                        )
-                    });
-                    #read_by_id_query_for_url_encoding_camel_case_token_stream {
-                        select
+        // println!("{query_for_url_encoding_token_stream}");
+        let into_url_encoding_version_token_stream = {
+            quote::quote!{
+                impl #read_by_id_query_camel_case_token_stream {
+                    fn into_url_encoding_version(self) -> #read_by_id_query_for_url_encoding_camel_case_token_stream {
+                        let select = self.select.map(|value| {
+                            crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                                value,
+                            )
+                        });
+                        #read_by_id_query_for_url_encoding_camel_case_token_stream {
+                            select
+                        }
                     }
                 }
             }
-            impl #read_by_id_parameters_camel_case_token_stream {
-                pub async fn #prepare_and_execute_query_name_token_stream(
-                    self,
-                    app_info_state: &#app_info_state_path,
-                ) -> #prepare_and_execute_query_response_variants_token_stream
-                {
-                    let select = self.query.select.unwrap_or_default();
-                    let query_string = format!(
-                        #query_token_stream,
-                        crate::server::postgres::constants::SELECT_NAME,
-                        crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
-                         crate::server::postgres::constants::FROM_NAME,
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
-                        crate::server::postgres::constants::WHERE_NAME,
-                    );
-                    println!("{query_string}");
-                    let binded_query = {
-                        let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
-                        #binded_query_modifications_token_stream
-                        query
-                    };
-                    match binded_query.fetch_one(app_info_state.get_postgres_pool()).await {
-                        Ok(row) => match select.options_try_from_sqlx_row(&row) {
-                            Ok(value) => #prepare_and_execute_query_response_variants_token_stream::Desirable(value),
+        };
+        // println!("{into_url_encoding_version_token_stream}");
+        let prepare_and_execute_query_token_stream = {
+            let read_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_by_id_name_camel_case_stringified);
+            let prepare_and_execute_query_response_variants_token_stream = {
+                let try_response_variants_path_stringified = format!("{path_to_crud}{read_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{read_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+                try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            let prepare_and_execute_query_error_token_stream = {
+                let error_path_stringified = format!("{path_to_crud}{read_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{read_by_id_name_camel_case_stringified}");
+                error_path_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            let query_token_stream = {
+                let query_stringified = format!("\"{{}} {{}} {{}} {{}} {{}} {id_field_ident} = $1\"");
+                query_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            let binded_query_modifications_token_stream = quote::quote!{
+                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                    self.path.#id_field_ident, query,
+                );
+            };
+            quote::quote!{
+                impl #read_by_id_parameters_camel_case_token_stream {
+                    pub async fn #prepare_and_execute_query_name_token_stream(
+                        self,
+                        app_info_state: &#app_info_state_path,
+                    ) -> #prepare_and_execute_query_response_variants_token_stream
+                    {
+                        let select = self.query.select.unwrap_or_default();
+                        let query_string = format!(
+                            #query_token_stream,
+                            crate::server::postgres::constants::SELECT_NAME,
+                            crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
+                             crate::server::postgres::constants::FROM_NAME,
+                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                            crate::server::postgres::constants::WHERE_NAME,
+                        );
+                        println!("{query_string}");
+                        let binded_query = {
+                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            #binded_query_modifications_token_stream
+                            query
+                        };
+                        match binded_query.fetch_one(app_info_state.get_postgres_pool()).await {
+                            Ok(row) => match select.options_try_from_sqlx_row(&row) {
+                                Ok(value) => #prepare_and_execute_query_response_variants_token_stream::Desirable(value),
+                                Err(e) => {
+                                    let error = #prepare_and_execute_query_error_token_stream::from(e);
+                                    #error_log_call_token_stream
+                                    #prepare_and_execute_query_response_variants_token_stream::from(error)
+                                },
+                            },
                             Err(e) => {
                                 let error = #prepare_and_execute_query_error_token_stream::from(e);
                                 #error_log_call_token_stream
                                 #prepare_and_execute_query_response_variants_token_stream::from(error)
                             },
-                        },
-                        Err(e) => {
-                            let error = #prepare_and_execute_query_error_token_stream::from(e);
-                            #error_log_call_token_stream
-                            #prepare_and_execute_query_response_variants_token_stream::from(error)
-                        },
+                        }
                     }
                 }
             }
+        };
+        // println!("{prepare_and_execute_query_token_stream}");
+        quote::quote!{
+            #parameters_token_stream
+            #path_token_stream
+            #query_token_stream
+            #query_for_url_encoding_token_stream
+            #into_url_encoding_version_token_stream
+            #prepare_and_execute_query_token_stream
         }
     };
+    // println!("{read_by_id_token_stream}");
     let read_with_body_token_stream = {
         let read_with_body_name_camel_case_stringified = "ReadWithBody";
         let read_with_body_parameters_camel_case_token_stream = {
@@ -1470,6 +1512,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        // println!("{parameters_token_stream}");
         let payload_token_stream = {
             let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -1495,6 +1538,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        // println!("{payload_token_stream}");
         let prepare_and_execute_query_token_stream = {
             let read_with_body_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_with_body_name_camel_case_stringified);
             let prepare_and_execute_query_response_variants_token_stream = {
@@ -1764,12 +1808,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        // println!("{prepare_and_execute_query_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
         }
     };
+    // println!("{read_with_body_token_stream}");
     let read_token_stream = {
         let read_name_camel_case_stringified = "Read";
         let read_parameters_camel_case_token_stream = {
@@ -2108,6 +2154,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #prepare_and_execute_query_token_stream
         }
     };
+    // println!("{read_token_stream}");
     let update_by_id_token_stream = {//todo WHY ITS RETURN SUCCESS EVEN IF ROW DOES NOT EXISTS?
         let update_by_id_name_camel_case_stringified = "UpdateById";
         let update_by_id_parameters_camel_case_token_stream = {
@@ -2497,6 +2544,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #prepare_and_execute_query_token_stream
         }
     };
+    // println!("{update_by_id_token_stream}");
     let update_token_stream = {
         let update_name_camel_case_stringified = "Update";
         let update_parameters_camel_case_token_stream = {
@@ -2680,6 +2728,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #prepare_and_execute_query_token_stream
         }
     };
+    // println!("{update_token_stream}");
     let gen = quote::quote! {
         #struct_options_token_stream
         #from_ident_for_ident_options_token_stream
