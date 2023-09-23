@@ -508,6 +508,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let function_creation_query_string_name_token_stream = quote::quote!{function_creation_query_string};
     let function_creation_query_name_token_stream = quote::quote!{function_creation_query};
     let binded_query_name_token_stream = quote::quote!{binded_query};
+    let increment_initialization_token_stream = quote::quote!{let mut increment: u64 = 0;};
     
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -637,7 +638,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         crate::repositories_types::tufa_server::routes::api::cats::CATS,
                         crate::server::postgres::constants::VALUES_NAME,
                         {
-                            let mut increment: u64 = 0;
+                            #increment_initialization_token_stream
                             let mut bind_increments = std::string::String::default();
                             for element in &self.payload {
                                 bind_increments.push_str(&format!(
@@ -1160,8 +1161,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #check_for_all_none_token_stream
                         let #query_string_name_token_stream = {
                             let additional_parameters = {
+                                #increment_initialization_token_stream
                                 let mut additional_parameters = std::string::String::default();
-                                let mut increment: u64 = 0;
                                 #additional_parameters_id_modification_token_stream
                                 #(#additional_parameters_modification_token_stream)*
                                 additional_parameters
@@ -1407,9 +1408,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #check_for_all_none_token_stream
                         let #query_string_name_token_stream = {
                             let additional_parameters = {
+                                #increment_initialization_token_stream
                                 let mut additional_parameters = std::string::String::default();
-                                let mut increment: u64 = 0;
-
                                 #(#additional_parameters_modification_token_stream)*
                                 additional_parameters
                             };
@@ -1816,8 +1816,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 crate::repositories_types::tufa_server::routes::api::cats::CATS
                             ));
                             let additional_parameters = {
+                                #increment_initialization_token_stream
                                 let mut additional_parameters = std::string::String::default();
-                                let mut increment: u64 = 0;
                                 #additional_parameters_id_modification_token_stream
                                 #(#additional_parameters_modification_token_stream)*
                                 {
@@ -2155,8 +2155,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let select = #column_select_ident_token_stream::from(self.query.select.clone());
                         let #query_string_name_token_stream = {
                             let additional_parameters = {
+                                #increment_initialization_token_stream
                                 let mut additional_parameters = std::string::String::default();
-                                let mut increment: u64 = 0;
                                 #(#additional_parameters_modification_token_stream)*
                                 if let Some(value) = &self.query.order_by {
                                     let prefix = match additional_parameters.is_empty() {
@@ -2469,7 +2469,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }).collect::<Vec<proc_macro2::TokenStream>>()
                     };
                     quote::quote!{
-                        let mut increment: u64 = 0;
+                        #increment_initialization_token_stream
                         let mut query = std::string::String::from("");
                         #additional_parameters_id_modification_token_stream
                         #(#additional_parameters_modification_token_stream)*
@@ -2841,8 +2841,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         let #query_string_name_token_stream = {
+                            #increment_initialization_token_stream
                             let mut values = std::string::String::default();
-                            let mut increment: u64 = 0;
                             for element in &self.payload {
                                 let mut element_value = std::string::String::default();
                                 #(#additional_parameters_modification_token_stream)*
