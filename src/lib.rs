@@ -1,5 +1,6 @@
 mod column_names_factorial;
 mod check_for_all_none;
+mod acquire_pool_and_connection;
 
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
@@ -500,6 +501,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
+    let pg_connection_token_stream = quote::quote!{pg_connection};
     
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -560,6 +562,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &prepare_and_execute_query_error_token_stream,
+                &error_log_call_token_stream,
+                &prepare_and_execute_query_response_variants_token_stream,
+                &pg_connection_token_stream
+            );
             let query_token_stream = {
                 let column_names = {
                     let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
@@ -660,8 +668,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                             query
                         };
+                        #acquire_pool_and_connection_token_stream
                         match binded_query
-                            .execute(app_info_state.get_postgres_pool())
+                            .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
                             Ok(_) => {
@@ -741,6 +750,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &prepare_and_execute_query_error_token_stream,
+                &error_log_call_token_stream,
+                &prepare_and_execute_query_response_variants_token_stream,
+                &pg_connection_token_stream
+            );
             let query_token_stream = {
                 let (
                     column_names,
@@ -805,8 +820,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #(#binded_query_modifications_token_stream)*
                             query
                         };
+                        #acquire_pool_and_connection_token_stream
                         match binded_query
-                            .execute(app_info_state.get_postgres_pool())
+                            .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
                             Ok(_) => {
@@ -873,6 +889,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &prepare_and_execute_query_error_token_stream,
+                &error_log_call_token_stream,
+                &prepare_and_execute_query_response_variants_token_stream,
+                &pg_connection_token_stream
+            );
             let query_token_stream = {
                 let query_stringified = format!("\"{{}} {{}} {{}} {{}} {id_field_ident} = $1\"");
                 query_stringified.parse::<proc_macro2::TokenStream>()
@@ -901,8 +923,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #binded_query_modifications_token_stream
                             query
                         };
+                        #acquire_pool_and_connection_token_stream
                         match binded_query
-                            .execute(app_info_state.get_postgres_pool())
+                            .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
                             Ok(_) => {
@@ -989,6 +1012,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 dot_space,
                 &prepare_and_execute_query_response_variants_token_stream,
                 crate::check_for_all_none::QueryPart::Payload
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &prepare_and_execute_query_error_token_stream,
+                &error_log_call_token_stream,
+                &prepare_and_execute_query_response_variants_token_stream,
+                &pg_connection_token_stream
             );
             let additional_parameters_id_modification_token_stream = {
                 let query_part_token_stream = {
@@ -1131,8 +1160,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #(#binded_query_modifications_token_stream)*
                             query
                         };
+                        #acquire_pool_and_connection_token_stream
                         match binded_query
-                            .execute(app_info_state.get_postgres_pool())
+                            .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
                             Ok(_) => {
@@ -1279,6 +1309,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &prepare_and_execute_query_error_token_stream,
+                &error_log_call_token_stream,
+                &prepare_and_execute_query_response_variants_token_stream,
+                &pg_connection_token_stream
+            );
             let check_for_all_none_token_stream = crate::check_for_all_none::check_for_all_none(
                 &fields_named,
                 &id_field,
@@ -1371,8 +1407,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #(#binded_query_modifications_token_stream)*
                             query
                         };
+                        #acquire_pool_and_connection_token_stream
                         match binded_query
-                            .execute(app_info_state.get_postgres_pool())
+                            .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
                             Ok(_) => {
@@ -1487,6 +1524,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &prepare_and_execute_query_error_token_stream,
+                &error_log_call_token_stream,
+                &prepare_and_execute_query_response_variants_token_stream,
+                &pg_connection_token_stream
+            );
             let query_token_stream = {
                 let query_stringified = format!("\"{{}} {{}} {{}} {{}} {{}} {id_field_ident} = $1\"");
                 query_stringified.parse::<proc_macro2::TokenStream>()
@@ -1519,7 +1562,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #binded_query_modifications_token_stream
                             query
                         };
-                        match binded_query.fetch_one(app_info_state.get_postgres_pool()).await {
+                        #acquire_pool_and_connection_token_stream
+                        match binded_query.fetch_one(#pg_connection_token_stream.as_mut()).await {
                             Ok(row) => match select.options_try_from_sqlx_row(&row) {
                                 Ok(value) => #prepare_and_execute_query_response_variants_token_stream::Desirable(value),
                                 Err(e) => {
@@ -1608,6 +1652,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &prepare_and_execute_query_error_token_stream,
+                &error_log_call_token_stream,
+                &prepare_and_execute_query_response_variants_token_stream,
+                &pg_connection_token_stream
+            );
             let additional_parameters_id_modification_token_stream = {
                 let query_part_token_stream = {
                     let query_part_stringified = format!("\"{{prefix}} {id_field_ident} = {{}}({{}}[{{}}])\"");
@@ -1830,7 +1880,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             query
                         };
                         let vec_values = {
-                            let mut rows = binded_query.fetch(app_info_state.get_postgres_pool());
+                            #acquire_pool_and_connection_token_stream
+                            let mut rows = binded_query.fetch(#pg_connection_token_stream.as_mut());
                             let mut vec_values = Vec::new();
                             while let Some(row) = {
                                 match {
@@ -2020,6 +2071,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &prepare_and_execute_query_error_token_stream,
+                &error_log_call_token_stream,
+                &prepare_and_execute_query_response_variants_token_stream,
+                &pg_connection_token_stream
+            );
             let additional_parameters_modification_token_stream = fields_named.iter().map(|field| {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
@@ -2167,7 +2224,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             query
                         };
                         let vec_values = {
-                            let mut rows = binded_query.fetch(app_info_state.get_postgres_pool());
+                            #acquire_pool_and_connection_token_stream
+                            let mut rows = binded_query.fetch(#pg_connection_token_stream.as_mut());
                             let mut vec_values = Vec::new();
                             while let Some(row) = {
                                 match {
@@ -2289,6 +2347,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 dot_space,
                 &prepare_and_execute_query_response_variants_token_stream,
                 crate::check_for_all_none::QueryPart::Payload
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &prepare_and_execute_query_error_token_stream,
+                &error_log_call_token_stream,
+                &prepare_and_execute_query_response_variants_token_stream,
+                &pg_connection_token_stream
             );
             let additional_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -2536,33 +2600,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         #check_for_all_none_token_stream
-                        let mut pool_connection = match app_info_state.get_postgres_pool().acquire().await {
-                            Ok(value) => value,
-                            Err(e) => {
-                                let error = crate::repositories_types::tufa_server::routes::api::cats::update_by_id::TryUpdateById::from(e);
-                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                    &error,
-                                    app_info_state.as_ref(),
-                                );
-                                return crate::repositories_types::tufa_server::routes::api::cats::update_by_id::TryUpdateByIdResponseVariants::from(error);
-                            }
-                        };
-                        let pg_connection = match sqlx::Acquire::acquire(&mut pool_connection).await {
-                            Ok(value) => value,
-                            Err(e) => {
-                                let error = crate::repositories_types::tufa_server::routes::api::cats::update_by_id::TryUpdateById::from(e);
-                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                    &error,
-                                    app_info_state.as_ref(),
-                                );
-                                return crate::repositories_types::tufa_server::routes::api::cats::update_by_id::TryUpdateByIdResponseVariants::from(error);
-                            }
-                        };
                         let function_creation_query_stringified = #create_or_replace_function_token_stream;
                         println!("{function_creation_query_stringified}");
                         let function_creation_query = sqlx::query::<sqlx::Postgres>(&function_creation_query_stringified);
+                        #acquire_pool_and_connection_token_stream
                         if let Err(e) = function_creation_query
-                            .execute(pg_connection.as_mut())
+                            .execute(#pg_connection_token_stream.as_mut())
                             .await {
                             let error = #prepare_and_execute_query_error_token_stream::from(e);
                             #error_log_call_token_stream
@@ -2598,7 +2641,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             query
                         };
                         match binded_query
-                            .execute(pg_connection.as_mut())
+                            .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
                             Ok(_) => {
@@ -2615,7 +2658,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        println!("{prepare_and_execute_query_token_stream}");
+        // println!("{prepare_and_execute_query_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
@@ -2680,6 +2723,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &prepare_and_execute_query_error_token_stream,
+                &error_log_call_token_stream,
+                &prepare_and_execute_query_response_variants_token_stream,
+                &pg_connection_token_stream
+            );
             let query_token_stream = {
                 let column_names = fields_named.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
                     let field_ident = field.ident.clone()
@@ -2782,8 +2831,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                             query
                         };
+                        #acquire_pool_and_connection_token_stream
                         match binded_query
-                            .execute(app_info_state.get_postgres_pool())
+                            .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
                             Ok(_) => {
