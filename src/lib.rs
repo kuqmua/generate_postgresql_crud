@@ -2212,7 +2212,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 })
             }
         });
-        //
         let create_or_replace_function_name_original_stringified = format!("{ident_lower_case_stringified}_update_by_id");
         let create_or_replace_function_token_stream = {
             let create_or_replace_function_name_token_stream = {
@@ -2279,12 +2278,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     let mut value = std::string::String::from(#create_or_replace_function_parameters_original_token_stream);//format!("cats_id bigint, cats_name varchar, cats_color varchar");
                     #(#create_or_replace_function_parameters_additions_token_stream)*
-                    // if &self.payload.name.is_some() {
-                    //     value.push_str(&format!("cats_name varchar, "));
-                    // }
-                    // if &self.payload.color.is_some() {
-                    //     value.push_str(&format!("cats_color varchar"));
-                    // }
                     value
                 }
             };
@@ -2342,31 +2335,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             crate::server::postgres::constants::SET_NAME,
                         );
                         #(#create_or_replace_function_additional_parameters_modification_token_stream)*
-                        // if &self.payload.name.is_some() {
-                        //     value.push_str(&format!("name = cats_name, "));
-                        // }
-                        // if &self.payload.color.is_some() {
-                        //     value.push_str(&format!("color = cats_color "));
-                        // }
                         #create_or_replace_function_additional_parameters_id_modification_token_stream
-                        // value.push_str(&format!(
-                        //     "{} id = cats_id",
-                        //     crate::server::postgres::constants::WHERE_NAME
-                        // ));
                         value
                     };
                     let create_or_replace_function_second_line_query = std::string::String::from("if not found then raise exception 'cats id % not found', cats_id");
                     let create_or_replace_function_third_line_query = std::string::String::from("end if");
                     format!("create or replace function pg_temp.{create_or_replace_function_name}({create_or_replace_function_parameters}) returns void language plpgsql as $$ begin {create_or_replace_function_first_line_query};{create_or_replace_function_second_line_query};{create_or_replace_function_third_line_query};end $$")
-// #create_or_replace_function_token_stream
-// r#"create or replace function cats_update_by_id_name_color(cat_id bigint, cat_name varchar, cat_color varchar)
-// returns void language plpgsql
-// as $$
-// begin
-//     update cats set name = cat_name, color = cat_color where id = cat_id;
-//     if not found then raise exception 'cat id % not found', cat_id;
-//     end if;
-// end $$"#//;
                 }
             }
         };
