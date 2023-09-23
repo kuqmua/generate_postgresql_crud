@@ -2844,11 +2844,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #increment_initialization_token_stream
                             let mut values = std::string::String::default();
                             for element in &self.payload {
-                                let mut element_value = std::string::String::default();
-                                #(#additional_parameters_modification_token_stream)*
-                                element_value.pop();//todo - remove it 
-                                element_value.pop();
-                                values.push_str(&format!("({element_value}), "));
+                                values.push_str(&format!(
+                                    "({}), ",
+                                    {
+                                        let mut element_value = std::string::String::default();
+                                        #(#additional_parameters_modification_token_stream)*
+                                        element_value.pop();//todo - remove it 
+                                        element_value.pop();
+                                        element_value
+                                    }
+                                ));
                             }
                             values.pop();
                             values.pop();
