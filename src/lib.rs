@@ -1,6 +1,7 @@
 mod column_names_factorial;
 mod check_for_all_none;
 mod acquire_pool_and_connection;
+mod from_log_and_return_error;
 
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
@@ -562,10 +563,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+            let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
                 &prepare_and_execute_query_response_variants_token_stream,
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
             let query_token_stream = {
@@ -750,10 +754,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+            let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
                 &prepare_and_execute_query_response_variants_token_stream,
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
             let query_token_stream = {
@@ -889,10 +896,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+            let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
                 &prepare_and_execute_query_response_variants_token_stream,
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
             let query_token_stream = {
@@ -1013,10 +1023,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &prepare_and_execute_query_response_variants_token_stream,
                 crate::check_for_all_none::QueryPart::Payload
             );
-            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+            let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
                 &prepare_and_execute_query_response_variants_token_stream,
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
             let additional_parameters_id_modification_token_stream = {
@@ -1309,10 +1322,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+            let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
                 &prepare_and_execute_query_response_variants_token_stream,
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
             let check_for_all_none_token_stream = crate::check_for_all_none::check_for_all_none(
@@ -1524,10 +1540,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+            let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
                 &prepare_and_execute_query_response_variants_token_stream,
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
             let query_token_stream = {
@@ -1652,10 +1671,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+            let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
                 &prepare_and_execute_query_response_variants_token_stream,
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
             let additional_parameters_id_modification_token_stream = {
@@ -2071,10 +2093,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+            let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
                 &prepare_and_execute_query_response_variants_token_stream,
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
             let additional_parameters_modification_token_stream = fields_named.iter().map(|field| {
@@ -2348,10 +2373,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &prepare_and_execute_query_response_variants_token_stream,
                 crate::check_for_all_none::QueryPart::Payload
             );
-            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+            let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
                 &prepare_and_execute_query_response_variants_token_stream,
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
             let additional_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
@@ -2723,10 +2751,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+            let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
                 &prepare_and_execute_query_response_variants_token_stream,
+            );
+            let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
+                &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
             let query_token_stream = {
@@ -2841,9 +2872,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #prepare_and_execute_query_response_variants_token_stream::Desirable(())
                             }
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                #error_log_call_token_stream
-                                #prepare_and_execute_query_response_variants_token_stream::from(error)
+                                #from_log_and_return_error_token_stream
                             }
                         }
                     }
