@@ -505,6 +505,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let pg_connection_token_stream = quote::quote!{pg_connection};
     let desirable_token_stream = quote::quote!{Desirable};
     let query_string_name_token_stream = quote::quote!{query_string};
+    let function_creation_query_string_name_token_stream = quote::quote!{function_creation_query_string};
+    let function_creation_query_name_token_stream = quote::quote!{function_creation_query};
+    let binded_query_name_token_stream = quote::quote!{binded_query};
     
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -667,7 +670,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             crate::server::postgres::constants::VALUES_NAME
                         );
                         // println!("{query_string}");
-                        let binded_query = {
+                        let #binded_query_name_token_stream = {
                             let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             for element in self.payload {
                                 #(#bind_value_to_query_modificate_token_stream)*
@@ -675,7 +678,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             query
                         };
                         #acquire_pool_and_connection_token_stream
-                        match binded_query
+                        match #binded_query_name_token_stream
                             .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
@@ -822,13 +825,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             crate::server::postgres::constants::VALUES_NAME
                         );
                         // println!("{query_string}");
-                        let binded_query = {
+                        let #binded_query_name_token_stream = {
                             let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
                             query
                         };
                         #acquire_pool_and_connection_token_stream
-                        match binded_query
+                        match #binded_query_name_token_stream
                             .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
@@ -926,13 +929,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             crate::server::postgres::constants::WHERE_NAME
                         );
                         // println!("{query_string}");
-                        let binded_query = {
+                        let #binded_query_name_token_stream = {
                             let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #binded_query_modifications_token_stream
                             query
                         };
                         #acquire_pool_and_connection_token_stream
-                        match binded_query
+                        match #binded_query_name_token_stream
                             .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
@@ -1164,13 +1167,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             )
                         };
                         // println!("{query_string}");
-                        let binded_query = {
+                        let #binded_query_name_token_stream = {
                             let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
                             query
                         };
                         #acquire_pool_and_connection_token_stream
-                        match binded_query
+                        match #binded_query_name_token_stream
                             .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
@@ -1412,13 +1415,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             )
                         };
                         // println!("{query_string}");
-                        let binded_query = {
+                        let #binded_query_name_token_stream = {
                             let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
                             query
                         };
                         #acquire_pool_and_connection_token_stream
-                        match binded_query
+                        match #binded_query_name_token_stream
                             .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
@@ -1568,13 +1571,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             crate::server::postgres::constants::WHERE_NAME,
                         );
                         // println!("{query_string}");
-                        let binded_query = {
+                        let #binded_query_name_token_stream = {
                             let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #binded_query_modifications_token_stream
                             query
                         };
                         #acquire_pool_and_connection_token_stream
-                        match binded_query.fetch_one(#pg_connection_token_stream.as_mut()).await {
+                        match #binded_query_name_token_stream.fetch_one(#pg_connection_token_stream.as_mut()).await {
                             Ok(row) => match select.options_try_from_sqlx_row(&row) {
                                 Ok(value) => #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(value),
                                 Err(e) => {
@@ -1876,7 +1879,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             query
                         };
                         // println!("{query_string}");
-                        let binded_query = {
+                        let #binded_query_name_token_stream = {
                             let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
                             query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
@@ -1891,7 +1894,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         let vec_values = {
                             #acquire_pool_and_connection_token_stream
-                            let mut rows = binded_query.fetch(#pg_connection_token_stream.as_mut());
+                            let mut rows = #binded_query_name_token_stream.fetch(#pg_connection_token_stream.as_mut());
                             let mut vec_values = Vec::new();
                             while let Some(row) = {
                                 match {
@@ -2218,7 +2221,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             )
                         };
                         // println!("{query_string}");
-                        let binded_query = {
+                        let #binded_query_name_token_stream = {
                             let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
                             query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
@@ -2234,7 +2237,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         let vec_values = {
                             #acquire_pool_and_connection_token_stream
-                            let mut rows = binded_query.fetch(#pg_connection_token_stream.as_mut());
+                            let mut rows = #binded_query_name_token_stream.fetch(#pg_connection_token_stream.as_mut());
                             let mut vec_values = Vec::new();
                             while let Some(row) = {
                                 match {
@@ -2648,25 +2651,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         #check_for_all_none_token_stream
-                        let function_creation_query_string = {
+                        let #function_creation_query_string_name_token_stream = {
                             #create_or_replace_function_token_stream
                         };
                         // println!("{function_creation_query_string}");
-                        let function_creation_query = sqlx::query::<sqlx::Postgres>(&function_creation_query_string);
-                        #acquire_pool_and_connection_token_stream
-                        if let Err(e) = function_creation_query
-                            .execute(#pg_connection_token_stream.as_mut())
-                            .await {
-                            #from_log_and_return_error_token_stream;
-                        }
+                        let #function_creation_query_name_token_stream = sqlx::query::<sqlx::Postgres>(&#function_creation_query_string_name_token_stream);
                         let #query_string_name_token_stream = {
                             #query_string_token_stream
                         };
                         // println!("{query_string}");
-                        let binded_query = {
+                        let #binded_query_name_token_stream = {
                             #binded_query_token_stream
                         };
-                        match binded_query
+                        #acquire_pool_and_connection_token_stream
+                        //todo - maybe add transaction here? 
+                        if let Err(e) = #function_creation_query_name_token_stream
+                            .execute(#pg_connection_token_stream.as_mut())
+                            .await {
+                            #from_log_and_return_error_token_stream;
+                        }
+                        match #binded_query_name_token_stream
                             .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
@@ -2851,7 +2855,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             )
                         };
                         // println!("{query_string}");
-                        let binded_query = {
+                        let #binded_query_name_token_stream = {
                             let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                             for element in self.payload {
                                 #(#binded_query_modifications_token_stream)*
@@ -2859,7 +2863,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             query
                         };
                         #acquire_pool_and_connection_token_stream
-                        match binded_query
+                        match #binded_query_name_token_stream
                             .execute(#pg_connection_token_stream.as_mut())
                             .await
                         {
