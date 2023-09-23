@@ -2536,15 +2536,38 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         #check_for_all_none_token_stream
-                        let mut pool_connection = app_info_state.get_postgres_pool().acquire().await.unwrap();
-                        let pg_connection = sqlx::Acquire::acquire(&mut pool_connection).await.unwrap();
+                        let mut pool_connection = match app_info_state.get_postgres_pool().acquire().await {
+                            Ok(value) => value,
+                            Err(e) => {
+                                let error = crate::repositories_types::tufa_server::routes::api::cats::update_by_id::TryUpdateById::from(e);
+                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                    &error,
+                                    app_info_state.as_ref(),
+                                );
+                                return crate::repositories_types::tufa_server::routes::api::cats::update_by_id::TryUpdateByIdResponseVariants::from(error);
+                            }
+                        };
+                        let pg_connection = match sqlx::Acquire::acquire(&mut pool_connection).await {
+                            Ok(value) => value,
+                            Err(e) => {
+                                let error = crate::repositories_types::tufa_server::routes::api::cats::update_by_id::TryUpdateById::from(e);
+                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                    &error,
+                                    app_info_state.as_ref(),
+                                );
+                                return crate::repositories_types::tufa_server::routes::api::cats::update_by_id::TryUpdateByIdResponseVariants::from(error);
+                            }
+                        };
                         let function_creation_query_stringified = #create_or_replace_function_token_stream;
                         println!("{function_creation_query_stringified}");
                         let function_creation_query = sqlx::query::<sqlx::Postgres>(&function_creation_query_stringified);
-                        function_creation_query
+                        if let Err(e) = function_creation_query
                             .execute(pg_connection.as_mut())
-                            .await
-                            .unwrap();
+                            .await {
+                            let error = #prepare_and_execute_query_error_token_stream::from(e);
+                            #error_log_call_token_stream
+                            return #prepare_and_execute_query_response_variants_token_stream::from(error);
+                        }
                         let query_string = {
                             let mut increment: u64 = 0;
                             let function_name = {
@@ -2592,7 +2615,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        // println!("{prepare_and_execute_query_token_stream}");
+        println!("{prepare_and_execute_query_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
