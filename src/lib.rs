@@ -682,9 +682,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #prepare_and_execute_query_response_variants_token_stream::Desirable(())
                             }
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                #error_log_call_token_stream
-                                #prepare_and_execute_query_response_variants_token_stream::from(error)
+                                #from_log_and_return_error_token_stream
                             }
                         }
                     }
@@ -837,9 +835,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #prepare_and_execute_query_response_variants_token_stream::Desirable(())
                             }
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                #error_log_call_token_stream
-                                #prepare_and_execute_query_response_variants_token_stream::from(error)
+                                #from_log_and_return_error_token_stream
                             }
                         }
                     }
@@ -943,9 +939,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #prepare_and_execute_query_response_variants_token_stream::Desirable(())
                             }
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                #error_log_call_token_stream
-                                #prepare_and_execute_query_response_variants_token_stream::from(error)
+                                #from_log_and_return_error_token_stream
                             }
                         }
                     }
@@ -1183,9 +1177,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #prepare_and_execute_query_response_variants_token_stream::Desirable(())
                             }
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                #error_log_call_token_stream
-                                #prepare_and_execute_query_response_variants_token_stream::from(error)
+                                #from_log_and_return_error_token_stream
                             }
                         }
                     }
@@ -1433,9 +1425,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #prepare_and_execute_query_response_variants_token_stream::Desirable(())
                             }
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                #error_log_call_token_stream
-                                #prepare_and_execute_query_response_variants_token_stream::from(error)
+                                #from_log_and_return_error_token_stream
                             }
                         }
                     }
@@ -1586,15 +1576,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(row) => match select.options_try_from_sqlx_row(&row) {
                                 Ok(value) => #prepare_and_execute_query_response_variants_token_stream::Desirable(value),
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                    #error_log_call_token_stream
-                                    #prepare_and_execute_query_response_variants_token_stream::from(error)
+                                    #from_log_and_return_error_token_stream
                                 },
                             },
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                #error_log_call_token_stream
-                                #prepare_and_execute_query_response_variants_token_stream::from(error)
+                                #from_log_and_return_error_token_stream
                             },
                         }
                     }
@@ -1914,9 +1900,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 {
                                     Ok(option_pg_row) => option_pg_row,
                                     Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                        #error_log_call_token_stream
-                                        return #prepare_and_execute_query_response_variants_token_stream::from(error);
+                                        #from_log_and_return_error_token_stream;
                                     }
                                 }
                             } {
@@ -1925,9 +1909,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         vec_values.push(value);
                                     }
                                     Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                        #error_log_call_token_stream
-                                        return #prepare_and_execute_query_response_variants_token_stream::from(error);
+                                        #from_log_and_return_error_token_stream;
                                     }
                                 }
                             }
@@ -2261,9 +2243,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 {
                                     Ok(option_pg_row) => option_pg_row,
                                     Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                        #error_log_call_token_stream
-                                        return #prepare_and_execute_query_response_variants_token_stream::from(error);
+                                        #from_log_and_return_error_token_stream;
                                     }
                                 }
                             } {
@@ -2272,9 +2252,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         vec_values.push(value);
                                     }
                                     Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                        #error_log_call_token_stream
-                                        return #prepare_and_execute_query_response_variants_token_stream::from(error);
+                                        #from_log_and_return_error_token_stream;
                                     }
                                 }
                             }
@@ -2635,9 +2613,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         if let Err(e) = function_creation_query
                             .execute(#pg_connection_token_stream.as_mut())
                             .await {
-                            let error = #prepare_and_execute_query_error_token_stream::from(e);
-                            #error_log_call_token_stream
-                            return #prepare_and_execute_query_response_variants_token_stream::from(error);
+                            #from_log_and_return_error_token_stream;
                         }
                         let query_string = {
                             let mut increment: u64 = 0;
@@ -2677,9 +2653,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #prepare_and_execute_query_response_variants_token_stream::Desirable(())
                             }
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                #error_log_call_token_stream
-                                #prepare_and_execute_query_response_variants_token_stream::from(error)
+                                #from_log_and_return_error_token_stream
                             }
                         }
                     }
@@ -2872,7 +2846,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #prepare_and_execute_query_response_variants_token_stream::Desirable(())
                             }
                             Err(e) => {
-                                #from_log_and_return_error_token_stream
+                                #from_log_and_return_error_token_stream;
                             }
                         }
                     }
