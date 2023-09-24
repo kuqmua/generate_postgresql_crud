@@ -569,13 +569,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         crate_server_postgres_constants_array_name_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_array_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    // let crate_server_postgres_constants_update_name_token_stream = {
-    //     let crate_server_postgres_constants_update_name_stringified = format!("{crate_server_postgres_constants_stringified}UPDATE_NAME");
-    //     crate_server_postgres_constants_update_name_stringified.parse::<proc_macro2::TokenStream>()
-    //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_update_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    // };
-
-    
+    let crate_server_postgres_constants_select_name_token_stream = {
+        let crate_server_postgres_constants_select_name_stringified = format!("{crate_server_postgres_constants_stringified}SELECT_NAME");
+        crate_server_postgres_constants_select_name_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_select_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let crate_server_postgres_constants_order_by_name_token_stream = {
+        let crate_server_postgres_constants_order_by_name_stringified = format!("{crate_server_postgres_constants_stringified}ORDER_BY_NAME");
+        crate_server_postgres_constants_order_by_name_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_order_by_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let crate_server_postgres_constants_limit_name_token_stream = {
+        let crate_server_postgres_constants_limit_name_stringified = format!("{crate_server_postgres_constants_stringified}LIMIT_NAME");
+        crate_server_postgres_constants_limit_name_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_limit_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let crate_server_postgres_constants_offset_name_token_stream = {
+        let crate_server_postgres_constants_offset_name_stringified = format!("{crate_server_postgres_constants_stringified}OFFSET_NAME");
+        crate_server_postgres_constants_offset_name_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_offset_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
 
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
@@ -1668,7 +1681,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     format!(
                         #query_token_stream,
-                        crate::server::postgres::constants::SELECT_NAME,
+                        #crate_server_postgres_constants_select_name_token_stream,
                         crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
                         #crate_server_postgres_constants_from_name_token_stream,
                         crate::repositories_types::tufa_server::routes::api::cats::CATS,
@@ -1899,7 +1912,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     format!(
                         "{} {} {} {} {}",
-                        crate::server::postgres::constants::SELECT_NAME,
+                        #crate_server_postgres_constants_select_name_token_stream,
                         crate::server::postgres::generate_query::GenerateQuery::generate_query(
                             &self.payload.select
                         ),
@@ -1922,7 +1935,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 };
                                 additional_parameters.push_str(&format!(
                                     "{prefix}{} {} {order_stringified}",
-                                    crate::server::postgres::constants::ORDER_BY_NAME,
+                                    #crate_server_postgres_constants_order_by_name_token_stream,
                                     value.column
                                 ));
                             }
@@ -1945,7 +1958,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 };
                                 additional_parameters.push_str(&format!(
                                     "{prefix}{} {value}",
-                                    crate::server::postgres::constants::LIMIT_NAME,
+                                    #crate_server_postgres_constants_limit_name_token_stream,
                                 ));
                             }
                             {
@@ -1967,7 +1980,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 };
                                 additional_parameters.push_str(&format!(
                                     "{prefix}{} {value}",
-                                    crate::server::postgres::constants::OFFSET_NAME,
+                                    #crate_server_postgres_constants_offset_name_token_stream,
                                 ));
                             }
                             additional_parameters
@@ -2254,7 +2267,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     format!(
                         "{} {} {} {} {}",
-                        crate::server::postgres::constants::SELECT_NAME,
+                        #crate_server_postgres_constants_select_name_token_stream,
                         crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
                         #crate_server_postgres_constants_from_name_token_stream,
                         crate::repositories_types::tufa_server::routes::api::cats::CATS,
@@ -2273,7 +2286,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 };
                                 additional_parameters.push_str(&format!(
                                     "{prefix}{} {} {order_stringified}",
-                                    crate::server::postgres::constants::ORDER_BY_NAME,
+                                    #crate_server_postgres_constants_order_by_name_token_stream,
                                     value.0.column
                                 ));
                             }
@@ -2296,7 +2309,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 };
                                 additional_parameters.push_str(&format!(
                                     "{prefix}{} {value}",
-                                    crate::server::postgres::constants::LIMIT_NAME,
+                                    #crate_server_postgres_constants_limit_name_token_stream,
                                 ));
                             }
                             if let Some(value) = &self.query.offset {
@@ -2318,7 +2331,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 };
                                 additional_parameters.push_str(&format!(
                                     "{prefix}{} {value}",
-                                    crate::server::postgres::constants::OFFSET_NAME,
+                                    #crate_server_postgres_constants_offset_name_token_stream,
                                 ));
                             }
                             additional_parameters
@@ -2740,7 +2753,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     format!(
                         #query_token_stream,
-                        crate::server::postgres::constants::SELECT_NAME,
+                        #crate_server_postgres_constants_select_name_token_stream,
                         {
                             #query_parameters_token_stream
                         }
