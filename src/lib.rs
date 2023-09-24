@@ -1592,15 +1592,34 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
-            let query_token_stream = {
-                let query_stringified = format!("\"{{}} {{}} {{}} {{}} {{}} {id_field_ident} = $1\"");
-                query_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            let query_string_token_stream = {
+                let query_token_stream = {
+                    let query_stringified = format!("\"{{}} {{}} {{}} {{}} {{}} {id_field_ident} = $1\"");
+                    query_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote!{
+                    format!(
+                        #query_token_stream,
+                        crate::server::postgres::constants::SELECT_NAME,
+                        crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
+                         crate::server::postgres::constants::FROM_NAME,
+                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        crate::server::postgres::constants::WHERE_NAME,
+                    )
+                }
             };
-            let binded_query_modifications_token_stream = quote::quote!{
-                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                    self.path.#id_field_ident, query,
-                );
+            let binded_query_token_stream = {
+                let binded_query_modifications_token_stream = quote::quote!{
+                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                        self.path.#id_field_ident, query,
+                    );
+                };
+                quote::quote!{
+                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    #binded_query_modifications_token_stream
+                    query
+                }
             };
             quote::quote!{
                 impl #read_by_id_parameters_camel_case_token_stream {
@@ -1610,19 +1629,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         let select = self.query.select.unwrap_or_default();
-                        let #query_string_name_token_stream = format!(
-                            #query_token_stream,
-                            crate::server::postgres::constants::SELECT_NAME,
-                            crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
-                             crate::server::postgres::constants::FROM_NAME,
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
-                            crate::server::postgres::constants::WHERE_NAME,
-                        );
+                        let #query_string_name_token_stream = #query_string_token_stream;
                         // println!("{query_string}");
                         let #binded_query_name_token_stream = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
-                            #binded_query_modifications_token_stream
-                            query
+                            #binded_query_token_stream
                         };
                         #acquire_pool_and_connection_token_stream
                         match #binded_query_name_token_stream.fetch_one(#pg_connection_token_stream.as_mut()).await {
