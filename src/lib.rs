@@ -2826,38 +2826,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
-            let query_token_stream = {
-                let column_names = fields_named.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    let possible_dot_space = match (index + 1) == fields_named_len {
-                        true => "",
-                        false => dot_space,
-                    };
-                    acc.push_str(&format!("{field_ident}{possible_dot_space}"));
-                    acc
-                });
-                let declarations = {
-                    let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
-                    let fields_named_len = fields_named_filtered.len();
-                    fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
-                        let field_ident = field.ident.clone().unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                        let possible_dot_space = match (index + 1) == fields_named_len {
-                            true => "",
-                            false => dot_space,
-                        };
-                        acc.push_str(&format!("{field_ident} = data.{field_ident}{possible_dot_space}"));
-                        acc
-                    })
-                };
-                let query_stringified = format!("\"{{}} {{}} {{}} t {{}} {declarations} {{}} (values {{values}}) as data({column_names}) where t.{id_field_ident} = data.{id_field_ident}\"");
-                query_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
             let additional_parameters_modification_token_stream = fields_named.iter().map(|field| {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
@@ -2880,18 +2848,87 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 }
             });
-            let binded_query_modifications_token_stream = fields_named.iter().map(|field|{
-                let field_ident = field.ident.clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+            let query_string_token_stream = {
+                let query_token_stream = {
+                    let column_names = fields_named.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
+                        let field_ident = field.ident.clone()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                            });
+                        let possible_dot_space = match (index + 1) == fields_named_len {
+                            true => "",
+                            false => dot_space,
+                        };
+                        acc.push_str(&format!("{field_ident}{possible_dot_space}"));
+                        acc
                     });
+                    let declarations = {
+                        let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+                        let fields_named_len = fields_named_filtered.len();
+                        fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
+                            let field_ident = field.ident.clone().unwrap_or_else(|| {
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                            });
+                            let possible_dot_space = match (index + 1) == fields_named_len {
+                                true => "",
+                                false => dot_space,
+                            };
+                            acc.push_str(&format!("{field_ident} = data.{field_ident}{possible_dot_space}"));
+                            acc
+                        })
+                    };
+                    let query_stringified = format!("\"{{}} {{}} {{}} t {{}} {declarations} {{}} (values {{values}}) as data({column_names}) where t.{id_field_ident} = data.{id_field_ident}\"");
+                    query_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
                 quote::quote!{
-                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                        element.#field_ident,
-                        query,
-                    ); 
+                    #increment_initialization_token_stream
+                    let mut values = std::string::String::default();
+                    for element in &self.payload {
+                        values.push_str(&format!(
+                            "({}), ",
+                            {
+                                let mut element_value = std::string::String::default();
+                                #(#additional_parameters_modification_token_stream)*
+                                element_value.pop();//todo - remove it 
+                                element_value.pop();
+                                element_value
+                            }
+                        ));
+                    }
+                    values.pop();
+                    values.pop();
+                    format!(
+                        #query_token_stream,
+                        crate::server::postgres::constants::UPDATE_NAME,
+                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        crate::server::postgres::constants::AS_NAME,
+                        crate::server::postgres::constants::SET_NAME,
+                        crate::server::postgres::constants::FROM_NAME,
+                    )
                 }
-            });
+            };
+            let binded_query_token_stream = {
+                let binded_query_modifications_token_stream = fields_named.iter().map(|field|{
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    quote::quote!{
+                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                            element.#field_ident,
+                            query,
+                        ); 
+                    }
+                });
+                quote::quote!{
+                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    for element in self.payload {
+                        #(#binded_query_modifications_token_stream)*
+                    }
+                    query
+                }
+            };
             quote::quote!{
                 impl #update_parameters_camel_case_token_stream {
                     pub async fn #prepare_and_execute_query_name_token_stream(
@@ -2900,38 +2937,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #prepare_and_execute_query_response_variants_token_stream
                     {
                         let #query_string_name_token_stream = {
-                            #increment_initialization_token_stream
-                            let mut values = std::string::String::default();
-                            for element in &self.payload {
-                                values.push_str(&format!(
-                                    "({}), ",
-                                    {
-                                        let mut element_value = std::string::String::default();
-                                        #(#additional_parameters_modification_token_stream)*
-                                        element_value.pop();//todo - remove it 
-                                        element_value.pop();
-                                        element_value
-                                    }
-                                ));
-                            }
-                            values.pop();
-                            values.pop();
-                            format!(
-                                #query_token_stream,
-                                crate::server::postgres::constants::UPDATE_NAME,
-                                crate::repositories_types::tufa_server::routes::api::cats::CATS,
-                                crate::server::postgres::constants::AS_NAME,
-                                crate::server::postgres::constants::SET_NAME,
-                                crate::server::postgres::constants::FROM_NAME,
-                            )
+                            #query_string_token_stream
                         };
                         // println!("{query_string}");
                         let #binded_query_name_token_stream = {
-                            let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
-                            for element in self.payload {
-                                #(#binded_query_modifications_token_stream)*
-                            }
-                            query
+                            #binded_query_token_stream
                         };
                         #acquire_pool_and_connection_token_stream
                         match #binded_query_name_token_stream
