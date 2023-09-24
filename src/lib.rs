@@ -589,7 +589,39 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         crate_server_postgres_constants_offset_name_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_offset_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-
+    let generate_create_or_replace_function_token_stream = |
+        operation: Operation
+    | -> proc_macro2::TokenStream {
+        let create_or_replace_function_name_original_token_stream = {
+            let create_or_replace_function_name_original_stringified = format!("\"{ident_lower_case_stringified}{operation}\"");
+            create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_name_original_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let create_or_replace_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                let format_value_token_stream = {
+                    let format_value_stringified = format!("\"_{field_ident}\"");
+                    format_value_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                Some(quote::quote!{
+                    if self.payload.#field_ident.is_some() {
+                        value.push_str(&format!(#format_value_token_stream));
+                    }
+                })
+            },
+        });
+        quote::quote!{
+            let mut value = format!(#create_or_replace_function_name_original_token_stream);
+            #(#create_or_replace_function_name_additions_token_stream)*
+            value
+        }
+    };
     // let path_lower_case_token_stream= quote::quote!{path};
     // let query_lower_case_token_stream= quote::quote!{query};
     // let payload_lower_case_token_stream= quote::quote!{payload};
@@ -2481,6 +2513,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        //
+        //
         // println!("{payload_token_stream}");
         let prepare_and_execute_query_token_stream = {
             let update_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_by_id_name_camel_case_stringified);
@@ -2513,37 +2547,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let update_by_id_stringified = "_update_by_id";
             let create_or_replace_function_token_stream = {
-                let create_or_replace_function_name_token_stream = {
-                    let create_or_replace_function_name_original_token_stream = {
-                        let create_or_replace_function_name_original_stringified = format!("\"{ident_lower_case_stringified}{update_by_id_stringified}\"");
-                        create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
-                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_name_original_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                    };
-                    let create_or_replace_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                        true => None,
-                        false => {
-                            let field_ident = field.ident.clone()
-                                .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                                });
-                            let format_value_token_stream = {
-                                let format_value_stringified = format!("\"_{field_ident}\"");
-                                format_value_stringified.parse::<proc_macro2::TokenStream>()
-                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                            };
-                            Some(quote::quote!{
-                                if self.payload.#field_ident.is_some() {
-                                    value.push_str(&format!(#format_value_token_stream));
-                                }
-                            })
-                        },
-                    });
-                    quote::quote!{
-                        let mut value = format!(#create_or_replace_function_name_original_token_stream);
-                        #(#create_or_replace_function_name_additions_token_stream)*
-                        value
-                    }
-                };
+                let create_or_replace_function_name_token_stream = generate_create_or_replace_function_token_stream(Operation::UpdateById);
+                println!("{create_or_replace_function_name_token_stream}");
+                println!("-----------");
                 let create_or_replace_function_parameters_token_stream = {
                     let create_or_replace_function_parameters_original_token_stream = {
                         let create_or_replace_function_parameters_stringified = format!("\"{ident_lower_case_stringified}_{id_field_ident} bigint, \"");//todo postgresql type
@@ -2643,25 +2649,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let query_string_token_stream = {
                 let function_name_token_stream = {
-                    let additional_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                        true => None,
-                        false => {
-                            let field_ident = field.ident.clone()
-                                .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                                });
-                            let handle_token_stream = {
-                                let handle_stringified = format!("\"_{field_ident}\"");
-                                handle_stringified.parse::<proc_macro2::TokenStream>()
-                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                            };
-                            Some(quote::quote!{
-                                if self.payload.#field_ident.is_some() {
-                                    additional_function_name.push_str(#handle_token_stream);
-                                }
-                            })
-                        }
-                    });
+                    let create_or_replace_function_token_stream = generate_create_or_replace_function_token_stream(Operation::UpdateById);
                     let function_name_handle_token_stream = {
                         let handle_stringified = format!("\"{ident_lower_case_stringified}{update_by_id_stringified}{{}}\"");//{{additional_function_name}}
                         handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -2669,9 +2657,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     quote::quote!{
                         let additional_function_name = {
-                            let mut additional_function_name = std::string::String::default();
-                            #(#additional_function_name_additions_token_stream)*
-                            additional_function_name
+                            #create_or_replace_function_token_stream
                         };
                         format!(
                             #function_name_handle_token_stream,
@@ -2679,6 +2665,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         )
                     }
                 };
+                println!("{function_name_token_stream}");
                 let query_token_stream = {
                     let query_stringified = format!("\"{{}} {pg_temp_stringified}.{{function_name}}({{}})\"");
                     query_stringified.parse::<proc_macro2::TokenStream>()
@@ -3074,6 +3061,35 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
+enum Operation {
+    CreateBatch,
+    Create,
+    DeleteById,
+    DeleteWithBody,
+    Delete,
+    ReadById,
+    ReadWithBody,
+    Read,
+    UpdateById,
+    Update
+}
+
+impl std::fmt::Display for Operation {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::CreateBatch => write!(f, "create_batch"),
+            Self::Create => write!(f, "create"),
+            Self::DeleteById => write!(f, "delete_by_id"),
+            Self::DeleteWithBody => write!(f, "delete_with_body"),
+            Self::Delete => write!(f, "delete"),
+            Self::ReadById => write!(f, "read_by_id"),
+            Self::ReadWithBody => write!(f, "read_with_body"),
+            Self::Read => write!(f, "read"),
+            Self::UpdateById => write!(f, "update_by_id"),
+            Self::Update => write!(f, "update"),
+        }
+    }
+}
 // `DO` blocks cannot use bound parameters.  If you need to pass in values then you can create a temporary function and call that instead, though it's a bit more of a hassle.
 
 // #[derive(strum_macros::Display)]//strum_macros::EnumIter, 
