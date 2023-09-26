@@ -2593,27 +2593,44 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         ));
                     }
                 };
+                let format_exception_logic_handle_token_stream = {
+                    let format_exception_logic_handle_stringified = format!("\"if not found then raise exception \'{{}} {id_field_ident} % not found\', {{}}_{id_field_ident}\"");
+                    format_exception_logic_handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_exception_logic_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                let format_handle_token_stream = {
+                    let format_handle_stringified = format!("\"create or replace function {pg_temp_stringified}.{{}}({{}}) returns void language plpgsql as $$ begin {{}};{{}};end if;end $$\"");
+                    format_handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
                 quote::quote!{
-                    let create_or_replace_function_name = {
-                        #create_or_replace_function_name_token_stream
-                    };
-                    let create_or_replace_function_parameters = {
-                        #create_or_replace_function_parameters_token_stream
-                    };
-                    let create_or_replace_function_first_line_query = {
-                        let mut value = format!(
-                            "{} {} {} ",
-                            #crate_server_postgres_constants_update_name_token_stream,
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
-                            #crate_server_postgres_constants_set_name_token_stream,
-                        );
-                        #(#create_or_replace_function_additional_parameters_modification_token_stream)*
-                        #create_or_replace_function_additional_parameters_id_modification_token_stream
-                        value
-                    };
-                    let create_or_replace_function_second_line_query = std::string::String::from("if not found then raise exception 'cats id % not found', cats_id");
-                    let create_or_replace_function_third_line_query = std::string::String::from("end if");
-                    format!("create or replace function pg_temp.{create_or_replace_function_name}({create_or_replace_function_parameters}) returns void language plpgsql as $$ begin {create_or_replace_function_first_line_query};{create_or_replace_function_second_line_query};{create_or_replace_function_third_line_query};end $$")
+                    format!(
+                        #format_handle_token_stream,
+                        {
+                            #create_or_replace_function_name_token_stream
+                        },
+                        {
+                            #create_or_replace_function_parameters_token_stream
+                        },
+                        {
+                            let mut value = format!(
+                                "{} {} {} ",
+                                #crate_server_postgres_constants_update_name_token_stream,
+                                crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                                #crate_server_postgres_constants_set_name_token_stream,
+                            );
+                            #(#create_or_replace_function_additional_parameters_modification_token_stream)*
+                            #create_or_replace_function_additional_parameters_id_modification_token_stream
+                            value
+                        },
+                        {
+                            format!(
+                                #format_exception_logic_handle_token_stream,
+                                crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                                crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                            )
+                        }
+                    )
                 }
             };
             let query_string_token_stream = {
@@ -2956,7 +2973,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #query_string_name_token_stream = {
                             #query_string_token_stream
                         };
-                        // println!("{query_string}");
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
                         };
