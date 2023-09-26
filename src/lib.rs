@@ -2617,24 +2617,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let query_string_token_stream = {
-                let function_name_token_stream = {
-                    let function_name_handle_token_stream = {
-                        let handle_stringified = format!("\"{ident_lower_case_stringified}{operation}{{}}\"");//{{additional_function_name}}
-                        handle_stringified.parse::<proc_macro2::TokenStream>()
-                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                    };
-                    quote::quote!{
-                        let additional_function_name = {
-                            #create_or_replace_function_token_stream
-                        };
-                        format!(
-                            #function_name_handle_token_stream,
-                            additional_function_name
-                        )
-                    }
-                };
                 let query_token_stream = {
-                    let query_stringified = format!("\"{{}} {pg_temp_stringified}.{{function_name}}({{}})\"");
+                    let query_stringified = format!("\"{{}} {pg_temp_stringified}.{{}}({{}})\"");
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -2702,12 +2686,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 quote::quote!{
-                    let function_name = {
-                        #function_name_token_stream
-                    };
                     format!(
                         #query_token_stream,
                         #crate_server_postgres_constants_select_name_token_stream,
+                        {
+                            #create_or_replace_function_name_token_stream
+                        },
                         {
                             #query_parameters_token_stream
                         }
@@ -2756,11 +2740,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #function_creation_query_string_name_token_stream = {
                             #create_or_replace_function_token_stream
                         };
-                        // println!("{function_creation_query_string}");
                         let #query_string_name_token_stream = {
                             #query_string_token_stream
                         };
-                        // println!("{query_string}");
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
                         };
@@ -3094,7 +3076,6 @@ fn generate_create_or_replace_function_token_stream(
     quote::quote! {
         let mut value = format!(#create_or_replace_function_name_original_token_stream);
         #(#create_or_replace_function_name_additions_token_stream)*
-        println!("{value}");
         value
     }
 }
