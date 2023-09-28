@@ -788,7 +788,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
-        let http_request = {
+        let http_request_token_stream = {
             let tvfrr_extraction_logic_token_stream = {
                 let tvfrr_extraction_logic_stringified = format!("tvfrr_extraction_logic_{try_lower_case_stringified}_{create_batch_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
@@ -839,7 +839,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
-            #http_request
+            #http_request_token_stream
         }
     };
     // println!("{create_batch_token_stream}");
@@ -999,7 +999,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
-        let http_request = {
+        let http_request_token_stream = {
             let tvfrr_extraction_logic_token_stream = {
                 let tvfrr_extraction_logic_stringified = format!("tvfrr_extraction_logic_{try_lower_case_stringified}_{create_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
@@ -1049,7 +1049,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
-            #http_request
+            #http_request_token_stream
         }
     };
     // println!("{create_token_stream}");
@@ -1159,7 +1159,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
-        let http_request = {
+        let http_request_token_stream = {
             quote::quote!{
                 pub async fn try_delete_by_id<'a>(
                     server_location: &str,
@@ -1194,7 +1194,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #path_token_stream
             #prepare_and_execute_query_token_stream
-            #http_request
+            #http_request_token_stream
         }
     };
     // println!("{delete_by_id_token_stream}");
@@ -1436,7 +1436,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
-        let http_request = {
+        let http_request_token_stream = {
             quote::quote!{
                 pub async fn try_delete_with_body<'a>(
                     server_location: &str,
@@ -1482,7 +1482,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
-            #http_request
+            #http_request_token_stream
         }
     };
     // println!("{delete_with_body_token_stream}");
@@ -1733,7 +1733,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
-        let http_request = {
+        let http_request_token_stream = {
             quote::quote!{
                 pub async fn try_delete<'a>(
                     server_location: &str,
@@ -1778,7 +1778,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #query_for_url_encoding_token_stream
             #into_url_encoding_version_token_stream
             #prepare_and_execute_query_token_stream
-            #http_request
+            #http_request_token_stream
         }
     };
     // println!("{delete_token_stream}");
@@ -1937,7 +1937,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
-        let http_request = {
+        let http_request_token_stream = {
             quote::quote!{
                 pub async fn try_read_by_id(
                     server_location: &str,
@@ -1989,7 +1989,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #query_for_url_encoding_token_stream
             #into_url_encoding_version_token_stream
             #prepare_and_execute_query_token_stream
-            #http_request
+            #http_request_token_stream
         }
     };
     // println!("{read_by_id_token_stream}");
@@ -2041,14 +2041,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{payload_token_stream}");
         let prepare_and_execute_query_token_stream = {
-            let read_with_body_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_with_body_name_camel_case_stringified);
             let prepare_and_execute_query_response_variants_token_stream = {
-                let try_response_variants_path_stringified = format!("{path_to_crud}{read_with_body_name_lower_case_stringified}::{try_camel_case_stringified}{read_with_body_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+                let try_response_variants_path_stringified = format!("{try_camel_case_stringified}{read_with_body_name_camel_case_stringified}{response_variants_camel_case_stringified}");
                 try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let prepare_and_execute_query_error_token_stream = {
-                let error_path_stringified = format!("{path_to_crud}{read_with_body_name_lower_case_stringified}::{try_camel_case_stringified}{read_with_body_name_camel_case_stringified}");
+                let error_path_stringified = format!("{try_camel_case_stringified}{read_with_body_name_camel_case_stringified}");
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -2316,10 +2315,56 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let http_request = {
+            quote::quote!{
+                pub async fn try_read_with_body<'a>(
+                    server_location: &str,
+                    parameters: crate::repositories_types::tufa_server::routes::api::cats::ReadWithBodyParameters,
+                ) -> Result<
+                    Vec<crate::repositories_types::tufa_server::routes::api::cats::CatOptions>,
+                    TryReadWithBodyErrorNamed,
+                > {
+                    let payload_json = match serde_json::to_string(&parameters.payload) {
+                        Ok(payload_json) => payload_json,
+                        Err(e) => {
+                            return Err(TryReadWithBodyErrorNamed::SerdeJsonToString {
+                                serde_json_to_string: e,
+                                code_occurence: crate::code_occurence_tufa_common!(),
+                            });
+                        }
+                    };
+                    match tvfrr_extraction_logic_try_read_with_body(
+                        reqwest::Client::new()
+                        .post(&format!(
+                            "{server_location}/api/{}/search",
+                            crate::repositories_types::tufa_server::routes::api::cats::CATS
+                        ))
+                        .header(
+                            crate::common::git::project_git_info::PROJECT_COMMIT,
+                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO
+                                .project_commit,
+                        )
+                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                        .body(payload_json)
+                        .send(),
+                    )
+                    .await
+                    {
+                        Ok(value) => Ok(value),
+                        Err(e) => Err(TryReadWithBodyErrorNamed::RequestError {
+                            request_error: e,
+                            code_occurence: crate::code_occurence_tufa_common!(),
+                        }),
+                    }
+                }
+            }
+        };
+        // println!("{http_request}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
+            #http_request
         }
     };
     // println!("{read_with_body_token_stream}");
