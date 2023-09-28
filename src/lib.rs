@@ -2827,14 +2827,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{payload_token_stream}");
         let prepare_and_execute_query_token_stream = {
-            let update_by_id_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_by_id_name_camel_case_stringified);
             let prepare_and_execute_query_response_variants_token_stream = {
-                let try_response_variants_path_stringified = format!("{path_to_crud}{update_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+                let try_response_variants_path_stringified = format!("{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}{response_variants_camel_case_stringified}");
                 try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let prepare_and_execute_query_error_token_stream = {
-                let error_path_stringified = format!("{path_to_crud}{update_by_id_name_lower_case_stringified}::{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}");
+                let error_path_stringified = format!("{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}");
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -3120,11 +3119,54 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let http_request_token_stream = {
+            quote::quote!{
+                pub async fn try_update_by_id<'a>(
+                    server_location: &str,
+                    parameters: crate::repositories_types::tufa_server::routes::api::cats::UpdateByIdParameters,
+                ) -> Result<(), TryUpdateByIdErrorNamed> {
+                    let payload_json = match serde_json::to_string(&parameters.payload) {
+                        Ok(payload_json) => payload_json,
+                        Err(e) => {
+                            return Err(TryUpdateByIdErrorNamed::SerdeJsonToString {
+                                serde_json_to_string: e,
+                                code_occurence: crate::code_occurence_tufa_common!(),
+                            });
+                        }
+                    };
+                    match tvfrr_extraction_logic_try_update_by_id(
+                        reqwest::Client::new()
+                        .patch(&format!(
+                            "{server_location}/api/{}/{}",
+                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                            parameters.path.id.to_inner()
+                        ))
+                        .header(
+                            crate::common::git::project_git_info::PROJECT_COMMIT,
+                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
+                        )
+                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                        .body(payload_json)
+                        .send(),
+                    )
+                    .await
+                    {
+                        Ok(_) => Ok(()),
+                        Err(e) => Err(TryUpdateByIdErrorNamed::RequestError {
+                            request_error: e,
+                            code_occurence: crate::code_occurence_tufa_common!(),
+                        }),
+                    }
+                }
+            }
+        };
+        // println!("{http_request_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
+            #http_request_token_stream
         }
     };
     // println!("{update_by_id_token_stream}");
