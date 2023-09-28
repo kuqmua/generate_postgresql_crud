@@ -2720,13 +2720,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         ));
                     }
                 };
-                let format_exception_logic_handle_token_stream = {
-                    let format_exception_logic_handle_stringified = format!("\"if not found then raise exception \'{{}} {id_field_ident} % not found\', {{}}_{id_field_ident}\"");
-                    format_exception_logic_handle_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_exception_logic_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
                 let format_handle_token_stream = {
-                    let format_handle_stringified = format!("\"create or replace function {pg_temp_stringified}.{{}}({{}}) returns void language plpgsql as $$ begin {{}};{{}};end if;end $$\"");
+                    let format_handle_stringified = format!("\"create or replace function {pg_temp_stringified}.{{}}({{}}) returns void language plpgsql as $$ begin {{}};if not found then raise exception \'{id_field_ident} % not found\', {ident_lower_case_stringified}_{id_field_ident};end if;end $$\"");
                     format_handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -2749,13 +2744,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #(#create_or_replace_function_additional_parameters_modification_token_stream)*
                             #create_or_replace_function_additional_parameters_id_modification_token_stream
                             value
-                        },
-                        {
-                            format!(
-                                #format_exception_logic_handle_token_stream,
-                                crate::repositories_types::tufa_server::routes::api::cats::CATS,
-                                crate::repositories_types::tufa_server::routes::api::cats::CATS,
-                            )
                         }
                     )
                 }
@@ -2906,7 +2894,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(())
                             }
                             Err(e) => {
-                                #from_log_and_return_error_token_stream
+                                #from_log_and_return_error_token_stream;
                             }
                         }
                     }
