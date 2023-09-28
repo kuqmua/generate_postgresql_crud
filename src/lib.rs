@@ -492,7 +492,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let try_camel_case_stringified = "Try";
     let try_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&try_camel_case_stringified.to_string());
     let response_variants_camel_case_stringified = "ResponseVariants";
-    let path_to_crud = "crate::repositories_types::tufa_server::routes::api::cats::";
+    // let path_to_crud = "crate::repositories_types::tufa_server::routes::api::cats::";
     let app_info_state_path = quote::quote!{crate::repositories_types::tufa_server::routes::api::cats::DynArcGetConfigGetPostgresPoolSendSync};
     let error_log_call_token_stream = quote::quote!{
         crate::common::error_logs_logic::error_log::ErrorLog::error_log(
@@ -1010,7 +1010,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn try_create<'a>(
                     server_location: &str,
-                    parameters: crate::repositories_types::tufa_server::routes::api::cats::CreateParameters,
+                    parameters: CreateParameters,
                 ) -> Result<(), TryCreateErrorNamed> {
                     let stringified_json = match serde_json::to_string(&parameters.payload) {
                         Ok(stringified_json) => stringified_json,
@@ -1165,7 +1165,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn try_delete_by_id<'a>(
                     server_location: &str,
-                    parameters: crate::repositories_types::tufa_server::routes::api::cats::DeleteByIdParameters,
+                    parameters: DeleteByIdParameters,
                 ) -> Result<(), TryDeleteByIdErrorNamed> {
                     match tvfrr_extraction_logic_try_delete_by_id(
                         reqwest::Client::new()
@@ -1442,7 +1442,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn try_delete_with_body<'a>(
                     server_location: &str,
-                    parameters: crate::repositories_types::tufa_server::routes::api::cats::DeleteWithBodyParameters,
+                    parameters: DeleteWithBodyParameters,
                 ) -> Result<(), TryDeleteWithBodyErrorNamed> {
                     let payload_json = match serde_json::to_string(&parameters.payload) {
                         Ok(payload_json) => payload_json,
@@ -1739,7 +1739,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn try_delete<'a>(
                     server_location: &str,
-                    parameters: crate::repositories_types::tufa_server::routes::api::cats::DeleteParameters,
+                    parameters: DeleteParameters,
                 ) -> Result<(), TryDeleteErrorNamed> {
                     let encoded_query = match serde_urlencoded::to_string(parameters.query.into_url_encoding_version()) {
                         Ok(encoded_query) => encoded_query,
@@ -1943,9 +1943,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn try_read_by_id(
                     server_location: &str,
-                    parameters: crate::repositories_types::tufa_server::routes::api::cats::ReadByIdParameters,
+                    parameters: ReadByIdParameters,
                 ) -> Result<
-                    crate::repositories_types::tufa_server::routes::api::cats::CatOptions,
+                    CatOptions,
                     TryReadByIdErrorNamed,
                 > {
                     let encoded_query = match serde_urlencoded::to_string(parameters.query.into_url_encoding_version()) {
@@ -2321,9 +2321,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn try_read_with_body<'a>(
                     server_location: &str,
-                    parameters: crate::repositories_types::tufa_server::routes::api::cats::ReadWithBodyParameters,
+                    parameters: ReadWithBodyParameters,
                 ) -> Result<
-                    Vec<crate::repositories_types::tufa_server::routes::api::cats::CatOptions>,
+                    Vec<CatOptions>,
                     TryReadWithBodyErrorNamed,
                 > {
                     let payload_json = match serde_json::to_string(&parameters.payload) {
@@ -2717,9 +2717,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn try_read<'a>(
                     server_location: &str,
-                    parameters: crate::repositories_types::tufa_server::routes::api::cats::ReadParameters,
+                    parameters: ReadParameters,
                 ) -> Result<
-                    Vec<crate::repositories_types::tufa_server::routes::api::cats::CatOptions>,
+                    Vec<CatOptions>,
                     TryReadErrorNamed,
                 > {
                     let encoded_query = match serde_urlencoded::to_string(parameters.query.into_url_encoding_version()) {
@@ -3123,7 +3123,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn try_update_by_id<'a>(
                     server_location: &str,
-                    parameters: crate::repositories_types::tufa_server::routes::api::cats::UpdateByIdParameters,
+                    parameters: UpdateByIdParameters,
                 ) -> Result<(), TryUpdateByIdErrorNamed> {
                     let payload_json = match serde_json::to_string(&parameters.payload) {
                         Ok(payload_json) => payload_json,
@@ -3372,7 +3372,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn try_update<'a>(
                     server_location: &str,
-                    parameters: crate::repositories_types::tufa_server::routes::api::cats::UpdateParameters,
+                    parameters: UpdateParameters,
                 ) -> Result<(), TryUpdateErrorNamed> {
                     let payload_json = match serde_json::to_string(&parameters.payload) {
                         Ok(payload_json) => payload_json,
