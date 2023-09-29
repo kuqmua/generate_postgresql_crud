@@ -892,7 +892,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         axum::extract::rejection::JsonRejection,
                     >,
                 ) -> impl axum::response::IntoResponse {
-                    let parameters = CreateBatchParameters {
+                    let parameters = #create_batch_parameters_camel_case_token_stream {
                         payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
                             Vec<CreateBatchPayloadElement>,
                             TryCreateBatchResponseVariants,
@@ -1157,13 +1157,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #create_lower_case_token_stream(
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                     payload_extraction_result: Result<
-                        axum::Json<CreatePayload>,
+                        axum::Json<#create_payload_camel_case_token_stream>,
                         axum::extract::rejection::JsonRejection,
                     >,
                 ) -> impl axum::response::IntoResponse {
-                    let parameters = CreateParameters {
+                    let parameters = #create_parameters_camel_case_token_stream {
                         payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
-                            CreatePayload,
+                            #create_payload_camel_case_token_stream,
                             TryCreateResponseVariants,
                         >::try_extract_value(payload_extraction_result, &app_info_state)
                         {
@@ -1362,16 +1362,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let delete_by_id_lower_case_token_stream = delete_by_id_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_by_id_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
-                pub async fn delete_by_id<'a>(
+                pub async fn #delete_by_id_lower_case_token_stream<'a>(
                     path_parameters_extraction_result: Result<
-                        axum::extract::Path<DeleteByIdPath>,
+                        axum::extract::Path<#delete_by_id_path_camel_case_token_stream>,
                         axum::extract::rejection::PathRejection,
                     >,
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                 ) -> impl axum::response::IntoResponse {
-                    let parameters = DeleteByIdParameters {
+                    let parameters = #delete_by_id_parameters_camel_case_token_stream {
                         path: match crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor::<
-                            DeleteByIdPath,
+                            #delete_by_id_path_camel_case_token_stream,
                             TryDeleteByIdResponseVariants,
                         >::try_extract_value(path_parameters_extraction_result, &app_info_state)
                         {
@@ -1718,13 +1718,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #delete_with_body_lower_case_token_stream<'a>(
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                     payload_extraction_result: Result<
-                        axum::Json<DeleteWithBodyPayload>,
+                        axum::Json<#delete_with_body_payload_camel_case_token_stream>,
                         axum::extract::rejection::JsonRejection,
                     >,
                 ) -> impl axum::response::IntoResponse {
-                    let parameters = DeleteWithBodyParameters {
+                    let parameters = #delete_with_body_parameters_camel_case_token_stream {
                         payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
-                            DeleteWithBodyPayload,
+                            #delete_with_body_payload_camel_case_token_stream,
                             TryDeleteWithBodyResponseVariants,
                         >::try_extract_value(payload_extraction_result, &app_info_state)
                         {
@@ -2079,14 +2079,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #delete_lower_case_token_stream<'a>(
                     query_parameters_extraction_result: Result<
-                        axum::extract::Query<DeleteQuery>,
+                        axum::extract::Query<#delete_query_camel_case_token_stream>,
                         axum::extract::rejection::QueryRejection,
                     >,
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                 ) -> impl axum::response::IntoResponse {
-                    let parameters = DeleteParameters {
+                    let parameters = #delete_parameters_camel_case_token_stream {
                         query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
-                            DeleteQuery,
+                            #delete_query_camel_case_token_stream,
                             TryDeleteResponseVariants,
                         >::try_extract_value(
                             query_parameters_extraction_result, &app_info_state
@@ -2358,18 +2358,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #read_by_id_lower_case_token_stream(
                     path_parameters_extraction_result: Result<
-                        axum::extract::Path<ReadByIdPath>,
+                        axum::extract::Path<#read_by_id_path_camel_case_token_stream>,
                         axum::extract::rejection::PathRejection,
                     >,
                     query_parameters_extraction_result: Result<
-                        axum::extract::Query<ReadByIdQuery>,
+                        axum::extract::Query<#read_by_id_query_camel_case_token_stream>,
                         axum::extract::rejection::QueryRejection,
                     >,
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                 ) -> impl axum::response::IntoResponse {
-                    let parameters = ReadByIdParameters {
+                    let parameters = #read_by_id_parameters_camel_case_token_stream {
                         path: match crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor::<
-                            ReadByIdPath,
+                            #read_by_id_path_camel_case_token_stream,
                             TryReadByIdResponseVariants,
                         >::try_extract_value(path_parameters_extraction_result, &app_info_state)
                         {
@@ -2379,7 +2379,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                         query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
-                            ReadByIdQuery,
+                            #read_by_id_query_camel_case_token_stream,
                             TryReadByIdResponseVariants,
                         >::try_extract_value(
                             query_parameters_extraction_result, &app_info_state
@@ -2817,13 +2817,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #read_with_body_lower_case_token_stream(
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                     payload_extraction_result: Result<
-                        axum::Json<ReadWithBodyPayload>,
+                        axum::Json<#read_with_body_payload_camel_case_token_stream>,
                         axum::extract::rejection::JsonRejection,
                     >,
                 ) -> impl axum::response::IntoResponse {
-                    let parameters = ReadWithBodyParameters {
+                    let parameters = #read_with_body_parameters_camel_case_token_stream {
                         payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
-                            ReadWithBodyPayload,
+                            #read_with_body_payload_camel_case_token_stream,
                             TryReadWithBodyResponseVariants,
                         >::try_extract_value(payload_extraction_result, &app_info_state)
                         {
@@ -3280,14 +3280,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #read_lower_case_token_stream(
                     query_parameters_extraction_result: Result<
-                        axum::extract::Query<ReadQuery>,
+                        axum::extract::Query<#read_query_camel_case_token_stream>,
                         axum::extract::rejection::QueryRejection,
                     >,
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                 ) -> impl axum::response::IntoResponse {
-                    let parameters = ReadParameters {
+                    let parameters = #read_parameters_camel_case_token_stream {
                         query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
-                            ReadQuery,
+                            #read_query_camel_case_token_stream,
                             TryReadResponseVariants,
                         >::try_extract_value(
                             query_parameters_extraction_result, &app_info_state
@@ -3750,18 +3750,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #update_by_id_lower_case_token_stream<'a>(
                     //todo how to check with type system what http request function params and route path query and payload params are same?
                     path_parameters_extraction_result: Result<
-                        axum::extract::Path<UpdateByIdPath>,
+                        axum::extract::Path<#update_by_id_path_camel_case_token_stream>,
                         axum::extract::rejection::PathRejection,
                     >,
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                     payload_extraction_result: Result<
-                        axum::Json<UpdateByIdPayload>,
+                        axum::Json<#update_by_id_payload_camel_case_token_stream>,
                         axum::extract::rejection::JsonRejection,
                     >,
                 ) -> impl axum::response::IntoResponse {
-                    let parameters = UpdateByIdParameters {
+                    let parameters = #update_by_id_parameters_camel_case_token_stream {
                         path: match crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor::<
-                            UpdateByIdPath,
+                            #update_by_id_path_camel_case_token_stream,
                             TryUpdateByIdResponseVariants,
                         >::try_extract_value(path_parameters_extraction_result, &app_info_state)
                         {
@@ -3771,7 +3771,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                         payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
-                            UpdateByIdPayload,
+                            #update_by_id_payload_camel_case_token_stream,
                             TryUpdateByIdResponseVariants,
                         >::try_extract_value(payload_extraction_result, &app_info_state)
                         {
@@ -4079,13 +4079,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #update_lower_case_token_stream<'a>(
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                     payload_extraction_result: Result<
-                        axum::Json<Vec<UpdatePayloadElement>>,
+                        axum::Json<Vec<#update_payload_element_camel_case_token_stream>>,
                         axum::extract::rejection::JsonRejection,
                     >,
                 ) -> impl axum::response::IntoResponse {
-                    let parameters = UpdateParameters {
+                    let parameters = #update_parameters_camel_case_token_stream {
                         payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
-                            Vec<UpdatePayloadElement>,
+                            Vec<#update_payload_element_camel_case_token_stream>,
                             TryUpdateResponseVariants,
                         >::try_extract_value(payload_extraction_result, &app_info_state)
                         {
