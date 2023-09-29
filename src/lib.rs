@@ -517,6 +517,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -817,7 +818,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_create_batch_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                #error_named_derive_token_stream
                 pub enum #try_create_batch_error_named_camel_case_token_stream {
                     RequestError {
                         #[eo_error_occurence]
@@ -1057,7 +1058,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_create_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                #error_named_derive_token_stream
                 pub enum #try_create_error_named_camel_case_token_stream {
                     RequestError {
                         #[eo_error_occurence]
@@ -1247,7 +1248,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_delete_by_id_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                #error_named_derive_token_stream
                 pub enum #try_delete_by_id_error_named_camel_case_token_stream {
                     RequestError {
                         #[eo_error_occurence]
@@ -1557,7 +1558,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_delete_with_body_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                #error_named_derive_token_stream
                 pub enum #try_delete_with_body_error_named_camel_case_token_stream {
                     RequestError {
                         #[eo_error_occurence]
@@ -1889,7 +1890,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_delete_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                #error_named_derive_token_stream
                 pub enum #try_delete_error_named_camel_case_token_stream {
                     QueryEncode {
                         #[eo_display]
@@ -2131,7 +2132,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_read_by_id_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                #error_named_derive_token_stream
                 pub enum #try_read_by_id_error_named_camel_case_token_stream {
                     QueryEncode {
                         #[eo_display]
@@ -2547,7 +2548,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_read_with_body_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                #error_named_derive_token_stream
                 pub enum #try_read_with_body_error_named_camel_case_token_stream {
                     RequestError {
                         #[eo_error_occurence]
@@ -2978,7 +2979,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_read_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                #error_named_derive_token_stream
                 pub enum #try_read_error_named_camel_case_token_stream {
                     QueryEncode {
                         #[eo_display]
@@ -3422,7 +3423,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_update_by_id_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                #error_named_derive_token_stream
                 pub enum #try_update_by_id_error_named_camel_case_token_stream {
                     RequestError {
                         #[eo_error_occurence]
@@ -3706,7 +3707,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_update_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                #error_named_derive_token_stream
                 pub enum #try_update_error_named_camel_case_token_stream {
                     RequestError {
                         #[eo_error_occurence]
