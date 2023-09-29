@@ -882,8 +882,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
+            let create_batch_lower_case_token_stream = create_batch_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_batch_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
-                pub async fn create_batch(
+                pub async fn #create_batch_lower_case_token_stream(
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                     payload_extraction_result: Result<
                         axum::Json<Vec<CreateBatchPayloadElement>>,
@@ -1149,8 +1151,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
+            let create_lower_case_token_stream = create_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
-                pub async fn create(
+                pub async fn #create_lower_case_token_stream(
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                     payload_extraction_result: Result<
                         axum::Json<CreatePayload>,
@@ -1355,6 +1359,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
+            let delete_by_id_lower_case_token_stream = delete_by_id_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_by_id_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
                 pub async fn delete_by_id<'a>(
                     path_parameters_extraction_result: Result<
@@ -1706,8 +1712,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
+            let delete_with_body_lower_case_token_stream = delete_with_body_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_with_body_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
-                pub async fn delete_with_body<'a>(
+                pub async fn #delete_with_body_lower_case_token_stream<'a>(
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                     payload_extraction_result: Result<
                         axum::Json<DeleteWithBodyPayload>,
@@ -2066,8 +2074,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
+            let delete_lower_case_token_stream = delete_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
-                pub async fn delete<'a>(
+                pub async fn #delete_lower_case_token_stream<'a>(
                     query_parameters_extraction_result: Result<
                         axum::extract::Query<DeleteQuery>,
                         axum::extract::rejection::QueryRejection,
@@ -2343,8 +2353,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
+            let read_by_id_lower_case_token_stream = read_by_id_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_by_id_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
-                pub async fn read_by_id(
+                pub async fn #read_by_id_lower_case_token_stream(
                     path_parameters_extraction_result: Result<
                         axum::extract::Path<ReadByIdPath>,
                         axum::extract::rejection::PathRejection,
@@ -2799,8 +2811,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
+            let read_with_body_lower_case_token_stream = read_with_body_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_with_body_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
-                pub async fn read_with_body(
+                pub async fn #read_with_body_lower_case_token_stream(
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                     payload_extraction_result: Result<
                         axum::Json<ReadWithBodyPayload>,
@@ -3261,8 +3275,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
+            let read_lower_case_token_stream = read_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
-                pub async fn read(
+                pub async fn #read_lower_case_token_stream(
                     query_parameters_extraction_result: Result<
                         axum::extract::Query<ReadQuery>,
                         axum::extract::rejection::QueryRejection,
@@ -3728,8 +3744,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
+            let update_by_id_lower_case_token_stream = update_by_id_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_by_id_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
-                pub async fn update_by_id<'a>(
+                pub async fn #update_by_id_lower_case_token_stream<'a>(
                     //todo how to check with type system what http request function params and route path query and payload params are same?
                     path_parameters_extraction_result: Result<
                         axum::extract::Path<UpdateByIdPath>,
@@ -4055,8 +4073,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
+            let update_lower_case_token_stream = update_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
-                pub async fn update<'a>(
+                pub async fn #update_lower_case_token_stream<'a>(
                     app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
                     payload_extraction_result: Result<
                         axum::Json<Vec<UpdatePayloadElement>>,
