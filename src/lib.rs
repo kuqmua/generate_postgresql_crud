@@ -1773,6 +1773,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             try_delete_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_delete_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let try_delete_response_variants_token_stream = {
+            let try_delete_response_variants_stringified = format!("{try_camel_case_stringified}{delete_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_delete_response_variants_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_delete_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         let parameters_token_stream = {
             quote::quote!{
                 #[derive(Debug, serde::Deserialize)]
@@ -1867,11 +1872,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{into_url_encoding_version_token_stream}");
         let prepare_and_execute_query_token_stream = {
-            let prepare_and_execute_query_response_variants_token_stream = {
-                let try_response_variants_path_stringified = format!("{try_camel_case_stringified}{delete_name_camel_case_stringified}{response_variants_camel_case_stringified}");
-                try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
             let prepare_and_execute_query_error_token_stream = {
                 let error_path_stringified = format!("{try_camel_case_stringified}{delete_name_camel_case_stringified}");
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
@@ -1880,7 +1880,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
-                &prepare_and_execute_query_response_variants_token_stream,
+                &try_delete_response_variants_token_stream,
             );
             let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
                 &from_log_and_return_error_token_stream,
@@ -1891,7 +1891,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &id_field,
                 &proc_macro_name_ident_stringified,
                 dot_space,
-                &prepare_and_execute_query_response_variants_token_stream,
+                &try_delete_response_variants_token_stream,
                 crate::check_for_all_none::QueryPart::QueryParameters
             );
             let query_string_token_stream = {
@@ -1925,7 +1925,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         }
                                     },
                                     Err(e) => {
-                                        return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                                        return #try_delete_response_variants_token_stream::BindQuery { 
                                             checked_add: e.into_serialize_deserialize_version(), 
                                             code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream 
                                         };
@@ -1977,7 +1977,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         app_info_state: &#app_info_state_path,
-                    ) -> #prepare_and_execute_query_response_variants_token_stream
+                    ) -> #try_delete_response_variants_token_stream
                     {
                         #check_for_all_none_token_stream
                         let #query_string_name_token_stream = #query_string_token_stream;
@@ -1992,7 +1992,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(_) => {
                                 //todo - is need to return rows affected?
-                                #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(())
+                                #try_delete_response_variants_token_stream::#desirable_token_stream(())
                             }
                             Err(e) => {
                                 #from_log_and_return_error_token_stream
@@ -2087,7 +2087,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let parameters = #delete_parameters_camel_case_token_stream {
                         query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
                             #delete_query_camel_case_token_stream,
-                            TryDeleteResponseVariants,
+                            #try_delete_response_variants_token_stream,
                         >::try_extract_value(
                             query_parameters_extraction_result, &app_info_state
                         ) {
