@@ -1356,7 +1356,28 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
             quote::quote!{
-                
+                pub async fn delete_by_id<'a>(
+                    path_parameters_extraction_result: Result<
+                        axum::extract::Path<DeleteByIdPath>,
+                        axum::extract::rejection::PathRejection,
+                    >,
+                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                ) -> impl axum::response::IntoResponse {
+                    let parameters = DeleteByIdParameters {
+                        path: match crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor::<
+                            DeleteByIdPath,
+                            TryDeleteByIdResponseVariants,
+                        >::try_extract_value(path_parameters_extraction_result, &app_info_state)
+                        {
+                            Ok(path_parameters) => path_parameters,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                    };
+                    println!("{parameters:#?}");
+                    parameters.prepare_and_execute_query(&app_info_state).await
+                }
             }
         };
         // println!("{route_handler_token_stream}");
@@ -1686,7 +1707,28 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
             quote::quote!{
-                
+                pub async fn delete_with_body<'a>(
+                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    payload_extraction_result: Result<
+                        axum::Json<DeleteWithBodyPayload>,
+                        axum::extract::rejection::JsonRejection,
+                    >,
+                ) -> impl axum::response::IntoResponse {
+                    let parameters = DeleteWithBodyParameters {
+                        payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
+                            DeleteWithBodyPayload,
+                            TryDeleteWithBodyResponseVariants,
+                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        {
+                            Ok(payload) => payload,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                    };
+                    println!("{parameters:#?}");
+                    parameters.prepare_and_execute_query(&app_info_state).await
+                }
             }
         };
         // println!("{route_handler_token_stream}");
@@ -2025,7 +2067,29 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
             quote::quote!{
-                
+                pub async fn delete<'a>(
+                    query_parameters_extraction_result: Result<
+                        axum::extract::Query<DeleteQuery>,
+                        axum::extract::rejection::QueryRejection,
+                    >,
+                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                ) -> impl axum::response::IntoResponse {
+                    let parameters = DeleteParameters {
+                        query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
+                            DeleteQuery,
+                            TryDeleteResponseVariants,
+                        >::try_extract_value(
+                            query_parameters_extraction_result, &app_info_state
+                        ) {
+                            Ok(query_parameters) => query_parameters,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                    };
+                    println!("{parameters:#?}");
+                    parameters.prepare_and_execute_query(&app_info_state).await
+                }
             }
         };
         // println!("{route_handler_token_stream}");
@@ -2280,7 +2344,43 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
             quote::quote!{
-                
+                pub async fn read_by_id(
+                    path_parameters_extraction_result: Result<
+                        axum::extract::Path<ReadByIdPath>,
+                        axum::extract::rejection::PathRejection,
+                    >,
+                    query_parameters_extraction_result: Result<
+                        axum::extract::Query<ReadByIdQuery>,
+                        axum::extract::rejection::QueryRejection,
+                    >,
+                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                ) -> impl axum::response::IntoResponse {
+                    let parameters = ReadByIdParameters {
+                        path: match crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor::<
+                            ReadByIdPath,
+                            TryReadByIdResponseVariants,
+                        >::try_extract_value(path_parameters_extraction_result, &app_info_state)
+                        {
+                            Ok(path_parameters) => path_parameters,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                        query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
+                            ReadByIdQuery,
+                            TryReadByIdResponseVariants,
+                        >::try_extract_value(
+                            query_parameters_extraction_result, &app_info_state
+                        ) {
+                            Ok(query_parameters) => query_parameters,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                    };
+                    println!("{parameters:#?}");
+                    parameters.prepare_and_execute_query(&app_info_state).await
+                }
             }
         };
         // println!("{route_handler_token_stream}");
@@ -2700,7 +2800,28 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
             quote::quote!{
-                
+                pub async fn read_with_body(
+                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    payload_extraction_result: Result<
+                        axum::Json<ReadWithBodyPayload>,
+                        axum::extract::rejection::JsonRejection,
+                    >,
+                ) -> impl axum::response::IntoResponse {
+                    let parameters = ReadWithBodyParameters {
+                        payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
+                            ReadWithBodyPayload,
+                            TryReadWithBodyResponseVariants,
+                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        {
+                            Ok(payload) => payload,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                    };
+                    println!("{parameters:#?}");
+                    parameters.prepare_and_execute_query(&app_info_state).await
+                }
             }
         };
         // println!("{route_handler_token_stream}");
@@ -3141,7 +3262,29 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
             quote::quote!{
-                
+                pub async fn read(
+                    query_parameters_extraction_result: Result<
+                        axum::extract::Query<ReadQuery>,
+                        axum::extract::rejection::QueryRejection,
+                    >,
+                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                ) -> impl axum::response::IntoResponse {
+                    let parameters = ReadParameters {
+                        query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
+                            ReadQuery,
+                            TryReadResponseVariants,
+                        >::try_extract_value(
+                            query_parameters_extraction_result, &app_info_state
+                        ) {
+                            Ok(query_parameters) => query_parameters,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                    };
+                    println!("{parameters:#?}");
+                    parameters.prepare_and_execute_query(&app_info_state).await
+                }
             }
         };
         // println!("{route_handler_token_stream}");
@@ -3586,7 +3729,43 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
             quote::quote!{
-                
+                pub async fn update_by_id<'a>(
+                    //todo how to check with type system what http request function params and route path query and payload params are same?
+                    path_parameters_extraction_result: Result<
+                        axum::extract::Path<UpdateByIdPath>,
+                        axum::extract::rejection::PathRejection,
+                    >,
+                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    payload_extraction_result: Result<
+                        axum::Json<UpdateByIdPayload>,
+                        axum::extract::rejection::JsonRejection,
+                    >,
+                ) -> impl axum::response::IntoResponse {
+                    let parameters = UpdateByIdParameters {
+                        path: match crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor::<
+                            UpdateByIdPath,
+                            TryUpdateByIdResponseVariants,
+                        >::try_extract_value(path_parameters_extraction_result, &app_info_state)
+                        {
+                            Ok(path_parameters) => path_parameters,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                        payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
+                            UpdateByIdPayload,
+                            TryUpdateByIdResponseVariants,
+                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        {
+                            Ok(payload) => payload,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                    };
+                    println!("{parameters:#?}");
+                    parameters.prepare_and_execute_query(&app_info_state).await
+                }
             }
         };
         // println!("{route_handler_token_stream}");
@@ -3597,6 +3776,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #prepare_and_execute_query_token_stream
             #try_update_by_id_error_named_token_stream
             #http_request_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{update_by_id_token_stream}");
@@ -3876,7 +4056,28 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
             quote::quote!{
-                
+                pub async fn update<'a>(
+                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    payload_extraction_result: Result<
+                        axum::Json<Vec<UpdatePayloadElement>>,
+                        axum::extract::rejection::JsonRejection,
+                    >,
+                ) -> impl axum::response::IntoResponse {
+                    let parameters = UpdateParameters {
+                        payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
+                            Vec<UpdatePayloadElement>,
+                            TryUpdateResponseVariants,
+                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        {
+                            Ok(payload) => payload,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                    };
+                    println!("{parameters:#?}");
+                    parameters.prepare_and_execute_query(&app_info_state).await
+                }
             }
         };
         // println!("{route_handler_token_stream}");
@@ -3886,6 +4087,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #prepare_and_execute_query_token_stream
             #try_update_error_named_token_stream
             #http_request_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{update_token_stream}");
