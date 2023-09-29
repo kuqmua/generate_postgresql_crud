@@ -511,6 +511,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let serde_json_to_string_variant_initialization_token_stream = quote::quote!{
+        SerdeJsonToString {
+            serde_json_to_string: e,
+            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
+        }
+    };
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -847,10 +853,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let stringified_json = match serde_json::to_string(&parameters.payload) {
                         Ok(stringified_json) => stringified_json,
                         Err(e) => {
-                            return Err(#try_create_batch_error_named_camel_case_token_stream::SerdeJsonToString {
-                                serde_json_to_string: e,
-                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            });
+                            return Err(#try_create_batch_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
@@ -1090,10 +1093,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let stringified_json = match serde_json::to_string(&parameters.payload) {
                         Ok(stringified_json) => stringified_json,
                         Err(e) => {
-                            return Err(#try_create_error_named_camel_case_token_stream::SerdeJsonToString {
-                                serde_json_to_string: e,
-                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            });
+                            return Err(#try_create_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
@@ -1593,10 +1593,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let payload_json = match serde_json::to_string(&parameters.payload) {
                         Ok(payload_json) => payload_json,
                         Err(e) => {
-                            return Err(#try_delete_with_body_error_named_camel_case_token_stream::SerdeJsonToString {
-                                serde_json_to_string: e,
-                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            });
+                            return Err(#try_delete_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
@@ -2589,10 +2586,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let payload_json = match serde_json::to_string(&parameters.payload) {
                         Ok(payload_json) => payload_json,
                         Err(e) => {
-                            return Err(#try_read_with_body_error_named_camel_case_token_stream::SerdeJsonToString {
-                                serde_json_to_string: e,
-                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            });
+                            return Err(#try_read_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
@@ -3464,10 +3458,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let payload_json = match serde_json::to_string(&parameters.payload) {
                         Ok(payload_json) => payload_json,
                         Err(e) => {
-                            return Err(#try_update_by_id_error_named_camel_case_token_stream::SerdeJsonToString {
-                                serde_json_to_string: e,
-                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            });
+                            return Err(#try_update_by_id_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
@@ -3751,10 +3742,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let payload_json = match serde_json::to_string(&parameters.payload) {
                         Ok(payload_json) => payload_json,
                         Err(e) => {
-                            return Err(#try_update_error_named_camel_case_token_stream::SerdeJsonToString {
-                                serde_json_to_string: e,
-                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            });
+                            return Err(#try_update_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
