@@ -504,6 +504,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
     };
     let crate_common_code_occurence_code_occurence_token_stream = quote::quote!{crate::common::code_occurence::CodeOccurence};
+    let crate_code_occurence_tufa_common_macro_call_token_stream = quote::quote!{crate::code_occurence_tufa_common!()};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -712,7 +713,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 Err(e) => {
                                     return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                         checked_add: e.into_serialize_deserialize_version(), 
-                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                        code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
                                 },
                             }
@@ -842,7 +843,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => {
                             return Err(#try_create_batch_error_named_camel_case_token_stream::SerdeJsonToString {
                                 serde_json_to_string: e,
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
                     };
@@ -866,7 +867,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(_) => Ok(()),
                         Err(e) => Err(#try_create_batch_error_named_camel_case_token_stream::RequestError {
                             request_error: e,
-                            code_occurence: crate::code_occurence_tufa_common!(),
+                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                         }),
                     }
                 }
@@ -1088,7 +1089,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => {
                             return Err(#try_create_error_named_camel_case_token_stream::SerdeJsonToString {
                                 serde_json_to_string: e,
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
                     };
@@ -1111,7 +1112,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(_) => Ok(()),
                         Err(e) => Err(#try_create_error_named_camel_case_token_stream::RequestError {
                             request_error: e,
-                            code_occurence: crate::code_occurence_tufa_common!(),
+                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                         }),
                     }
                 }
@@ -1292,7 +1293,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => Ok(value),
                         Err(e) => Err(#try_delete_by_id_error_named_camel_case_token_stream::RequestError {
                             request_error: e,
-                            code_occurence: crate::code_occurence_tufa_common!(),
+                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                         }),
                     }
                 }
@@ -1411,7 +1412,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         Err(e) => {
                                             return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                                 checked_add: e.into_serialize_deserialize_version(), 
-                                                code_occurence: crate::code_occurence_tufa_common!(),
+                                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                             };
                                         },
                                     }
@@ -1468,7 +1469,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             Err(e) => {
                                                 return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                                     checked_add: e.into_serialize_deserialize_version(), 
-                                                    code_occurence: crate::code_occurence_tufa_common!(),
+                                                    code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
                                             },
                                         }
@@ -1597,7 +1598,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => {
                             return Err(#try_delete_with_body_error_named_camel_case_token_stream::SerdeJsonToString {
                                 serde_json_to_string: e,
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
                     };
@@ -1621,7 +1622,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => Ok(value),
                         Err(e) => Err(#try_delete_with_body_error_named_camel_case_token_stream::RequestError {
                             request_error: e,
-                            code_occurence: crate::code_occurence_tufa_common!(),
+                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                         }),
                     }
                 }
@@ -1814,7 +1815,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Err(e) => {
                                         return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                             checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!() 
+                                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream 
                                         };
                                     },
                                 }
@@ -1935,7 +1936,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => {
                             return Err(#try_delete_error_named_camel_case_token_stream::QueryEncode {
                                 url_encoding: e,
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
                     };
@@ -1956,7 +1957,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => Ok(value),
                         Err(e) => Err(#try_delete_error_named_camel_case_token_stream::RequestError {
                             request_error: e,
-                            code_occurence: crate::code_occurence_tufa_common!(),
+                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                         }),
                     }
                 }
@@ -2183,7 +2184,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => {
                             return Err(#try_read_by_id_error_named_camel_case_token_stream::QueryEncode {
                                 url_encoding: e,
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
                     };
@@ -2207,7 +2208,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => Ok(value),
                         Err(e) => Err(#try_read_by_id_error_named_camel_case_token_stream::RequestError {
                             request_error: e,
-                            code_occurence: crate::code_occurence_tufa_common!(),
+                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                         }),
                     }
                 }
@@ -2325,7 +2326,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         Err(e) => {
                                             return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                                 checked_add: e.into_serialize_deserialize_version(), 
-                                                code_occurence: crate::code_occurence_tufa_common!(),
+                                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                             };
                                         },
                                     }
@@ -2384,7 +2385,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             Err(e) => {
                                                 return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                                     checked_add: e.into_serialize_deserialize_version(), 
-                                                    code_occurence: crate::code_occurence_tufa_common!(),
+                                                    code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
                                             },
                                         }
@@ -2442,7 +2443,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Err(e) => {
                                         return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                             checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                         };
                                     },
                                 };
@@ -2464,7 +2465,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Err(e) => {
                                         return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                             checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                         };
                                     },
                                 };
@@ -2602,7 +2603,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => {
                             return Err(#try_read_with_body_error_named_camel_case_token_stream::SerdeJsonToString {
                                 serde_json_to_string: e,
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
                     };
@@ -2626,7 +2627,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => Ok(value),
                         Err(e) => Err(#try_read_with_body_error_named_camel_case_token_stream::RequestError {
                             request_error: e,
-                            code_occurence: crate::code_occurence_tufa_common!(),
+                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                         }),
                     }
                 }
@@ -2828,7 +2829,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 Err(e) => {
                                     return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                         checked_add: e.into_serialize_deserialize_version(), 
-                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                        code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
                                 },
                             };
@@ -2879,7 +2880,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Err(e) => {
                                         return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                             checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                         };
                                     },
                                 };
@@ -2901,7 +2902,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Err(e) => {
                                         return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                             checked_add: e.into_serialize_deserialize_version(), 
-                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                         };
                                     },
                                 };
@@ -3039,7 +3040,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => {
                             return Err(#try_read_error_named_camel_case_token_stream::QueryEncode {
                                 url_encoding: e,
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
                     };
@@ -3063,7 +3064,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => Ok(value),
                         Err(e) => Err(#try_read_error_named_camel_case_token_stream::RequestError {
                             request_error: e,
-                            code_occurence: crate::code_occurence_tufa_common!(),
+                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                         }),
                     }
                 }
@@ -3305,7 +3306,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 Err(e) => {
                                     return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                         checked_add: e.into_serialize_deserialize_version(), 
-                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                        code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
                                 },
                             }
@@ -3337,7 +3338,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         Err(e) => {
                                             return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                                 checked_add: e.into_serialize_deserialize_version(), 
-                                                code_occurence: crate::code_occurence_tufa_common!() 
+                                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream 
                                             };
                                         },
                                     }
@@ -3483,7 +3484,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => {
                             return Err(#try_update_by_id_error_named_camel_case_token_stream::SerdeJsonToString {
                                 serde_json_to_string: e,
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
                     };
@@ -3507,7 +3508,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(_) => Ok(()),
                         Err(e) => Err(#try_update_by_id_error_named_camel_case_token_stream::RequestError {
                             request_error: e,
-                            code_occurence: crate::code_occurence_tufa_common!(),
+                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                         }),
                     }
                 }
@@ -3610,7 +3611,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => {
                             return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
                                 checked_add: e.into_serialize_deserialize_version(), 
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             };
                         },
                     };
@@ -3773,7 +3774,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => {
                             return Err(#try_update_error_named_camel_case_token_stream::SerdeJsonToString {
                                 serde_json_to_string: e,
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
                     };
@@ -3797,7 +3798,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(_) => Ok(()),
                         Err(e) => Err(#try_update_error_named_camel_case_token_stream::RequestError {
                             request_error: e,
-                            code_occurence: crate::code_occurence_tufa_common!(),
+                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                         }),
                     }
                 }
