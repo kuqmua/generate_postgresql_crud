@@ -525,6 +525,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let axum_extract_rejection_path_rejection_token_stream = quote::quote!{axum::extract::rejection::PathRejection};
     let axum_extract_rejection_query_rejection_token_stream = quote::quote!{axum::extract::rejection::QueryRejection};
     let axum_extract_rejection_json_rejection_token_stream = quote::quote!{axum::extract::rejection::JsonRejection};
+    let try_extract_value_token_stream = quote::quote!{try_extract_value};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -903,7 +904,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             Vec<#create_batch_payload_element_camel_case_token_stream>,
                             #try_create_batch_response_variants_token_stream,
-                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(payload_extraction_result, &app_info_state)
                         {
                             Ok(payload) => payload,
                             Err(err) => {
@@ -1172,7 +1173,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             #create_payload_camel_case_token_stream,
                             #try_create_response_variants_token_stream,
-                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(payload_extraction_result, &app_info_state)
                         {
                             Ok(payload) => payload,
                             Err(err) => {
@@ -1380,7 +1381,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         path: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #delete_by_id_path_camel_case_token_stream,
                             #try_delete_by_id_response_variants_token_stream,
-                        >::try_extract_value(path_parameters_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(path_parameters_extraction_result, &app_info_state)
                         {
                             Ok(path_parameters) => path_parameters,
                             Err(err) => {
@@ -1733,7 +1734,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             #delete_with_body_payload_camel_case_token_stream,
                             #try_delete_with_body_response_variants_token_stream,
-                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(payload_extraction_result, &app_info_state)
                         {
                             Ok(payload) => payload,
                             Err(err) => {
@@ -2095,7 +2096,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #delete_query_camel_case_token_stream,
                             #try_delete_response_variants_token_stream,
-                        >::try_extract_value(
+                        >::#try_extract_value_token_stream(
                             query_parameters_extraction_result, &app_info_state
                         ) {
                             Ok(query_parameters) => query_parameters,
@@ -2378,7 +2379,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         path: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #read_by_id_path_camel_case_token_stream,
                             #try_read_by_id_response_variants_token_stream,
-                        >::try_extract_value(path_parameters_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(path_parameters_extraction_result, &app_info_state)
                         {
                             Ok(path_parameters) => path_parameters,
                             Err(err) => {
@@ -2388,7 +2389,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #read_by_id_query_camel_case_token_stream,
                             #try_read_by_id_response_variants_token_stream,
-                        >::try_extract_value(
+                        >::#try_extract_value_token_stream(
                             query_parameters_extraction_result, &app_info_state
                         ) {
                             Ok(query_parameters) => query_parameters,
@@ -2832,7 +2833,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             #read_with_body_payload_camel_case_token_stream,
                             #try_read_with_body_response_variants_token_stream,
-                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(payload_extraction_result, &app_info_state)
                         {
                             Ok(payload) => payload,
                             Err(err) => {
@@ -3296,7 +3297,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #read_query_camel_case_token_stream,
                             #try_read_response_variants_token_stream,
-                        >::try_extract_value(
+                        >::#try_extract_value_token_stream(
                             query_parameters_extraction_result, &app_info_state
                         ) {
                             Ok(query_parameters) => query_parameters,
@@ -3769,7 +3770,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         path: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #update_by_id_path_camel_case_token_stream,
                             #try_update_by_id_response_variants_token_stream,
-                        >::try_extract_value(path_parameters_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(path_parameters_extraction_result, &app_info_state)
                         {
                             Ok(path_parameters) => path_parameters,
                             Err(err) => {
@@ -3779,7 +3780,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             #update_by_id_payload_camel_case_token_stream,
                             #try_update_by_id_response_variants_token_stream,
-                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(payload_extraction_result, &app_info_state)
                         {
                             Ok(payload) => payload,
                             Err(err) => {
@@ -4093,7 +4094,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             Vec<#update_payload_element_camel_case_token_stream>,
                             #try_update_response_variants_token_stream,
-                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(payload_extraction_result, &app_info_state)
                         {
                             Ok(payload) => payload,
                             Err(err) => {
