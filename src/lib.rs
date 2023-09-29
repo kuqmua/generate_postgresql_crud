@@ -3816,6 +3816,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             try_update_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_update_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let try_update_response_variants_token_stream = {
+            let try_update_response_variants_stringified = format!("{try_camel_case_stringified}{update_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            try_update_response_variants_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_update_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         let parameters_token_stream = {
             quote::quote!{
                 #[derive(Debug, serde :: Deserialize)]
@@ -3849,11 +3854,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{payload_token_stream}");
         let prepare_and_execute_query_token_stream = {
-            let prepare_and_execute_query_response_variants_token_stream = {
-                let try_response_variants_path_stringified = format!("{try_camel_case_stringified}{update_name_camel_case_stringified}{response_variants_camel_case_stringified}");
-                try_response_variants_path_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_response_variants_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
             let prepare_and_execute_query_error_token_stream = {
                 let error_path_stringified = format!("{try_camel_case_stringified}{update_name_camel_case_stringified}");
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
@@ -3862,7 +3862,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
-                &prepare_and_execute_query_response_variants_token_stream,
+                &try_update_response_variants_token_stream,
             );
             let acquire_pool_and_connection_token_stream = crate::acquire_pool_and_connection::acquire_pool_and_connection(
                 &from_log_and_return_error_token_stream,
@@ -3882,7 +3882,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             element_value.push_str(&format!("{value}, "));
                         },
                         Err(e) => {
-                            return #prepare_and_execute_query_response_variants_token_stream::BindQuery { 
+                            return #try_update_response_variants_token_stream::BindQuery { 
                                 checked_add: e.into_serialize_deserialize_version(), 
                                 code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             };
@@ -3976,7 +3976,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         app_info_state: &#app_info_state_path,
-                    ) -> #prepare_and_execute_query_response_variants_token_stream
+                    ) -> #try_update_response_variants_token_stream
                     {
                         let #query_string_name_token_stream = {
                             #query_string_token_stream
@@ -3991,7 +3991,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(_) => {
                                 //todo - is need to return rows affected?
-                                #prepare_and_execute_query_response_variants_token_stream::#desirable_token_stream(())
+                                #try_update_response_variants_token_stream::#desirable_token_stream(())
                             }
                             Err(e) => {
                                 #from_log_and_return_error_token_stream;
@@ -4086,7 +4086,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let parameters = #update_parameters_camel_case_token_stream {
                         payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
                             Vec<#update_payload_element_camel_case_token_stream>,
-                            TryUpdateResponseVariants,
+                            #try_update_response_variants_token_stream,
                         >::try_extract_value(payload_extraction_result, &app_info_state)
                         {
                             Ok(payload) => payload,
