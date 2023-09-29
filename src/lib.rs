@@ -520,6 +520,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
     let crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor};
+    let crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor};
     let crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
@@ -2088,7 +2089,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let parameters = #delete_parameters_camel_case_token_stream {
-                        query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
+                        query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #delete_query_camel_case_token_stream,
                             #try_delete_response_variants_token_stream,
                         >::try_extract_value(
@@ -2381,7 +2382,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 return err;
                             }
                         },
-                        query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
+                        query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #read_by_id_query_camel_case_token_stream,
                             #try_read_by_id_response_variants_token_stream,
                         >::try_extract_value(
@@ -3289,7 +3290,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let parameters = #read_parameters_camel_case_token_stream {
-                        query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
+                        query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #read_query_camel_case_token_stream,
                             #try_read_response_variants_token_stream,
                         >::try_extract_value(
