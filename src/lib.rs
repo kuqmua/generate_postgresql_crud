@@ -523,6 +523,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor};
     let crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor};
     let axum_extract_rejection_query_rejection_token_stream = quote::quote!{axum::extract::rejection::QueryRejection};
+    let axum_extract_rejection_json_rejection_token_stream = quote::quote!{axum::extract::rejection::JsonRejection};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -894,7 +895,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<Vec<#create_batch_payload_element_camel_case_token_stream>>,
-                        axum::extract::rejection::JsonRejection,
+                        #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let parameters = #create_batch_parameters_camel_case_token_stream {
@@ -1163,7 +1164,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<#create_payload_camel_case_token_stream>,
-                        axum::extract::rejection::JsonRejection,
+                        #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let parameters = #create_parameters_camel_case_token_stream {
@@ -1724,7 +1725,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<#delete_with_body_payload_camel_case_token_stream>,
-                        axum::extract::rejection::JsonRejection,
+                        #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let parameters = #delete_with_body_parameters_camel_case_token_stream {
@@ -2823,7 +2824,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<#read_with_body_payload_camel_case_token_stream>,
-                        axum::extract::rejection::JsonRejection,
+                        #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let parameters = #read_with_body_parameters_camel_case_token_stream {
@@ -3760,7 +3761,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<#update_by_id_payload_camel_case_token_stream>,
-                        axum::extract::rejection::JsonRejection,
+                        #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let parameters = #update_by_id_parameters_camel_case_token_stream {
@@ -4084,7 +4085,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<Vec<#update_payload_element_camel_case_token_stream>>,
-                        axum::extract::rejection::JsonRejection,
+                        #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let parameters = #update_parameters_camel_case_token_stream {
