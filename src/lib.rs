@@ -790,6 +790,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let try_create_batch_error_named_token_stream = {
+            quote::quote!{
+                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                pub enum TryCreateBatchErrorNamed {
+                    RequestError {
+                        #[eo_error_occurence]
+                        request_error: TryCreateBatchRequestError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    SerdeJsonToString {
+                        #[eo_display]
+                        serde_json_to_string: serde_json::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        // println!("{try_create_batch_error_named_token_stream}");
         let http_request_token_stream = {
             let try_create_batch_lower_case_token_stream = {
                 let try_create_batch_lower_case_stringified = format!("{try_lower_case_stringified}_{create_batch_name_lower_case_stringified}");
@@ -852,6 +870,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
+            #try_create_batch_error_named_token_stream
             #http_request_token_stream
         }
     };
@@ -1012,6 +1031,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let try_create_error_named_token_stream = {
+            quote::quote!{
+                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                pub enum TryCreateErrorNamed {
+                    RequestError {
+                        #[eo_error_occurence]
+                        request_error: TryCreateRequestError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    SerdeJsonToString {
+                        #[eo_display]
+                        serde_json_to_string: serde_json::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        // println!("{try_create_error_named_token_stream}");
         let http_request_token_stream = {
             let try_create_lower_case_token_stream = {
                 let try_create_lower_case_stringified = format!("{try_lower_case_stringified}_{create_name_lower_case_stringified}");
@@ -1073,6 +1110,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
+            #try_create_error_named_token_stream
             #http_request_token_stream
         }
     };
@@ -1184,6 +1222,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let try_delete_by_id_error_named_token_stream = {
+            quote::quote!{
+                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                pub enum TryDeleteByIdErrorNamed {
+                    RequestError {
+                        #[eo_error_occurence]
+                        request_error: TryDeleteByIdRequestError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        // println!("{try_delete_by_id_error_named_token_stream}");
         let http_request_token_stream = {
             let try_delete_by_id_lower_case_token_stream = {
                 let try_delete_by_id_lower_case_stringified = format!("{try_lower_case_stringified}_{delete_by_id_name_lower_case_stringified}");
@@ -1235,6 +1286,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #path_token_stream
             #prepare_and_execute_query_token_stream
+            #try_delete_by_id_error_named_token_stream
             #http_request_token_stream
         }
     };
@@ -1478,6 +1530,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let try_delete_with_body_error_named_token_stream = {
+            quote::quote!{
+                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                pub enum TryDeleteWithBodyErrorNamed {
+                    RequestError {
+                        #[eo_error_occurence]
+                        request_error: TryDeleteWithBodyRequestError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    SerdeJsonToString {
+                        #[eo_display]
+                        serde_json_to_string: serde_json::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        // println!("{try_delete_with_body_error_named_token_stream}");
         let http_request_token_stream = {
             let try_delete_with_body_lower_case_token_stream = {
                 let try_delete_with_body_lower_case_stringified = format!("{try_lower_case_stringified}_{delete_with_body_name_lower_case_stringified}");
@@ -1540,6 +1610,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
+            #try_delete_with_body_error_named_token_stream
             #http_request_token_stream
         }
     };
@@ -1792,6 +1863,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let try_delete_error_named_token_stream = {
+            quote::quote!{
+                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                pub enum TryDeleteErrorNamed {
+                    QueryEncode {
+                        #[eo_display]
+                        url_encoding: serde_urlencoded::ser::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    RequestError {
+                        #[eo_error_occurence]
+                        request_error: TryDeleteRequestError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        // println!("{try_delete_error_named_token_stream}");
         let http_request_token_stream = {
             let try_delete_lower_case_token_stream = {
                 let try_delete_lower_case_stringified = format!("{try_lower_case_stringified}_{delete_name_lower_case_stringified}");
@@ -1853,6 +1942,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #query_for_url_encoding_token_stream
             #into_url_encoding_version_token_stream
             #prepare_and_execute_query_token_stream
+            #try_delete_error_named_token_stream
             #http_request_token_stream
         }
     };
@@ -2013,6 +2103,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let try_read_by_id_error_named_token_stream = {
+            quote::quote!{
+                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                pub enum TryReadByIdErrorNamed {
+                    QueryEncode {
+                        #[eo_display]
+                        url_encoding: serde_urlencoded::ser::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    RequestError {
+                        #[eo_error_occurence]
+                        request_error: TryReadByIdRequestError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        // println!("{try_read_by_id_error_named_token_stream}");
         let http_request_token_stream = {
             let try_read_by_id_lower_case_token_stream = {
                 let try_read_by_id_lower_case_stringified = format!("{try_lower_case_stringified}_{read_by_id_name_lower_case_stringified}");
@@ -2081,6 +2189,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #query_for_url_encoding_token_stream
             #into_url_encoding_version_token_stream
             #prepare_and_execute_query_token_stream
+            #try_read_by_id_error_named_token_stream
             #http_request_token_stream
         }
     };
@@ -2408,6 +2517,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let try_read_with_body_error_named_token_stream = {
+            quote::quote!{
+                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                pub enum TryReadWithBodyErrorNamed {
+                    RequestError {
+                        #[eo_error_occurence]
+                        request_error: TryReadWithBodyRequestError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    SerdeJsonToString {
+                        #[eo_display]
+                        serde_json_to_string: serde_json::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        // println!("{try_read_with_body_error_named_token_stream}");
         let http_request_token_stream = {
             let try_read_with_body_lower_case_token_stream = {
                 let try_read_with_body_lower_case_stringified = format!("{try_lower_case_stringified}_{read_with_body_name_lower_case_stringified}");
@@ -2473,6 +2600,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
+            #try_read_with_body_error_named_token_stream
             #http_request_token_stream
         }
     };
@@ -2821,6 +2949,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let try_read_error_named_token_stream = {
+            quote::quote!{
+                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                pub enum TryReadErrorNamed {
+                    QueryEncode {
+                        #[eo_display]
+                        url_encoding: serde_urlencoded::ser::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    RequestError {
+                        #[eo_error_occurence]
+                        request_error: TryReadRequestError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        // println!("{try_read_error_named_token_stream}");
         let http_request_token_stream = {
             let try_read_lower_case_token_stream = {
                 let try_read_lower_case_stringified = format!("{try_lower_case_stringified}_{read_name_lower_case_stringified}");
@@ -2888,6 +3034,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #query_for_url_encoding_token_stream
             #into_url_encoding_version_token_stream
             #prepare_and_execute_query_token_stream
+            #try_read_error_named_token_stream
             #http_request_token_stream
         }
     };
@@ -3244,6 +3391,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let try_update_by_id_error_named_token_stream = {
+            quote::quote!{
+                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                pub enum TryUpdateByIdErrorNamed {
+                    RequestError {
+                        #[eo_error_occurence]
+                        request_error: TryUpdateByIdRequestError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    SerdeJsonToString {
+                        #[eo_display]
+                        serde_json_to_string: serde_json::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        // println!("{try_update_by_id_error_named_token_stream}");
         let http_request_token_stream = {
             let try_update_by_id_lower_case_token_stream = {
                 let try_update_by_id_lower_case_stringified = format!("{try_lower_case_stringified}_{update_by_id_name_lower_case_stringified}");
@@ -3307,6 +3472,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #path_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
+            #try_update_by_id_error_named_token_stream
             #http_request_token_stream
         }
     };
@@ -3510,6 +3676,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{prepare_and_execute_query_token_stream}");
+        let try_update_error_named_token_stream = {
+            quote::quote!{
+                #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+                pub enum TryUpdateErrorNamed {
+                    RequestError {
+                        #[eo_error_occurence]
+                        request_error: TryUpdateRequestError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    SerdeJsonToString {
+                        #[eo_display]
+                        serde_json_to_string: serde_json::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        // println!("{try_update_error_named_token_stream}");
         let http_request_token_stream = {
             let try_update_lower_case_token_stream = {
                 let try_update_lower_case_stringified = format!("{try_lower_case_stringified}_{update_name_lower_case_stringified}");
@@ -3572,6 +3756,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
+            #try_update_error_named_token_stream
             #http_request_token_stream
         }
     };
