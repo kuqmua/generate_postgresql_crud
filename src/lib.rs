@@ -738,7 +738,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #query_token_stream,
                         #crate_server_postgres_constants_insert_name_token_stream,
                         #crate_server_postgres_constants_into_name_token_stream,
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                         #crate_server_postgres_constants_values_name_token_stream,
                         {
                             #increment_initialization_token_stream
@@ -851,8 +851,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     server_location: &str,
                     parameters: #create_batch_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_batch_error_named_camel_case_token_stream> {
-                    let stringified_json = match serde_json::to_string(&parameters.payload) {
-                        Ok(stringified_json) => stringified_json,
+                    let payload = match serde_json::to_string(&parameters.payload) {
+                        Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_create_batch_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
@@ -861,7 +861,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         reqwest::Client::new()
                         .post(&format!(
                             "{server_location}/api/{}",
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS
+                            ROUTE_NAME
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
@@ -869,7 +869,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .project_commit,
                         )
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
-                        .body(stringified_json)
+                        .body(payload)
                         .send(),
                     )
                     .await
@@ -997,7 +997,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #query_token_stream,
                         #crate_server_postgres_constants_insert_name_token_stream,
                         #crate_server_postgres_constants_into_name_token_stream,
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                         #crate_server_postgres_constants_values_name_token_stream
                     )
                 }
@@ -1091,8 +1091,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     server_location: &str,
                     parameters: #create_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_error_named_camel_case_token_stream> {
-                    let stringified_json = match serde_json::to_string(&parameters.payload) {
-                        Ok(stringified_json) => stringified_json,
+                    let payload = match serde_json::to_string(&parameters.payload) {
+                        Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_create_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
@@ -1101,14 +1101,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         reqwest::Client::new()
                         .post(&format!(
                             "{server_location}/api/{}",
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS
+                            ROUTE_NAME
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
                             crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
                         )
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
-                        .body(stringified_json)
+                        .body(payload)
                         .send(),
                     )
                     .await
@@ -1196,7 +1196,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #query_token_stream,
                         #crate_server_postgres_constants_delete_name_token_stream,
                         #crate_server_postgres_constants_from_name_token_stream,
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                         #crate_server_postgres_constants_where_name_token_stream
                     )
                 }
@@ -1280,7 +1280,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         reqwest::Client::new()
                         .delete(&format!(
                             "{server_location}/api/{}/{}",
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                            ROUTE_NAME,
                             parameters.path.id
                         ))
                         .header(
@@ -1487,7 +1487,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         "{} {} {} {}",
                         #crate_server_postgres_constants_delete_name_token_stream,
                         #crate_server_postgres_constants_from_name_token_stream,
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                         {
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
@@ -1591,8 +1591,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     server_location: &str,
                     parameters: #delete_with_body_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_with_body_error_named_camel_case_token_stream> {
-                    let payload_json = match serde_json::to_string(&parameters.payload) {
-                        Ok(payload_json) => payload_json,
+                    let payload = match serde_json::to_string(&parameters.payload) {
+                        Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_delete_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
@@ -1601,7 +1601,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         reqwest::Client::new()
                         .delete(&format!(
                             "{server_location}/api/{}/search",
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS
+                            ROUTE_NAME
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
@@ -1609,7 +1609,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 .project_commit,
                         )
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
-                        .body(payload_json)
+                        .body(payload)
                         .send(),
                     )
                     .await
@@ -1820,7 +1820,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         "{} {} {} {} {}",
                         #crate_server_postgres_constants_delete_name_token_stream,
                         #crate_server_postgres_constants_from_name_token_stream,
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                         #crate_server_postgres_constants_where_name_token_stream,
                         {
                             #increment_initialization_token_stream
@@ -1936,7 +1936,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         reqwest::Client::new()
                         .delete(&format!(
                             "{server_location}/api/{}?{encoded_query}",
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                            ROUTE_NAME,
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
@@ -2078,7 +2078,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #crate_server_postgres_constants_select_name_token_stream,
                         crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
                         #crate_server_postgres_constants_from_name_token_stream,
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                         #crate_server_postgres_constants_where_name_token_stream,
                     )
                 }
@@ -2179,7 +2179,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     let url = format!(
                         "{server_location}/api/{}/{}?{encoded_query}",
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                         parameters.path.id,
                     );
                     match #tvfrr_extraction_logic_token_stream(
@@ -2394,7 +2394,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             &self.payload.select
                         ),
                         #crate_server_postgres_constants_from_name_token_stream,
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                         {
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
@@ -2584,8 +2584,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     Vec<CatOptions>,
                     #try_read_with_body_error_named_camel_case_token_stream,
                 > {
-                    let payload_json = match serde_json::to_string(&parameters.payload) {
-                        Ok(payload_json) => payload_json,
+                    let payload = match serde_json::to_string(&parameters.payload) {
+                        Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_read_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
@@ -2594,7 +2594,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         reqwest::Client::new()
                         .post(&format!(
                             "{server_location}/api/{}/search",
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS
+                            ROUTE_NAME
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
@@ -2602,7 +2602,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 .project_commit,
                         )
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
-                        .body(payload_json)
+                        .body(payload)
                         .send(),
                     )
                     .await
@@ -2827,7 +2827,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #crate_server_postgres_constants_select_name_token_stream,
                         crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
                         #crate_server_postgres_constants_from_name_token_stream,
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                         {
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
@@ -3027,7 +3027,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     println!("{encoded_query}");
                     let url = format!(
                         "{server_location}/api/{}?{encoded_query}",
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                     );
                     println!("{url}");
                     match #tvfrr_extraction_logic_token_stream(
@@ -3252,7 +3252,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut value = format!(
                                 "{} {} {} ",
                                 #crate_server_postgres_constants_update_name_token_stream,
-                                crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                                ROUTE_NAME,
                                 #crate_server_postgres_constants_set_name_token_stream,
                             );
                             #(#create_or_replace_function_additional_parameters_modification_token_stream)*
@@ -3456,8 +3456,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     server_location: &str,
                     parameters: #update_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_by_id_error_named_camel_case_token_stream> {
-                    let payload_json = match serde_json::to_string(&parameters.payload) {
-                        Ok(payload_json) => payload_json,
+                    let payload = match serde_json::to_string(&parameters.payload) {
+                        Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_update_by_id_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
@@ -3466,7 +3466,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         reqwest::Client::new()
                         .patch(&format!(
                             "{server_location}/api/{}/{}",
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                            ROUTE_NAME,
                             parameters.path.id.to_inner()
                         ))
                         .header(
@@ -3474,7 +3474,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
                         )
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
-                        .body(payload_json)
+                        .body(payload)
                         .send(),
                     )
                     .await
@@ -3641,7 +3641,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     format!(
                         #query_token_stream,
                         #crate_server_postgres_constants_update_name_token_stream,
-                        crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                        ROUTE_NAME,
                         #crate_server_postgres_constants_as_name_token_stream,
                         #crate_server_postgres_constants_set_name_token_stream,
                         #crate_server_postgres_constants_from_name_token_stream,
@@ -3740,8 +3740,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     server_location: &str,
                     parameters: #update_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_error_named_camel_case_token_stream> {
-                    let payload_json = match serde_json::to_string(&parameters.payload) {
-                        Ok(payload_json) => payload_json,
+                    let payload = match serde_json::to_string(&parameters.payload) {
+                        Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_update_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
@@ -3750,7 +3750,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         reqwest::Client::new()
                         .patch(&format!(
                             "{server_location}/api/{}/",
-                            crate::repositories_types::tufa_server::routes::api::cats::CATS,
+                            ROUTE_NAME,
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
@@ -3758,7 +3758,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 .project_commit,
                         )
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
-                        .body(payload_json)
+                        .body(payload)
                         .send(),
                     )
                     .await
