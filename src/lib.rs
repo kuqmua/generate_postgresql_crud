@@ -881,12 +881,40 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{http_request_token_stream}");
+        let route_handler_token_stream = {
+            quote::quote!{
+                pub async fn create_batch(
+                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    payload_extraction_result: Result<
+                        axum::Json<Vec<CreateBatchPayloadElement>>,
+                        axum::extract::rejection::JsonRejection,
+                    >,
+                ) -> impl axum::response::IntoResponse {
+                    let parameters = CreateBatchParameters {
+                        payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
+                            Vec<CreateBatchPayloadElement>,
+                            TryCreateBatchResponseVariants,
+                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        {
+                            Ok(payload) => payload,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                    };
+                    println!("{parameters:#?}");
+                    parameters.prepare_and_execute_query(&app_info_state).await
+                }
+            }
+        };
+        // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
             #try_create_batch_error_named_token_stream
             #http_request_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{create_batch_token_stream}");
@@ -1120,12 +1148,40 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{http_request_token_stream}");
+        let route_handler_token_stream = {
+            quote::quote!{
+                pub async fn create(
+                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    payload_extraction_result: Result<
+                        axum::Json<CreatePayload>,
+                        axum::extract::rejection::JsonRejection,
+                    >,
+                ) -> impl axum::response::IntoResponse {
+                    let parameters = CreateParameters {
+                        payload: match crate::server::routes::helpers::json_extractor_error::JsonValueResultExtractor::<
+                            CreatePayload,
+                            TryCreateResponseVariants,
+                        >::try_extract_value(payload_extraction_result, &app_info_state)
+                        {
+                            Ok(payload) => payload,
+                            Err(err) => {
+                                return err;
+                            }
+                        },
+                    };
+                    println!("{parameters:#?}");
+                    parameters.prepare_and_execute_query(&app_info_state).await
+                }
+            }
+        };
+        // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
             #try_create_error_named_token_stream
             #http_request_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{create_token_stream}");
@@ -1298,12 +1354,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{http_request_token_stream}");
+        let route_handler_token_stream = {
+            quote::quote!{
+                
+            }
+        };
+        // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
             #prepare_and_execute_query_token_stream
             #try_delete_by_id_error_named_token_stream
             #http_request_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{delete_by_id_token_stream}");
@@ -1621,12 +1684,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{http_request_token_stream}");
+        let route_handler_token_stream = {
+            quote::quote!{
+                
+            }
+        };
+        // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
             #try_delete_with_body_error_named_token_stream
             #http_request_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{delete_with_body_token_stream}");
@@ -1953,6 +2023,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{http_request_token_stream}");
+        let route_handler_token_stream = {
+            quote::quote!{
+                
+            }
+        };
+        // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #query_token_stream
@@ -1961,6 +2037,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #prepare_and_execute_query_token_stream
             #try_delete_error_named_token_stream
             #http_request_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{delete_token_stream}");
@@ -2201,6 +2278,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{http_request_token_stream}");
+        let route_handler_token_stream = {
+            quote::quote!{
+                
+            }
+        };
+        // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
@@ -2210,6 +2293,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #prepare_and_execute_query_token_stream
             #try_read_by_id_error_named_token_stream
             #http_request_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{read_by_id_token_stream}");
@@ -2614,12 +2698,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{http_request_token_stream}");
+        let route_handler_token_stream = {
+            quote::quote!{
+                
+            }
+        };
+        // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
             #prepare_and_execute_query_token_stream
             #try_read_with_body_error_named_token_stream
             #http_request_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{read_with_body_token_stream}");
@@ -3048,6 +3139,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{http_request_token_stream}");
+        let route_handler_token_stream = {
+            quote::quote!{
+                
+            }
+        };
+        // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #query_token_stream
@@ -3056,6 +3153,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #prepare_and_execute_query_token_stream
             #try_read_error_named_token_stream
             #http_request_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{read_token_stream}");
@@ -3486,6 +3584,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{http_request_token_stream}");
+        let route_handler_token_stream = {
+            quote::quote!{
+                
+            }
+        };
+        // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
@@ -3770,6 +3874,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{http_request_token_stream}");
+        let route_handler_token_stream = {
+            quote::quote!{
+                
+            }
+        };
+        // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
