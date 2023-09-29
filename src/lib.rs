@@ -886,7 +886,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_batch_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
                 pub async fn #create_batch_lower_case_token_stream(
-                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<Vec<#create_batch_payload_element_camel_case_token_stream>>,
                         axum::extract::rejection::JsonRejection,
@@ -1155,7 +1155,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
                 pub async fn #create_lower_case_token_stream(
-                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<#create_payload_camel_case_token_stream>,
                         axum::extract::rejection::JsonRejection,
@@ -1367,7 +1367,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         axum::extract::Path<#delete_by_id_path_camel_case_token_stream>,
                         axum::extract::rejection::PathRejection,
                     >,
-                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> impl axum::response::IntoResponse {
                     let parameters = #delete_by_id_parameters_camel_case_token_stream {
                         path: match crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor::<
@@ -1716,7 +1716,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_with_body_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
                 pub async fn #delete_with_body_lower_case_token_stream<'a>(
-                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<#delete_with_body_payload_camel_case_token_stream>,
                         axum::extract::rejection::JsonRejection,
@@ -2082,7 +2082,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         axum::extract::Query<#delete_query_camel_case_token_stream>,
                         axum::extract::rejection::QueryRejection,
                     >,
-                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> impl axum::response::IntoResponse {
                     let parameters = #delete_parameters_camel_case_token_stream {
                         query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
@@ -2365,7 +2365,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         axum::extract::Query<#read_by_id_query_camel_case_token_stream>,
                         axum::extract::rejection::QueryRejection,
                     >,
-                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> impl axum::response::IntoResponse {
                     let parameters = #read_by_id_parameters_camel_case_token_stream {
                         path: match crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor::<
@@ -2815,7 +2815,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_with_body_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
                 pub async fn #read_with_body_lower_case_token_stream(
-                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<#read_with_body_payload_camel_case_token_stream>,
                         axum::extract::rejection::JsonRejection,
@@ -3283,7 +3283,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         axum::extract::Query<#read_query_camel_case_token_stream>,
                         axum::extract::rejection::QueryRejection,
                     >,
-                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> impl axum::response::IntoResponse {
                     let parameters = #read_parameters_camel_case_token_stream {
                         query: match crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor::<
@@ -3753,7 +3753,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         axum::extract::Path<#update_by_id_path_camel_case_token_stream>,
                         axum::extract::rejection::PathRejection,
                     >,
-                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<#update_by_id_payload_camel_case_token_stream>,
                         axum::extract::rejection::JsonRejection,
@@ -4077,7 +4077,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
                 pub async fn #update_lower_case_token_stream<'a>(
-                    app_info_state: axum::extract::State<DynArcGetConfigGetPostgresPoolSendSync>,
+                    app_info_state: axum::extract::State<#app_info_state_path>,
                     payload_extraction_result: Result<
                         axum::Json<Vec<#update_payload_element_camel_case_token_stream>>,
                         axum::extract::rejection::JsonRejection,
