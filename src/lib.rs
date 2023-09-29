@@ -791,6 +791,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         let http_request_token_stream = {
+            let try_create_batch_lower_case_token_stream = {
+                let try_create_batch_lower_case_stringified = format!("{try_lower_case_stringified}_{create_batch_name_lower_case_stringified}");
+                try_create_batch_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_create_batch_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let try_create_batch_error_named_camel_case_token_stream = {
                 let try_create_batch_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{create_batch_name_camel_case_stringified}{error_named_camel_case_stringified}");
                 try_create_batch_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -803,7 +808,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                pub async fn try_create_batch<'a>(
+                pub async fn #try_create_batch_lower_case_token_stream<'a>(
                     server_location: &str,
                     parameters: #create_batch_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_batch_error_named_camel_case_token_stream> {
@@ -1008,6 +1013,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         let http_request_token_stream = {
+            let try_create_lower_case_token_stream = {
+                let try_create_lower_case_stringified = format!("{try_lower_case_stringified}_{create_name_lower_case_stringified}");
+                try_create_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_create_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let try_create_error_named_camel_case_token_stream = {
                 let try_create_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{create_name_camel_case_stringified}{error_named_camel_case_stringified}");
                 try_create_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -1020,7 +1030,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                pub async fn try_create<'a>(
+                pub async fn #try_create_lower_case_token_stream<'a>(
                     server_location: &str,
                     parameters: #create_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_error_named_camel_case_token_stream> {
@@ -1175,6 +1185,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         let http_request_token_stream = {
+            let try_delete_by_id_lower_case_token_stream = {
+                let try_delete_by_id_lower_case_stringified = format!("{try_lower_case_stringified}_{delete_by_id_name_lower_case_stringified}");
+                try_delete_by_id_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_delete_by_id_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let try_delete_by_id_error_named_camel_case_token_stream = {
                 let try_delete_by_id_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{delete_by_id_name_camel_case_stringified}{error_named_camel_case_stringified}");
                 try_delete_by_id_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -1187,7 +1202,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                pub async fn try_delete_by_id<'a>(
+                pub async fn #try_delete_by_id_lower_case_token_stream<'a>(
                     server_location: &str,
                     parameters: #delete_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_by_id_error_named_camel_case_token_stream> {
@@ -1464,6 +1479,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         let http_request_token_stream = {
+            let try_delete_with_body_lower_case_token_stream = {
+                let try_delete_with_body_lower_case_stringified = format!("{try_lower_case_stringified}_{delete_with_body_name_lower_case_stringified}");
+                try_delete_with_body_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_delete_with_body_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let try_delete_with_body_error_named_camel_case_token_stream = {
                 let try_delete_with_body_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{delete_with_body_name_camel_case_stringified}{error_named_camel_case_stringified}");
                 try_delete_with_body_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -1476,7 +1496,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                pub async fn try_delete_with_body<'a>(
+                pub async fn #try_delete_with_body_lower_case_token_stream<'a>(
                     server_location: &str,
                     parameters: #delete_with_body_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_with_body_error_named_camel_case_token_stream> {
@@ -1773,6 +1793,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         let http_request_token_stream = {
+            let try_delete_lower_case_token_stream = {
+                let try_delete_lower_case_stringified = format!("{try_lower_case_stringified}_{delete_name_lower_case_stringified}");
+                try_delete_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_delete_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let try_delete_error_named_camel_case_token_stream = {
                 let try_delete_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{delete_name_camel_case_stringified}{error_named_camel_case_stringified}");
                 try_delete_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -1785,7 +1810,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                pub async fn try_delete<'a>(
+                pub async fn #try_delete_lower_case_token_stream<'a>(
                     server_location: &str,
                     parameters: #delete_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_error_named_camel_case_token_stream> {
@@ -1989,6 +2014,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         let http_request_token_stream = {
+            let try_read_by_id_lower_case_token_stream = {
+                let try_read_by_id_lower_case_stringified = format!("{try_lower_case_stringified}_{read_by_id_name_lower_case_stringified}");
+                try_read_by_id_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_read_by_id_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let try_read_by_id_error_named_camel_case_token_stream = {
                 let try_read_by_id_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{read_by_id_name_camel_case_stringified}{error_named_camel_case_stringified}");
                 try_read_by_id_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -2001,7 +2031,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                pub async fn try_read_by_id(
+                pub async fn #try_read_by_id_lower_case_token_stream(
                     server_location: &str,
                     parameters: #read_by_id_parameters_camel_case_token_stream,
                 ) -> Result<
@@ -2379,6 +2409,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         let http_request_token_stream = {
+            let try_read_with_body_lower_case_token_stream = {
+                let try_read_with_body_lower_case_stringified = format!("{try_lower_case_stringified}_{read_with_body_name_lower_case_stringified}");
+                try_read_with_body_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_read_with_body_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let try_read_with_body_error_named_camel_case_token_stream = {
                 let try_read_with_body_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{read_with_body_name_camel_case_stringified}{error_named_camel_case_stringified}");
                 try_read_with_body_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -2391,7 +2426,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                pub async fn try_read_with_body<'a>(
+                pub async fn #try_read_with_body_lower_case_token_stream<'a>(
                     server_location: &str,
                     parameters: #read_with_body_parameters_camel_case_token_stream,
                 ) -> Result<
@@ -2787,6 +2822,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         let http_request_token_stream = {
+            let try_read_lower_case_token_stream = {
+                let try_read_lower_case_stringified = format!("{try_lower_case_stringified}_{read_name_lower_case_stringified}");
+                try_read_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_read_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let try_read_error_named_camel_case_token_stream = {
                 let try_read_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{read_name_camel_case_stringified}{error_named_camel_case_stringified}");
                 try_read_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -2799,7 +2839,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                pub async fn try_read<'a>(
+                pub async fn #try_read_lower_case_token_stream<'a>(
                     server_location: &str,
                     parameters: #read_parameters_camel_case_token_stream,
                 ) -> Result<
@@ -3205,6 +3245,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         let http_request_token_stream = {
+            let try_update_by_id_lower_case_token_stream = {
+                let try_update_by_id_lower_case_stringified = format!("{try_lower_case_stringified}_{update_by_id_name_lower_case_stringified}");
+                try_update_by_id_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_update_by_id_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let try_update_by_id_error_named_camel_case_token_stream = {
                 let try_update_by_id_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{update_by_id_name_camel_case_stringified}{error_named_camel_case_stringified}");
                 try_update_by_id_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -3217,7 +3262,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                pub async fn try_update_by_id<'a>(
+                pub async fn #try_update_by_id_lower_case_token_stream<'a>(
                     server_location: &str,
                     parameters: #update_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_by_id_error_named_camel_case_token_stream> {
@@ -3466,6 +3511,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{prepare_and_execute_query_token_stream}");
         let http_request_token_stream = {
+            let try_update_lower_case_token_stream = {
+                let try_update_lower_case_stringified = format!("{try_lower_case_stringified}_{update_name_lower_case_stringified}");
+                try_update_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_update_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let try_update_error_named_camel_case_token_stream = {
                 let try_update_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{update_name_camel_case_stringified}{error_named_camel_case_stringified}");
                 try_update_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -3478,7 +3528,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                pub async fn try_update<'a>(
+                pub async fn #try_update_lower_case_token_stream<'a>(
                     server_location: &str,
                     parameters: #update_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_error_named_camel_case_token_stream> {
