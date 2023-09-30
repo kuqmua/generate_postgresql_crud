@@ -574,6 +574,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
     let parameters_derive_token_stream = quote::quote!{#[derive(Debug, serde::Deserialize)]};
     let path_derive_token_stream = quote::quote!{#[derive(Debug, serde::Deserialize)]};
+    let query_derive_token_stream = quote::quote!{#[derive(Debug, serde::Serialize, serde::Deserialize)]};
+    let payload_derive_token_stream = quote::quote!{#[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]};
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
     let crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor};
     let crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor};
@@ -732,7 +734,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+                #payload_derive_token_stream
                 pub struct #create_batch_payload_element_camel_case_token_stream {
                     #(#fields_with_excluded_id_token_stream),*
                 }
@@ -1030,7 +1032,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+                #payload_derive_token_stream
                 pub struct #create_payload_camel_case_token_stream {
                     #(#fields_with_excluded_id_token_stream),*
                 }
@@ -1498,7 +1500,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #[derive(Debug, serde::Serialize, serde::Deserialize)]
+                #payload_derive_token_stream
                 pub struct #delete_with_body_payload_camel_case_token_stream {
                     pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,//todo
                     #(#fields_with_excluded_id_token_stream),*
@@ -1844,7 +1846,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #[derive(Debug, serde::Serialize, serde::Deserialize)]
+                #query_derive_token_stream
                 pub struct #delete_query_camel_case_token_stream {
                     #(#fields_with_excluded_id_token_stream),*
                 }
@@ -2207,7 +2209,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{path_token_stream}");
         let query_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde::Serialize, serde::Deserialize)]
+                #query_derive_token_stream
                 pub struct #read_by_id_query_camel_case_token_stream {
                     pub select: Option<#column_select_ident_token_stream>,
                 }
@@ -2491,7 +2493,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+                #payload_derive_token_stream
                 pub struct #read_with_body_payload_camel_case_token_stream {
                     pub select: #column_select_ident_token_stream,
                     pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,
@@ -2917,7 +2919,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #[derive(Debug, serde::Serialize, serde::Deserialize)]
+                #query_derive_token_stream
                 pub struct #read_query_camel_case_token_stream {
                     pub select: Option<#column_select_ident_token_stream>,
                     pub #id_field_ident: Option<crate::server::postgres::bigserial_ids::BigserialIds>,
@@ -3385,7 +3387,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+                #payload_derive_token_stream
                 pub struct #update_by_id_payload_camel_case_token_stream {
                     #(#fields_with_excluded_id_token_stream),*
                 }
@@ -3841,7 +3843,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+                #payload_derive_token_stream
                 pub struct #update_payload_element_camel_case_token_stream {
                     pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,
                     #(#fields_with_excluded_id_token_stream),*
