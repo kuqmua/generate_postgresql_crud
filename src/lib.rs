@@ -582,6 +582,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let query_string_name_token_stream = quote::quote!{query_string};
     let function_creation_query_string_name_token_stream = quote::quote!{function_creation_query_string};
     let binded_query_name_token_stream = quote::quote!{binded_query};
+    let sqlx_query_sqlx_postgres_token_stream = quote::quote!{sqlx::query::<sqlx::Postgres>};
     let increment_initialization_token_stream = quote::quote!{let mut increment: u64 = 0;};
     let crate_server_postgres_constants_stringified = "crate::server::postgres::constants::";
     let crate_server_postgres_constants_update_name_token_stream = {
@@ -824,7 +825,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     },
                 });
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     for element in self.#payload_lower_case_token_stream {
                         #(#bind_value_to_query_modificate_token_stream)*
                     }
@@ -1093,7 +1094,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     },
                 });
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     #(#binded_query_modifications_token_stream)*
                     query
                 }
@@ -1311,7 +1312,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(self.#path_lower_case_token_stream.#id_field_ident, query);
                 };
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     #binded_query_modifications_token_stream
                     query
                 }
@@ -1642,7 +1643,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 });
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     #(#binded_query_modifications_token_stream)*
                     query
                 }
@@ -1998,7 +1999,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     },
                 });
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     #(#binded_query_modifications_token_stream)*
                     query
                 }
@@ -2271,7 +2272,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     );
                 };
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     #binded_query_modifications_token_stream
                     query
                 }
@@ -2694,7 +2695,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 });
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     #(#binded_query_modifications_token_stream)*
                     query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                         self.#payload_lower_case_token_stream.limit,
@@ -3141,7 +3142,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 });
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     #(#binded_query_modifications_token_stream)*
                     query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                         self.#query_lower_case_token_stream.limit,
@@ -3624,7 +3625,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 });
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     #binded_query_id_modification_token_stream
                     #(#binded_query_modifications_token_stream)*
                     query
@@ -3649,7 +3650,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         #acquire_pool_and_connection_token_stream
                         //todo - maybe add transaction here? 
-                        if let Err(e) = sqlx::query::<sqlx::Postgres>(&#function_creation_query_string_name_token_stream)
+                        if let Err(e) = #sqlx_query_sqlx_postgres_token_stream(&#function_creation_query_string_name_token_stream)
                             .execute(#pg_connection_token_stream.as_mut())
                             .await {
                             #from_log_and_return_error_token_stream;
@@ -3957,7 +3958,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 });
                 quote::quote!{
-                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
+                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     for element in self.#payload_lower_case_token_stream {
                         #(#binded_query_modifications_token_stream)*
                     }
