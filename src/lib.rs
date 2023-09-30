@@ -526,6 +526,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let axum_extract_rejection_query_rejection_token_stream = quote::quote!{axum::extract::rejection::QueryRejection};
     let axum_extract_rejection_json_rejection_token_stream = quote::quote!{axum::extract::rejection::JsonRejection};
     let try_extract_value_token_stream = quote::quote!{try_extract_value};
+    let parameters_name_token_stream = quote::quote!{parameters};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -857,9 +858,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_create_batch_lower_case_token_stream<'a>(
                     server_location: &str,
-                    parameters: #create_batch_parameters_camel_case_token_stream,
+                    #parameters_name_token_stream: #create_batch_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_batch_error_named_camel_case_token_stream> {
-                    let payload = match serde_json::to_string(&parameters.payload) {
+                    let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
                         Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_create_batch_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -900,7 +901,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let parameters = #create_batch_parameters_camel_case_token_stream {
+                    let #parameters_name_token_stream = #create_batch_parameters_camel_case_token_stream {
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             Vec<#create_batch_payload_element_camel_case_token_stream>,
                             #try_create_batch_response_variants_token_stream,
@@ -913,7 +914,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     };
                     println!("{parameters:#?}");
-                    parameters.#prepare_and_execute_query_name_token_stream(&app_info_state).await
+                    #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
         };
@@ -1127,9 +1128,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_create_lower_case_token_stream<'a>(
                     server_location: &str,
-                    parameters: #create_parameters_camel_case_token_stream,
+                    #parameters_name_token_stream: #create_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_error_named_camel_case_token_stream> {
-                    let payload = match serde_json::to_string(&parameters.payload) {
+                    let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
                         Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_create_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -1169,7 +1170,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let parameters = #create_parameters_camel_case_token_stream {
+                    let #parameters_name_token_stream = #create_parameters_camel_case_token_stream {
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             #create_payload_camel_case_token_stream,
                             #try_create_response_variants_token_stream,
@@ -1182,7 +1183,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     };
                     println!("{parameters:#?}");
-                    parameters.#prepare_and_execute_query_name_token_stream(&app_info_state).await
+                    #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
         };
@@ -1342,14 +1343,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_delete_by_id_lower_case_token_stream<'a>(
                     server_location: &str,
-                    parameters: #delete_by_id_parameters_camel_case_token_stream,
+                    #parameters_name_token_stream: #delete_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_by_id_error_named_camel_case_token_stream> {
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .delete(&format!(
                             "{server_location}/api/{}/{}",
                             ROUTE_NAME,
-                            parameters.path.id
+                            #parameters_name_token_stream.path.id
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
@@ -1377,7 +1378,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     >,
                     app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let parameters = #delete_by_id_parameters_camel_case_token_stream {
+                    let #parameters_name_token_stream = #delete_by_id_parameters_camel_case_token_stream {
                         path: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #delete_by_id_path_camel_case_token_stream,
                             #try_delete_by_id_response_variants_token_stream,
@@ -1390,7 +1391,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     };
                     println!("{parameters:#?}");
-                    parameters.#prepare_and_execute_query_name_token_stream(&app_info_state).await
+                    #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
         };
@@ -1687,9 +1688,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_delete_with_body_lower_case_token_stream<'a>(
                     server_location: &str,
-                    parameters: #delete_with_body_parameters_camel_case_token_stream,
+                    #parameters_name_token_stream: #delete_with_body_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_with_body_error_named_camel_case_token_stream> {
-                    let payload = match serde_json::to_string(&parameters.payload) {
+                    let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
                         Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_delete_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -1730,7 +1731,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let parameters = #delete_with_body_parameters_camel_case_token_stream {
+                    let #parameters_name_token_stream = #delete_with_body_parameters_camel_case_token_stream {
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             #delete_with_body_payload_camel_case_token_stream,
                             #try_delete_with_body_response_variants_token_stream,
@@ -1743,7 +1744,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     };
                     println!("{parameters:#?}");
-                    parameters.#prepare_and_execute_query_name_token_stream(&app_info_state).await
+                    #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
         };
@@ -2049,9 +2050,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_delete_lower_case_token_stream<'a>(
                     server_location: &str,
-                    parameters: #delete_parameters_camel_case_token_stream,
+                    #parameters_name_token_stream: #delete_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_error_named_camel_case_token_stream> {
-                    let encoded_query = match serde_urlencoded::to_string(parameters.query.into_url_encoding_version()) {
+                    let encoded_query = match serde_urlencoded::to_string(#parameters_name_token_stream.query.into_url_encoding_version()) {
                         Ok(encoded_query) => encoded_query,
                         Err(e) => {
                             return Err(#try_delete_error_named_camel_case_token_stream::QueryEncode {
@@ -2092,7 +2093,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     >,
                     app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let parameters = #delete_parameters_camel_case_token_stream {
+                    let #parameters_name_token_stream = #delete_parameters_camel_case_token_stream {
                         query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #delete_query_camel_case_token_stream,
                             #try_delete_response_variants_token_stream,
@@ -2106,7 +2107,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     };
                     println!("{parameters:#?}");
-                    parameters.#prepare_and_execute_query_name_token_stream(&app_info_state).await
+                    #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
         };
@@ -2322,12 +2323,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_read_by_id_lower_case_token_stream(
                     server_location: &str,
-                    parameters: #read_by_id_parameters_camel_case_token_stream,
+                    #parameters_name_token_stream: #read_by_id_parameters_camel_case_token_stream,
                 ) -> Result<
                     CatOptions,
                     #try_read_by_id_error_named_camel_case_token_stream,
                 > {
-                    let encoded_query = match serde_urlencoded::to_string(parameters.query.into_url_encoding_version()) {
+                    let encoded_query = match serde_urlencoded::to_string(#parameters_name_token_stream.query.into_url_encoding_version()) {
                         Ok(encoded_query) => encoded_query,
                         Err(e) => {
                             return Err(#try_read_by_id_error_named_camel_case_token_stream::QueryEncode {
@@ -2339,7 +2340,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let url = format!(
                         "{server_location}/api/{}/{}?{encoded_query}",
                         ROUTE_NAME,
-                        parameters.path.id,
+                        #parameters_name_token_stream.path.id,
                     );
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
@@ -2375,7 +2376,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     >,
                     app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let parameters = #read_by_id_parameters_camel_case_token_stream {
+                    let #parameters_name_token_stream = #read_by_id_parameters_camel_case_token_stream {
                         path: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #read_by_id_path_camel_case_token_stream,
                             #try_read_by_id_response_variants_token_stream,
@@ -2399,7 +2400,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     };
                     println!("{parameters:#?}");
-                    parameters.#prepare_and_execute_query_name_token_stream(&app_info_state).await
+                    #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
         };
@@ -2783,12 +2784,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_read_with_body_lower_case_token_stream<'a>(
                     server_location: &str,
-                    parameters: #read_with_body_parameters_camel_case_token_stream,
+                    #parameters_name_token_stream: #read_with_body_parameters_camel_case_token_stream,
                 ) -> Result<
                     Vec<CatOptions>,
                     #try_read_with_body_error_named_camel_case_token_stream,
                 > {
-                    let payload = match serde_json::to_string(&parameters.payload) {
+                    let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
                         Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_read_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -2829,7 +2830,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let parameters = #read_with_body_parameters_camel_case_token_stream {
+                    let #parameters_name_token_stream = #read_with_body_parameters_camel_case_token_stream {
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             #read_with_body_payload_camel_case_token_stream,
                             #try_read_with_body_response_variants_token_stream,
@@ -2842,7 +2843,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     };
                     println!("{parameters:#?}");
-                    parameters.#prepare_and_execute_query_name_token_stream(&app_info_state).await
+                    #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
         };
@@ -3244,12 +3245,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_read_lower_case_token_stream<'a>(
                     server_location: &str,
-                    parameters: #read_parameters_camel_case_token_stream,
+                    #parameters_name_token_stream: #read_parameters_camel_case_token_stream,
                 ) -> Result<
                     Vec<CatOptions>,
                     #try_read_error_named_camel_case_token_stream,
                 > {
-                    let encoded_query = match serde_urlencoded::to_string(parameters.query.into_url_encoding_version()) {
+                    let encoded_query = match serde_urlencoded::to_string(#parameters_name_token_stream.query.into_url_encoding_version()) {
                         Ok(encoded_query) => encoded_query,
                         Err(e) => {
                             return Err(#try_read_error_named_camel_case_token_stream::QueryEncode {
@@ -3293,7 +3294,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     >,
                     app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let parameters = #read_parameters_camel_case_token_stream {
+                    let #parameters_name_token_stream = #read_parameters_camel_case_token_stream {
                         query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #read_query_camel_case_token_stream,
                             #try_read_response_variants_token_stream,
@@ -3307,7 +3308,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     };
                     println!("{parameters:#?}");
-                    parameters.#prepare_and_execute_query_name_token_stream(&app_info_state).await
+                    #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
         };
@@ -3719,9 +3720,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_update_by_id_lower_case_token_stream<'a>(
                     server_location: &str,
-                    parameters: #update_by_id_parameters_camel_case_token_stream,
+                    #parameters_name_token_stream: #update_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_by_id_error_named_camel_case_token_stream> {
-                    let payload = match serde_json::to_string(&parameters.payload) {
+                    let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
                         Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_update_by_id_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -3732,7 +3733,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .patch(&format!(
                             "{server_location}/api/{}/{}",
                             ROUTE_NAME,
-                            parameters.path.id.to_inner()
+                            #parameters_name_token_stream.path.id.to_inner()
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
@@ -3766,7 +3767,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let parameters = #update_by_id_parameters_camel_case_token_stream {
+                    let #parameters_name_token_stream = #update_by_id_parameters_camel_case_token_stream {
                         path: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #update_by_id_path_camel_case_token_stream,
                             #try_update_by_id_response_variants_token_stream,
@@ -3789,7 +3790,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     };
                     println!("{parameters:#?}");
-                    parameters.#prepare_and_execute_query_name_token_stream(&app_info_state).await
+                    #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
         };
@@ -4047,9 +4048,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_update_lower_case_token_stream<'a>(
                     server_location: &str,
-                    parameters: #update_parameters_camel_case_token_stream,
+                    #parameters_name_token_stream: #update_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_error_named_camel_case_token_stream> {
-                    let payload = match serde_json::to_string(&parameters.payload) {
+                    let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
                         Ok(payload) => payload,
                         Err(e) => {
                             return Err(#try_update_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -4090,7 +4091,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let parameters = #update_parameters_camel_case_token_stream {
+                    let #parameters_name_token_stream = #update_parameters_camel_case_token_stream {
                         payload: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             Vec<#update_payload_element_camel_case_token_stream>,
                             #try_update_response_variants_token_stream,
@@ -4103,7 +4104,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     };
                     println!("{parameters:#?}");
-                    parameters.#prepare_and_execute_query_name_token_stream(&app_info_state).await
+                    #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
         };
