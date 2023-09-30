@@ -913,7 +913,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                     };
-                    println!("{parameters:#?}");
+                    println!("{:#?}", #parameters_name_token_stream);
                     #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
@@ -1182,7 +1182,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                     };
-                    println!("{parameters:#?}");
+                    println!("{:#?}", #parameters_name_token_stream);
                     #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
@@ -1390,7 +1390,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                     };
-                    println!("{parameters:#?}");
+                    println!("{:#?}", #parameters_name_token_stream);
                     #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
@@ -1743,7 +1743,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                     };
-                    println!("{parameters:#?}");
+                    println!("{:#?}", #parameters_name_token_stream);
                     #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
@@ -2106,7 +2106,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                     };
-                    println!("{parameters:#?}");
+                    println!("{:#?}", #parameters_name_token_stream);
                     #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
@@ -2399,7 +2399,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                     };
-                    println!("{parameters:#?}");
+                    println!("{:#?}", #parameters_name_token_stream);
                     #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
@@ -2842,7 +2842,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                     };
-                    println!("{parameters:#?}");
+                    println!("{:#?}", #parameters_name_token_stream);
                     #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
@@ -3259,12 +3259,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             });
                         }
                     };
-                    println!("{encoded_query}");
+                    println!("{}", encoded_query);
                     let url = format!(
                         "{server_location}/api/{}?{encoded_query}",
                         ROUTE_NAME,
                     );
-                    println!("{url}");
+                    println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .get(&url)
@@ -3307,7 +3307,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                     };
-                    println!("{parameters:#?}");
+                    println!("{:#?}", #parameters_name_token_stream);
                     #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
@@ -3789,7 +3789,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                     };
-                    println!("{parameters:#?}");
+                    println!("{:#?}", #parameters_name_token_stream);
                     #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
@@ -4103,7 +4103,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         },
                     };
-                    println!("{parameters:#?}");
+                    println!("{:#?}", #parameters_name_token_stream);
                     #parameters_name_token_stream.#prepare_and_execute_query_name_token_stream(&app_info_state).await
                 }
             }
