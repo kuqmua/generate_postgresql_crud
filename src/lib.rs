@@ -573,6 +573,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
     let parameters_derive_token_stream = quote::quote!{#[derive(Debug, serde::Deserialize)]};
+    let path_derive_token_stream = quote::quote!{#[derive(Debug, serde::Deserialize)]};
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
     let crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor};
     let crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor};
@@ -1279,7 +1280,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let path_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde::Deserialize)]
+                #path_derive_token_stream
                 pub struct #delete_by_id_path_camel_case_token_stream {
                     pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
                 }
@@ -2197,7 +2198,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let path_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde::Deserialize)]
+                #path_derive_token_stream
                 pub struct #read_by_id_path_camel_case_token_stream {
                     pub #id_field_ident: crate::server::postgres::bigserial::Bigserial//#id_field_type,
                 }
@@ -3362,7 +3363,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let path_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde::Deserialize)]
+                #path_derive_token_stream
                 pub struct #update_by_id_path_camel_case_token_stream {
                     pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
                 }
