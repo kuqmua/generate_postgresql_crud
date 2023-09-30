@@ -528,6 +528,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let try_extract_value_token_stream = quote::quote!{try_extract_value};
     let parameters_name_token_stream = quote::quote!{parameters};
     let server_location_name_token_stream = quote::quote!{server_location};
+    let server_location_type_token_stream = quote::quote!{&str};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -858,7 +859,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_create_batch_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: &str,
+                    #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_name_token_stream: #create_batch_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_batch_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
@@ -1129,7 +1130,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_create_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: &str,
+                    #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_name_token_stream: #create_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
@@ -1345,7 +1346,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_delete_by_id_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: &str,
+                    #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_name_token_stream: #delete_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_by_id_error_named_camel_case_token_stream> {
                     match #tvfrr_extraction_logic_token_stream(
@@ -1691,7 +1692,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_delete_with_body_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: &str,
+                    #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_name_token_stream: #delete_with_body_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_with_body_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
@@ -2054,7 +2055,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_delete_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: &str,
+                    #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_name_token_stream: #delete_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_error_named_camel_case_token_stream> {
                     let encoded_query = match serde_urlencoded::to_string(#parameters_name_token_stream.query.into_url_encoding_version()) {
@@ -2329,7 +2330,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_read_by_id_lower_case_token_stream(
-                    #server_location_name_token_stream: &str,
+                    #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_name_token_stream: #read_by_id_parameters_camel_case_token_stream,
                 ) -> Result<
                     CatOptions,
@@ -2792,7 +2793,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_read_with_body_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: &str,
+                    #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_name_token_stream: #read_with_body_parameters_camel_case_token_stream,
                 ) -> Result<
                     Vec<CatOptions>,
@@ -3254,7 +3255,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_read_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: &str,
+                    #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_name_token_stream: #read_parameters_camel_case_token_stream,
                 ) -> Result<
                     Vec<CatOptions>,
@@ -3730,7 +3731,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_update_by_id_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: &str,
+                    #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_name_token_stream: #update_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_by_id_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
@@ -4059,7 +4060,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_update_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: &str,
+                    #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_name_token_stream: #update_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
