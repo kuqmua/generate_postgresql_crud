@@ -599,6 +599,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let function_creation_query_string_name_token_stream = quote::quote!{function_creation_query_string};
     let binded_query_name_token_stream = quote::quote!{binded_query};
     let order_by_token_stream = quote::quote!{order_by};
+    let select_token_stream = quote::quote!{select};
     let sqlx_query_sqlx_postgres_token_stream = quote::quote!{sqlx::query::<sqlx::Postgres>};
     let reqwest_client_new_token_stream = quote::quote!{reqwest::Client::new()};
     let axum_extract_state_token_stream = quote::quote!{axum::extract::State};
@@ -2212,7 +2213,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #query_derive_token_stream
                 pub struct #read_by_id_query_camel_case_token_stream {
-                    pub select: Option<#column_select_ident_token_stream>,
+                    pub #select_token_stream: Option<#column_select_ident_token_stream>,
                 }
             }
         };
@@ -2221,7 +2222,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #[derive(Debug, serde::Serialize, serde::Deserialize)]
                 struct #read_by_id_query_for_url_encoding_camel_case_token_stream {
-                    select: Option<std::string::String>,
+                    #select_token_stream: Option<std::string::String>,
                 } 
             }
         };
@@ -2230,13 +2231,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 impl #read_by_id_query_camel_case_token_stream {
                     fn into_url_encoding_version(self) -> #read_by_id_query_for_url_encoding_camel_case_token_stream {
-                        let select = self.select.map(|value| {
+                        let #select_token_stream = self.#select_token_stream.map(|value| {
                             #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
                             )
                         });
                         #read_by_id_query_for_url_encoding_camel_case_token_stream {
-                            select
+                            #select_token_stream
                         }
                     }
                 }
@@ -2268,7 +2269,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     format!(
                         #query_token_stream,
                         #crate_server_postgres_constants_select_name_token_stream,
-                        crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
+                        crate::server::postgres::generate_query::GenerateQuery::generate_query(&#select_token_stream),
                         #crate_server_postgres_constants_from_name_token_stream,
                         ROUTE_NAME,
                         #crate_server_postgres_constants_where_name_token_stream,
@@ -2294,7 +2295,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_read_by_id_response_variants_token_stream
                     {
-                        let select = self.#query_lower_case_token_stream.select.unwrap_or_default();
+                        let #select_token_stream = self.#query_lower_case_token_stream.#select_token_stream.unwrap_or_default();
                         let #query_string_name_token_stream = #query_string_token_stream;
                         // println!("{query_string}");
                         let #binded_query_name_token_stream = {
@@ -2302,7 +2303,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         #acquire_pool_and_connection_token_stream
                         match #binded_query_name_token_stream.fetch_one(#pg_connection_token_stream.as_mut()).await {
-                            Ok(row) => match select.#options_try_from_sqlx_row_name_token_stream(&row) {
+                            Ok(row) => match #select_token_stream.#options_try_from_sqlx_row_name_token_stream(&row) {
                                 Ok(value) => #try_read_by_id_response_variants_token_stream::#desirable_token_stream(value),
                                 Err(e) => {
                                     #from_log_and_return_error_token_stream
@@ -2496,7 +2497,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #payload_derive_token_stream
                 pub struct #read_with_body_payload_camel_case_token_stream {
-                    pub select: #column_select_ident_token_stream,
+                    pub #select_token_stream: #column_select_ident_token_stream,
                     pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,
                     #(#fields_with_excluded_id_token_stream)*
                     pub #order_by_token_stream: crate::server::postgres::order_by::OrderBy<#column_ident_token_stream>,
@@ -2620,7 +2621,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         "{} {} {} {} {}",
                         #crate_server_postgres_constants_select_name_token_stream,
                         crate::server::postgres::generate_query::GenerateQuery::generate_query(
-                            &self.#payload_lower_case_token_stream.select
+                            &self.#payload_lower_case_token_stream.#select_token_stream
                         ),
                         #crate_server_postgres_constants_from_name_token_stream,
                         ROUTE_NAME,
@@ -2747,7 +2748,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                 }
                             } {
-                                match self.#payload_lower_case_token_stream.select.#options_try_from_sqlx_row_name_token_stream(&row) {
+                                match self.#payload_lower_case_token_stream.#select_token_stream.#options_try_from_sqlx_row_name_token_stream(&row) {
                                     Ok(value) => {
                                         vec_values.push(value);
                                     }
@@ -2922,7 +2923,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #query_derive_token_stream
                 pub struct #read_query_camel_case_token_stream {
-                    pub select: Option<#column_select_ident_token_stream>,
+                    pub #select_token_stream: Option<#column_select_ident_token_stream>,
                     pub #id_field_ident: Option<crate::server::postgres::bigserial_ids::BigserialIds>,
                     #(#fields_with_excluded_id_token_stream)*
                     pub #order_by_token_stream: Option<CatOrderByWrapper>,//todo
@@ -2948,7 +2949,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #[derive(Debug, serde::Serialize, serde::Deserialize)]
                 struct #read_query_for_url_encoding_camel_case_token_stream {
-                    select: Option<std::string::String>,
+                    #select_token_stream: Option<std::string::String>,
                     pub #id_field_ident: Option<std::string::String>,
                     #(#fields_for_url_encoding_with_excluded_id_token_stream)*
                     #order_by_token_stream: Option<std::string::String>,
@@ -2984,7 +2985,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 impl #read_query_camel_case_token_stream {
                     fn into_url_encoding_version(self) -> #read_query_for_url_encoding_camel_case_token_stream {
-                        let select = self.select.map(|value| {
+                        let #select_token_stream = self.#select_token_stream.map(|value| {
                             #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
                             )
@@ -3004,7 +3005,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             )
                         });
                         #read_query_for_url_encoding_camel_case_token_stream {
-                            select,
+                            #select_token_stream,
                             #(#fields_into_url_encoding_version_constract_with_excluded_id_token_stream)*
                             #order_by_token_stream,
                             limit,
@@ -3068,7 +3069,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     format!(
                         "{} {} {} {} {}",
                         #crate_server_postgres_constants_select_name_token_stream,
-                        crate::server::postgres::generate_query::GenerateQuery::generate_query(&select),
+                        crate::server::postgres::generate_query::GenerateQuery::generate_query(&#select_token_stream),
                         #crate_server_postgres_constants_from_name_token_stream,
                         ROUTE_NAME,
                         {
@@ -3169,7 +3170,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_read_response_variants_token_stream
                     {
-                        let select = #column_select_ident_token_stream::from(self.#query_lower_case_token_stream.select.clone());
+                        let #select_token_stream = #column_select_ident_token_stream::from(self.#query_lower_case_token_stream.#select_token_stream.clone());
                         let #query_string_name_token_stream = #query_string_token_stream;
                         // println!("{query_string}");
                         let #binded_query_name_token_stream = {
@@ -3192,7 +3193,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                 }
                             } {
-                                match select.#options_try_from_sqlx_row_name_token_stream(&row) {
+                                match #select_token_stream.#options_try_from_sqlx_row_name_token_stream(&row) {
                                     Ok(value) => {
                                         vec_values.push(value);
                                     }
