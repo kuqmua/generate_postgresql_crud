@@ -560,6 +560,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let try_extract_value_token_stream = quote::quote!{try_extract_value};
     let server_location_name_token_stream = quote::quote!{server_location};
     let server_location_type_token_stream = quote::quote!{&str};
+    let crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::bind_value_to_query};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -807,7 +808,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                         Some(quote::quote!{
-                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(element.#field_ident, query);  
+                            query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(element.#field_ident, query);  
                         })
                     },
                 });
@@ -1080,7 +1081,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                         Some(quote::quote!{
-                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(self.#payload_lower_case_token_stream.#field_ident, query);
+                            query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(self.#payload_lower_case_token_stream.#field_ident, query);
                         })
                     },
                 });
@@ -1303,7 +1304,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let binded_query_token_stream = {
                 let binded_query_modifications_token_stream = quote::quote!{
-                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(self.#path_lower_case_token_stream.#id_field_ident, query);
+                    query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(self.#path_lower_case_token_stream.#id_field_ident, query);
                 };
                 quote::quote!{
                     let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
@@ -1638,7 +1639,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     quote::quote!{
                         if let Some(values) = self.#payload_lower_case_token_stream.#field_ident {
                             for value in values {
-                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                                     value, query,
                                 );
                             }
@@ -2003,7 +2004,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             });
                         Some(quote::quote!{
                             if let Some(value) = self.#query_lower_case_token_stream.#field_ident {
-                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(value, query);
+                                query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(value, query);
                             }
                         })
                     },
@@ -2280,7 +2281,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let binded_query_token_stream = {
                 let binded_query_modifications_token_stream = quote::quote!{
-                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                    query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                         self.#path_lower_case_token_stream.#id_field_ident, query,
                     );
                 };
@@ -2716,7 +2717,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     quote::quote!{
                         if let Some(values) = self.#payload_lower_case_token_stream.#field_ident {
                             for value in values {
-                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                                     value, query,
                                 );
                             }
@@ -2726,11 +2727,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                     #(#binded_query_modifications_token_stream)*
-                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                    query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                         self.#payload_lower_case_token_stream.limit,
                         query,
                     );
-                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                    query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                         self.#payload_lower_case_token_stream.offset,
                         query,
                     );
@@ -3177,7 +3178,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         });
                     quote::quote!{
                         if let Some(value) = self.#query_lower_case_token_stream.#field_ident {
-                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                            query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                                 value, query,
                             );
                         }
@@ -3186,12 +3187,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                     #(#binded_query_modifications_token_stream)*
-                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                    query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                         self.#query_lower_case_token_stream.limit,
                         query,
                     );
                     if let Some(value) = self.#query_lower_case_token_stream.offset {
-                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                        query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                             value, query,
                         );
                     }
@@ -3653,7 +3654,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let binded_query_token_stream = {
                 let binded_query_id_modification_token_stream = quote::quote!{
-                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                    query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                         self.#path_lower_case_token_stream.#id_field_ident,
                         query,
                     );
@@ -3667,7 +3668,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             });
                         Some(quote::quote!{
                             if let Some(value) = self.#payload_lower_case_token_stream.#field_ident {
-                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                                     value,
                                     query,
                                 );
@@ -4007,7 +4008,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
                     quote::quote!{
-                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                        query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                             element.#field_ident,
                             query,
                         ); 
