@@ -549,6 +549,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let bind_query_variant_initialization_token_stream = quote::quote!{
+        BindQuery { 
+            checked_add: e.into_serialize_deserialize_version(), 
+            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
+        }
+    };
     let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
     let crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor};
@@ -764,10 +770,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     element_bind_increments.push_str(&format!(#possible_dot_space_format));
                                 },
                                 Err(e) => {
-                                    return #try_create_batch_response_variants_token_stream::BindQuery { 
-                                        checked_add: e.into_serialize_deserialize_version(), 
-                                        code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                    };
+                                    return #try_create_batch_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                 },
                             }
                         }
@@ -3082,10 +3085,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             ) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    return #try_read_response_variants_token_stream::BindQuery { 
-                                        checked_add: e.into_serialize_deserialize_version(), 
-                                        code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                    };
+                                    return #try_read_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                 },
                             };
                             additional_parameters.push_str(&format!(
@@ -3590,10 +3590,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     query.push_str(&format!(#query_part_token_stream));
                                 },
                                 Err(e) => {
-                                    return #try_update_by_id_response_variants_token_stream::BindQuery { 
-                                        checked_add: e.into_serialize_deserialize_version(), 
-                                        code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                    };
+                                    return #try_update_by_id_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                 },
                             }
                         }
