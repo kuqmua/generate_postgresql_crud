@@ -264,6 +264,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         column_select_ident_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {column_select_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+    let options_try_from_sqlx_row_name_token_stream = quote::quote!{options_try_from_sqlx_row};
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
@@ -441,7 +442,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote! {
                 impl #column_select_ident_token_stream {
-                    fn options_try_from_sqlx_row<'a, R: sqlx::Row>(
+                    fn #options_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(
                         &self,
                         row: &'a R,
                     ) -> sqlx::Result<#struct_options_ident_token_stream>
@@ -2282,7 +2283,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         #acquire_pool_and_connection_token_stream
                         match #binded_query_name_token_stream.fetch_one(#pg_connection_token_stream.as_mut()).await {
-                            Ok(row) => match select.options_try_from_sqlx_row(&row) {
+                            Ok(row) => match select.#options_try_from_sqlx_row_name_token_stream(&row) {
                                 Ok(value) => #try_read_by_id_response_variants_token_stream::#desirable_token_stream(value),
                                 Err(e) => {
                                     #from_log_and_return_error_token_stream
@@ -2743,7 +2744,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                 }
                             } {
-                                match self.payload.select.options_try_from_sqlx_row(&row) {
+                                match self.payload.select.#options_try_from_sqlx_row_name_token_stream(&row) {
                                     Ok(value) => {
                                         vec_values.push(value);
                                     }
@@ -3205,7 +3206,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                 }
                             } {
-                                match select.options_try_from_sqlx_row(&row) {
+                                match select.#options_try_from_sqlx_row_name_token_stream(&row) {
                                     Ok(value) => {
                                         vec_values.push(value);
                                     }
