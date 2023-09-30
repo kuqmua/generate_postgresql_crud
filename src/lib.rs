@@ -549,6 +549,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let http_request_error_named_serde_json_to_string_variant = quote::quote!{
+        SerdeJsonToString {
+            #[eo_display]
+            serde_json_to_string: serde_json::Error,
+            code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
     let bind_query_variant_initialization_token_stream = quote::quote!{
         BindQuery { 
             checked_add: e.into_serialize_deserialize_version(), 
@@ -880,11 +887,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         request_error: #try_create_batch_request_error_camel_case_token_stream,
                         code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    SerdeJsonToString {
-                        #[eo_display]
-                        serde_json_to_string: serde_json::Error,
-                        code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #http_request_error_named_serde_json_to_string_variant,
                 }
             }
         };
@@ -1147,11 +1150,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         request_error: #try_create_request_error_camel_case_token_stream,
                         code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    SerdeJsonToString {
-                        #[eo_display]
-                        serde_json_to_string: serde_json::Error,
-                        code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #http_request_error_named_serde_json_to_string_variant,
                 }
             }
         };
@@ -1697,11 +1696,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         request_error: #try_delete_with_body_request_error_camel_case_token_stream,
                         code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    SerdeJsonToString {
-                        #[eo_display]
-                        serde_json_to_string: serde_json::Error,
-                        code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #http_request_error_named_serde_json_to_string_variant,
                 }
             }
         };
@@ -2772,11 +2767,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         request_error: #try_read_with_body_request_error_camel_case_token_stream,
                         code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    SerdeJsonToString {
-                        #[eo_display]
-                        serde_json_to_string: serde_json::Error,
-                        code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #http_request_error_named_serde_json_to_string_variant,
                 }
             }
         };
@@ -3690,11 +3681,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         request_error: #try_update_by_id_request_error_camel_case_token_stream,
                         code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    SerdeJsonToString {
-                        #[eo_display]
-                        serde_json_to_string: serde_json::Error,
-                        code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #http_request_error_named_serde_json_to_string_variant,
                 }
             }
         };
@@ -4014,11 +4001,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         request_error: #try_update_request_error_camel_case_token_stream,
                         code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    SerdeJsonToString {
-                        #[eo_display]
-                        serde_json_to_string: serde_json::Error,
-                        code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #http_request_error_named_serde_json_to_string_variant,
                 }
             }
         };
