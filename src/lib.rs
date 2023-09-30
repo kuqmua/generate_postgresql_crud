@@ -2352,7 +2352,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #read_by_id_parameters_camel_case_token_stream,
                 ) -> Result<
-                    CatOptions,
+                    #struct_options_ident_token_stream,
                     #try_read_by_id_error_named_camel_case_token_stream,
                 > {
                     let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.#query_lower_case_token_stream.into_url_encoding_version()) {
@@ -2795,7 +2795,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #read_with_body_parameters_camel_case_token_stream,
                 ) -> Result<
-                    Vec<CatOptions>,
+                    Vec<#struct_options_ident_token_stream>,
                     #try_read_with_body_error_named_camel_case_token_stream,
                 > {
                     let #payload_lower_case_token_stream = match serde_json::to_string(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
@@ -3244,7 +3244,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #read_parameters_camel_case_token_stream,
                 ) -> Result<
-                    Vec<CatOptions>,
+                    Vec<#struct_options_ident_token_stream>,
                     #try_read_error_named_camel_case_token_stream,
                 > {
                     let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.#query_lower_case_token_stream.into_url_encoding_version()) {
