@@ -596,6 +596,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let binded_query_name_token_stream = quote::quote!{binded_query};
     let sqlx_query_sqlx_postgres_token_stream = quote::quote!{sqlx::query::<sqlx::Postgres>};
     let reqwest_client_new_token_stream = quote::quote!{reqwest::Client::new()};
+    let axum_extract_query_token_stream = quote::quote!{axum::extract::Query};
     let increment_initialization_token_stream = quote::quote!{let mut increment: u64 = 0;};
     let crate_server_postgres_constants_stringified = "crate::server::postgres::constants::";
     let crate_server_postgres_constants_update_name_token_stream = {
@@ -2111,7 +2112,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #delete_lower_case_token_stream<'a>(
                     #query_extraction_result_lower_case_token_stream: Result<
-                        axum::extract::Query<#delete_query_camel_case_token_stream>,
+                        #axum_extract_query_token_stream<#delete_query_camel_case_token_stream>,
                         #axum_extract_rejection_query_rejection_token_stream,
                     >,
                     #app_info_state_name_token_stream: axum::extract::State<#app_info_state_path>,
@@ -2392,7 +2393,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #axum_extract_rejection_path_rejection_token_stream,
                     >,
                     #query_extraction_result_lower_case_token_stream: Result<
-                        axum::extract::Query<#read_by_id_query_camel_case_token_stream>,
+                        #axum_extract_query_token_stream<#read_by_id_query_camel_case_token_stream>,
                         #axum_extract_rejection_query_rejection_token_stream,
                     >,
                     #app_info_state_name_token_stream: axum::extract::State<#app_info_state_path>,
@@ -3281,7 +3282,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #read_lower_case_token_stream(
                     #query_extraction_result_lower_case_token_stream: Result<
-                        axum::extract::Query<#read_query_camel_case_token_stream>,
+                        #axum_extract_query_token_stream<#read_query_camel_case_token_stream>,
                         #axum_extract_rejection_query_rejection_token_stream,
                     >,
                     #app_info_state_name_token_stream: axum::extract::State<#app_info_state_path>,
