@@ -561,6 +561,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
         )
     };
+    let content_type_application_json_header_addition_token_stream = quote::quote!{
+        .header(reqwest::header::CONTENT_TYPE, "application/json")
+    };
     let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
     let crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor};
@@ -583,6 +586,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let function_creation_query_string_name_token_stream = quote::quote!{function_creation_query_string};
     let binded_query_name_token_stream = quote::quote!{binded_query};
     let sqlx_query_sqlx_postgres_token_stream = quote::quote!{sqlx::query::<sqlx::Postgres>};
+    let reqwest_client_new_token_stream = quote::quote!{reqwest::Client::new()};
     let increment_initialization_token_stream = quote::quote!{let mut increment: u64 = 0;};
     let crate_server_postgres_constants_stringified = "crate::server::postgres::constants::";
     let crate_server_postgres_constants_update_name_token_stream = {
@@ -909,14 +913,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
-                        reqwest::Client::new()
+                        #reqwest_client_new_token_stream
                         .post(&format!(
                             "{}/api/{}",
                             #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
                         #project_commit_header_addition_token_stream
-                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                        #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
                         .send(),
                     )
@@ -1176,14 +1180,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
-                        reqwest::Client::new()
+                        #reqwest_client_new_token_stream
                         .post(&format!(
                             "{}/api/{}",
                             #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
                         #project_commit_header_addition_token_stream
-                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                        #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
                         .send(),
                     )
@@ -1383,7 +1387,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #parameters_lower_case_token_stream: #delete_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_by_id_error_named_camel_case_token_stream> {
                     match #tvfrr_extraction_logic_token_stream(
-                        reqwest::Client::new()
+                        #reqwest_client_new_token_stream
                         .delete(&format!(
                             "{}/api/{}/{}",
                             #server_location_name_token_stream,
@@ -1726,14 +1730,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
-                        reqwest::Client::new()
+                        #reqwest_client_new_token_stream
                         .delete(&format!(
                             "{}/api/{}/search",
                             #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
                         #project_commit_header_addition_token_stream
-                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                        #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
                         .send(),
                     )
@@ -2085,7 +2089,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
-                        reqwest::Client::new()
+                        #reqwest_client_new_token_stream
                         .delete(&format!(
                             "{}/api/{}?{}",
                             #server_location_name_token_stream,
@@ -2367,7 +2371,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         encoded_query
                     );
                     match #tvfrr_extraction_logic_token_stream(
-                        reqwest::Client::new()
+                        #reqwest_client_new_token_stream
                         .get(&url)
                         #project_commit_header_addition_token_stream
                         .send(),
@@ -2804,14 +2808,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
-                        reqwest::Client::new()
+                        #reqwest_client_new_token_stream
                         .post(&format!(
                             "{}/api/{}/search",
                             #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
                         #project_commit_header_addition_token_stream
-                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                        #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
                         .send(),
                     )
@@ -3264,7 +3268,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     );
                     println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
-                        reqwest::Client::new()
+                        #reqwest_client_new_token_stream
                         .get(&url)
                         #project_commit_header_addition_token_stream
                         .send(),
@@ -3719,7 +3723,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
-                        reqwest::Client::new()
+                        #reqwest_client_new_token_stream
                         .patch(&format!(
                             "{}/api/{}/{}",
                             #server_location_name_token_stream,
@@ -3727,7 +3731,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #parameters_lower_case_token_stream.#path_lower_case_token_stream.id.to_inner()
                         ))
                         #project_commit_header_addition_token_stream
-                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                        #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
                         .send(),
                     )
@@ -4043,14 +4047,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     match #tvfrr_extraction_logic_token_stream(
-                        reqwest::Client::new()
+                        #reqwest_client_new_token_stream
                         .patch(&format!(
                             "{}/api/{}/",
                             #server_location_name_token_stream,
                             ROUTE_NAME,
                         ))
                         #project_commit_header_addition_token_stream
-                        .header(reqwest::header::CONTENT_TYPE, "application/json")
+                        #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
                         .send(),
                     )
