@@ -599,6 +599,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let axum_extract_state_token_stream = quote::quote!{axum::extract::State};
     let axum_extract_path_token_stream = quote::quote!{axum::extract::Path};
     let axum_extract_query_token_stream = quote::quote!{axum::extract::Query};
+    let axum_json_token_stream = quote::quote!{axum::Json};
     let increment_initialization_token_stream = quote::quote!{let mut increment: u64 = 0;};
     let crate_server_postgres_constants_stringified = "crate::server::postgres::constants::";
     let crate_server_postgres_constants_update_name_token_stream = {
@@ -948,7 +949,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #create_batch_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
-                        axum::Json<#create_batch_payload_camel_case_token_stream>,
+                        #axum_json_token_stream<#create_batch_payload_camel_case_token_stream>,
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
@@ -1211,7 +1212,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #create_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
-                        axum::Json<#create_payload_camel_case_token_stream>,
+                        #axum_json_token_stream<#create_payload_camel_case_token_stream>,
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
@@ -1757,7 +1758,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #delete_with_body_lower_case_token_stream<'a>(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
-                        axum::Json<#delete_with_body_payload_camel_case_token_stream>,
+                        #axum_json_token_stream<#delete_with_body_payload_camel_case_token_stream>,
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
@@ -2831,7 +2832,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #read_with_body_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
-                        axum::Json<#read_with_body_payload_camel_case_token_stream>,
+                        #axum_json_token_stream<#read_with_body_payload_camel_case_token_stream>,
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
@@ -3747,7 +3748,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     >,
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
-                        axum::Json<#update_by_id_payload_camel_case_token_stream>,
+                        #axum_json_token_stream<#update_by_id_payload_camel_case_token_stream>,
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
@@ -4062,7 +4063,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #update_lower_case_token_stream<'a>(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
-                        axum::Json<#update_payload_camel_case_token_stream>,
+                        #axum_json_token_stream<#update_payload_camel_case_token_stream>,
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
