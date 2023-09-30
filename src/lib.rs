@@ -555,6 +555,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream
         }
     };
+    let project_commit_header_addition_token_stream = quote::quote!{
+        .header(
+            crate::common::git::project_git_info::PROJECT_COMMIT,
+            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
+        )
+    };
     let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
     let crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor};
@@ -908,11 +914,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
-                        .header(
-                            crate::common::git::project_git_info::PROJECT_COMMIT,
-                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO
-                            .project_commit,
-                        )
+                        #project_commit_header_addition_token_stream
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
                         .body(#payload_lower_case_token_stream)
                         .send(),
@@ -1179,10 +1181,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
-                        .header(
-                            crate::common::git::project_git_info::PROJECT_COMMIT,
-                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
-                        )
+                        #project_commit_header_addition_token_stream
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
                         .body(#payload_lower_case_token_stream)
                         .send(),
@@ -1390,10 +1389,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             ROUTE_NAME,
                             #parameters_lower_case_token_stream.#path_lower_case_token_stream.id
                         ))
-                        .header(
-                            crate::common::git::project_git_info::PROJECT_COMMIT,
-                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
-                        )
+                        #project_commit_header_addition_token_stream
                         .send(),
                     )
                     .await
@@ -1485,14 +1481,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
                     Some(quote::quote!{
-                        pub #field_ident: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>
+                        pub #field_ident: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>//todo
                     })
                 },
             });
             quote::quote!{
                 #[derive(Debug, serde::Serialize, serde::Deserialize)]
                 pub struct #delete_with_body_payload_camel_case_token_stream {
-                    pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,
+                    pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,//todo
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
@@ -1735,11 +1731,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
-                        .header(
-                            crate::common::git::project_git_info::PROJECT_COMMIT,
-                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO
-                                .project_commit,
-                        )
+                        #project_commit_header_addition_token_stream
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
                         .body(#payload_lower_case_token_stream)
                         .send(),
@@ -2099,10 +2091,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             ROUTE_NAME,
                             encoded_query
                         ))
-                        .header(
-                            crate::common::git::project_git_info::PROJECT_COMMIT,
-                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
-                        )
+                        #project_commit_header_addition_token_stream
                         .send(),
                     )
                     .await
@@ -2379,11 +2368,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .get(&url)
-                        .header(
-                            crate::common::git::project_git_info::PROJECT_COMMIT,
-                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO
-                                .project_commit,
-                        )
+                        #project_commit_header_addition_token_stream
                         .send(),
                     )
                     .await
@@ -2824,11 +2809,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
-                        .header(
-                            crate::common::git::project_git_info::PROJECT_COMMIT,
-                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO
-                                .project_commit,
-                        )
+                        #project_commit_header_addition_token_stream
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
                         .body(#payload_lower_case_token_stream)
                         .send(),
@@ -3284,10 +3265,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .get(&url)
-                        .header(
-                            crate::common::git::project_git_info::PROJECT_COMMIT,
-                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
-                        )
+                        #project_commit_header_addition_token_stream
                         .send(),
                     )
                     .await
@@ -3747,10 +3725,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             ROUTE_NAME,
                             #parameters_lower_case_token_stream.#path_lower_case_token_stream.id.to_inner()
                         ))
-                        .header(
-                            crate::common::git::project_git_info::PROJECT_COMMIT,
-                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
-                        )
+                        #project_commit_header_addition_token_stream
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
                         .body(#payload_lower_case_token_stream)
                         .send(),
@@ -4073,11 +4048,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #server_location_name_token_stream,
                             ROUTE_NAME,
                         ))
-                        .header(
-                            crate::common::git::project_git_info::PROJECT_COMMIT,
-                            crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO
-                                .project_commit,
-                        )
+                        #project_commit_header_addition_token_stream
                         .header(reqwest::header::CONTENT_TYPE, "application/json")
                         .body(#payload_lower_case_token_stream)
                         .send(),
