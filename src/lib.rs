@@ -598,6 +598,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let query_string_name_token_stream = quote::quote!{query_string};
     let function_creation_query_string_name_token_stream = quote::quote!{function_creation_query_string};
     let binded_query_name_token_stream = quote::quote!{binded_query};
+    let order_by_token_stream = quote::quote!{order_by};
     let sqlx_query_sqlx_postgres_token_stream = quote::quote!{sqlx::query::<sqlx::Postgres>};
     let reqwest_client_new_token_stream = quote::quote!{reqwest::Client::new()};
     let axum_extract_state_token_stream = quote::quote!{axum::extract::State};
@@ -2498,7 +2499,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub select: #column_select_ident_token_stream,
                     pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,
                     #(#fields_with_excluded_id_token_stream)*
-                    pub order_by: crate::server::postgres::order_by::OrderBy<#column_ident_token_stream>,
+                    pub #order_by_token_stream: crate::server::postgres::order_by::OrderBy<#column_ident_token_stream>,
                     pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
                     pub offset: crate::server::postgres::postgres_bigint::PostgresBigint,
                 }
@@ -2633,7 +2634,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     true => "",
                                     false => " ",
                                 };
-                                let value = &self.#payload_lower_case_token_stream.order_by;
+                                let value = &self.#payload_lower_case_token_stream.#order_by_token_stream;
                                 let order_stringified = match &value.order {
                                     Some(order) => order.to_string(),
                                     None => crate::server::postgres::order::Order::default().to_string(),
@@ -2924,7 +2925,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub select: Option<#column_select_ident_token_stream>,
                     pub #id_field_ident: Option<crate::server::postgres::bigserial_ids::BigserialIds>,
                     #(#fields_with_excluded_id_token_stream)*
-                    pub order_by: Option<CatOrderByWrapper>,//todo
+                    pub #order_by_token_stream: Option<CatOrderByWrapper>,//todo
                     pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
                     pub offset: Option<crate::server::postgres::postgres_bigint::PostgresBigint>,
                 }
@@ -2950,7 +2951,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     select: Option<std::string::String>,
                     pub #id_field_ident: Option<std::string::String>,
                     #(#fields_for_url_encoding_with_excluded_id_token_stream)*
-                    order_by: Option<std::string::String>,
+                    #order_by_token_stream: Option<std::string::String>,
                     limit: std::string::String,
                     offset: Option<std::string::String>,
                 }
@@ -2989,7 +2990,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             )
                         });
                         #(#fields_into_url_encoding_version_with_excluded_id_token_stream)*
-                        let order_by = self.order_by.map(|value| {
+                        let #order_by_token_stream = self.#order_by_token_stream.map(|value| {
                             #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
                             )
@@ -3005,7 +3006,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #read_query_for_url_encoding_camel_case_token_stream {
                             select,
                             #(#fields_into_url_encoding_version_constract_with_excluded_id_token_stream)*
-                            order_by,
+                            #order_by_token_stream,
                             limit,
                             offset,
                         }
@@ -3074,7 +3075,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
                             #(#additional_parameters_modification_token_stream)*
-                            if let Some(value) = &self.#query_lower_case_token_stream.order_by {
+                            if let Some(value) = &self.#query_lower_case_token_stream.#order_by_token_stream {
                                 let prefix = match additional_parameters.is_empty() {
                                     true => "",
                                     false => " ",
