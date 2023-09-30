@@ -584,6 +584,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let server_location_type_token_stream = quote::quote!{&str};
     let crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::bind_value_to_query};
     let crate_server_postgres_bind_query_bind_query_try_generate_bind_increments = quote::quote!{crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments};
+    let crate_server_postgres_bind_query_bind_query_try_increment_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::try_increment};
     let crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream = quote::quote!{crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
@@ -1944,7 +1945,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         Some(quote::quote!{
                             if let Some(value) = &self.#query_lower_case_token_stream.#field_ident {
-                                match crate::server::postgres::bind_query::BindQuery::try_increment(
+                                match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(
                                     value,
                                     &mut increment
                                 ) {
@@ -3534,7 +3535,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_part_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
                         quote::quote!{
-                            match crate::server::postgres::bind_query::BindQuery::try_increment(&self.#path_lower_case_token_stream.#id_field_ident, &mut increment) {
+                            match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(&self.#path_lower_case_token_stream.#id_field_ident, &mut increment) {
                                 Ok(_) => {
                                     query.push_str(&format!(#query_part_token_stream));
                                 },
@@ -3563,7 +3564,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             };
                             quote::quote!{
                                 if let Some(value) = &self.#payload_lower_case_token_stream.#field_ident {
-                                    match crate::server::postgres::bind_query::BindQuery::try_increment(value, &mut increment) {
+                                    match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(value, &mut increment) {
                                         Ok(_) => {
                                             query.push_str(&format!(#handle_token_stream));//add dot_space for all elements except last
                                         },
