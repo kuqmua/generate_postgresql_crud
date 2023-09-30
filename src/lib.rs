@@ -494,6 +494,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let query_camel_case_stringified = "Query";
     // let query_camel_case_token_stream = query_camel_case_stringified.parse::<proc_macro2::TokenStream>()
     //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)); 
+    let query_lower_case_token_stream = {
+        let query_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&query_camel_case_stringified);
+        query_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };    
     let payload_camel_case_stringified = "Payload";
     // let payload_camel_case_token_stream = payload_camel_case_stringified.parse::<proc_macro2::TokenStream>()
     //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {payload_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)); 
@@ -1803,7 +1808,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #[derive(Debug, serde::Deserialize)]
                 pub struct #delete_parameters_camel_case_token_stream {
-                    pub query: #delete_query_camel_case_token_stream,
+                    pub #query_lower_case_token_stream: #delete_query_camel_case_token_stream,
                 }
             }
         };
@@ -1929,7 +1934,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
                         Some(quote::quote!{
-                            if let Some(value) = &self.query.#field_ident {
+                            if let Some(value) = &self.#query_lower_case_token_stream.#field_ident {
                                 match crate::server::postgres::bind_query::BindQuery::try_increment(
                                     value,
                                     &mut increment
@@ -1981,7 +1986,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                         Some(quote::quote!{
-                            if let Some(value) = self.query.#field_ident {
+                            if let Some(value) = self.#query_lower_case_token_stream.#field_ident {
                                 query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(value, query);
                             }
                         })
@@ -2108,7 +2113,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let #parameters_lower_case_token_stream = #delete_parameters_camel_case_token_stream {
-                        query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
+                        #query_lower_case_token_stream: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #delete_query_camel_case_token_stream,
                             #try_delete_response_variants_token_stream,
                         >::#try_extract_value_token_stream(
@@ -2176,7 +2181,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[derive(Debug, serde::Deserialize)]
                 pub struct #read_by_id_parameters_camel_case_token_stream {
                     pub #path_lower_case_token_stream: #read_by_id_path_camel_case_token_stream,
-                    pub query: #read_by_id_query_camel_case_token_stream,
+                    pub #query_lower_case_token_stream: #read_by_id_query_camel_case_token_stream,
                 }
             }
         };
@@ -2276,7 +2281,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         app_info_state: &#app_info_state_path,
                     ) -> #try_read_by_id_response_variants_token_stream
                     {
-                        let select = self.query.select.unwrap_or_default();
+                        let select = self.#query_lower_case_token_stream.select.unwrap_or_default();
                         let #query_string_name_token_stream = #query_string_token_stream;
                         // println!("{query_string}");
                         let #binded_query_name_token_stream = {
@@ -2342,7 +2347,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     CatOptions,
                     #try_read_by_id_error_named_camel_case_token_stream,
                 > {
-                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.query.into_url_encoding_version()) {
+                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.#query_lower_case_token_stream.into_url_encoding_version()) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_read_by_id_error_named_camel_case_token_stream::QueryEncode {
@@ -2403,7 +2408,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 return err;
                             }
                         },
-                        query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
+                        #query_lower_case_token_stream: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #read_by_id_query_camel_case_token_stream,
                             #try_read_by_id_response_variants_token_stream,
                         >::#try_extract_value_token_stream(
@@ -2907,7 +2912,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #[derive(Debug, serde::Deserialize)]
                 pub struct #read_parameters_camel_case_token_stream {
-                    pub query: #read_query_camel_case_token_stream,
+                    pub #query_lower_case_token_stream: #read_query_camel_case_token_stream,
                 }
             }
         };
@@ -3048,7 +3053,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
                     quote::quote!{
-                        if let Some(value) = &self.query.#field_ident {
+                        if let Some(value) = &self.#query_lower_case_token_stream.#field_ident {
                             let prefix = match additional_parameters.is_empty() {
                                 true => #crate_server_postgres_constants_where_name_token_stream.to_string(),
                                 false => format!(" {}", #crate_server_postgres_constants_and_name_token_stream),
@@ -3084,7 +3089,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
                             #(#additional_parameters_modification_token_stream)*
-                            if let Some(value) = &self.query.order_by {
+                            if let Some(value) = &self.#query_lower_case_token_stream.order_by {
                                 let prefix = match additional_parameters.is_empty() {
                                     true => "",
                                     false => " ",
@@ -3105,7 +3110,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     false => " ",
                                 };
                                 let value = match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
-                                    &self.query.limit,
+                                    &self.#query_lower_case_token_stream.limit,
                                     &mut increment
                                 ) {
                                     Ok(value) => value,
@@ -3121,7 +3126,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     #crate_server_postgres_constants_limit_name_token_stream,
                                 ));
                             }
-                            if let Some(value) = &self.query.offset {
+                            if let Some(value) = &self.#query_lower_case_token_stream.offset {
                                 let prefix = match additional_parameters.is_empty() {
                                     true => "",
                                     false => " ",
@@ -3155,7 +3160,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
                     quote::quote!{
-                        if let Some(value) = self.query.#field_ident {
+                        if let Some(value) = self.#query_lower_case_token_stream.#field_ident {
                             query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
                                 value, query,
                             );
@@ -3166,10 +3171,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                     #(#binded_query_modifications_token_stream)*
                     query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                        self.query.limit,
+                        self.#query_lower_case_token_stream.limit,
                         query,
                     );
-                    if let Some(value) = self.query.offset {
+                    if let Some(value) = self.#query_lower_case_token_stream.offset {
                         query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
                             value, query,
                         );
@@ -3184,7 +3189,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         app_info_state: &#app_info_state_path,
                     ) -> #try_read_response_variants_token_stream
                     {
-                        let select = #column_select_ident_token_stream::from(self.query.select.clone());
+                        let select = #column_select_ident_token_stream::from(self.#query_lower_case_token_stream.select.clone());
                         let #query_string_name_token_stream = #query_string_token_stream;
                         // println!("{query_string}");
                         let #binded_query_name_token_stream = {
@@ -3267,7 +3272,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     Vec<CatOptions>,
                     #try_read_error_named_camel_case_token_stream,
                 > {
-                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.query.into_url_encoding_version()) {
+                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.#query_lower_case_token_stream.into_url_encoding_version()) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_read_error_named_camel_case_token_stream::QueryEncode {
@@ -3314,7 +3319,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let #parameters_lower_case_token_stream = #read_parameters_camel_case_token_stream {
-                        query: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
+                        #query_lower_case_token_stream: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
                             #read_query_camel_case_token_stream,
                             #try_read_response_variants_token_stream,
                         >::#try_extract_value_token_stream(
