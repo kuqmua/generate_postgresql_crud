@@ -209,12 +209,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             })
             .collect::<Vec<proc_macro2::TokenStream>>()
     };
+    let column_ident_token_stream = {
+        let column_ident_stringified = format!("{ident}Column");
+        column_ident_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {column_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let column_token_stream = {
-        let column_ident_token_stream = {
-            let column_ident_stringified = format!("{ident}Column");
-            column_ident_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {column_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
         let column_variants = fields_named
             .iter()
             .map(|field| {
@@ -2498,7 +2498,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub select: #column_select_ident_token_stream,
                     pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,
                     #(#fields_with_excluded_id_token_stream)*
-                    pub order_by: crate::server::postgres::order_by::OrderBy<CatColumn>,
+                    pub order_by: crate::server::postgres::order_by::OrderBy<#column_ident_token_stream>,
                     pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
                     pub offset: crate::server::postgres::postgres_bigint::PostgresBigint,
                 }
@@ -3458,7 +3458,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }).collect::<Vec<proc_macro2::TokenStream>>()
                     };
                     quote::quote!{
-                        let mut value = std::string::String::from(#create_or_replace_function_parameters_original_token_stream);//format!("cats_id bigint, cats_name varchar, cats_color varchar");
+                        let mut value = std::string::String::from(#create_or_replace_function_parameters_original_token_stream);
                         #(#create_or_replace_function_parameters_additions_token_stream)*
                         value
                     }
