@@ -561,6 +561,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let server_location_name_token_stream = quote::quote!{server_location};
     let server_location_type_token_stream = quote::quote!{&str};
     let crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::bind_value_to_query};
+    let crate_server_postgres_bind_query_bind_query_try_generate_bind_increments = quote::quote!{crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -758,7 +759,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             false => quote::quote!{"{value}, "},
                         };
                         quote::quote!{
-                            match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(&element.#field_ident, &mut increment) {
+                            match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(&element.#field_ident, &mut increment) {
                                 Ok(value) => {
                                     element_bind_increments.push_str(&format!(#possible_dot_space_format));
                                 },
@@ -1532,7 +1533,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let bind_increments = {
                                 let mut bind_increments = std::string::String::default();
                                 for element in value {
-                                    match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                    match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(
                                         element,
                                         &mut increment
                                     ) {
@@ -1581,7 +1582,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 let bind_increments = {
                                     let mut bind_increments = std::string::String::default();
                                     for (index, element) in value.iter().enumerate() {
-                                        match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                        match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(
                                             element,
                                             &mut increment
                                         ) {
@@ -2545,7 +2546,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let bind_increments = {
                                 let mut bind_increments = std::string::String::default();
                                 for element in value {
-                                    match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                    match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(
                                         element,
                                         &mut increment
                                     ) {
@@ -2596,7 +2597,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 let bind_increments = {
                                     let mut bind_increments = std::string::String::default();
                                     for (index, element) in value.iter().enumerate() {
-                                        match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                        match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(
                                             element,
                                             &mut increment
                                         ) {
@@ -2664,7 +2665,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     true => "",
                                     false => " ",
                                 };
-                                let value = match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                let value = match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(
                                     &self.#payload_lower_case_token_stream.limit,
                                     &mut increment
                                 ) {
@@ -2686,7 +2687,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     true => "",
                                     false => " ",
                                 };
-                                let value = match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                let value = match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(
                                     &self.#payload_lower_case_token_stream.offset,
                                     &mut increment
                                 ) {
@@ -3075,7 +3076,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 true => #crate_server_postgres_constants_where_name_token_stream.to_string(),
                                 false => format!(" {}", #crate_server_postgres_constants_and_name_token_stream),
                             };
-                            let value = match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                            let value = match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(
                                 value,
                                 &mut increment
                             ) {
@@ -3126,7 +3127,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     true => "",
                                     false => " ",
                                 };
-                                let value = match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                let value = match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(
                                     &self.#query_lower_case_token_stream.limit,
                                     &mut increment
                                 ) {
@@ -3148,7 +3149,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     true => "",
                                     false => " ",
                                 };
-                                let value = match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                                let value = match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(
                                     value,
                                     &mut increment
                                 ) {
@@ -3925,7 +3926,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    match crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments(
+                    match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments(
                         &element.#field_ident,
                         &mut increment
                     ) {
