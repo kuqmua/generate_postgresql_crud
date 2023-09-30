@@ -1393,7 +1393,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_by_id_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
                 pub async fn #delete_by_id_lower_case_token_stream<'a>(
-                    path_extraction_result: Result<
+                    #path_extraction_result_lower_case_token_stream: Result<
                         axum::extract::Path<#delete_by_id_path_camel_case_token_stream>,
                         #axum_extract_rejection_path_rejection_token_stream,
                     >,
@@ -1403,7 +1403,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #path_lower_case_token_stream: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #delete_by_id_path_camel_case_token_stream,
                             #try_delete_by_id_response_variants_token_stream,
-                        >::#try_extract_value_token_stream(path_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(#path_extraction_result_lower_case_token_stream, &app_info_state)
                         {
                             Ok(value) => value,
                             Err(err) => {
@@ -2392,7 +2392,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_by_id_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
                 pub async fn #read_by_id_lower_case_token_stream(
-                    path_extraction_result: Result<
+                    #path_extraction_result_lower_case_token_stream: Result<
                         axum::extract::Path<#read_by_id_path_camel_case_token_stream>,
                         #axum_extract_rejection_path_rejection_token_stream,
                     >,
@@ -2406,7 +2406,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #path_lower_case_token_stream: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #read_by_id_path_camel_case_token_stream,
                             #try_read_by_id_response_variants_token_stream,
-                        >::#try_extract_value_token_stream(path_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(#path_extraction_result_lower_case_token_stream, &app_info_state)
                         {
                             Ok(value) => value,
                             Err(err) => {
@@ -3788,7 +3788,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_by_id_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
                 pub async fn #update_by_id_lower_case_token_stream<'a>(
-                    path_extraction_result: Result<
+                    #path_extraction_result_lower_case_token_stream: Result<
                         axum::extract::Path<#update_by_id_path_camel_case_token_stream>,
                         #axum_extract_rejection_path_rejection_token_stream,
                     >,
@@ -3802,7 +3802,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #path_lower_case_token_stream: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #update_by_id_path_camel_case_token_stream,
                             #try_update_by_id_response_variants_token_stream,
-                        >::#try_extract_value_token_stream(path_extraction_result, &app_info_state)
+                        >::#try_extract_value_token_stream(#path_extraction_result_lower_case_token_stream, &app_info_state)
                         {
                             Ok(value) => value,
                             Err(err) => {
