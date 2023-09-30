@@ -572,6 +572,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .header(reqwest::header::CONTENT_TYPE, "application/json")
     };
     let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
+    let parameters_derive_token_stream = quote::quote!{#[derive(Debug, serde::Deserialize)]};
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
     let crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor};
     let crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::query_extractor_error::QueryValueResultExtractor};
@@ -1269,7 +1270,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde::Deserialize)]
+                #parameters_derive_token_stream
                 pub struct #delete_by_id_parameters_camel_case_token_stream {
                     pub #path_lower_case_token_stream: #delete_by_id_path_camel_case_token_stream,
                 }
@@ -1475,7 +1476,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde::Deserialize)]
+                #parameters_derive_token_stream
                 pub struct #delete_with_body_parameters_camel_case_token_stream {
                     pub #payload_lower_case_token_stream: #delete_with_body_payload_camel_case_token_stream,
                 }
@@ -1820,7 +1821,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde::Deserialize)]
+                #parameters_derive_token_stream
                 pub struct #delete_parameters_camel_case_token_stream {
                     pub #query_lower_case_token_stream: #delete_query_camel_case_token_stream,
                 }
@@ -2186,7 +2187,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde::Deserialize)]
+                #parameters_derive_token_stream
                 pub struct #read_by_id_parameters_camel_case_token_stream {
                     pub #path_lower_case_token_stream: #read_by_id_path_camel_case_token_stream,
                     pub #query_lower_case_token_stream: #read_by_id_query_camel_case_token_stream,
@@ -2894,7 +2895,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde::Deserialize)]
+                #parameters_derive_token_stream
                 pub struct #read_parameters_camel_case_token_stream {
                     pub #query_lower_case_token_stream: #read_query_camel_case_token_stream,
                 }
@@ -3351,7 +3352,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde::Deserialize)]
+                #parameters_derive_token_stream
                 pub struct #update_by_id_parameters_camel_case_token_stream {
                     pub #path_lower_case_token_stream: #update_by_id_path_camel_case_token_stream,
                     pub #payload_lower_case_token_stream: #update_by_id_payload_camel_case_token_stream,
@@ -3817,7 +3818,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde :: Deserialize)]
+                #parameters_derive_token_stream
                 pub struct #update_parameters_camel_case_token_stream {
                     pub #payload_lower_case_token_stream: #update_payload_camel_case_token_stream,
                 }
@@ -3839,7 +3840,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #[derive(Debug, serde_derive :: Serialize, serde_derive :: Deserialize)]
+                #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
                 pub struct #update_payload_element_camel_case_token_stream {
                     pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,
                     #(#fields_with_excluded_id_token_stream),*
