@@ -1395,7 +1395,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #try_delete_by_id_response_variants_token_stream,
                         >::#try_extract_value_token_stream(path_parameters_extraction_result, &app_info_state)
                         {
-                            Ok(path_parameters) => path_parameters,
+                            Ok(value) => value,
                             Err(err) => {
                                 return err;
                             }
@@ -1514,8 +1514,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         element,
                                         &mut increment
                                     ) {
-                                        Ok(bind_increments_handle) => {
-                                            bind_increments.push_str(&format!("{bind_increments_handle}, "));
+                                        Ok(value) => {
+                                            bind_increments.push_str(&format!("{value}, "));
                                         },
                                         Err(e) => {
                                             return #try_delete_with_body_response_variants_token_stream::BindQuery { 
@@ -1546,7 +1546,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                         let handle_token_stream = {
-                            let handle_stringified = format!("\"{field_ident} ~ {{bind_increments_handle}} \"");
+                            let handle_stringified = format!("\"{field_ident} ~ {{value}} \"");
                             handle_stringified.parse::<proc_macro2::TokenStream>()
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
@@ -1563,7 +1563,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             element,
                                             &mut increment
                                         ) {
-                                            Ok(bind_increments_handle) => {
+                                            Ok(value) => {
                                                 let handle = format!(#handle_token_stream);
                                                 match index == 0 {
                                                     true => {
@@ -1702,7 +1702,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #parameters_lower_case_token_stream: #delete_with_body_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_with_body_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_lower_case_token_stream.payload) {
-                        Ok(payload) => payload,
+                        Ok(value) => value,
                         Err(e) => {
                             return Err(#try_delete_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
@@ -1749,7 +1749,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #try_delete_with_body_response_variants_token_stream,
                         >::#try_extract_value_token_stream(payload_extraction_result, &app_info_state)
                         {
-                            Ok(payload) => payload,
+                            Ok(value) => value,
                             Err(err) => {
                                 return err;
                             }
@@ -2065,7 +2065,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #parameters_lower_case_token_stream: #delete_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_error_named_camel_case_token_stream> {
                     let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.query.into_url_encoding_version()) {
-                        Ok(encoded_query) => encoded_query,
+                        Ok(value) => value,
                         Err(e) => {
                             return Err(#try_delete_error_named_camel_case_token_stream::QueryEncode {
                                 url_encoding: e,
@@ -2114,7 +2114,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         >::#try_extract_value_token_stream(
                             query_parameters_extraction_result, &app_info_state
                         ) {
-                            Ok(query_parameters) => query_parameters,
+                            Ok(value) => value,
                             Err(err) => {
                                 return err;
                             }
@@ -2343,7 +2343,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #try_read_by_id_error_named_camel_case_token_stream,
                 > {
                     let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.query.into_url_encoding_version()) {
-                        Ok(encoded_query) => encoded_query,
+                        Ok(value) => value,
                         Err(e) => {
                             return Err(#try_read_by_id_error_named_camel_case_token_stream::QueryEncode {
                                 url_encoding: e,
@@ -2398,7 +2398,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #try_read_by_id_response_variants_token_stream,
                         >::#try_extract_value_token_stream(path_parameters_extraction_result, &app_info_state)
                         {
-                            Ok(path_parameters) => path_parameters,
+                            Ok(value) => value,
                             Err(err) => {
                                 return err;
                             }
@@ -2409,7 +2409,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         >::#try_extract_value_token_stream(
                             query_parameters_extraction_result, &app_info_state
                         ) {
-                            Ok(query_parameters) => query_parameters,
+                            Ok(value) => value,
                             Err(err) => {
                                 return err;
                             }
@@ -2527,8 +2527,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         element,
                                         &mut increment
                                     ) {
-                                        Ok(bind_increments_handle) => {
-                                            bind_increments.push_str(&format!("{bind_increments_handle}, "));
+                                        Ok(value) => {
+                                            bind_increments.push_str(&format!("{value}, "));
                                         },
                                         Err(e) => {
                                             return #try_read_with_body_response_variants_token_stream::BindQuery { 
@@ -2561,7 +2561,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                         let handle_token_stream = {
-                            let handle_stringified = format!("\"{field_ident} ~ {{bind_increments_handle}} \"");
+                            let handle_stringified = format!("\"{field_ident} ~ {{value}} \"");
                             handle_stringified.parse::<proc_macro2::TokenStream>()
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
@@ -2578,7 +2578,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             element,
                                             &mut increment
                                         ) {
-                                            Ok(bind_increments_handle) => {
+                                            Ok(value) => {
                                                 let handle = format!(#handle_token_stream);
                                                 match index == 0 {
                                                     true => {
@@ -2739,7 +2739,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 }
                                 .await
                                 {
-                                    Ok(option_pg_row) => option_pg_row,
+                                    Ok(value) => value,
                                     Err(e) => {
                                         #from_log_and_return_error_token_stream;
                                     }
@@ -2806,7 +2806,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #try_read_with_body_error_named_camel_case_token_stream,
                 > {
                     let payload = match serde_json::to_string(&#parameters_lower_case_token_stream.payload) {
-                        Ok(payload) => payload,
+                        Ok(value) => value,
                         Err(e) => {
                             return Err(#try_read_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
@@ -2853,7 +2853,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #try_read_with_body_response_variants_token_stream,
                         >::#try_extract_value_token_stream(payload_extraction_result, &app_info_state)
                         {
-                            Ok(payload) => payload,
+                            Ok(value) => value,
                             Err(err) => {
                                 return err;
                             }
@@ -3201,7 +3201,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 }
                                 .await
                                 {
-                                    Ok(option_pg_row) => option_pg_row,
+                                    Ok(value) => value,
                                     Err(e) => {
                                         #from_log_and_return_error_token_stream;
                                     }
@@ -3268,7 +3268,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #try_read_error_named_camel_case_token_stream,
                 > {
                     let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.query.into_url_encoding_version()) {
-                        Ok(encoded_query) => encoded_query,
+                        Ok(value) => value,
                         Err(e) => {
                             return Err(#try_read_error_named_camel_case_token_stream::QueryEncode {
                                 url_encoding: e,
@@ -3278,9 +3278,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{}", encoded_query);
                     let url = format!(
-                        "{}/api/{}?{encoded_query}",
+                        "{}/api/{}?{}",
                         #server_location_name_token_stream,
                         ROUTE_NAME,
+                        encoded_query
                     );
                     println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
@@ -3319,7 +3320,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         >::#try_extract_value_token_stream(
                             query_parameters_extraction_result, &app_info_state
                         ) {
-                            Ok(query_parameters) => query_parameters,
+                            Ok(value) => value,
                             Err(err) => {
                                 return err;
                             }
@@ -3741,7 +3742,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #parameters_lower_case_token_stream: #update_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_by_id_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_lower_case_token_stream.payload) {
-                        Ok(payload) => payload,
+                        Ok(value) => value,
                         Err(e) => {
                             return Err(#try_update_by_id_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
@@ -3792,7 +3793,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #try_update_by_id_response_variants_token_stream,
                         >::#try_extract_value_token_stream(path_parameters_extraction_result, &app_info_state)
                         {
-                            Ok(path_parameters) => path_parameters,
+                            Ok(value) => value,
                             Err(err) => {
                                 return err;
                             }
@@ -3802,7 +3803,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #try_update_by_id_response_variants_token_stream,
                         >::#try_extract_value_token_stream(payload_extraction_result, &app_info_state)
                         {
-                            Ok(payload) => payload,
+                            Ok(value) => value,
                             Err(err) => {
                                 return err;
                             }
@@ -4070,7 +4071,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #parameters_lower_case_token_stream: #update_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_lower_case_token_stream.payload) {
-                        Ok(payload) => payload,
+                        Ok(value) => value,
                         Err(e) => {
                             return Err(#try_update_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
@@ -4117,7 +4118,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #try_update_response_variants_token_stream,
                         >::#try_extract_value_token_stream(payload_extraction_result, &app_info_state)
                         {
-                            Ok(payload) => payload,
+                            Ok(value) => value,
                             Err(err) => {
                                 return err;
                             }
