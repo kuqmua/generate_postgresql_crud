@@ -486,6 +486,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let path_camel_case_stringified = "Path";
     // let path_camel_case_token_stream = path_camel_case_stringified.parse::<proc_macro2::TokenStream>()
     //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {path_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+    let path_lower_case_token_stream = {
+        let path_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&path_camel_case_stringified);
+        path_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {path_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let query_camel_case_stringified = "Query";
     // let query_camel_case_token_stream = query_camel_case_stringified.parse::<proc_macro2::TokenStream>()
     //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)); 
@@ -624,10 +629,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         crate_server_postgres_constants_offset_name_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_offset_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    // let path_lower_case_token_stream= quote::quote!{path};
-    // let query_lower_case_token_stream= quote::quote!{query};
-    // let payload_lower_case_token_stream= quote::quote!{payload};
-    // let select_lower_case_token_stream= quote::quote!{select};
     let create_batch_token_stream = {
         let create_batch_name_camel_case_stringified = "CreateBatch";
         let create_batch_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_batch_name_camel_case_stringified.to_string());
@@ -1234,7 +1235,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #[derive(Debug, serde::Deserialize)]
                 pub struct #delete_by_id_parameters_camel_case_token_stream {
-                    pub path: #delete_by_id_path_camel_case_token_stream,
+                    pub #path_lower_case_token_stream: #delete_by_id_path_camel_case_token_stream,
                 }
             }
         };
@@ -1281,7 +1282,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let binded_query_token_stream = {
                 let binded_query_modifications_token_stream = quote::quote!{
-                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(self.path.#id_field_ident, query);
+                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(self.#path_lower_case_token_stream.#id_field_ident, query);
                 };
                 quote::quote!{
                     let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
@@ -1360,7 +1361,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             "{}/api/{}/{}",
                             #server_location_name_token_stream,
                             ROUTE_NAME,
-                            #parameters_lower_case_token_stream.path.id
+                            #parameters_lower_case_token_stream.#path_lower_case_token_stream.id
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
@@ -1389,7 +1390,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let #parameters_lower_case_token_stream = #delete_by_id_parameters_camel_case_token_stream {
-                        path: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
+                        #path_lower_case_token_stream: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #delete_by_id_path_camel_case_token_stream,
                             #try_delete_by_id_response_variants_token_stream,
                         >::#try_extract_value_token_stream(path_parameters_extraction_result, &app_info_state)
@@ -2174,7 +2175,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #[derive(Debug, serde::Deserialize)]
                 pub struct #read_by_id_parameters_camel_case_token_stream {
-                    pub path: #read_by_id_path_camel_case_token_stream,
+                    pub #path_lower_case_token_stream: #read_by_id_path_camel_case_token_stream,
                     pub query: #read_by_id_query_camel_case_token_stream,
                 }
             }
@@ -2259,7 +2260,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let binded_query_token_stream = {
                 let binded_query_modifications_token_stream = quote::quote!{
                     query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                        self.path.#id_field_ident, query,
+                        self.#path_lower_case_token_stream.#id_field_ident, query,
                     );
                 };
                 quote::quote!{
@@ -2354,7 +2355,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         "{}/api/{}/{}?{}",
                         #server_location_name_token_stream,
                         ROUTE_NAME,
-                        #parameters_lower_case_token_stream.path.id,
+                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.id,
                         encoded_query
                     );
                     match #tvfrr_extraction_logic_token_stream(
@@ -2392,7 +2393,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     app_info_state: axum::extract::State<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let #parameters_lower_case_token_stream = #read_by_id_parameters_camel_case_token_stream {
-                        path: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
+                        #path_lower_case_token_stream: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #read_by_id_path_camel_case_token_stream,
                             #try_read_by_id_response_variants_token_stream,
                         >::#try_extract_value_token_stream(path_parameters_extraction_result, &app_info_state)
@@ -3374,7 +3375,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #[derive(Debug, serde::Deserialize)]
                 pub struct #update_by_id_parameters_camel_case_token_stream {
-                    pub path: #update_by_id_path_camel_case_token_stream,
+                    pub #path_lower_case_token_stream: #update_by_id_path_camel_case_token_stream,
                     pub payload: #update_by_id_payload_camel_case_token_stream,
                 }
             }
@@ -3559,7 +3560,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_part_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
                         quote::quote!{
-                            match crate::server::postgres::bind_query::BindQuery::try_increment(&self.path.#id_field_ident, &mut increment) {
+                            match crate::server::postgres::bind_query::BindQuery::try_increment(&self.#path_lower_case_token_stream.#id_field_ident, &mut increment) {
                                 Ok(_) => {
                                     query.push_str(&format!(#query_part_token_stream));
                                 },
@@ -3630,7 +3631,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let binded_query_token_stream = {
                 let binded_query_id_modification_token_stream = quote::quote!{
                     query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                        self.path.#id_field_ident,
+                        self.#path_lower_case_token_stream.#id_field_ident,
                         query,
                     );
                 };
@@ -3751,7 +3752,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             "{}/api/{}/{}",
                             #server_location_name_token_stream,
                             ROUTE_NAME,
-                            #parameters_lower_case_token_stream.path.id.to_inner()
+                            #parameters_lower_case_token_stream.#path_lower_case_token_stream.id.to_inner()
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
@@ -3786,7 +3787,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let #parameters_lower_case_token_stream = #update_by_id_parameters_camel_case_token_stream {
-                        path: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
+                        #path_lower_case_token_stream: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
                             #update_by_id_path_camel_case_token_stream,
                             #try_update_by_id_response_variants_token_stream,
                         >::#try_extract_value_token_stream(path_parameters_extraction_result, &app_info_state)
