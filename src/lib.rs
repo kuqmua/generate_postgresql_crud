@@ -584,6 +584,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let server_location_type_token_stream = quote::quote!{&str};
     let crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::bind_value_to_query};
     let crate_server_postgres_bind_query_bind_query_try_generate_bind_increments = quote::quote!{crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments};
+    let crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream = quote::quote!{crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -1874,7 +1875,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         });
                     Some(quote::quote!{
                         let #field_ident = self.#field_ident.map(|value| {
-                            crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                            #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
                             )
                         });
@@ -2220,7 +2221,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 impl #read_by_id_query_camel_case_token_stream {
                     fn into_url_encoding_version(self) -> #read_by_id_query_for_url_encoding_camel_case_token_stream {
                         let select = self.select.map(|value| {
-                            crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                            #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
                             )
                         });
@@ -2955,7 +2956,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     });
                 quote::quote!{
                     let #field_ident = self.#field_ident.map(|value| {
-                        crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                        #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                             value,
                         )
                     });
@@ -2974,21 +2975,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 impl #read_query_camel_case_token_stream {
                     fn into_url_encoding_version(self) -> #read_query_for_url_encoding_camel_case_token_stream {
                         let select = self.select.map(|value| {
-                            crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                            #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
                             )
                         });
                         #(#fields_into_url_encoding_version_with_excluded_id_token_stream)*
                         let order_by = self.order_by.map(|value| {
-                            crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                            #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
                             )
                         });
-                        let limit = crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                        let limit = #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                             self.limit,
                         );
                         let offset = self.offset.map(|value| {
-                            crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter(
+                            #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
                             )
                         });
