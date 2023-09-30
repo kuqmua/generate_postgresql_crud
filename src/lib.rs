@@ -927,13 +927,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             return Err(#try_create_batch_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
+                    let url = format!(
+                        "{}/api/{}",
+                        #server_location_name_token_stream,
+                        ROUTE_NAME
+                    );
+                    // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         #reqwest_client_new_token_stream
-                        .post(&format!(
-                            "{}/api/{}",
-                            #server_location_name_token_stream,
-                            ROUTE_NAME
-                        ))
+                        .post(&url)
                         #project_commit_header_addition_token_stream
                         #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
@@ -1190,13 +1192,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             return Err(#try_create_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
+                    let url = format!(
+                        "{}/api/{}",
+                        #server_location_name_token_stream,
+                        ROUTE_NAME
+                    );
+                    // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         #reqwest_client_new_token_stream
-                        .post(&format!(
-                            "{}/api/{}",
-                            #server_location_name_token_stream,
-                            ROUTE_NAME
-                        ))
+                        .post(&url)
                         #project_commit_header_addition_token_stream
                         #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
@@ -1397,14 +1401,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #delete_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_by_id_error_named_camel_case_token_stream> {
+                    let url = format!(
+                        "{}/api/{}/{}",
+                        #server_location_name_token_stream,
+                        ROUTE_NAME,
+                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.id
+                    );
+                    // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         #reqwest_client_new_token_stream
-                        .delete(&format!(
-                            "{}/api/{}/{}",
-                            #server_location_name_token_stream,
-                            ROUTE_NAME,
-                            #parameters_lower_case_token_stream.#path_lower_case_token_stream.id
-                        ))
+                        .delete(&url)
                         #project_commit_header_addition_token_stream
                         .send(),
                     )
@@ -1736,13 +1742,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             return Err(#try_delete_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
+                    let url = format!(
+                        "{}/api/{}/search",
+                        #server_location_name_token_stream,
+                        ROUTE_NAME
+                    );
+                    // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         #reqwest_client_new_token_stream
-                        .delete(&format!(
-                            "{}/api/{}/search",
-                            #server_location_name_token_stream,
-                            ROUTE_NAME
-                        ))
+                        .delete(&url)
                         #project_commit_header_addition_token_stream
                         #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
@@ -2095,14 +2103,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             });
                         }
                     };
+                    let url = format!(
+                        "{}/api/{}?{}",
+                        #server_location_name_token_stream,
+                        ROUTE_NAME,
+                        encoded_query
+                    );
+                    // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         #reqwest_client_new_token_stream
-                        .delete(&format!(
-                            "{}/api/{}?{}",
-                            #server_location_name_token_stream,
-                            ROUTE_NAME,
-                            encoded_query
-                        ))
+                        .delete(&url)
                         #project_commit_header_addition_token_stream
                         .send(),
                     )
@@ -2377,6 +2387,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #parameters_lower_case_token_stream.#path_lower_case_token_stream.id,
                         encoded_query
                     );
+                    // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         #reqwest_client_new_token_stream
                         .get(&url)
@@ -2810,13 +2821,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             return Err(#try_read_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
+                    let url = format!(
+                        "{}/api/{}/search",
+                        #server_location_name_token_stream,
+                        ROUTE_NAME
+                    );
+                    // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         #reqwest_client_new_token_stream
-                        .post(&format!(
-                            "{}/api/{}/search",
-                            #server_location_name_token_stream,
-                            ROUTE_NAME
-                        ))
+                        .post(&url)
                         #project_commit_header_addition_token_stream
                         #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
@@ -3262,14 +3275,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             });
                         }
                     };
-                    println!("{}", encoded_query);
                     let url = format!(
                         "{}/api/{}?{}",
                         #server_location_name_token_stream,
                         ROUTE_NAME,
                         encoded_query
                     );
-                    println!("{}", url);
+                    // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         #reqwest_client_new_token_stream
                         .get(&url)
@@ -3721,14 +3733,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             return Err(#try_update_by_id_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
+                    let url = format!(
+                        "{}/api/{}/{}",
+                        #server_location_name_token_stream,
+                        ROUTE_NAME,
+                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.id.to_inner()
+                    );
+                    // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         #reqwest_client_new_token_stream
-                        .patch(&format!(
-                            "{}/api/{}/{}",
-                            #server_location_name_token_stream,
-                            ROUTE_NAME,
-                            #parameters_lower_case_token_stream.#path_lower_case_token_stream.id.to_inner()
-                        ))
+                        .patch(&url)
                         #project_commit_header_addition_token_stream
                         #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
@@ -4041,13 +4055,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             return Err(#try_update_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
+                    let url = format!(
+                        "{}/api/{}/",
+                        #server_location_name_token_stream,
+                        ROUTE_NAME,
+                    );
+                    // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
                         #reqwest_client_new_token_stream
-                        .patch(&format!(
-                            "{}/api/{}/",
-                            #server_location_name_token_stream,
-                            ROUTE_NAME,
-                        ))
+                        .patch(&url)
                         #project_commit_header_addition_token_stream
                         #content_type_application_json_header_addition_token_stream
                         .body(#payload_lower_case_token_stream)
