@@ -527,6 +527,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let axum_extract_rejection_json_rejection_token_stream = quote::quote!{axum::extract::rejection::JsonRejection};
     let try_extract_value_token_stream = quote::quote!{try_extract_value};
     let parameters_name_token_stream = quote::quote!{parameters};
+    let server_location_name_token_stream = quote::quote!{server_location};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     let pg_temp_stringified = "pg_temp";
@@ -857,7 +858,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_create_batch_lower_case_token_stream<'a>(
-                    server_location: &str,
+                    #server_location_name_token_stream: &str,
                     #parameters_name_token_stream: #create_batch_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_batch_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
@@ -869,7 +870,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .post(&format!(
-                            "{server_location}/api/{}",
+                            "{}/api/{}",
+                            #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
                         .header(
@@ -1127,7 +1129,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_create_lower_case_token_stream<'a>(
-                    server_location: &str,
+                    #server_location_name_token_stream: &str,
                     #parameters_name_token_stream: #create_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
@@ -1139,7 +1141,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .post(&format!(
-                            "{server_location}/api/{}",
+                            "{}/api/{}",
+                            #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
                         .header(
@@ -1342,13 +1345,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_delete_by_id_lower_case_token_stream<'a>(
-                    server_location: &str,
+                    #server_location_name_token_stream: &str,
                     #parameters_name_token_stream: #delete_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_by_id_error_named_camel_case_token_stream> {
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .delete(&format!(
-                            "{server_location}/api/{}/{}",
+                            "{}/api/{}/{}",
+                            #server_location_name_token_stream,
                             ROUTE_NAME,
                             #parameters_name_token_stream.path.id
                         ))
@@ -1687,7 +1691,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_delete_with_body_lower_case_token_stream<'a>(
-                    server_location: &str,
+                    #server_location_name_token_stream: &str,
                     #parameters_name_token_stream: #delete_with_body_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_with_body_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
@@ -1699,7 +1703,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .delete(&format!(
-                            "{server_location}/api/{}/search",
+                            "{}/api/{}/search",
+                            #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
                         .header(
@@ -2049,7 +2054,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_delete_lower_case_token_stream<'a>(
-                    server_location: &str,
+                    #server_location_name_token_stream: &str,
                     #parameters_name_token_stream: #delete_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_error_named_camel_case_token_stream> {
                     let encoded_query = match serde_urlencoded::to_string(#parameters_name_token_stream.query.into_url_encoding_version()) {
@@ -2064,8 +2069,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .delete(&format!(
-                            "{server_location}/api/{}?{encoded_query}",
+                            "{}/api/{}?{}",
+                            #server_location_name_token_stream,
                             ROUTE_NAME,
+                            encoded_query
                         ))
                         .header(
                             crate::common::git::project_git_info::PROJECT_COMMIT,
@@ -2322,7 +2329,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_read_by_id_lower_case_token_stream(
-                    server_location: &str,
+                    #server_location_name_token_stream: &str,
                     #parameters_name_token_stream: #read_by_id_parameters_camel_case_token_stream,
                 ) -> Result<
                     CatOptions,
@@ -2338,9 +2345,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     let url = format!(
-                        "{server_location}/api/{}/{}?{encoded_query}",
+                        "{}/api/{}/{}?{}",
+                        #server_location_name_token_stream,
                         ROUTE_NAME,
                         #parameters_name_token_stream.path.id,
+                        encoded_query
                     );
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
@@ -2783,7 +2792,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_read_with_body_lower_case_token_stream<'a>(
-                    server_location: &str,
+                    #server_location_name_token_stream: &str,
                     #parameters_name_token_stream: #read_with_body_parameters_camel_case_token_stream,
                 ) -> Result<
                     Vec<CatOptions>,
@@ -2798,7 +2807,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .post(&format!(
-                            "{server_location}/api/{}/search",
+                            "{}/api/{}/search",
+                            #server_location_name_token_stream,
                             ROUTE_NAME
                         ))
                         .header(
@@ -3244,7 +3254,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_read_lower_case_token_stream<'a>(
-                    server_location: &str,
+                    #server_location_name_token_stream: &str,
                     #parameters_name_token_stream: #read_parameters_camel_case_token_stream,
                 ) -> Result<
                     Vec<CatOptions>,
@@ -3261,7 +3271,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{}", encoded_query);
                     let url = format!(
-                        "{server_location}/api/{}?{encoded_query}",
+                        "{}/api/{}?{encoded_query}",
+                        #server_location_name_token_stream,
                         ROUTE_NAME,
                     );
                     println!("{}", url);
@@ -3719,7 +3730,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_update_by_id_lower_case_token_stream<'a>(
-                    server_location: &str,
+                    #server_location_name_token_stream: &str,
                     #parameters_name_token_stream: #update_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_by_id_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
@@ -3731,7 +3742,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .patch(&format!(
-                            "{server_location}/api/{}/{}",
+                            "{}/api/{}/{}",
+                            #server_location_name_token_stream,
                             ROUTE_NAME,
                             #parameters_name_token_stream.path.id.to_inner()
                         ))
@@ -4047,7 +4059,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 pub async fn #try_update_lower_case_token_stream<'a>(
-                    server_location: &str,
+                    #server_location_name_token_stream: &str,
                     #parameters_name_token_stream: #update_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_error_named_camel_case_token_stream> {
                     let payload = match serde_json::to_string(&#parameters_name_token_stream.payload) {
@@ -4059,7 +4071,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match #tvfrr_extraction_logic_token_stream(
                         reqwest::Client::new()
                         .patch(&format!(
-                            "{server_location}/api/{}/",
+                            "{}/api/{}/",
+                            #server_location_name_token_stream,
                             ROUTE_NAME,
                         ))
                         .header(
