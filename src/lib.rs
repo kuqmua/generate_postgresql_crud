@@ -1310,32 +1310,172 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
+            //
+            let operation = crate::Operation::DeleteById;
+            let create_or_replace_function_name_token_stream = {
+                let create_or_replace_function_name_original_token_stream = {
+                    let create_or_replace_function_name_original_stringified =
+                        format!("\"{ident_lower_case_stringified}_{operation}\"");
+                    create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_name_original_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote! {std::string::String::from(#create_or_replace_function_name_original_token_stream)}
+            };
+            let create_or_replace_function_token_stream = {
+                let create_or_replace_function_parameters_token_stream = {
+                    let create_or_replace_function_parameters_original_token_stream = {
+                        let create_or_replace_function_parameters_stringified = format!("\"{ident_lower_case_stringified}_{id_field_ident} bigint\"");//todo postgresql type
+                        create_or_replace_function_parameters_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_parameters_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    quote::quote!{std::string::String::from(#create_or_replace_function_parameters_original_token_stream)}
+                };
+                let create_or_replace_function_additional_parameters_id_modification_token_stream = {
+                    let handle_token_stream = {
+                        let handle_stringified = format!("\"{{}} {id_field_ident} = {ident_lower_case_stringified}_{id_field_ident}\"");//todo postgresql type
+                        handle_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    quote::quote!{
+                        value.push_str(&format!(
+                            #handle_token_stream,
+                            #crate_server_postgres_constants_where_name_token_stream
+                        ));
+                    }
+                };
+                let format_handle_token_stream = {
+                    let format_handle_stringified = format!("\"create or replace function {pg_temp_stringified}.{{}}({{}}) returns void language plpgsql as $$ begin {{}};if not found then raise exception \'{id_field_ident} % not found\', {ident_lower_case_stringified}_{id_field_ident};end if;end $$\"");
+                    format_handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote!{
+                    format!(
+                        #format_handle_token_stream,
+                        {
+                            #create_or_replace_function_name_token_stream
+                        },
+                        {
+                            #create_or_replace_function_parameters_token_stream
+                        },
+                        {
+                            let mut value = format!(
+                                "{} {} {} ",
+                                #crate_server_postgres_constants_delete_name_token_stream,
+                                #crate_server_postgres_constants_from_name_token_stream,
+                                ROUTE_NAME,
+                            );
+                            #create_or_replace_function_additional_parameters_id_modification_token_stream
+                            value
+                        }
+                    )
+                }
+            };
+            println!("{create_or_replace_function_token_stream}");
             let query_string_token_stream = {
                 let query_token_stream = {
-                    let query_stringified = format!("\"{{}} {{}} {{}} {{}} {id_field_ident} = $1\"");
+                    let query_stringified = format!("\"{{}} {pg_temp_stringified}.{{}}({{}})\"");
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                let query_parameters_token_stream = {
+                    let additional_parameters_id_modification_token_stream = {
+                        let query_part_token_stream = {
+                            let query_part_stringified = format!("\"{ident_lower_case_stringified}_{id_field_ident} => $1\"");
+                            query_part_stringified.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_part_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        };
+                        quote::quote!{
+                            query.push_str(&format!(#query_part_token_stream));
+                            // match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(&self.#path_lower_case_token_stream.#id_field_ident, &mut increment) {
+                            //     Ok(_) => {
+                                    
+                            //     },
+                            //     Err(e) => {
+                            //         return #try_delete_by_id_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                            //     },
+                            // }
+                        }
+                    };
+                    // let additional_parameters_modification_token_stream = {
+                    //     let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+                    //     let fields_named_len = fields_named_filtered.len();
+                    //     fields_named_filtered.iter().enumerate().map(|(index, field)| {
+                    //         let field_ident = field.ident.clone()
+                    //             .unwrap_or_else(|| {
+                    //                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    //             });
+                    //         let handle_token_stream = {
+                    //             let possible_dot_space = match (index + 1) == fields_named_len {
+                    //                 true => "",
+                    //                 false => dot_space,
+                    //             };
+                    //             let handle_stringified = format!("\"{ident_lower_case_stringified}_{field_ident} => ${{increment}}{possible_dot_space}\"");
+                    //             handle_stringified.parse::<proc_macro2::TokenStream>()
+                    //             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    //         };
+                    //         quote::quote!{
+                    //             if let Some(value) = &self.#payload_lower_case_token_stream.#field_ident {
+                    //                 match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(value, &mut increment) {
+                    //                     Ok(_) => {
+                    //                         query.push_str(&format!(#handle_token_stream));//add dot_space for all elements except last
+                    //                     },
+                    //                     Err(e) => {
+                    //                         return #try_delete_by_id_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                    //                     },
+                    //                 }
+                    //             }
+                    //         }
+                    //     }).collect::<Vec<proc_macro2::TokenStream>>()
+                    // };
+                    quote::quote!{
+                        // #increment_initialization_token_stream
+                        let mut query = std::string::String::from("");
+                        #additional_parameters_id_modification_token_stream
+                        // #(#additional_parameters_modification_token_stream)*
+                        query
+                    }
                 };
                 quote::quote!{
                     format!(
                         #query_token_stream,
-                        #crate_server_postgres_constants_delete_name_token_stream,
-                        #crate_server_postgres_constants_from_name_token_stream,
-                        ROUTE_NAME,
-                        #crate_server_postgres_constants_where_name_token_stream
+                        #crate_server_postgres_constants_select_name_token_stream,
+                        {
+                            #create_or_replace_function_name_token_stream
+                        },
+                        {
+                            #query_parameters_token_stream
+                        }
                     )
                 }
             };
-            let binded_query_token_stream = {
-                let binded_query_modifications_token_stream = quote::quote!{
-                    query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(self.#path_lower_case_token_stream.#id_field_ident, query);
-                };
-                quote::quote!{
-                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
-                    #binded_query_modifications_token_stream
-                    query
-                }
-            };
+            println!("{query_string_token_stream}");
+            //
+            // let query_string_token_stream = {
+            //     let query_token_stream = {
+            //         let query_stringified = format!("\"{{}} {{}} {{}} {{}} {id_field_ident} = $1\"");
+            //         query_stringified.parse::<proc_macro2::TokenStream>()
+            //         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            //     };
+            //     quote::quote!{
+            //         format!(
+            //             #query_token_stream,
+            //             #crate_server_postgres_constants_delete_name_token_stream,
+            //             #crate_server_postgres_constants_from_name_token_stream,
+            //             ROUTE_NAME,
+            //             #crate_server_postgres_constants_where_name_token_stream
+            //         )
+            //     }
+            // };
+            // let binded_query_token_stream = {
+            //     let binded_query_modifications_token_stream = quote::quote!{
+            //         query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(self.#path_lower_case_token_stream.#id_field_ident, query);
+            //     };
+            //     quote::quote!{
+            //         let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
+            //         #binded_query_modifications_token_stream
+            //         query
+            //     }
+            // };
             quote::quote!{
                 impl #delete_by_id_parameters_camel_case_token_stream {
                     pub async fn #prepare_and_execute_query_name_token_stream(
@@ -1343,24 +1483,32 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_delete_by_id_response_variants_token_stream
                     {
-                        let #query_string_name_token_stream = #query_string_token_stream;
-                        // println!("{query_string}");
-                        let #binded_query_name_token_stream = {
-                            #binded_query_token_stream
+                        let #function_creation_query_string_name_token_stream = {
+                            #create_or_replace_function_token_stream
                         };
-                        #acquire_pool_and_connection_token_stream
-                        match #binded_query_name_token_stream
-                            .execute(#pg_connection_token_stream.as_mut())
-                            .await
-                        {
-                            Ok(_) => {
-                                //todo - is need to return rows affected?
-                                #try_delete_by_id_response_variants_token_stream::#desirable_token_stream(())
-                            }
-                            Err(e) => {
-                                #from_log_and_return_error_token_stream
-                            }
-                        }
+                        println!("function_creation_query_string\n{function_creation_query_string}");
+                        let #query_string_name_token_stream = {
+                            #query_string_token_stream
+                        };
+                        println!("query_string\n{query_string}");
+                        //
+                        // let #query_string_name_token_stream = #query_string_token_stream;
+                        // let #binded_query_name_token_stream = {
+                        //     #binded_query_token_stream
+                        // };
+                        // #acquire_pool_and_connection_token_stream
+                        // match #binded_query_name_token_stream
+                        //     .execute(#pg_connection_token_stream.as_mut())
+                        //     .await
+                        // {
+                        //     Ok(_) => {
+                        //         //todo - is need to return rows affected?
+                        //         #try_delete_by_id_response_variants_token_stream::#desirable_token_stream(())
+                        //     }
+                        //     Err(e) => {
+                        //         #from_log_and_return_error_token_stream
+                        //     }
+                        // }
                     }
                 }
             }
@@ -1455,7 +1603,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
-            #prepare_and_execute_query_token_stream
+            // #prepare_and_execute_query_token_stream
             #try_delete_by_id_error_named_token_stream
             #http_request_token_stream
             #route_handler_token_stream
@@ -3804,7 +3952,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #path_token_stream
             #payload_token_stream
-            #prepare_and_execute_query_token_stream
+            // #prepare_and_execute_query_token_stream
             #try_update_by_id_error_named_token_stream
             #http_request_token_stream
             #route_handler_token_stream
@@ -4145,7 +4293,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 enum Operation {
     // CreateBatch,
     // Create,
-    // DeleteById,
+    DeleteById,
     // DeleteWithBody,
     // Delete,
     // ReadById,
@@ -4160,7 +4308,7 @@ impl std::fmt::Display for Operation {
         match self {
             // Self::CreateBatch => write!(f, "create_batch"),
             // Self::Create => write!(f, "create"),
-            // Self::DeleteById => write!(f, "delete_by_id"),
+            Self::DeleteById => write!(f, "delete_by_id"),
             // Self::DeleteWithBody => write!(f, "delete_with_body"),
             // Self::Delete => write!(f, "delete"),
             // Self::ReadById => write!(f, "read_by_id"),
@@ -4207,7 +4355,7 @@ fn generate_create_or_replace_function_token_stream(
         },
     });
     quote::quote! {
-        let mut value = format!(#create_or_replace_function_name_original_token_stream);
+        let mut value = std::string::String::from(#create_or_replace_function_name_original_token_stream);
         #(#create_or_replace_function_name_additions_token_stream)*
         value
     }
