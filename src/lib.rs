@@ -3761,25 +3761,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
-            let additional_parameters_modification_token_stream = fields_named.iter().map(|field| {
-                let field_ident = field.ident.clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                    });
-                quote::quote!{
-                    match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream(
-                        &element.#field_ident,
-                        &mut increment
-                    ) {
-                        Ok(value) => {
-                            element_value.push_str(&format!("{value}, "));
-                        },
-                        Err(e) => {
-                            return #try_update_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
-                        },
-                    };
-                }
-            });
             let query_string_token_stream = {
                 let query_token_stream = {
                     let column_names = fields_named.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
@@ -3813,6 +3794,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
+                let additional_parameters_modification_token_stream = fields_named.iter().map(|field| {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    quote::quote!{
+                        match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream(
+                            &element.#field_ident,
+                            &mut increment
+                        ) {
+                            Ok(value) => {
+                                element_value.push_str(&format!("{value}, "));
+                            },
+                            Err(e) => {
+                                return #try_update_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                            },
+                        };
+                    }
+                });
                 quote::quote!{
                     #increment_initialization_token_stream
                     let mut values = std::string::String::default();
@@ -3868,13 +3868,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_update_response_variants_token_stream
                     {
+                        let select_check_query_string = {
+                            format!("select id from (values($1),($2),($3)) v(id) except select id from cats")
+                        };
                         let #query_string_name_token_stream = {
                             #query_string_token_stream
                         };
+                        println!("{query_string}");
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
                         };
                         #acquire_pool_and_connection_token_stream
+
+
+// SELECT id
+// FROM (VALUES(16),(17),(18)) V(id)
+// EXCEPT
+// SELECT id 
+// FROM cats;
                         match #binded_query_name_token_stream
                             .execute(#pg_connection_token_stream.as_mut())
                             .await
@@ -3989,7 +4000,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
-            #prepare_and_execute_query_token_stream
+            // #prepare_and_execute_query_token_stream
             #try_update_error_named_token_stream
             #http_request_token_stream
             #route_handler_token_stream
