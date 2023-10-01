@@ -1366,12 +1366,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .fetch_one(#pg_connection_token_stream.as_mut())
                             .await
                         {
-                            Ok(row) => {
-                                let mut id_option: Option<i64> = None;
-                                id_option = Some(row.try_get("id").unwrap());
-                                println!("{id_option:#?}");
-                                #try_delete_by_id_response_variants_token_stream::#desirable_token_stream(())//todo - () as variable token stream
-                            }
+                            Ok(row) => #try_delete_by_id_response_variants_token_stream::#desirable_token_stream(()),//todo - () as variable token stream
                             Err(e) => {
                                 #from_log_and_return_error_token_stream;
                             }
@@ -3565,12 +3560,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .fetch_one(#pg_connection_token_stream.as_mut())
                             .await
                         {
-                            Ok(row) => {
-                                let mut id_option: Option<i64> = None;
-                                id_option = Some(row.try_get("id").unwrap());//todo
-                                println!("{id_option:#?}");
-                                #try_update_by_id_response_variants_token_stream::#desirable_token_stream(())
-                            }
+                            Ok(_) => #try_update_by_id_response_variants_token_stream::#desirable_token_stream(()),//todo () type token_stream
                             Err(e) => {
                                 #from_log_and_return_error_token_stream;
                             }
