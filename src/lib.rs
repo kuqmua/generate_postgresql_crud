@@ -3,6 +3,7 @@ mod check_for_all_none;
 mod acquire_pool_and_connection;
 mod from_log_and_return_error;
 
+// begin, update values returning id - check count, rollback if count not equal, commit if is equal
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
     attributes(
