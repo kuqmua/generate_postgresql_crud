@@ -517,7 +517,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let payload_extraction_result_lower_case = format!("{payload_lower_case_token_stream}_{extraction_result_lower_case_stringified}");
         payload_extraction_result_lower_case.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {payload_extraction_result_lower_case} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    }; 
+    };
+    let query_encode_token_stream = quote::quote!{QueryEncode};
+    let url_encoding_token_stream = quote::quote!{url_encoding};
+    let serde_urlencoded_ser_error_token_stream = quote::quote!{serde_urlencoded::ser::Error};
+    let into_url_encoding_version_name_token_stream = quote::quote!{into_url_encoding_version}; 
     let for_url_encoding_camel_case_stringified = "ForUrlEncoding";
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
     let prepare_and_execute_query_name_token_stream = quote::quote!{prepare_and_execute_query};
@@ -587,6 +591,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             checked_add: e.into_serialize_deserialize_version(), 
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream
         }
+    };
+    let query_encode_variant_token_stream = quote::quote!{
+        #query_encode_token_stream {
+            #eo_display_attribute_token_stream
+            #url_encoding_token_stream: #serde_urlencoded_ser_error_token_stream,
+            #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
+    let query_encode_variant_initialization_token_stream = quote::quote!{
+        
     };
     let project_commit_header_addition_token_stream = quote::quote!{
         .header(
@@ -1840,7 +1854,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{delete_with_body_token_stream}");
-    let delete_token_stream = {
+let delete_token_stream = {
         let delete_name_camel_case_stringified = "Delete";
         let delete_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_name_camel_case_stringified.to_string());
         let delete_parameters_camel_case_token_stream = {
@@ -1951,7 +1965,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 impl #delete_query_camel_case_token_stream {
-                    fn into_url_encoding_version(self) -> #delete_query_for_url_encoding_camel_case_token_stream {
+                    fn #into_url_encoding_version_name_token_stream(self) -> #delete_query_for_url_encoding_camel_case_token_stream {
                         #(#fields_into_url_encoding_version_with_excluded_id_token_stream)*
                         #delete_query_for_url_encoding_camel_case_token_stream {
                             #(#fields_into_url_encoding_version_constract_with_excluded_id_token_stream),*
@@ -2099,11 +2113,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #try_delete_error_named_camel_case_token_stream {
-                    QueryEncode {
-                        #eo_display_attribute_token_stream
-                        url_encoding: serde_urlencoded::ser::Error,
-                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #query_encode_variant_token_stream,
                     #request_error_camel_case_token_stream {
                         #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_delete_request_error_camel_case_token_stream,
@@ -2130,11 +2140,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #delete_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_error_named_camel_case_token_stream> {
-                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.query.into_url_encoding_version()) {
+                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.query.#into_url_encoding_version_name_token_stream()) {
                         Ok(value) => value,
                         Err(e) => {
-                            return Err(#try_delete_error_named_camel_case_token_stream::QueryEncode {
-                                url_encoding: e,
+                            return Err(#try_delete_error_named_camel_case_token_stream::#query_encode_token_stream {
+                                #url_encoding_token_stream: e,
                                 #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
@@ -2276,7 +2286,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let into_url_encoding_version_token_stream = {
             quote::quote!{
                 impl #read_by_id_query_camel_case_token_stream {
-                    fn into_url_encoding_version(self) -> #read_by_id_query_for_url_encoding_camel_case_token_stream {
+                    fn #into_url_encoding_version_name_token_stream(self) -> #read_by_id_query_for_url_encoding_camel_case_token_stream {
                         let #select_token_stream = self.#select_token_stream.map(|value| {
                             #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
@@ -2373,11 +2383,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #try_read_by_id_error_named_camel_case_token_stream {
-                    QueryEncode {
-                        #eo_display_attribute_token_stream
-                        url_encoding: serde_urlencoded::ser::Error,
-                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #query_encode_variant_token_stream,
                     #request_error_camel_case_token_stream {
                         #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_read_by_id_request_error_camel_case_token_stream,
@@ -2407,11 +2413,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #struct_options_ident_token_stream,
                     #try_read_by_id_error_named_camel_case_token_stream,
                 > {
-                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.#query_lower_case_token_stream.into_url_encoding_version()) {
+                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.#query_lower_case_token_stream.#into_url_encoding_version_name_token_stream()) {
                         Ok(value) => value,
                         Err(e) => {
-                            return Err(#try_read_by_id_error_named_camel_case_token_stream::QueryEncode {
-                                url_encoding: e,
+                            return Err(#try_read_by_id_error_named_camel_case_token_stream::#query_encode_token_stream {
+                                #url_encoding_token_stream: e,
                                 #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
@@ -3033,7 +3039,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 impl #read_query_camel_case_token_stream {
-                    fn into_url_encoding_version(self) -> #read_query_for_url_encoding_camel_case_token_stream {
+                    fn #into_url_encoding_version_name_token_stream(self) -> #read_query_for_url_encoding_camel_case_token_stream {
                         let #select_token_stream = self.#select_token_stream.map(|value| {
                             #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
@@ -3268,11 +3274,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #try_read_error_named_camel_case_token_stream {
-                    QueryEncode {
-                        #eo_display_attribute_token_stream
-                        url_encoding: serde_urlencoded::ser::Error,
-                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #query_encode_variant_token_stream,
                     #request_error_camel_case_token_stream {
                         #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_read_request_error_camel_case_token_stream,
@@ -3302,11 +3304,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     Vec<#struct_options_ident_token_stream>,
                     #try_read_error_named_camel_case_token_stream,
                 > {
-                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.#query_lower_case_token_stream.into_url_encoding_version()) {
+                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.#query_lower_case_token_stream.#into_url_encoding_version_name_token_stream()) {
                         Ok(value) => value,
                         Err(e) => {
-                            return Err(#try_read_error_named_camel_case_token_stream::QueryEncode {
-                                url_encoding: e,
+                            return Err(#try_read_error_named_camel_case_token_stream::#query_encode_token_stream {
+                                #url_encoding_token_stream: e,
                                 #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
@@ -3798,7 +3800,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #increment_initialization_token_stream
                         let mut values = std::string::String::default();
                         for element in &self.payload {
-                            match crate::server::postgres::bind_query::BindQuery::try_increment(
+                            match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(
                                 &element.name,
                                 &mut increment,
                             ) {
