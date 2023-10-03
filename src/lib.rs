@@ -521,6 +521,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let query_encode_token_stream = quote::quote!{QueryEncode};
     let url_encoding_token_stream = quote::quote!{url_encoding};
     let serde_urlencoded_ser_error_token_stream = quote::quote!{serde_urlencoded::ser::Error};
+    let serde_json_to_string_token_stream = quote::quote!{serde_json::to_string};
     let into_url_encoding_version_name_token_stream = quote::quote!{into_url_encoding_version}; 
     let for_url_encoding_camel_case_stringified = "ForUrlEncoding";
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
@@ -600,7 +601,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     let query_encode_variant_initialization_token_stream = quote::quote!{
-        
+        #query_encode_token_stream {
+            #url_encoding_token_stream: e,
+            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+        }
     };
     let project_commit_header_addition_token_stream = quote::quote!{
         .header(
@@ -960,7 +964,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #create_batch_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_batch_error_named_camel_case_token_stream> {
-                    let #payload_lower_case_token_stream = match serde_json::to_string(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
+                    let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_create_batch_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -1225,7 +1229,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #create_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_create_error_named_camel_case_token_stream> {
-                    let #payload_lower_case_token_stream = match serde_json::to_string(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
+                    let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_create_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -1786,7 +1790,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #delete_with_body_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_with_body_error_named_camel_case_token_stream> {
-                    let #payload_lower_case_token_stream = match serde_json::to_string(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
+                    let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_delete_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -2143,10 +2147,7 @@ let delete_token_stream = {
                     let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.query.#into_url_encoding_version_name_token_stream()) {
                         Ok(value) => value,
                         Err(e) => {
-                            return Err(#try_delete_error_named_camel_case_token_stream::#query_encode_token_stream {
-                                #url_encoding_token_stream: e,
-                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            });
+                            return Err(#try_delete_error_named_camel_case_token_stream::#query_encode_variant_initialization_token_stream);
                         }
                     };
                     let url = format!(
@@ -2416,10 +2417,7 @@ let delete_token_stream = {
                     let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.#query_lower_case_token_stream.#into_url_encoding_version_name_token_stream()) {
                         Ok(value) => value,
                         Err(e) => {
-                            return Err(#try_read_by_id_error_named_camel_case_token_stream::#query_encode_token_stream {
-                                #url_encoding_token_stream: e,
-                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            });
+                            return Err(#try_read_by_id_error_named_camel_case_token_stream::#query_encode_variant_initialization_token_stream);
                         }
                     };
                     let url = format!(
@@ -2857,7 +2855,7 @@ let delete_token_stream = {
                     Vec<#struct_options_ident_token_stream>,
                     #try_read_with_body_error_named_camel_case_token_stream,
                 > {
-                    let #payload_lower_case_token_stream = match serde_json::to_string(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
+                    let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_read_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -3307,10 +3305,7 @@ let delete_token_stream = {
                     let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.#query_lower_case_token_stream.#into_url_encoding_version_name_token_stream()) {
                         Ok(value) => value,
                         Err(e) => {
-                            return Err(#try_read_error_named_camel_case_token_stream::#query_encode_token_stream {
-                                #url_encoding_token_stream: e,
-                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            });
+                            return Err(#try_read_error_named_camel_case_token_stream::#query_encode_variant_initialization_token_stream);
                         }
                     };
                     let url = format!(
@@ -3634,7 +3629,7 @@ let delete_token_stream = {
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #update_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_by_id_error_named_camel_case_token_stream> {
-                    let #payload_lower_case_token_stream = match serde_json::to_string(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
+                    let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_update_by_id_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -4001,7 +3996,7 @@ let delete_token_stream = {
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #update_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_update_error_named_camel_case_token_stream> {
-                    let #payload_lower_case_token_stream = match serde_json::to_string(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
+                    let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_update_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
