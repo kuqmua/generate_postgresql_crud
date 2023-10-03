@@ -559,16 +559,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let serde_json_to_string_camel_case_stringified = "SerdeJsonToString";
+    let serde_json_to_string_camel_case_token_stream = serde_json_to_string_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {serde_json_to_string_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+    let serde_json_to_string_lower_case_token_stream = {
+        let serde_json_to_string_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&serde_json_to_string_camel_case_stringified);
+        serde_json_to_string_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {serde_json_to_string_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let serde_json_to_string_variant_initialization_token_stream = quote::quote!{
-        SerdeJsonToString {
-            serde_json_to_string: e,
+        #serde_json_to_string_camel_case_token_stream {
+            #serde_json_to_string_lower_case_token_stream: e,
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
     let http_request_error_named_serde_json_to_string_variant = quote::quote!{
-        SerdeJsonToString {
+        #serde_json_to_string_camel_case_token_stream {
             #[eo_display]
-            serde_json_to_string: serde_json::Error,
+            #serde_json_to_string_lower_case_token_stream: serde_json::Error,
             #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
         }
     };
