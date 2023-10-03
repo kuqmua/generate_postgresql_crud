@@ -580,7 +580,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let http_request_error_named_serde_json_to_string_variant = quote::quote!{
+    let http_request_error_named_serde_json_to_string_variant_token_stream = quote::quote!{
         #serde_json_to_string_camel_case_token_stream {
             #eo_display_attribute_token_stream
             #serde_json_to_string_lower_case_token_stream: serde_json::Error,
@@ -942,7 +942,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #request_error_lower_case_token_stream: #try_create_batch_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    #http_request_error_named_serde_json_to_string_variant,
+                    #http_request_error_named_serde_json_to_string_variant_token_stream,
                 }
             }
         };
@@ -1207,7 +1207,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #request_error_lower_case_token_stream: #try_create_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    #http_request_error_named_serde_json_to_string_variant,
+                    #http_request_error_named_serde_json_to_string_variant_token_stream,
                 }
             }
         };
@@ -1768,7 +1768,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #request_error_lower_case_token_stream: #try_delete_with_body_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    #http_request_error_named_serde_json_to_string_variant,
+                    #http_request_error_named_serde_json_to_string_variant_token_stream,
                 }
             }
         };
@@ -2830,7 +2830,7 @@ let delete_token_stream = {
                         #request_error_lower_case_token_stream: #try_read_with_body_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    #http_request_error_named_serde_json_to_string_variant,
+                    #http_request_error_named_serde_json_to_string_variant_token_stream,
                 }
             }
         };
@@ -3607,7 +3607,7 @@ let delete_token_stream = {
                         #request_error_lower_case_token_stream: #try_update_by_id_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    #http_request_error_named_serde_json_to_string_variant,
+                    #http_request_error_named_serde_json_to_string_variant_token_stream,
                 }
             }
         };
@@ -3974,7 +3974,7 @@ let delete_token_stream = {
                         #request_error_lower_case_token_stream: #try_update_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    #http_request_error_named_serde_json_to_string_variant,
+                    #http_request_error_named_serde_json_to_string_variant_token_stream,
                 }
             }
         };
