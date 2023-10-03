@@ -559,6 +559,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let eo_error_occurence_attribute_token_stream = quote::quote!{#[eo_error_occurence]};
+    let eo_display_attribute_token_stream = quote::quote!{#[eo_display]};
     let serde_json_to_string_camel_case_stringified = "SerdeJsonToString";
     let serde_json_to_string_camel_case_token_stream = serde_json_to_string_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {serde_json_to_string_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
@@ -575,7 +577,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let http_request_error_named_serde_json_to_string_variant = quote::quote!{
         #serde_json_to_string_camel_case_token_stream {
-            #[eo_display]
+            #eo_display_attribute_token_stream
             #serde_json_to_string_lower_case_token_stream: serde_json::Error,
             #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
         }
@@ -918,7 +920,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #error_named_derive_token_stream
                 pub enum #try_create_batch_error_named_camel_case_token_stream {
                     #request_error_camel_case_token_stream {
-                        #[eo_error_occurence]
+                        #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_create_batch_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -1183,7 +1185,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #error_named_derive_token_stream
                 pub enum #try_create_error_named_camel_case_token_stream {
                     #request_error_camel_case_token_stream {
-                        #[eo_error_occurence]
+                        #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_create_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -1410,7 +1412,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #error_named_derive_token_stream
                 pub enum #try_delete_by_id_error_named_camel_case_token_stream {
                     #request_error_camel_case_token_stream {
-                        #[eo_error_occurence]
+                        #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_delete_by_id_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -1744,7 +1746,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #error_named_derive_token_stream
                 pub enum #try_delete_with_body_error_named_camel_case_token_stream {
                     #request_error_camel_case_token_stream {
-                        #[eo_error_occurence]
+                        #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_delete_with_body_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -2098,12 +2100,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #error_named_derive_token_stream
                 pub enum #try_delete_error_named_camel_case_token_stream {
                     QueryEncode {
-                        #[eo_display]
+                        #eo_display_attribute_token_stream
                         url_encoding: serde_urlencoded::ser::Error,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #request_error_camel_case_token_stream {
-                        #[eo_error_occurence]
+                        #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_delete_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -2372,12 +2374,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #error_named_derive_token_stream
                 pub enum #try_read_by_id_error_named_camel_case_token_stream {
                     QueryEncode {
-                        #[eo_display]
+                        #eo_display_attribute_token_stream
                         url_encoding: serde_urlencoded::ser::Error,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #request_error_camel_case_token_stream {
-                        #[eo_error_occurence]
+                        #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_read_by_id_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -2819,8 +2821,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #try_read_with_body_error_named_camel_case_token_stream {
-                    RequestError {
-                        #[eo_error_occurence]
+                    #request_error_camel_case_token_stream {
+                        #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_read_with_body_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -3267,12 +3269,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #error_named_derive_token_stream
                 pub enum #try_read_error_named_camel_case_token_stream {
                     QueryEncode {
-                        #[eo_display]
+                        #eo_display_attribute_token_stream
                         url_encoding: serde_urlencoded::ser::Error,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    RequestError {
-                        #[eo_error_occurence]
+                    #request_error_camel_case_token_stream {
+                        #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_read_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -3603,8 +3605,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #try_update_by_id_error_named_camel_case_token_stream {
-                    RequestError {
-                        #[eo_error_occurence]
+                    #request_error_camel_case_token_stream {
+                        #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_update_by_id_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -3970,8 +3972,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #try_update_error_named_camel_case_token_stream {
-                    RequestError {
-                        #[eo_error_occurence]
+                    #request_error_camel_case_token_stream {
+                        #eo_error_occurence_attribute_token_stream
                         #request_error_lower_case_token_stream: #try_update_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
