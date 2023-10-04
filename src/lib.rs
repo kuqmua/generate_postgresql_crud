@@ -267,6 +267,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let options_try_from_sqlx_row_name_token_stream = quote::quote!{options_try_from_sqlx_row};
     let std_primitive_str_sqlx_column_index_token_stream = quote::quote!{&'a std::primitive::str: sqlx::ColumnIndex<R>,};
+    let sqlx_decode_decode_database_token_stream = quote::quote!{sqlx::decode::Decode<'a, R::Database>};
+    let sqlx_types_type_database_token_stream = quote::quote!{sqlx::types::Type<R::Database>};
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
@@ -445,8 +447,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let sqlx_decode_decode_and_sqlx_types_type_token_stream = fields_named.iter().map(|field|{
                 let field_type = &field.ty;
                 quote::quote! {
-                    Option<#field_type>: sqlx::decode::Decode<'a, R::Database>,
-                    Option<#field_type>: sqlx::types::Type<R::Database>,
+                    Option<#field_type>: #sqlx_decode_decode_database_token_stream,
+                    Option<#field_type>: #sqlx_types_type_database_token_stream,
                 }
             });
             quote::quote! {
@@ -493,8 +495,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             fn #primary_key_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(#row_name_token_stream: &'a R) -> sqlx::Result<#id_field_type>
                 where
                     #std_primitive_str_sqlx_column_index_token_stream
-                    #id_field_type: sqlx::decode::Decode<'a, R::Database>,
-                    #id_field_type: sqlx::types::Type<R::Database>,
+                    #id_field_type: #sqlx_decode_decode_database_token_stream,
+                    #id_field_type: #sqlx_types_type_database_token_stream,
             {
                 let #primary_key_name_token_stream: #id_field_type = #row_name_token_stream.try_get(#primary_key_str_token_stream)?;
                 Ok(#primary_key_name_token_stream)
