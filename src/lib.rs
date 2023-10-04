@@ -4069,12 +4069,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                             Err(e) => match postgres_transaction.rollback().await {
                                 Ok(_) => {
-                                    // let error = TryUpdate::from(e);
-                                    // crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                    //     &error,
-                                    //     app_info_state.as_ref(),
-                                    // );
-                                    // return TryUpdateResponseVariants::from(error);
                                     #from_log_and_return_error_token_stream;
                                 }
                                 Err(rollback_error) => {
