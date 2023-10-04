@@ -266,6 +266,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {column_select_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let options_try_from_sqlx_row_name_token_stream = quote::quote!{options_try_from_sqlx_row};
+    let std_primitive_str_sqlx_column_index_token_stream = quote::quote!{&'a std::primitive::str: sqlx::ColumnIndex<R>,};
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
@@ -441,6 +442,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     })
             });
+            let sqlx_decode_decode_and_sqlx_types_type_token_stream = fields_named.iter().map(|field|{
+                let field_type = &field.ty;
+                quote::quote! {
+                    Option<#field_type>: sqlx::decode::Decode<'a, R::Database>,
+                    Option<#field_type>: sqlx::types::Type<R::Database>,
+                }
+            });
             quote::quote! {
                 impl #column_select_ident_token_stream {
                     fn #options_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(
@@ -448,13 +456,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         row: &'a R,
                     ) -> sqlx::Result<#struct_options_ident_token_stream>
                     where
-                        &'a std::primitive::str: sqlx::ColumnIndex<R>,
-                        Option<#id_field_type>: sqlx::decode::Decode<'a, R::Database>,
-                        Option<#id_field_type>: sqlx::types::Type<R::Database>,
-                        Option<String>: sqlx::decode::Decode<'a, R::Database>,
-                        Option<String>: sqlx::types::Type<R::Database>,
-                        Option<String>: sqlx::decode::Decode<'a, R::Database>,
-                        Option<String>: sqlx::types::Type<R::Database>,
+                        #std_primitive_str_sqlx_column_index_token_stream
+                        #(#sqlx_decode_decode_and_sqlx_types_type_token_stream)*
                     {
                         #(#declaration_token_stream)*
                         match self {
@@ -489,7 +492,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote! {
             fn #primary_key_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(#row_name_token_stream: &'a R) -> sqlx::Result<#id_field_type>
                 where
-                    &'a std::primitive::str: sqlx::ColumnIndex<R>,
+                    #std_primitive_str_sqlx_column_index_token_stream
                     #id_field_type: sqlx::decode::Decode<'a, R::Database>,
                     #id_field_type: sqlx::types::Type<R::Database>,
             {
