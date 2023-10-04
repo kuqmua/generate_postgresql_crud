@@ -3999,10 +3999,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                         rollback_error,
                                                         code_occurence: crate::code_occurence_tufa_common!(),
                                                     };
-                                                    crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                                        &error,
-                                                        app_info_state.as_ref(),
-                                                    );
+                                                    #error_log_call_token_stream
                                                     return TryUpdateResponseVariants::from(error);
                                                 }
                                             },
@@ -4028,10 +4025,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                     non_existing_primary_keys,
                                                     code_occurence: crate::code_occurence_tufa_common!(), //todo how to show log from proc_macro
                                                 };
-                                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                                    &error,
-                                                    app_info_state.as_ref(),
-                                                );
+                                                #error_log_call_token_stream
                                                 return TryUpdateResponseVariants::from(error);
                                             }
                                             Err(e) => {
@@ -4040,10 +4034,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                     rollback_error: e,
                                                     code_occurence: crate::code_occurence_tufa_common!(), //todo how to show log from proc_macro
                                                 };
-                                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                                    &error,
-                                                    app_info_state.as_ref(),
-                                                );
+                                                #error_log_call_token_stream
                                                 return TryUpdateResponseVariants::from(error);
                                             }
                                         }
@@ -4059,10 +4050,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             commit_error: e,
                                             code_occurence: crate::code_occurence_tufa_common!(),
                                         };
-                                        crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                            &error,
-                                            app_info_state.as_ref(),
-                                        );
+                                        #error_log_call_token_stream
                                         return TryUpdateResponseVariants::from(error); //todo - few variants or return ResponseVariants::from - with return ; and not
                                     }
                                 }
@@ -4078,10 +4066,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         rollback_error,
                                         code_occurence: crate::code_occurence_tufa_common!(),
                                     };
-                                    crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                        &error,
-                                        app_info_state.as_ref(),
-                                    );
+                                    #error_log_call_token_stream
                                     return TryUpdateResponseVariants::from(error);
                                 }
                             },
