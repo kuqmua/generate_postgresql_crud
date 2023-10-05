@@ -679,6 +679,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let axum_json_token_stream = quote::quote!{axum::Json};
     let rollback_token_stream = quote::quote!{rollback};
     let commit_token_stream = quote::quote!{commit};
+    let begin_token_stream = quote::quote!{begin};
     let increment_initialization_token_stream = quote::quote!{let mut increment: u64 = 0;};
     let crate_server_postgres_constants_stringified = "crate::server::postgres::constants::";
     let crate_server_postgres_constants_update_name_token_stream = {
@@ -2234,10 +2235,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
-            #query_token_stream
-            #query_for_url_encoding_token_stream
-            #into_url_encoding_version_token_stream
-            #prepare_and_execute_query_token_stream
+            // #query_token_stream
+            // #query_for_url_encoding_token_stream
+            // #into_url_encoding_version_token_stream
+            // #prepare_and_execute_query_token_stream
             #try_delete_error_named_token_stream
             #http_request_token_stream
             #route_handler_token_stream
@@ -3935,7 +3936,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #acquire_pool_and_connection_token_stream
                         let mut #postgres_transaction_token_stream = match {
                             use sqlx::Acquire;
-                            #pg_connection_token_stream.begin()
+                            #pg_connection_token_stream.#begin_token_stream()
                         }
                         .await
                         {
