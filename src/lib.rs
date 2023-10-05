@@ -3797,6 +3797,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{payload_token_stream}");
         let prepare_and_execute_query_token_stream = {
+            //todo - check if primary keys are unique in the input array
             let prepare_and_execute_query_error_token_stream = {
                 let error_path_stringified = format!("{try_camel_case_stringified}{update_name_camel_case_stringified}");
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
@@ -3994,13 +3995,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 }
                                                 Err(rollback_error) => {
                                                     //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
-                                                    let error = TryUpdate::PrimaryKeyFromRowAndFailedRollback {
+                                                    let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
                                                         primary_key_from_row: e,
                                                         rollback_error,
-                                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                     };
                                                     #error_log_call_token_stream
-                                                    return TryUpdateResponseVariants::from(error);
+                                                    return #try_update_response_variants_token_stream::from(error);
                                                 }
                                             },
                                         }
@@ -4021,37 +4022,37 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     if let false = non_existing_primary_keys.is_empty() {
                                         match postgres_transaction.rollback().await {
                                             Ok(_) => {
-                                                let error = TryUpdate::NonExistingPrimaryKeys {
+                                                let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeys {
                                                     non_existing_primary_keys,
-                                                    code_occurence: crate::code_occurence_tufa_common!(), //todo how to show log from proc_macro
+                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream, //todo how to show log from proc_macro
                                                 };
                                                 #error_log_call_token_stream
-                                                return TryUpdateResponseVariants::from(error);
+                                                return #try_update_response_variants_token_stream::from(error);
                                             }
                                             Err(e) => {
-                                                let error = TryUpdate::NonExistingPrimaryKeysAndFailedRollback {
+                                                let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
                                                     non_existing_primary_keys,
                                                     rollback_error: e,
-                                                    code_occurence: crate::code_occurence_tufa_common!(), //todo how to show log from proc_macro
+                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream, //todo how to show log from proc_macro
                                                 };
                                                 #error_log_call_token_stream
-                                                return TryUpdateResponseVariants::from(error);
+                                                return #try_update_response_variants_token_stream::from(error);
                                             }
                                         }
                                     }
                                 }
                                 // println!("{:#?}", expected_updated_primary_keys);
                                 match postgres_transaction.commit().await {
-                                    Ok(_) => TryUpdateResponseVariants::Desirable(()),
+                                    Ok(_) => #try_update_response_variants_token_stream::#desirable_token_stream(()),
                                     Err(e) => {
                                         //todo  BIG QUESTION - WHAT TO DO IF COMMIT FAILED? INFINITE LOOP TRYING TO COMMIT?
                                         //todo and variant - rollback failed and non_existing_primary_keys
-                                        let error = TryUpdate::CommitFailed {
+                                        let error = #prepare_and_execute_query_error_token_stream::CommitFailed {
                                             commit_error: e,
-                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                         };
                                         #error_log_call_token_stream
-                                        return TryUpdateResponseVariants::from(error); //todo - few variants or return ResponseVariants::from - with return ; and not
+                                        return #try_update_response_variants_token_stream::from(error); //todo - few variants or return ResponseVariants::from - with return ; and not
                                     }
                                 }
                             }
@@ -4061,13 +4062,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 }
                                 Err(rollback_error) => {
                                     //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
-                                    let error = TryUpdate::UpdateAndRollbackFailed {
+                                    let error = #prepare_and_execute_query_error_token_stream::UpdateAndRollbackFailed {
                                         update_error: e,
                                         rollback_error,
-                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
                                     #error_log_call_token_stream
-                                    return TryUpdateResponseVariants::from(error);
+                                    return #try_update_response_variants_token_stream::from(error);
                                 }
                             },
                         }
