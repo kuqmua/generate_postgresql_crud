@@ -668,6 +668,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let desirable_token_stream = quote::quote!{Desirable};
     let query_string_name_token_stream = quote::quote!{query_string};
     let binded_query_name_token_stream = quote::quote!{binded_query};
+    let postgres_transaction_token_stream = quote::quote!{postgres_transaction_token_stream};
     let order_by_token_stream = quote::quote!{order_by};
     let select_token_stream = quote::quote!{select};
     let sqlx_query_sqlx_postgres_token_stream = quote::quote!{sqlx::query::<sqlx::Postgres>};
@@ -676,6 +677,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let axum_extract_path_token_stream = quote::quote!{axum::extract::Path};
     let axum_extract_query_token_stream = quote::quote!{axum::extract::Query};
     let axum_json_token_stream = quote::quote!{axum::Json};
+    let rollback_token_stream = quote::quote!{rollback};
+    let commit_token_stream = quote::quote!{commit};
     let increment_initialization_token_stream = quote::quote!{let mut increment: u64 = 0;};
     let crate_server_postgres_constants_stringified = "crate::server::postgres::constants::";
     let crate_server_postgres_constants_update_name_token_stream = {
@@ -3969,7 +3972,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #binded_query_token_stream
                         };
                         #acquire_pool_and_connection_token_stream
-                        let mut postgres_transaction = match {
+                        let mut #postgres_transaction_token_stream = match {
                             use sqlx::Acquire;
                             #pg_connection_token_stream.begin()
                         }
@@ -3980,7 +3983,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #from_log_and_return_error_token_stream;
                             }
                         };
-                        match #binded_query_name_token_stream.fetch_all(postgres_transaction.as_mut()).await {
+                        match #binded_query_name_token_stream.fetch_all(#postgres_transaction_token_stream.as_mut()).await {//todo maybe instead use fetch while try_next ? 
                             Ok(updated_rows) => {
                                 let typed_updated_rows = {
                                     let mut typed_updated_rows = Vec::with_capacity(updated_rows.len());
@@ -3989,7 +3992,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             Ok(updated_row_primary_key) => {
                                                 typed_updated_rows.push(updated_row_primary_key);
                                             }
-                                            Err(e) => match postgres_transaction.rollback().await {
+                                            Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                                 Ok(_) => {
                                                     #from_log_and_return_error_token_stream;
                                                 }
@@ -4020,7 +4023,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         non_existing_primary_keys
                                     };
                                     if let false = non_existing_primary_keys.is_empty() {
-                                        match postgres_transaction.rollback().await {
+                                        match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                             Ok(_) => {
                                                 let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeys {
                                                     non_existing_primary_keys,
@@ -4042,7 +4045,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                 }
                                 // println!("{:#?}", expected_updated_primary_keys);
-                                match postgres_transaction.commit().await {
+                                match #postgres_transaction_token_stream.#commit_token_stream().await {
                                     Ok(_) => #try_update_response_variants_token_stream::#desirable_token_stream(()),
                                     Err(e) => {
                                         //todo  BIG QUESTION - WHAT TO DO IF COMMIT FAILED? INFINITE LOOP TRYING TO COMMIT?
@@ -4056,7 +4059,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                 }
                             }
-                            Err(e) => match postgres_transaction.rollback().await {
+                            Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                 Ok(_) => {
                                     #from_log_and_return_error_token_stream;
                                 }
