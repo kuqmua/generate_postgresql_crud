@@ -20,7 +20,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         )
     });
     let ident = &ast.ident;
-    let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
+    // let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
     let proc_macro_name_ident_stringified = format!("{proc_macro_name} {ident}");
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
         data_struct
@@ -663,7 +663,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream = quote::quote!{crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
-    let pg_temp_stringified = "pg_temp";
+    // let pg_temp_stringified = "pg_temp";
     let pg_connection_token_stream = quote::quote!{pg_connection};
     let desirable_token_stream = quote::quote!{Desirable};
     let query_string_name_token_stream = quote::quote!{query_string};
@@ -2234,14 +2234,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{route_handler_token_stream}");
         quote::quote!{
-            #parameters_token_stream
+            // #parameters_token_stream
             // #query_token_stream
             // #query_for_url_encoding_token_stream
             // #into_url_encoding_version_token_stream
             // #prepare_and_execute_query_token_stream
-            #try_delete_error_named_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
+            // #try_delete_error_named_token_stream
+            // #http_request_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{delete_token_stream}");
