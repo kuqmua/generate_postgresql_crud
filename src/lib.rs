@@ -2175,7 +2175,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #delete_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_error_named_camel_case_token_stream> {
-                    let encoded_query = match serde_urlencoded::to_string(#parameters_lower_case_token_stream.query.#into_url_encoding_version_name_token_stream()) {
+                    let encoded_query = match serde_urlencoded::to_string(#delete_query_for_url_encoding_camel_case_token_stream::from(#parameters_lower_case_token_stream.query)) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_delete_error_named_camel_case_token_stream::#query_encode_variant_initialization_token_stream);
@@ -2200,6 +2200,39 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => Err(#try_delete_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
                     }
                 }
+                //
+                // pub async fn try_delete<'a>(
+                //     server_location: &str,
+                //     parameters: DeleteParameters,
+                // ) -> Result<(), TryDeleteErrorNamed> {
+                //     let encoded_query = match serde_urlencoded::to_string(DeleteQueryForUrlEncoding::from(parameters.query)) {
+                //         Ok(value) => value,
+                //         Err(e) => {
+                //             return Err(TryDeleteErrorNamed::QueryEncode {
+                //                 url_encoding: e,
+                //                 code_occurence: crate::code_occurence_tufa_common!(),
+                //             });
+                //         }
+                //     };
+                //     let url = format!("{}/api/{}?{}", server_location, ROUTE_NAME, encoded_query);
+                //     match tvfrr_extraction_logic_try_delete(
+                //         reqwest::Client::new()
+                //         .delete(&url)
+                //         .header(
+                //             crate::common::git::project_git_info::PROJECT_COMMIT,
+                //             crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
+                //         )
+                //         .send(),
+                //     )
+                //     .await
+                //     {
+                //         Ok(value) => Ok(value),
+                //         Err(e) => Err(TryDeleteErrorNamed::RequestError {
+                //             request_error: e,
+                //             code_occurence: crate::code_occurence_tufa_common!(),
+                //         }),
+                //     }
+                // }
             }
         };
         // println!("{http_request_token_stream}");
@@ -2234,13 +2267,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{route_handler_token_stream}");
         quote::quote!{
-            // #parameters_token_stream
+            #parameters_token_stream
             // #query_token_stream
             // #query_for_url_encoding_token_stream
             // #into_url_encoding_version_token_stream
             // #prepare_and_execute_query_token_stream
             // #try_delete_error_named_token_stream
-            // #http_request_token_stream
+            #http_request_token_stream
             // #route_handler_token_stream
         }
     };
