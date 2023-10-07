@@ -2272,7 +2272,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // #query_for_url_encoding_token_stream
             // #into_url_encoding_version_token_stream
             // #prepare_and_execute_query_token_stream
-            // #try_delete_error_named_token_stream
+            #try_delete_error_named_token_stream
             #http_request_token_stream
             // #route_handler_token_stream
         }
