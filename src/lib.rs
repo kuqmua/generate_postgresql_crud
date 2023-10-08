@@ -560,6 +560,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let error_named_camel_case_stringified = "ErrorNamed";
     let tvfrr_extraction_logic_lower_case_stringified = "tvfrr_extraction_logic";
     let request_error_camel_case_stringified = "RequestError";
+    let returning_stringified = "returning";
+    let returning_id_stringified = format!(" {returning_stringified} {id_field_ident}");
+    let returning_id_quotes_token_stream = {
+        let returning_id_quotes_stringified = format!("\"{returning_id_stringified}\"");
+        returning_id_quotes_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {returning_id_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let request_error_camel_case_token_stream = request_error_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
     let request_error_lower_case_token_stream = {
@@ -1396,11 +1403,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         query.push_str(&format!(#query_part_token_stream));
                     }
                 };
-                let returning_id_token_stream = {
-                    let returning_id_stringified = format!("\" returning {id_field_ident}\"");
-                    returning_id_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {returning_id_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
                 quote::quote!{
                     let mut query = format!(
                         "{} {} {} {} ",
@@ -1410,7 +1412,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #crate_server_postgres_constants_where_name_token_stream,
                     );
                     #additional_parameters_id_modification_token_stream
-                    query.push_str(&format!(#returning_id_token_stream));
+                    query.push_str(&format!(#returning_id_quotes_token_stream));
                     query
                 }
             };
@@ -2067,6 +2069,45 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .iter()
                         .map(|element| element.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
                         .collect::<Vec<#id_field_type>>()
+                }
+            };
+            let query_string_primary_key_some_other_none_token_stream = {
+                let handle_token_stream = {
+                    let handle_stringified = format!("\"{{}} {{}} {{}} {{}} {id_field_ident} {{}} ({{}}) {returning_id_stringified}\"");
+                    handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote!{
+                    format!(
+                        "{} {} {} {} id {} ({}) returning id",
+                        crate::server::postgres::constants::DELETE_NAME,
+                        crate::server::postgres::constants::FROM_NAME,
+                        ROUTE_NAME,
+                        crate::server::postgres::constants::WHERE_NAME,
+                        crate::server::postgres::constants::IN_NAME,
+                        {
+                            #increment_initialization_token_stream
+                            let mut additional_parameters = std::string::String::default();
+                            for element in id {
+                                match crate::server::postgres::bind_query::BindQuery::try_increment(
+                                    element,
+                                    &mut increment,
+                                ) {
+                                    Ok(_) => {
+                                        additional_parameters.push_str(&format!("${increment},"));
+                                    }
+                                    Err(e) => {
+                                        return #try_delete_response_variants_token_stream::BindQuery {
+                                            checked_add: e.into_serialize_deserialize_version(),
+                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                        };
+                                    }
+                                }
+                            }
+                            additional_parameters.pop();
+                            additional_parameters
+                        }
+                    )
                 }
             };
             let query_string_token_stream = {
@@ -3932,11 +3973,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }
                 };
-                let returning_id_token_stream = {
-                    let returning_id_stringified = format!("\" returning {id_field_ident}\"");
-                    returning_id_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {returning_id_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
                 quote::quote!{
                     #increment_initialization_token_stream
                     let mut query = format!(
@@ -3947,7 +3983,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     );
                     #(#additional_parameters_modification_token_stream)*
                     #additional_parameters_id_modification_token_stream
-                    query.push_str(&format!(#returning_id_token_stream));
+                    query.push_str(&format!(#returning_id_quotes_token_stream));
                     query
                 }
             };
@@ -4233,7 +4269,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             acc
                         })
                     };
-                    let query_stringified = format!("\"{{}} {{}} {{}} t {{}} {declarations} {{}} (values {{values}}) as data({column_names}) where t.{id_field_ident} = data.{id_field_ident} returning data.{id_field_ident}\"");
+                    let query_stringified = format!("\"{{}} {{}} {{}} t {{}} {declarations} {{}} (values {{values}}) as data({column_names}) where t.{id_field_ident} = data.{id_field_ident} {returning_stringified} data.{id_field_ident}\"");
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
