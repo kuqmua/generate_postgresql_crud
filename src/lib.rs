@@ -2207,7 +2207,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 Err(e) => {
                                                     return #try_delete_response_variants_token_stream::BindQuery {
                                                         checked_add: e.into_serialize_deserialize_version(),
-                                                        code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                     };
                                                 }
                                             }
@@ -2219,7 +2219,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 println!("{}", #query_string_name_token_stream);
                                 #binded_query_primary_key_some_other_none_token_stream
                                 #acquire_pool_and_connection_token_stream
-                                let mut postgres_transaction = match {
+                                let mut #postgres_transaction_token_stream = match {
                                     use sqlx::Acquire;
                                     pg_connection.begin()
                                 }
@@ -2232,7 +2232,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         return #try_delete_response_variants_token_stream::from(error);
                                     }
                                 };
-                                match #binded_query_name_token_stream.fetch_all(postgres_transaction.as_mut()).await {
+                                match #binded_query_name_token_stream.fetch_all(#postgres_transaction_token_stream.as_mut()).await {
                                     Ok(updated_rows) => {
                                         let typed_updated_rows = {
                                             let mut typed_updated_rows = Vec::with_capacity(updated_rows.len());
@@ -2241,7 +2241,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                     Ok(updated_row_primary_key) => {
                                                         typed_updated_rows.push(updated_row_primary_key);
                                                     }
-                                                    Err(e) => match postgres_transaction.rollback().await {
+                                                    Err(e) => match #postgres_transaction_token_stream.rollback().await {
                                                         Ok(_) => {
                                                             let error = #prepare_and_execute_query_error_token_stream::from(e);
                                                             #error_log_call_token_stream
@@ -2252,7 +2252,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                             let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
                                                                     primary_key_from_row: e,
                                                                     rollback_error,
-                                                                    code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                                 };
                                                             #error_log_call_token_stream
                                                             return #try_delete_response_variants_token_stream::from(error);
@@ -2277,11 +2277,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 non_existing_primary_keys
                                             };
                                             if let false = non_existing_primary_keys.is_empty() {
-                                                match postgres_transaction.rollback().await {
+                                                match #postgres_transaction_token_stream.rollback().await {
                                                     Ok(_) => {
                                                         let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeys {
                                                             non_existing_primary_keys,
-                                                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream, //todo how to show log from proc_macro
+                                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream, //todo how to show log from proc_macro
                                                         };
                                                         #error_log_call_token_stream
                                                         return #try_delete_response_variants_token_stream::from(error);
@@ -2290,7 +2290,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                         let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
                                                                 non_existing_primary_keys,
                                                                 rollback_error: e,
-                                                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream, //todo how to show log from proc_macro
+                                                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream, //todo how to show log from proc_macro
                                                             };
                                                         #error_log_call_token_stream
                                                         return #try_delete_response_variants_token_stream::from(error);
@@ -2298,20 +2298,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 }
                                             }
                                         }
-                                        match postgres_transaction.commit().await {
+                                        match #postgres_transaction_token_stream.commit().await {
                                             Ok(_) => #try_delete_response_variants_token_stream::Desirable(()),
                                             Err(e) => {
                                                 //todo  BIG QUESTION - WHAT TO DO IF COMMIT FAILED? INFINITE LOOP TRYING TO COMMIT?
                                                 let error = #prepare_and_execute_query_error_token_stream::CommitFailed {
                                                     commit_error: e,
-                                                    code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
                                                 #error_log_call_token_stream
                                                 #try_delete_response_variants_token_stream::from(error) //todo - few variants or return ResponseVariants::from - with return ; and not
                                             }
                                         }
                                     }
-                                    Err(e) => match postgres_transaction.rollback().await {
+                                    Err(e) => match #postgres_transaction_token_stream.rollback().await {
                                         Ok(_) => {
                                             let error = #prepare_and_execute_query_error_token_stream::from(e);
                                             #error_log_call_token_stream
@@ -2322,7 +2322,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             let error = #prepare_and_execute_query_error_token_stream::DeleteAndRollbackFailed {
                                                 delete_error: e,
                                                 rollback_error,
-                                                code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                             };
                                             #error_log_call_token_stream
                                             #try_delete_response_variants_token_stream::from(error)
@@ -2365,7 +2365,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                     Err(e) => {
                                                         return #try_delete_response_variants_token_stream::BindQuery {
                                                             checked_add: e.into_serialize_deserialize_version(),
-                                                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                         };
                                                     }
                                                 }
@@ -2392,7 +2392,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                     Err(e) => {
                                                         return #try_delete_response_variants_token_stream::BindQuery {
                                                             checked_add: e.into_serialize_deserialize_version(),
-                                                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                         };
                                                     }
                                                 }
@@ -2420,7 +2420,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                                     Err(e) => {
                                                                         return #try_delete_response_variants_token_stream::BindQuery {
                                                                             checked_add: e.into_serialize_deserialize_version(),
-                                                                            code_occurence: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                                         };
                                                                     }
                                                                 }
