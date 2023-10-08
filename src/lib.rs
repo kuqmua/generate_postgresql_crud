@@ -1608,13 +1608,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let check_for_all_none_token_stream_excluding_primary_key = crate::check_for_all_none::check_for_all_none_excluding_primary_key(
+            let check_for_all_none_token_stream_excluding_primary_key = crate::check_for_all_none::check_for_none(
                 &fields_named,
                 &id_field,
                 &proc_macro_name_ident_stringified,
                 dot_space,
                 &try_delete_with_body_response_variants_token_stream,
-                crate::check_for_all_none::QueryPart::Payload
+                crate::check_for_all_none::QueryPart::Payload,
+                true
             );
             let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
@@ -2030,13 +2031,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let prepare_and_execute_query_response_variants_token_stream = &try_delete_response_variants_token_stream;
             let query_part = crate::check_for_all_none::QueryPart::QueryParameters;
-            let check_for_all_none_token_stream = crate::check_for_all_none::check_for_all_none(
+            let check_for_all_none_token_stream = crate::check_for_all_none::check_for_none(
                 &fields_named,
                 &id_field,
                 &proc_macro_name_ident_stringified,
                 dot_space,
                 &try_delete_response_variants_token_stream,
-                query_part
+                query_part,
+                false
             );
             // println!("{check_for_all_none_token_stream}");
             let query_string_token_stream = {
@@ -3862,13 +3864,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let check_for_all_none_token_stream_excluding_primary_key = crate::check_for_all_none::check_for_all_none_excluding_primary_key(
+            let check_for_all_none_token_stream_excluding_primary_key = crate::check_for_all_none::check_for_none(
                 &fields_named,
                 &id_field,
                 &proc_macro_name_ident_stringified,
                 dot_space,
                 &try_update_by_id_response_variants_token_stream,
-                crate::check_for_all_none::QueryPart::Payload
+                crate::check_for_all_none::QueryPart::Payload,
+                true
             );
             let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
