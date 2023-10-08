@@ -554,6 +554,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let for_url_encoding_camel_case_stringified = format!("For{url_encoding_camel_case_stringified}");
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
     let prepare_and_execute_query_name_token_stream = quote::quote!{prepare_and_execute_query};
+    let from_camel_case_stringified = "From";
     let try_camel_case_stringified = "Try";
     let try_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&try_camel_case_stringified.to_string());
     let response_variants_camel_case_stringified = "ResponseVariants";
@@ -1960,10 +1961,76 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         let impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream = {
+            let delete_query_try_from_url_encoding_error_named_camel_case_token_stream = {
+                let delete_query_try_from_url_encoding_error_named_camel_case_stringified = format!("{delete_name_camel_case_stringified}{query_camel_case_stringified}{try_camel_case_stringified}{from_camel_case_stringified}{url_encoding_camel_case_stringified}{error_named_camel_case_stringified}");
+                delete_query_try_from_url_encoding_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_query_try_from_url_encoding_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            let impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_id_token_stream = {
+                quote::quote!{
+                    let #id_field_ident = {
+                        match value.#id_field_ident {
+                            Some(#id_field_ident) => {
+                                let splitted = #id_field_ident.split(',').collect::<Vec<&str>>();
+                                let mut bigserial_vec = Vec::with_capacity(splitted.len());
+                                for splitted_element in splitted {
+                                    match crate::server::postgres::bigserial::Bigserial::try_from(splitted_element) {
+                                        Ok(bigserial) => {
+                                            bigserial_vec.push(bigserial);
+                                        }
+                                        Err(e) => {
+                                            return Err(
+                                                #delete_query_try_from_url_encoding_error_named_camel_case_token_stream::BigserialTryFromStr {
+                                                    bigserial_try_from_str: e,
+                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                },
+                                            );
+                                        }
+                                    }
+                                }
+                                match bigserial_vec.is_empty() {
+                                    true => {
+                                        return Err(#delete_query_try_from_url_encoding_error_named_camel_case_token_stream::IdIsEmpty {
+                                            id_is_empty: std::string::String::from("id is empty"),
+                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                        });
+                                    }
+                                    false => Some(bigserial_vec),
+                                }
+                            },
+                            None => None,
+                        }
+                    };
+                }
+            };
+            let impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_others_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                true => None,
+                false => {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    Some(quote::quote!{
+                        let #field_ident = { value.#field_ident };
+                    })
+                },
+            });
+            let fields_idents_token_stream = fields_named.iter().map(|field|{
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{#field_ident}
+            });
             quote::quote!{
-                //
-
-                //
+                impl std::convert::TryFrom<#delete_query_for_url_encoding_camel_case_token_stream> for #delete_query_camel_case_token_stream {
+                    type Error = #delete_query_try_from_url_encoding_error_named_camel_case_token_stream;
+                    fn try_from(value: #delete_query_for_url_encoding_camel_case_token_stream) -> Result<Self, Self::Error> {
+                        #impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_id_token_stream
+                        #(#impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_others_token_stream)*
+                        Ok(#delete_query_camel_case_token_stream { #(#fields_idents_token_stream),* })
+                    }
+                }
             }
         };
         // println!("{query_token_stream}");
@@ -2532,6 +2599,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             // #query_token_stream
+            #impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream
             #query_for_url_encoding_token_stream
             #impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_token_stream
             #prepare_and_execute_query_token_stream
