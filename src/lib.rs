@@ -1644,7 +1644,36 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 query_part,
                 false
             );
-            println!("{check_for_none_token_stream}");
+            let parameters_match_token_stream = fields_named.iter().map(|field| {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    &self.#payload_lower_case_token_stream.#field_ident
+                }
+            });
+            //
+            let parameters_match_primary_key_some_other_none_token_stream = fields_named.iter().map(|field| {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                match field_ident == id_field_ident {
+                    true => quote::quote!{Some(#id_field_ident)},
+                    false => quote::quote!{None}
+                }
+            });
+            //
+            let expected_updated_primary_keys_name_token_stream = quote::quote!{expected_updated_primary_keys};
+            let expected_updated_primary_keys_token_stream = {
+                quote::quote!{
+                    #id_field_ident
+                        .iter()
+                        .map(|element| element.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
+                        .collect::<Vec<#id_field_type>>()
+                }
+            };
             //
             let query_string_token_stream = {
                 let additional_parameters_id_modification_token_stream = {
@@ -1811,12 +1840,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_delete_with_body_response_variants_token_stream {
                         #check_for_none_token_stream
-                        match (&self.payload.id, &self.payload.name, &self.payload.color) {
-                            (Some(id), None, None) => {
-                                let expected_updated_primary_keys = {
-                                    id.iter()
-                                        .map(|element| element.to_inner().clone())
-                                        .collect::<Vec<i64>>()
+                        match (#(#parameters_match_token_stream),*) {
+                            (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
+                                let #expected_updated_primary_keys_name_token_stream = {
+                                    #expected_updated_primary_keys_token_stream
                                 };
                                 let query_string = {
                                     format!(
