@@ -688,6 +688,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let rollback_token_stream = quote::quote!{rollback};
     let commit_token_stream = quote::quote!{commit};
     let begin_token_stream = quote::quote!{begin};
+    let use_sqlx_acquire_token_stream = quote::quote!{use sqlx::Acquire};
     let increment_initialization_token_stream = quote::quote!{let mut increment: u64 = 0;};
     let crate_server_postgres_constants_stringified = "crate::server::postgres::constants::";
     let crate_server_postgres_constants_update_name_token_stream = {
@@ -2239,7 +2240,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #binded_query_primary_key_some_other_none_token_stream
                                 #acquire_pool_and_connection_token_stream
                                 let mut #postgres_transaction_token_stream = match {
-                                    use sqlx::Acquire;
+                                    #use_sqlx_acquire_token_stream;
                                     #pg_connection_token_stream.#begin_token_stream()
                                 }
                                 .await
@@ -2378,15 +2379,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                             }
                                                         }
                                                         Err(e) => {
-                                                            return #try_delete_response_variants_token_stream::BindQuery {
-                                                                checked_add: e.into_serialize_deserialize_version(),
-                                                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                            };
+                                                            return #try_delete_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                                         }
                                                     }
                                                 }
                                                 if let Some(value) = &self.query.color {
-                                                    match crate::server::postgres::bind_query::BindQuery::try_increment(
+                                                    match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(
                                                         value,
                                                         &mut increment,
                                                     ) {
@@ -2405,14 +2403,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                             }
                                                         }
                                                         Err(e) => {
-                                                            return #try_delete_response_variants_token_stream::BindQuery {
-                                                                checked_add: e.into_serialize_deserialize_version(),
-                                                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                            };
+                                                            return #try_delete_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                                         }
                                                     }
                                                 }
-                                                if let Some(id_vec) = &self.query.id {
+                                                if let Some(id) = &self.query.id {
                                                     if let false = additional_parameters.is_empty() {
                                                         additional_parameters.push_str(&format!(
                                                             " {}",
@@ -2424,8 +2419,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                         crate::server::postgres::constants::IN_NAME,
                                                         {
                                                             let mut additional_parameters = std::string::String::default();
-                                                            for element in id_vec {
-                                                                match crate::server::postgres::bind_query::BindQuery::try_increment(
+                                                            for element in id {
+                                                                match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(
                                                                     element,
                                                                     &mut increment,
                                                                 ) {
@@ -2433,10 +2428,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                                         additional_parameters.push_str(&format!("${increment},"));
                                                                     }
                                                                     Err(e) => {
-                                                                        return #try_delete_response_variants_token_stream::BindQuery {
-                                                                            checked_add: e.into_serialize_deserialize_version(),
-                                                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                                        };
+                                                                        return #try_delete_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                                                     }
                                                                 }
                                                             }
@@ -4323,7 +4315,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         #acquire_pool_and_connection_token_stream
                         let mut #postgres_transaction_token_stream = match {
-                            use sqlx::Acquire;
+                            #use_sqlx_acquire_token_stream;
                             #pg_connection_token_stream.#begin_token_stream()
                         }
                         .await
