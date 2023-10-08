@@ -2041,8 +2041,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 false
             );
             // println!("{check_for_none_token_stream}");
-            //
-            // &self.#query_lower_case_token_stream.id, &self.#query_lower_case_token_stream.name, &self.#query_lower_case_token_stream.color
             let parameters_match_token_stream = fields_named.iter().map(|field| {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
@@ -2052,7 +2050,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &self.#query_lower_case_token_stream.#field_ident
                 }
             });
-            //
+            //Some(id), None, None
+            let parameters_match_primary_key_some_other_none_token_stream = fields_named.iter().map(|field| {
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                match field_ident == id_field_ident {
+                    true => quote::quote!{Some(#id_field_ident)},
+                    false => quote::quote!{None}
+                }
+            });
             let query_string_token_stream = {
                 let additional_parameters_modification_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                     true => None,
@@ -2163,7 +2171,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #try_delete_response_variants_token_stream {
                         #check_for_none_token_stream
                         match (#(#parameters_match_token_stream),*) {
-                            (Some(id), None, None) => {
+                            (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
                                 println!("{id:#?}");
                                 let expected_updated_primary_keys = id
                                     .iter()
