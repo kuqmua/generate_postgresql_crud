@@ -1959,6 +1959,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        let impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream = {
+            quote::quote!{
+                //
+
+                //
+            }
+        };
         // println!("{query_token_stream}");
         let query_for_url_encoding_token_stream = {
             let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.iter().map(|field|{
