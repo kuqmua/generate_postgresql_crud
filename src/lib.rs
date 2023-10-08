@@ -1923,13 +1923,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             try_delete_response_variants_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_delete_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        //
+        let delete_query_try_from_url_encoding_error_named_camel_case_token_stream = {
+            let delete_query_try_from_url_encoding_error_named_camel_case_stringified = format!("{delete_name_camel_case_stringified}{query_camel_case_stringified}{try_camel_case_stringified}{from_camel_case_stringified}{url_encoding_camel_case_stringified}{error_named_camel_case_stringified}");
+            delete_query_try_from_url_encoding_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_query_try_from_url_encoding_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         let prepare_and_execute_query_error_token_stream = {
             let error_path_stringified = format!("{try_camel_case_stringified}{delete_name_camel_case_stringified}");
             error_path_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        //
         let parameters_token_stream = {
             quote::quote!{
                 #parameters_derive_token_stream
@@ -1940,6 +1943,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{parameters_token_stream}");
         let query_token_stream = {
+            let query_id_field_token_stream = quote::quote!{
+                pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>, //there is an alternative BigserialIds but its not worth to migrate to it coz planing to migrate to uuid v7
+            };
             let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
                 false => {
@@ -1956,16 +1962,29 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #query_derive_token_stream
                 pub struct #delete_query_camel_case_token_stream {
+                    #query_id_field_token_stream
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
         };
+        // println!("{query_token_stream}");
+        let delete_query_try_from_url_encoding_error_named_token_stream = quote::quote!{
+            #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+            pub enum #delete_query_try_from_url_encoding_error_named_camel_case_token_stream {
+                IdIsEmpty {
+                    #[eo_display_with_serialize_deserialize]
+                    id_is_empty: std::string::String,
+                    #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                },
+                BigserialTryFromStr {
+                    #[eo_error_occurence]
+                    bigserial_try_from_str: crate::server::postgres::bigserial::BigserialTryFromStrErrorNamed,//todo
+                    #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                },
+            }
+        };
+        // println!("{delete_query_try_from_url_encoding_error_named_token_stream}");
         let impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream = {
-            let delete_query_try_from_url_encoding_error_named_camel_case_token_stream = {
-                let delete_query_try_from_url_encoding_error_named_camel_case_stringified = format!("{delete_name_camel_case_stringified}{query_camel_case_stringified}{try_camel_case_stringified}{from_camel_case_stringified}{url_encoding_camel_case_stringified}{error_named_camel_case_stringified}");
-                delete_query_try_from_url_encoding_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_query_try_from_url_encoding_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
             let impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_id_token_stream = {
                 quote::quote!{
                     let #id_field_ident = {
@@ -2033,7 +2052,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        // println!("{query_token_stream}");
+        // println!("{impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream}");
         let query_for_url_encoding_token_stream = {
             let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.iter().map(|field|{
                 let field_ident = field.ident.clone()
@@ -2100,7 +2119,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &from_log_and_return_error_token_stream,
                 &pg_connection_token_stream
             );
-            let prepare_and_execute_query_response_variants_token_stream = &try_delete_response_variants_token_stream;
+            // let prepare_and_execute_query_response_variants_token_stream = &try_delete_response_variants_token_stream;
             let query_part = crate::check_for_none::QueryPart::QueryParameters;
             let check_for_none_token_stream = crate::check_for_none::check_for_none(
                 &fields_named,
@@ -2598,7 +2617,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
-            // #query_token_stream
+            #query_token_stream
+            #delete_query_try_from_url_encoding_error_named_token_stream
             #impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream
             #query_for_url_encoding_token_stream
             #impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_token_stream
@@ -4531,76 +4551,76 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-enum Operation {
-    // CreateBatch,
-    // Create,
-    DeleteById,
-    // DeleteWithBody,//+
-    // Delete,//+
-    // ReadById,
-    // ReadWithBody,//+
-    // Read,//+
-    UpdateById,
-    // Update//+
-}
+// enum Operation {
+//     // CreateBatch,
+//     // Create,
+//     DeleteById,
+//     // DeleteWithBody,//+
+//     // Delete,//+
+//     // ReadById,
+//     // ReadWithBody,//+
+//     // Read,//+
+//     UpdateById,
+//     // Update//+
+// }
 
-impl std::fmt::Display for Operation {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            // Self::CreateBatch => write!(f, "create_batch"),
-            // Self::Create => write!(f, "create"),
-            Self::DeleteById => write!(f, "delete_by_id"),
-            // Self::DeleteWithBody => write!(f, "delete_with_body"),
-            // Self::Delete => write!(f, "delete"),
-            // Self::ReadById => write!(f, "read_by_id"),
-            // Self::ReadWithBody => write!(f, "read_with_body"),
-            // Self::Read => write!(f, "read"),
-            Self::UpdateById => write!(f, "update_by_id"),
-            // Self::Update => write!(f, "update"),
-        }
-    }
-}
+// impl std::fmt::Display for Operation {
+//     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+//         match self {
+//             // Self::CreateBatch => write!(f, "create_batch"),
+//             // Self::Create => write!(f, "create"),
+//             Self::DeleteById => write!(f, "delete_by_id"),
+//             // Self::DeleteWithBody => write!(f, "delete_with_body"),
+//             // Self::Delete => write!(f, "delete"),
+//             // Self::ReadById => write!(f, "read_by_id"),
+//             // Self::ReadWithBody => write!(f, "read_with_body"),
+//             // Self::Read => write!(f, "read"),
+//             Self::UpdateById => write!(f, "update_by_id"),
+//             // Self::Update => write!(f, "update"),
+//         }
+//     }
+// }
 
 
-fn generate_create_or_replace_function_token_stream(
-    ident_lower_case_stringified: &std::string::String,
-    operation: &crate::Operation,
-    proc_macro_name_ident_stringified: &std::string::String,
-    fields_named: &syn::punctuated::Punctuated<syn::Field, syn::token::Comma>,
-    id_field: &syn::Field,
-    payload_lower_case_token_stream: &proc_macro2::TokenStream
-) -> proc_macro2::TokenStream {
-    let create_or_replace_function_name_original_token_stream = {
-        let create_or_replace_function_name_original_stringified =
-            format!("\"{ident_lower_case_stringified}_{operation}\"");
-        create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_name_original_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
-    let create_or_replace_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == id_field {
-        true => None,
-        false => {
-            let field_ident = field.ident.clone()
-                .unwrap_or_else(|| {
-                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                });
-            let format_value_token_stream = {
-                let format_value_stringified = format!("\"_{field_ident}\"");
-                format_value_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
-            Some(quote::quote!{
-                if self.#payload_lower_case_token_stream.#field_ident.is_some() {
-                    value.push_str(&format!(#format_value_token_stream));
-                }
-            })
-        },
-    });
-    quote::quote! {
-        let mut value = std::string::String::from(#create_or_replace_function_name_original_token_stream);
-        #(#create_or_replace_function_name_additions_token_stream)*
-        value
-    }
-}
+// fn generate_create_or_replace_function_token_stream(
+//     ident_lower_case_stringified: &std::string::String,
+//     operation: &crate::Operation,
+//     proc_macro_name_ident_stringified: &std::string::String,
+//     fields_named: &syn::punctuated::Punctuated<syn::Field, syn::token::Comma>,
+//     id_field: &syn::Field,
+//     payload_lower_case_token_stream: &proc_macro2::TokenStream
+// ) -> proc_macro2::TokenStream {
+//     let create_or_replace_function_name_original_token_stream = {
+//         let create_or_replace_function_name_original_stringified =
+//             format!("\"{ident_lower_case_stringified}_{operation}\"");
+//         create_or_replace_function_name_original_stringified.parse::<proc_macro2::TokenStream>()
+//         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_or_replace_function_name_original_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+//     };
+//     let create_or_replace_function_name_additions_token_stream = fields_named.iter().filter_map(|field|match field == id_field {
+//         true => None,
+//         false => {
+//             let field_ident = field.ident.clone()
+//                 .unwrap_or_else(|| {
+//                     panic!("{proc_macro_name_ident_stringified} field.ident is None")
+//                 });
+//             let format_value_token_stream = {
+//                 let format_value_stringified = format!("\"_{field_ident}\"");
+//                 format_value_stringified.parse::<proc_macro2::TokenStream>()
+//                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {format_value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+//             };
+//             Some(quote::quote!{
+//                 if self.#payload_lower_case_token_stream.#field_ident.is_some() {
+//                     value.push_str(&format!(#format_value_token_stream));
+//                 }
+//             })
+//         },
+//     });
+//     quote::quote! {
+//         let mut value = std::string::String::from(#create_or_replace_function_name_original_token_stream);
+//         #(#create_or_replace_function_name_additions_token_stream)*
+//         value
+//     }
+// }
 
 // `DO` blocks cannot use bound parameters.  If you need to pass in values then you can create a temporary function and call that instead, though it's a bit more of a hassle.
 
