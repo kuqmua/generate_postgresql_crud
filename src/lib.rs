@@ -1961,21 +1961,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{query_token_stream}");
         let query_for_url_encoding_token_stream = {
-            let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    Some(quote::quote!{
-                        pub #field_ident: Option<std::string::String>
-                    })
-                },
+            let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.iter().map(|field|{
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    pub #field_ident: Option<std::string::String>
+                }
             });
             quote::quote!{
                 #[derive(Debug, serde::Serialize, serde::Deserialize)]
-                struct #delete_query_for_url_encoding_camel_case_token_stream {
+                pub struct #delete_query_for_url_encoding_camel_case_token_stream {
                     #(#fields_for_url_encoding_with_excluded_id_token_stream),*
                 }
             }
@@ -2531,7 +2528,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             // #query_token_stream
-            // #query_for_url_encoding_token_stream
+            #query_for_url_encoding_token_stream
             // #into_url_encoding_version_token_stream
             #prepare_and_execute_query_token_stream
             #try_delete_error_named_token_stream
