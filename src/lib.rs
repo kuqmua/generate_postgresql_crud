@@ -1608,7 +1608,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let check_for_all_none_token_stream = crate::check_for_all_none::check_for_all_none(
+            let check_for_all_none_token_stream_excluding_primary_key = crate::check_for_all_none::check_for_all_none_excluding_primary_key(
                 &fields_named,
                 &id_field,
                 &proc_macro_name_ident_stringified,
@@ -1762,7 +1762,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_delete_with_body_response_variants_token_stream
                     {
-                        #check_for_all_none_token_stream
+                        #check_for_all_none_token_stream_excluding_primary_key
                         let #query_string_name_token_stream = #query_string_token_stream;
                         // println!("{query_string}");
                         let #binded_query_name_token_stream = {
@@ -2030,38 +2030,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let prepare_and_execute_query_response_variants_token_stream = &try_delete_response_variants_token_stream;
             let query_part = crate::check_for_all_none::QueryPart::QueryParameters;
-            let check_for_all_none_token_stream = {
-                let (none_elements, match_elements) = {
-                    let fields_named_len = fields_named.len();
-                    fields_named.iter().enumerate().fold(
-                        (
-                            std::string::String::default(),
-                            std::string::String::default()
-                        ), |mut acc, (index, field)| {
-                            let field_ident = field.ident.clone()
-                                .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                                });
-                            let possible_dot_space = match (index + 1) == fields_named_len {
-                                true => "",
-                                false => dot_space,
-                            };
-                            acc.0.push_str(&format!("None{possible_dot_space}"));
-                            acc.1.push_str(&format!("&self.{query_part}.{field_ident}{possible_dot_space}"));
-                            acc
-                        })
-                };
-                let none_elements_token_stream = none_elements.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {none_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-                let match_elements_token_stream = match_elements.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {match_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-                let response_variant_token_stream = query_part.get_response_variant();
-                quote::quote!{
-                    if let (#none_elements_token_stream) = (#match_elements_token_stream) {
-                        return #prepare_and_execute_query_response_variants_token_stream::#response_variant_token_stream;
-                    }
-                }
-            };
+            let check_for_all_none_token_stream = crate::check_for_all_none::check_for_all_none(
+                &fields_named,
+                &id_field,
+                &proc_macro_name_ident_stringified,
+                dot_space,
+                &try_delete_response_variants_token_stream,
+                query_part
+            );
             // println!("{check_for_all_none_token_stream}");
             let query_string_token_stream = {
                 let additional_parameters_modification_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
@@ -3886,7 +3862,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let check_for_all_none_token_stream = crate::check_for_all_none::check_for_all_none(
+            let check_for_all_none_token_stream_excluding_primary_key = crate::check_for_all_none::check_for_all_none_excluding_primary_key(
                 &fields_named,
                 &id_field,
                 &proc_macro_name_ident_stringified,
@@ -4010,7 +3986,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_update_by_id_response_variants_token_stream
                     {
-                        #check_for_all_none_token_stream
+                        #check_for_all_none_token_stream_excluding_primary_key
                         let #query_string_name_token_stream = {
                             #query_string_token_stream
                         };
