@@ -2050,7 +2050,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &self.#query_lower_case_token_stream.#field_ident
                 }
             });
-            //Some(id), None, None
             let parameters_match_primary_key_some_other_none_token_stream = fields_named.iter().map(|field| {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
@@ -2115,6 +2114,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 }
             };
+            let binded_query_primary_key_some_other_none_token_stream = {
+                quote::quote!{
+                    let #binded_query_name_token_stream = {
+                        let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
+                        for element in #id_field_ident {
+                            query = query.bind(element.clone().into_inner());//todo think about - is clone needed?
+                        }
+                        query
+                    };
+                }
+            };
             let binded_query_token_stream = {
                 let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                     true => None,
@@ -2172,12 +2182,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #check_for_none_token_stream
                         match (#(#parameters_match_token_stream),*) {
                             (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
-                                println!("{id:#?}");
-                                let expected_updated_primary_keys = id
+                                let expected_updated_primary_keys = #id_field_ident
                                     .iter()
                                     .map(|element| element.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
-                                    .collect::<Vec<i64>>();
-                                let query_string = format!(
+                                    .collect::<Vec<#id_field_type>>();
+                                let #query_string_name_token_stream = format!(
                                     "{} {} {} {} id {} ({}) returning id",
                                     crate::server::postgres::constants::DELETE_NAME,
                                     crate::server::postgres::constants::FROM_NAME,
@@ -2207,30 +2216,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         additional_parameters
                                     }
                                 );
-                                println!("{}", query_string);
-                                let binded_query = {
-                                    let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
-                                    for element in id {
-                                        query = query.bind(element.clone().into_inner());
-                                    }
-                                    query
-                                };
-                                let mut pool_connection = match app_info_state.get_postgres_pool().acquire().await {
-                                    Ok(value) => value,
-                                    Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                        #error_log_call_token_stream
-                                        return #try_delete_response_variants_token_stream::from(error);
-                                    }
-                                };
-                                let pg_connection = match sqlx::Acquire::acquire(&mut pool_connection).await {
-                                    Ok(value) => value,
-                                    Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                        #error_log_call_token_stream
-                                        return #try_delete_response_variants_token_stream::from(error);
-                                    }
-                                };
+                                println!("{}", #query_string_name_token_stream);
+                                #binded_query_primary_key_some_other_none_token_stream
+                                #acquire_pool_and_connection_token_stream
                                 let mut postgres_transaction = match {
                                     use sqlx::Acquire;
                                     pg_connection.begin()
@@ -2244,7 +2232,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         return #try_delete_response_variants_token_stream::from(error);
                                     }
                                 };
-                                match binded_query.fetch_all(postgres_transaction.as_mut()).await {
+                                match #binded_query_name_token_stream.fetch_all(postgres_transaction.as_mut()).await {
                                     Ok(updated_rows) => {
                                         let typed_updated_rows = {
                                             let mut typed_updated_rows = Vec::with_capacity(updated_rows.len());
@@ -2343,7 +2331,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 }
                             }
                             _ => {
-                                let query_string = format!(
+                                let #query_string_name_token_stream = format!(
                                     "{} {} {} {} {}",
                                     crate::server::postgres::constants::DELETE_NAME,
                                     crate::server::postgres::constants::FROM_NAME,
@@ -2447,9 +2435,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         )
                                     }
                                 );
-                                println!("{}", query_string);
-                                let binded_query = {
-                                    let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                                println!("{}", #query_string_name_token_stream);
+                                let #binded_query_name_token_stream = {
+                                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
                                     if let Some(value) = self.query.name {
                                         query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
                                             value, query,
@@ -2467,23 +2455,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                     query
                                 };
-                                let mut pool_connection = match app_info_state.get_postgres_pool().acquire().await {
-                                    Ok(value) => value,
-                                    Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                        #error_log_call_token_stream
-                                        return #try_delete_response_variants_token_stream::from(error);
-                                    }
-                                };
-                                let pg_connection = match sqlx::Acquire::acquire(&mut pool_connection).await {
-                                    Ok(value) => value,
-                                    Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::from(e);
-                                        #error_log_call_token_stream
-                                        return #try_delete_response_variants_token_stream::from(error);
-                                    }
-                                };
-                                match binded_query.execute(pg_connection.as_mut()).await {
+                                #acquire_pool_and_connection_token_stream
+                                match #binded_query_name_token_stream.execute(#pg_connection_token_stream.as_mut()).await {
                                     Ok(_) => #try_delete_response_variants_token_stream::Desirable(()),
                                     Err(e) => {
                                         let error = #prepare_and_execute_query_error_token_stream::from(e);
