@@ -1,5 +1,5 @@
 mod column_names_factorial;
-mod check_for_all_none;
+mod check_for_none;
 mod acquire_pool_and_connection;
 mod from_log_and_return_error;
 //todo unnest allows to put multiple data(arrays) in sqlx compile time query(brookzerker twitch\youtube tutorial)
@@ -1608,13 +1608,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let check_for_all_none_token_stream_excluding_primary_key = crate::check_for_all_none::check_for_none(
+            let check_for_none_token_stream_excluding_primary_key = crate::check_for_none::check_for_none(
                 &fields_named,
                 &id_field,
                 &proc_macro_name_ident_stringified,
                 dot_space,
                 &try_delete_with_body_response_variants_token_stream,
-                crate::check_for_all_none::QueryPart::Payload,
+                crate::check_for_none::QueryPart::Payload,
                 true
             );
             let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
@@ -1763,7 +1763,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_delete_with_body_response_variants_token_stream
                     {
-                        #check_for_all_none_token_stream_excluding_primary_key
+                        #check_for_none_token_stream_excluding_primary_key
                         let #query_string_name_token_stream = #query_string_token_stream;
                         // println!("{query_string}");
                         let #binded_query_name_token_stream = {
@@ -2030,8 +2030,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &pg_connection_token_stream
             );
             let prepare_and_execute_query_response_variants_token_stream = &try_delete_response_variants_token_stream;
-            let query_part = crate::check_for_all_none::QueryPart::QueryParameters;
-            let check_for_all_none_token_stream = crate::check_for_all_none::check_for_none(
+            let query_part = crate::check_for_none::QueryPart::QueryParameters;
+            let check_for_none_token_stream = crate::check_for_none::check_for_none(
                 &fields_named,
                 &id_field,
                 &proc_macro_name_ident_stringified,
@@ -2040,7 +2040,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 query_part,
                 false
             );
-            // println!("{check_for_all_none_token_stream}");
+            // println!("{check_for_none_token_stream}");
             let query_string_token_stream = {
                 let additional_parameters_modification_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                     true => None,
@@ -2123,7 +2123,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 //         #app_info_state_name_token_stream: &#app_info_state_path,
                 //     ) -> #try_delete_response_variants_token_stream
                 //     {
-                //         #check_for_all_none_token_stream
+                //         #check_for_none_token_stream
                 //         let #query_string_name_token_stream = #query_string_token_stream;
                 //         // println!("{query_string}");
                 //         let #binded_query_name_token_stream = {
@@ -2149,7 +2149,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_delete_response_variants_token_stream {
-                        #check_for_all_none_token_stream
+                        #check_for_none_token_stream
                         match (&self.#query_lower_case_token_stream.id, &self.#query_lower_case_token_stream.name, &self.#query_lower_case_token_stream.color) {
                             (Some(id), None, None) => {
                                 println!("{id:#?}");
@@ -3864,13 +3864,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let check_for_all_none_token_stream_excluding_primary_key = crate::check_for_all_none::check_for_none(
+            let check_for_none_token_stream_excluding_primary_key = crate::check_for_none::check_for_none(
                 &fields_named,
                 &id_field,
                 &proc_macro_name_ident_stringified,
                 dot_space,
                 &try_update_by_id_response_variants_token_stream,
-                crate::check_for_all_none::QueryPart::Payload,
+                crate::check_for_none::QueryPart::Payload,
                 true
             );
             let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
@@ -3989,7 +3989,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_update_by_id_response_variants_token_stream
                     {
-                        #check_for_all_none_token_stream_excluding_primary_key
+                        #check_for_none_token_stream_excluding_primary_key
                         let #query_string_name_token_stream = {
                             #query_string_token_stream
                         };
