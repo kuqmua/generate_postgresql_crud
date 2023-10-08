@@ -1978,8 +1978,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{query_for_url_encoding_token_stream}");
-        let into_url_encoding_version_token_stream = {
-            let fields_into_url_encoding_version_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+        let impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_token_stream = {
+            let impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_id_token_stream = quote::quote!{
+                let #id_field_ident = value.#id_field_ident.map(|value| {
+                    #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(value)
+                });
+            };
+            let impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_others_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
                 false => {
                     let field_ident = field.ident.clone()
@@ -1987,38 +1992,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
                     Some(quote::quote!{
-                        let #field_ident = self.#field_ident.map(|value| {
-                            #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
-                                value,
-                            )
+                        let #field_ident = value.#field_ident.map(|value| {
+                            #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(value)
                         });
                     })
                 },
             });
-            let fields_into_url_encoding_version_constract_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    Some(quote::quote!{
-                        #field_ident
-                    })
-                },
+            let fields_idents_token_stream = fields_named.iter().map(|field|{
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{#field_ident}
             });
             quote::quote!{
-                impl #delete_query_camel_case_token_stream {
-                    fn #into_url_encoding_version_name_token_stream(self) -> #delete_query_for_url_encoding_camel_case_token_stream {
-                        #(#fields_into_url_encoding_version_with_excluded_id_token_stream)*
-                        #delete_query_for_url_encoding_camel_case_token_stream {
-                            #(#fields_into_url_encoding_version_constract_with_excluded_id_token_stream),*
-                        }
+                impl std::convert::From<#delete_query_camel_case_token_stream> for #delete_query_for_url_encoding_camel_case_token_stream {
+                    fn from(value: #delete_query_camel_case_token_stream) -> Self {
+                        #impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_id_token_stream
+                        #(#impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_others_token_stream)*
+                        Self { #(#fields_idents_token_stream),* }
                     }
                 }
             }
         };
-        // println!("{into_url_encoding_version_token_stream}");
+        // println!("{impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_token_stream}");
         let prepare_and_execute_query_token_stream = {
             let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
@@ -2529,7 +2526,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             // #query_token_stream
             #query_for_url_encoding_token_stream
-            // #into_url_encoding_version_token_stream
+            #impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_token_stream
             #prepare_and_execute_query_token_stream
             #try_delete_error_named_token_stream
             #http_request_token_stream
