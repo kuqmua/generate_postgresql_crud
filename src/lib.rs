@@ -2060,6 +2060,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     false => quote::quote!{None}
                 }
             });
+            let expected_updated_primary_keys_name_token_stream = quote::quote!{expected_updated_primary_keys};
+            let expected_updated_primary_keys_token_stream = {
+                quote::quote!{
+                    #id_field_ident
+                        .iter()
+                        .map(|element| element.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
+                        .collect::<Vec<#id_field_type>>()
+                }
+            };
             let query_string_token_stream = {
                 let additional_parameters_modification_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                     true => None,
@@ -2182,10 +2191,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #check_for_none_token_stream
                         match (#(#parameters_match_token_stream),*) {
                             (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
-                                let expected_updated_primary_keys = #id_field_ident
-                                    .iter()
-                                    .map(|element| element.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
-                                    .collect::<Vec<#id_field_type>>();
+                                let #expected_updated_primary_keys_name_token_stream = {
+                                    #expected_updated_primary_keys_token_stream
+                                };
                                 let #query_string_name_token_stream = format!(
                                     "{} {} {} {} id {} ({}) returning id",
                                     crate::server::postgres::constants::DELETE_NAME,
@@ -2221,7 +2229,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #acquire_pool_and_connection_token_stream
                                 let mut #postgres_transaction_token_stream = match {
                                     use sqlx::Acquire;
-                                    pg_connection.begin()
+                                    #pg_connection_token_stream.#begin_token_stream()
                                 }
                                 .await
                                 {
@@ -2237,11 +2245,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         let typed_updated_rows = {
                                             let mut typed_updated_rows = Vec::with_capacity(updated_rows.len());
                                             for updated_row in updated_rows {
-                                                match primary_key_try_from_sqlx_row(&updated_row) {
+                                                match #primary_key_try_from_sqlx_row_name_token_stream(&updated_row) {
                                                     Ok(updated_row_primary_key) => {
                                                         typed_updated_rows.push(updated_row_primary_key);
                                                     }
-                                                    Err(e) => match #postgres_transaction_token_stream.rollback().await {
+                                                    Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                                         Ok(_) => {
                                                             let error = #prepare_and_execute_query_error_token_stream::from(e);
                                                             #error_log_call_token_stream
@@ -2250,10 +2258,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                         Err(rollback_error) => {
                                                             //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
                                                             let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
-                                                                    primary_key_from_row: e,
-                                                                    rollback_error,
-                                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                                };
+                                                                primary_key_from_row: e,
+                                                                rollback_error,
+                                                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                            };
                                                             #error_log_call_token_stream
                                                             return #try_delete_response_variants_token_stream::from(error);
                                                         }
@@ -2265,19 +2273,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         {
                                             let non_existing_primary_keys = {
                                                 let mut non_existing_primary_keys =
-                                                    Vec::with_capacity(expected_updated_primary_keys.len());
-                                                for expected_updated_primary_key in expected_updated_primary_keys {
+                                                    Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
+                                                for element in #expected_updated_primary_keys_name_token_stream {
                                                     if let false =
-                                                        typed_updated_rows.contains(&expected_updated_primary_key)
+                                                        typed_updated_rows.contains(&element)
                                                     {
                                                         non_existing_primary_keys
-                                                            .push(expected_updated_primary_key);
+                                                            .push(element);
                                                     }
                                                 }
                                                 non_existing_primary_keys
                                             };
                                             if let false = non_existing_primary_keys.is_empty() {
-                                                match #postgres_transaction_token_stream.rollback().await {
+                                                match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                                     Ok(_) => {
                                                         let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeys {
                                                             non_existing_primary_keys,
@@ -2298,8 +2306,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 }
                                             }
                                         }
-                                        match #postgres_transaction_token_stream.commit().await {
-                                            Ok(_) => #try_delete_response_variants_token_stream::Desirable(()),
+                                        match #postgres_transaction_token_stream.#commit_token_stream().await {
+                                            Ok(_) => #try_delete_response_variants_token_stream::#desirable_token_stream(()),
                                             Err(e) => {
                                                 //todo  BIG QUESTION - WHAT TO DO IF COMMIT FAILED? INFINITE LOOP TRYING TO COMMIT?
                                                 let error = #prepare_and_execute_query_error_token_stream::CommitFailed {
@@ -2311,7 +2319,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             }
                                         }
                                     }
-                                    Err(e) => match #postgres_transaction_token_stream.rollback().await {
+                                    Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                         Ok(_) => {
                                             let error = #prepare_and_execute_query_error_token_stream::from(e);
                                             #error_log_call_token_stream
@@ -2343,7 +2351,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             {
                                                 #increment_initialization_token_stream
                                                 let mut additional_parameters = std::string::String::default();
-                                                if let Some(value) = &self.query.name {
+                                                if let Some(value) = &self.#query_lower_case_token_stream.name {
                                                     match crate::server::postgres::bind_query::BindQuery::try_increment(
                                                     value,
                                                     &mut increment,
