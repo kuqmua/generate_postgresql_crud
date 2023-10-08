@@ -13,7 +13,7 @@ impl std::fmt::Display for QueryPart {
 }
 
 impl QueryPart {
-    fn get_response_variant(&self) -> proc_macro2::TokenStream {
+    pub fn get_response_variant(&self) -> proc_macro2::TokenStream {
         match self {
             Self::Payload => quote::quote!{
                 NoPayloadFields {
