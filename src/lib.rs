@@ -1713,46 +1713,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             //
             let query_string_token_stream = {
-                let additional_parameters_id_modification_token_stream = {
-                    let query_part_token_stream = {
-                        let query_part_stringified = format!("\"{{prefix}} {id_field_ident} = {{}}({{}}[{{}}])\"");
-                        query_part_stringified.parse::<proc_macro2::TokenStream>()
-                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_part_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                    };
-                    quote::quote!{
-                        if let Some(value) = &self.#payload_lower_case_token_stream.#id_field_ident {
-                            let prefix = match additional_parameters.is_empty() {
-                                true => #crate_server_postgres_constants_where_name_token_stream.to_string(),
-                                false => format!(" {}", #crate_server_postgres_constants_and_name_token_stream),
-                            };
-                            let bind_increments = {
-                                let mut bind_increments = std::string::String::default();
-                                for element in value {
-                                    match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream(
-                                        element,
-                                        &mut increment
-                                    ) {
-                                        Ok(value) => {
-                                            bind_increments.push_str(&format!("{value}, "));
-                                        },
-                                        Err(e) => {
-                                            return #try_delete_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
-                                        },
-                                    }
-                                }
-                                bind_increments.pop();
-                                bind_increments.pop();
-                                bind_increments
-                            };
-                            additional_parameters.push_str(&format!(
-                                #query_part_token_stream,
-                                #crate_server_postgres_constants_any_name_token_stream,
-                                #crate_server_postgres_constants_array_name_token_stream,
-                                bind_increments
-                            ));
-                        }
-                    }
-                };
                 let additional_parameters_modification_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                     true => None,
                     false => {
@@ -1761,60 +1721,86 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                         let handle_token_stream = {
-                            let handle_stringified = format!("\"{field_ident} ~ {{value}} \"");
+                            let handle_stringified = format!("\"{field_ident} = ${{increment}}\"");
                             handle_stringified.parse::<proc_macro2::TokenStream>()
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
                         Some(quote::quote!{
                             if let Some(value) = &self.#payload_lower_case_token_stream.#field_ident {
-                                let prefix = match additional_parameters.is_empty() {
-                                    true => #crate_server_postgres_constants_where_name_token_stream.to_string(),
-                                    false => format!(" {}", #crate_server_postgres_constants_and_name_token_stream),
-                                };
-                                let bind_increments = {
-                                    let mut bind_increments = std::string::String::default();
-                                    for (index, element) in value.iter().enumerate() {
-                                        match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream(
-                                            element,
-                                            &mut increment
-                                        ) {
-                                            Ok(value) => {
-                                                let handle = format!(#handle_token_stream);
-                                                match index == 0 {
-                                                    true => {
-                                                        bind_increments.push_str(&format!("{handle}"));
-                                                    },
-                                                    false => {
-                                                        bind_increments.push_str(&format!("{} {handle}", element.conjuctive_operator));
-                                                    },
-                                                }
+                                match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(
+                                    value,
+                                    &mut increment
+                                ) {
+                                    Ok(_) => {
+                                        let handle = format!(#handle_token_stream);
+                                        match additional_parameters.is_empty() {
+                                            true => {
+                                                additional_parameters.push_str(&handle);
                                             },
-                                            Err(e) => {
-                                                return #try_delete_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                                            false => {
+                                                additional_parameters.push_str(&format!(" AND {handle}"));
                                             },
                                         }
-                                    }
-                                    if let false = bind_increments.is_empty() {
-                                        bind_increments.pop();
-                                    }
-                                    bind_increments
-                                };
-                                additional_parameters.push_str(&format!("{prefix} {bind_increments}"));
+                                    },
+                                    Err(e) => {
+                                        return #try_delete_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                                    },
+                                }
                             }
                         })
                     },
                 });
+                let additional_parameters_id_modification_token_stream = {
+                    let handle_token_stream = {
+                        let handle_stringified = format!("\" {id_field_ident} {{}} ({{}})\"");
+                        handle_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    quote::quote!{
+                        if let Some(#id_field_ident) = &self.#payload_lower_case_token_stream.#id_field_ident {
+                            if let false = additional_parameters.is_empty() {
+                                additional_parameters.push_str(&format!(
+                                    " {}",
+                                    crate::server::postgres::constants::AND_NAME,
+                                ));
+                            }
+                            additional_parameters.push_str(&format!(
+                                #handle_token_stream,
+                                crate::server::postgres::constants::IN_NAME,
+                                {
+                                    let mut additional_parameters = std::string::String::default();
+                                    for element in #id_field_ident {
+                                        match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(
+                                            element,
+                                            &mut increment,
+                                        ) {
+                                            Ok(_) => {
+                                                additional_parameters.push_str(&format!("${increment},"));
+                                            }
+                                            Err(e) => {
+                                                return #try_delete_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                                            }
+                                        }
+                                    }
+                                    additional_parameters.pop();
+                                    additional_parameters
+                                }
+                            ));
+                        }
+                    }
+                };
                 quote::quote!{
                     format!(
-                        "{} {} {} {}",
-                        #crate_server_postgres_constants_delete_name_token_stream,
-                        #crate_server_postgres_constants_from_name_token_stream,
+                        "{} {} {} {} {}",
+                        crate::server::postgres::constants::DELETE_NAME,
+                        crate::server::postgres::constants::FROM_NAME,
                         ROUTE_NAME,
+                        crate::server::postgres::constants::WHERE_NAME,
                         {
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
-                            #additional_parameters_id_modification_token_stream
                             #(#additional_parameters_modification_token_stream)*
+                            #additional_parameters_id_modification_token_stream
                             additional_parameters
                         }
                     )
@@ -1833,57 +1819,58 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             //
+            // let binded_query_token_stream = {
+            //     let binded_query_modifications_token_stream = fields_named.iter().map(|field|{
+            //         let field_ident = field.ident.clone()
+            //             .unwrap_or_else(|| {
+            //                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
+            //             });
+            //         quote::quote!{
+            //             if let Some(values) = self.#payload_lower_case_token_stream.#field_ident {
+            //                 for value in values {
+            //                     query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
+            //                         value, query,
+            //                     );
+            //                 }
+            //             }
+            //         }
+            //     });
+            //     quote::quote!{
+            //         let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
+            //         #(#binded_query_modifications_token_stream)*
+            //         query
+            //     }
+            // };
             let binded_query_token_stream = {
-                let binded_query_modifications_token_stream = fields_named.iter().map(|field|{
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    quote::quote!{
-                        if let Some(values) = self.#payload_lower_case_token_stream.#field_ident {
-                            for value in values {
-                                query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
-                                    value, query,
-                                );
+                let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                    true => None,
+                    false => {
+                        let field_ident = field.ident.clone()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                            });
+                        Some(quote::quote!{
+                            if let Some(value) = self.#payload_lower_case_token_stream.#field_ident {
+                                query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(value, query);
                             }
+                        })
+                    },
+                });
+                let binded_query_id_modifications_token_stream = quote::quote!{
+                    if let Some(#id_field_ident) = self.#payload_lower_case_token_stream.#id_field_ident {
+                        for element in #id_field_ident {
+                            query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(element, query);
                         }
                     }
-                });
+                };
                 quote::quote!{
                     let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     #(#binded_query_modifications_token_stream)*
+                    #binded_query_id_modifications_token_stream
                     query
                 }
             };
             quote::quote!{
-                // impl #delete_with_body_parameters_camel_case_token_stream {
-                //     pub async fn #prepare_and_execute_query_name_token_stream(
-                //         self,
-                //         #app_info_state_name_token_stream: &#app_info_state_path,
-                //     ) -> #try_delete_with_body_response_variants_token_stream
-                //     {
-                //         #check_for_none_token_stream_excluding_primary_key
-                //         let #query_string_name_token_stream = #query_string_token_stream;
-                //         // println!("{query_string}");
-                //         let #binded_query_name_token_stream = {
-                //             #binded_query_token_stream
-                //         };
-                //         #acquire_pool_and_connection_token_stream
-                //         match #binded_query_name_token_stream
-                //             .execute(#pg_connection_token_stream.as_mut())
-                //             .await
-                //         {
-                //             Ok(_) => {
-                //                 //todo - is need to return rows affected?
-                //                 #try_delete_with_body_response_variants_token_stream::#desirable_token_stream(())
-                //             }
-                //             Err(e) => {
-                //                 #from_log_and_return_error_token_stream
-                //             }
-                //         }
-                //     }
-                // }
-//
                 impl #delete_with_body_parameters_camel_case_token_stream {
                     pub async fn #prepare_and_execute_query_name_token_stream(
                         self,
@@ -1920,7 +1907,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         let typed_updated_rows = {
                                             let mut typed_updated_rows = Vec::with_capacity(updated_rows.len());
                                             for updated_row in updated_rows {
-                                                match primary_key_try_from_sqlx_row(&updated_row) {
+                                                match #primary_key_try_from_sqlx_row_name_token_stream(&updated_row) {
                                                     Ok(updated_row_primary_key) => {
                                                         typed_updated_rows.push(updated_row_primary_key);
                                                     }
@@ -1930,17 +1917,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                                 #from_log_and_return_error_token_stream
                                                             }
                                                             Err(rollback_error) => {
-                                                                let error =
-                                                                    TryDeleteWithBody::PrimaryKeyFromRowAndFailedRollback {
-                                                                        primary_key_from_row: e,
-                                                                        rollback_error,
-                                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                                    };
-                                                                crate :: common :: error_logs_logic :: error_log ::
-                                                            ErrorLog :: error_log(& error, app_info_state.as_ref(),) ;
-                                                                return #try_delete_with_body_response_variants_token_stream::from(
-                                                                    error,
-                                                                );
+                                                                let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
+                                                                    primary_key_from_row: e,
+                                                                    rollback_error,
+                                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                                };
+                                                                #error_log_call_token_stream
+                                                                return #try_delete_with_body_response_variants_token_stream::from(error);
                                                             }
                                                         }
                                                     }
@@ -1960,38 +1943,35 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 non_existing_primary_keys
                                             };
                                             if let false = non_existing_primary_keys.is_empty() {
-                                                match #postgres_transaction_token_stream.rollback().await {
+                                                match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                                     Ok(_) => {
-                                                        let error = TryDeleteWithBody::NonExistingPrimaryKeys {
+                                                        let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeys {
                                                             non_existing_primary_keys,
                                                             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                         };
-                                                        crate::common::error_logs_logic::error_log::ErrorLog::error_log(& error, app_info_state.as_ref(),) ;
+                                                        #error_log_call_token_stream
                                                         return #try_delete_with_body_response_variants_token_stream::from(error);
                                                     }
                                                     Err(e) => {
-                                                        let error = TryDeleteWithBody::NonExistingPrimaryKeysAndFailedRollback {
+                                                        let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
                                                             non_existing_primary_keys,
                                                             rollback_error: e,
                                                             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                         };
-                                                        crate :: common :: error_logs_logic :: error_log ::ErrorLog :: error_log(& error, app_info_state.as_ref());
+                                                        #error_log_call_token_stream
                                                         return #try_delete_with_body_response_variants_token_stream::from(error);
                                                     }
                                                 }
                                             }
                                         }
-                                        match #postgres_transaction_token_stream.commit().await {
+                                        match #postgres_transaction_token_stream.#commit_token_stream().await {
                                             Ok(_) => #try_delete_with_body_response_variants_token_stream::#desirable_token_stream(()),
                                             Err(e) => {
-                                                let error = TryDeleteWithBody::CommitFailed {
+                                                let error = #prepare_and_execute_query_error_token_stream::CommitFailed {
                                                     commit_error: e,
                                                     #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
-                                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                                    &error,
-                                                    app_info_state.as_ref(),
-                                                );
+                                                #error_log_call_token_stream
                                                 #try_delete_with_body_response_variants_token_stream::from(error)
                                             }
                                         }
@@ -2001,15 +1981,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             #from_log_and_return_error_token_stream
                                         }
                                         Err(rollback_error) => {
-                                            let error = TryDeleteWithBody::DeleteAndRollbackFailed {
+                                            let error = #prepare_and_execute_query_error_token_stream::DeleteAndRollbackFailed {
                                                 delete_error: e,
                                                 rollback_error,
                                                 #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                             };
-                                            crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                                &error,
-                                                app_info_state.as_ref(),
-                                            );
+                                            #error_log_call_token_stream
                                             #try_delete_with_body_response_variants_token_stream::from(error)
                                         }
                                     },
@@ -2017,118 +1994,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                             _ => {
                                 let #query_string_name_token_stream = {
-                                    format!(
-                                        "{} {} {} {} {}",
-                                        crate::server::postgres::constants::DELETE_NAME,
-                                        crate::server::postgres::constants::FROM_NAME,
-                                        ROUTE_NAME,
-                                        crate::server::postgres::constants::WHERE_NAME,
-                                        {
-                                            #increment_initialization_token_stream
-                                            let mut additional_parameters = std::string::String::default();
-                                            if let Some(value) = &self.payload.name {
-                                                match crate::server::postgres::bind_query::BindQuery::try_increment(
-                                                    value,
-                                                    &mut increment,
-                                                ) {
-                                                    Ok(_) => {
-                                                        let handle = format!("name = ${increment}");
-                                                        match additional_parameters.is_empty() {
-                                                            true => {
-                                                                additional_parameters.push_str(&handle);
-                                                            }
-                                                            false => {
-                                                                additional_parameters
-                                                                    .push_str(&format!(" AND {handle}"));
-                                                            }
-                                                        }
-                                                    }
-                                                    Err(e) => {
-                                                        return #try_delete_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
-                                                    }
-                                                }
-                                            }
-                                            if let Some(value) = &self.payload.color {
-                                                match crate::server::postgres::bind_query::BindQuery::try_increment(
-                                                    value,
-                                                    &mut increment,
-                                                ) {
-                                                    Ok(_) => {
-                                                        let handle = format!("color = ${increment}");
-                                                        match additional_parameters.is_empty() {
-                                                            true => {
-                                                                additional_parameters.push_str(&handle);
-                                                            }
-                                                            false => {
-                                                                additional_parameters
-                                                                    .push_str(&format!(" AND {handle}"));
-                                                            }
-                                                        }
-                                                    }
-                                                    Err(e) => {
-                                                        return #try_delete_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
-                                                    }
-                                                }
-                                            }
-                                            if let Some(id) = &self.payload.id {
-                                                if let false = additional_parameters.is_empty() {
-                                                    additional_parameters.push_str(&format!(
-                                                        " {}",
-                                                        crate::server::postgres::constants::AND_NAME,
-                                                    ));
-                                                }
-                                                additional_parameters.push_str(& format!
-                                            (" id {} ({})", crate :: server :: postgres :: constants ::
-                                            IN_NAME,
-                                            {
-                                                let mut additional_parameters = std :: string :: String ::
-                                                default() ; for element in id
-                                                {
-                                                    match crate :: server :: postgres :: bind_query :: BindQuery
-                                                    :: try_increment(element, & mut increment,)
-                                                    {
-                                                        Ok(_) =>
-                                                        {
-                                                            additional_parameters.push_str(& format! ("${increment},"))
-                                                            ;
-                                                        } Err(e) =>
-                                                        {
-                                                            return #try_delete_with_body_response_variants_token_stream :: BindQuery
-                                                            {
-                                                                checked_add : e.into_serialize_deserialize_version(),
-                                                                code_occurence : crate :: code_occurence_tufa_common! ()
-                                                            } ;
-                                                        }
-                                                    }
-                                                } additional_parameters.pop() ; additional_parameters
-                                            })) ;
-                                            }
-                                            additional_parameters
-                                        }
-                                    )
+                                    #query_string_token_stream
                                 };
                                 println!("{}", #query_string_name_token_stream);
                                 let #binded_query_name_token_stream = {
-                                    let mut query = sqlx::query::<sqlx::Postgres>(&#query_string_name_token_stream);
-                                    if let Some(value) = self.payload.name {
-                                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                                            value, query,
-                                        );
-                                    }
-                                    if let Some(value) = self.payload.color {
-                                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                                            value, query,
-                                        );
-                                    }
-                                    if let Some(id) = self.payload.id {
-                                        for element in id {
-                                            query =
-                                                crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                                                    element, query,
-                                            );
-                                        }
-                                    }
-                                    query
+                                    #binded_query_token_stream
                                 };
                                 #acquire_pool_and_connection_token_stream
                                 match #binded_query_name_token_stream.execute(#pg_connection_token_stream.as_mut()).await {
