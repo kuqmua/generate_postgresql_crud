@@ -2,6 +2,7 @@ mod column_names_factorial;
 mod check_for_none;
 mod acquire_pool_and_connection;
 mod from_log_and_return_error;
+//todo generate rules and roles
 //todo unnest allows to put multiple data(arrays) in sqlx compile time query(brookzerker twitch\youtube tutorial)
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
