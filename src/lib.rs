@@ -706,17 +706,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let values_name_stringified = "values";
     let delete_name_stringified = "delete";
     let where_name_stringified = "where";
-    let crate_server_postgres_constants_where_name_token_stream = {
-        let crate_server_postgres_constants_where_name_stringified = format!("{crate_server_postgres_constants_stringified}WHERE_NAME");
-        crate_server_postgres_constants_where_name_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_where_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    let where_name_qoutes_token_stream = {
+        let where_name_qoutes_stringified = format!("\"{where_name_stringified}\"");
+        where_name_qoutes_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {where_name_qoutes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let and_name_stringified = "and";
-    let crate_server_postgres_constants_and_name_token_stream = {
-        let crate_server_postgres_constants_and_name_stringified = format!("{crate_server_postgres_constants_stringified}AND_NAME");
-        crate_server_postgres_constants_and_name_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_and_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
     let any_name_stringified = "any";
     let crate_server_postgres_constants_any_name_token_stream = {
         let crate_server_postgres_constants_any_name_stringified = format!("{crate_server_postgres_constants_stringified}ANY_NAME");
@@ -1381,15 +1376,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {{}} {{}} \"");//todo where
+                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {{}} {where_name_stringified} \"");//todo where
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote!{
                     let mut query = format!(
                         #handle_token_stream,
-                        ROUTE_NAME,
-                        #crate_server_postgres_constants_where_name_token_stream,
+                        ROUTE_NAME
                     );
                     #additional_parameters_id_modification_token_stream
                     query.push_str(&format!(#returning_id_quotes_token_stream));
@@ -2898,7 +2892,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let query_string_token_stream = {
                 let query_token_stream = {
-                    let query_stringified = format!("\"{{}} {{}} {from_name_stringified} {{}} {{}} {id_field_ident} = $1\"");
+                    let query_stringified = format!("\"{{}} {{}} {from_name_stringified} {{}} {where_name_stringified} {id_field_ident} = $1\"");
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -2907,8 +2901,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #query_token_stream,
                         #crate_server_postgres_constants_select_name_token_stream,
                         crate::server::postgres::generate_query::GenerateQuery::generate_query(&#select_token_stream),
-                        ROUTE_NAME,
-                        #crate_server_postgres_constants_where_name_token_stream,
+                        ROUTE_NAME
                     )
                 }
             };
@@ -3159,11 +3152,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         query_part_stringified.parse::<proc_macro2::TokenStream>()
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_part_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
+                    let prefix_false_handle_token_stream = {
+                        let prefix_false_handle_stringified = format!("\" {and_name_stringified}\"");
+                        prefix_false_handle_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {prefix_false_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
                     quote::quote!{
                         if let Some(value) = &self.#payload_lower_case_token_stream.#id_field_ident {
                             let prefix = match additional_parameters.is_empty() {
-                                true => #crate_server_postgres_constants_where_name_token_stream.to_string(),
-                                false => format!(" {}", #crate_server_postgres_constants_and_name_token_stream),
+                                true => #where_name_qoutes_token_stream,
+                                false => #prefix_false_handle_token_stream,
                             };
                             let bind_increments = {
                                 let mut bind_increments = std::string::String::default();
@@ -3207,11 +3205,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             handle_stringified.parse::<proc_macro2::TokenStream>()
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
+                        let prefix_false_handle_token_stream = {
+                            let prefix_false_handle_stringified = format!("\" {and_name_stringified}\"");
+                            prefix_false_handle_stringified.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {prefix_false_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        };
                         Some(quote::quote!{
                             if let Some(value) = &self.#payload_lower_case_token_stream.#field_ident {
                                 let prefix = match additional_parameters.is_empty() {
-                                    true => #crate_server_postgres_constants_where_name_token_stream.to_string(),
-                                    false => format!(" {}", #crate_server_postgres_constants_and_name_token_stream),
+                                    true => #where_name_qoutes_token_stream,
+                                    false => #prefix_false_handle_token_stream,
                                 };
                                 let bind_increments = {
                                     let mut bind_increments = std::string::String::default();
@@ -3678,11 +3681,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         handle_stringified.parse::<proc_macro2::TokenStream>()
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
+                    let prefix_false_handle_token_stream = {
+                        let prefix_false_handle_stringified = format!("\" {and_name_stringified}\"");
+                        prefix_false_handle_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {prefix_false_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
                     quote::quote!{
                         if let Some(value) = &self.#query_lower_case_token_stream.#field_ident {
                             let prefix = match additional_parameters.is_empty() {
-                                true => #crate_server_postgres_constants_where_name_token_stream.to_string(),
-                                false => format!(" {}", #crate_server_postgres_constants_and_name_token_stream),
+                                true => #where_name_qoutes_token_stream,
+                                false => #prefix_false_handle_token_stream,
                             };
                             let value = match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream(
                                 value,
