@@ -717,11 +717,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let select_name_stringified = "select";
     let order_by_name_stringified = "order by";
     let limit_name_stringified = "limit";
-    let crate_server_postgres_constants_limit_name_token_stream = {
-        let crate_server_postgres_constants_limit_name_stringified = format!("{crate_server_postgres_constants_stringified}LIMIT_NAME");
-        crate_server_postgres_constants_limit_name_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_limit_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
+    // let crate_server_postgres_constants_limit_name_token_stream = {
+    //     let crate_server_postgres_constants_limit_name_stringified = format!("{crate_server_postgres_constants_stringified}LIMIT_NAME");
+    //     crate_server_postgres_constants_limit_name_stringified.parse::<proc_macro2::TokenStream>()
+    //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_limit_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    // };
     let offset_name_stringified = "offset";
     let crate_server_postgres_constants_offset_name_token_stream = {
         let crate_server_postgres_constants_offset_name_stringified = format!("{crate_server_postgres_constants_stringified}OFFSET_NAME");
@@ -3236,6 +3236,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     additional_parameters_order_by_handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {additional_parameters_order_by_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
+                let additional_parameters_limit_handle_token_stream = {
+                    let additional_parameters_limit_handle_stringified = format!("\"{{}}{limit_name_stringified} {{}}\"");
+                    additional_parameters_limit_handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {additional_parameters_limit_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
                 quote::quote!{
                     format!(
                         #handle_token_stream,
@@ -3280,8 +3285,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     },
                                 };
                                 additional_parameters.push_str(&format!(
-                                    "{prefix}{} {value}",
-                                    #crate_server_postgres_constants_limit_name_token_stream,
+                                    #additional_parameters_limit_handle_token_stream,
+                                    prefix,
+                                    value
                                 ));
                             }
                             {
@@ -3697,6 +3703,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     additional_parameters_order_by_handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {additional_parameters_order_by_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
+                let additional_parameters_limit_handle_token_stream = {
+                    let additional_parameters_limit_handle_stringified = format!("\"{{}}{limit_name_stringified} {{}}\"");
+                    additional_parameters_limit_handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {additional_parameters_limit_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
                 quote::quote!{
                     format!(
                         #handle_token_stream,
@@ -3737,8 +3748,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     },
                                 };
                                 additional_parameters.push_str(&format!(
-                                    "{prefix}{} {value}",
-                                    #crate_server_postgres_constants_limit_name_token_stream,
+                                    #additional_parameters_limit_handle_token_stream,
+                                    prefix,
+                                    value
                                 ));
                             }
                             if let Some(value) = &self.#query_lower_case_token_stream.offset {
