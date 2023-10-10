@@ -702,17 +702,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let set_name_stringified = "set";
     let from_name_stringified = "from";
     let insert_name_stringified = "insert";
-    // let crate_server_postgres_constants_insert_name_token_stream = {
-    //     let crate_server_postgres_constants_insert_name_stringified = format!("{crate_server_postgres_constants_stringified}INSERT_NAME");
-    //     crate_server_postgres_constants_insert_name_stringified.parse::<proc_macro2::TokenStream>()
-    //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_insert_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    // };
     let into_name_stringified = "into";
-    let crate_server_postgres_constants_into_name_token_stream = {
-        let crate_server_postgres_constants_into_name_stringified = format!("{crate_server_postgres_constants_stringified}INTO_NAME");
-        crate_server_postgres_constants_into_name_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_into_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
+    // let crate_server_postgres_constants_into_name_token_stream = {
+    //     let crate_server_postgres_constants_into_name_stringified = format!("{crate_server_postgres_constants_stringified}INTO_NAME");
+    //     crate_server_postgres_constants_into_name_stringified.parse::<proc_macro2::TokenStream>()
+    //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_into_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    // };
     let values_name_stringified = "values";
     let crate_server_postgres_constants_values_name_token_stream = {
         let crate_server_postgres_constants_values_name_stringified = format!("{crate_server_postgres_constants_stringified}VALUES_NAME");
@@ -864,7 +859,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             acc
                         })
                     };
-                    let query_stringified = format!("\"{insert_name_stringified} {{}} {{}}({column_names}) {{}} {{}}\"");
+                    let query_stringified = format!("\"{insert_name_stringified} {into_name_stringified} {{}}({column_names}) {{}} {{}}\"");
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -895,7 +890,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     format!(
                         #query_token_stream,
-                        #crate_server_postgres_constants_into_name_token_stream,
                         ROUTE_NAME,
                         #crate_server_postgres_constants_values_name_token_stream,
                         {
@@ -1171,14 +1165,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             acc
                         })
                     };
-                    let query_stringified = format!("\"{insert_name_stringified} {{}} {{}}({column_names}) {{}} ({column_increments})\"");
+                    let query_stringified = format!("\"{insert_name_stringified} {into_name_stringified} {{}}({column_names}) {{}} ({column_increments})\"");
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote!{
                     format!(
                         #query_token_stream,
-                        #crate_server_postgres_constants_into_name_token_stream,
                         ROUTE_NAME,
                         #crate_server_postgres_constants_values_name_token_stream
                     )
