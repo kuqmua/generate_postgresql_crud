@@ -715,17 +715,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let any_name_stringified = "any";
     let array_name_stringified = "array";
     let select_name_stringified = "select";
-    // let crate_server_postgres_constants_select_name_token_stream = {
-    //     let crate_server_postgres_constants_select_name_stringified = format!("{crate_server_postgres_constants_stringified}SELECT_NAME");
-    //     crate_server_postgres_constants_select_name_stringified.parse::<proc_macro2::TokenStream>()
-    //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_select_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    // };
-    let order_by_name_stringified = "order_by";
-    let crate_server_postgres_constants_order_by_name_token_stream = {
-        let crate_server_postgres_constants_order_by_name_stringified = format!("{crate_server_postgres_constants_stringified}ORDER_BY_NAME");
-        crate_server_postgres_constants_order_by_name_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_constants_order_by_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
+    let order_by_name_stringified = "order by";
     let limit_name_stringified = "limit";
     let crate_server_postgres_constants_limit_name_token_stream = {
         let crate_server_postgres_constants_limit_name_stringified = format!("{crate_server_postgres_constants_stringified}LIMIT_NAME");
@@ -3241,6 +3231,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
+                let additional_parameters_order_by_handle_token_stream = {
+                    let additional_parameters_order_by_handle_stringified = format!("\"{{}}{order_by_name_stringified} {{}} {{}}\"");
+                    additional_parameters_order_by_handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {additional_parameters_order_by_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
                 quote::quote!{
                     format!(
                         #handle_token_stream,
@@ -3264,9 +3259,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     None => crate::server::postgres::order::Order::default().to_string(),
                                 };
                                 additional_parameters.push_str(&format!(
-                                    "{prefix}{} {} {order_stringified}",
-                                    #crate_server_postgres_constants_order_by_name_token_stream,
-                                    value.column
+                                    #additional_parameters_order_by_handle_token_stream,
+                                    prefix,
+                                    value.column,
+                                    order_stringified
                                 ));
                             }
                             {
@@ -3350,7 +3346,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #try_read_with_body_response_variants_token_stream
                     {
                         let #query_string_name_token_stream = #query_string_token_stream;
-                        // println!("{query_string}");
+                        println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
                         };
@@ -3696,6 +3692,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
+                let additional_parameters_order_by_handle_token_stream = {
+                    let additional_parameters_order_by_handle_stringified = format!("\"{{}}{order_by_name_stringified} {{}} {{}}\"");
+                    additional_parameters_order_by_handle_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {additional_parameters_order_by_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
                 quote::quote!{
                     format!(
                         #handle_token_stream,
@@ -3715,9 +3716,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     None => crate::server::postgres::order::Order::default().to_string(),
                                 };
                                 additional_parameters.push_str(&format!(
-                                    "{prefix}{} {} {order_stringified}",
-                                    #crate_server_postgres_constants_order_by_name_token_stream,
-                                    value.0.column
+                                    #additional_parameters_order_by_handle_token_stream,
+                                    prefix,
+                                    value.0.column,
+                                    order_stringified
                                 ));
                             }
                             {
