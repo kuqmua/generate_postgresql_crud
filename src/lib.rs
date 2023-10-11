@@ -8,6 +8,8 @@ mod from_log_and_return_error;
 //todo authorization for returning concrete error or just minimal info(user role)
 //todo generate rules and roles
 //todo unnest allows to put multiple data(arrays) in sqlx compile time query(brookzerker twitch\youtube tutorial)
+//todo refactor scope visibility variables {}
+//todo unique(meaning not primary key unique column) and nullable support
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
     attributes(
@@ -682,7 +684,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let desirable_token_stream = quote::quote!{Desirable};
     let query_string_name_token_stream = quote::quote!{query_string};
     let binded_query_name_token_stream = quote::quote!{binded_query};
-    let postgres_transaction_token_stream = quote::quote!{postgres_transaction_token_stream};
+    let postgres_transaction_token_stream = quote::quote!{postgres_transaction};
     let order_by_token_stream = quote::quote!{order_by};
     let select_token_stream = quote::quote!{select};
     let sqlx_query_sqlx_postgres_token_stream = quote::quote!{sqlx::query::<sqlx::Postgres>};
@@ -696,7 +698,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let begin_token_stream = quote::quote!{begin};
     let use_sqlx_acquire_token_stream = quote::quote!{use sqlx::Acquire};
     let increment_initialization_token_stream = quote::quote!{let mut increment: u64 = 0;};
-    let crate_server_postgres_constants_stringified = "crate::server::postgres::constants::";
+    // let crate_server_postgres_constants_stringified = "crate::server::postgres::constants::";
     let update_name_stringified = "update";
     let as_name_stringified = "as";
     let set_name_stringified = "set";
@@ -1837,18 +1839,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Err(e) => {
                                         #from_log_and_return_error_token_stream
                                     }
-                                };
-                                match #binded_query_name_token_stream
-                                    .fetch_all(#postgres_transaction_token_stream.as_mut())
-                                    .await
-                                {
+                                };//todo fetch instead of fetch_all
+                                match #binded_query_name_token_stream.fetch_all(#postgres_transaction_token_stream.as_mut()).await {
                                     Ok(updated_rows) => {
                                         let typed_updated_rows = {
                                             let mut typed_updated_rows = Vec::with_capacity(updated_rows.len());
                                             for updated_row in updated_rows {
                                                 match #primary_key_try_from_sqlx_row_name_token_stream(&updated_row) {
                                                     Ok(updated_row_primary_key) => {
-                                                        typed_updated_rows.push(updated_row_primary_key);
+                                                        typed_updated_rows.push(updated_row_primary_key);//todo maybe check on bigserial?
                                                     }
                                                     Err(e) => {
                                                         match #postgres_transaction_token_stream.#rollback_token_stream().await {
@@ -2520,7 +2519,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         #from_log_and_return_error_token_stream
                                     }
                                 };
-                                match #binded_query_name_token_stream.fetch_all(#postgres_transaction_token_stream.as_mut()).await {//todo fetch instead of fetch_all?
+                                //todo fetch instead of fetch_all
+                                match #binded_query_name_token_stream.fetch_all(#postgres_transaction_token_stream.as_mut()).await {
                                     Ok(updated_rows) => {
                                         let typed_updated_rows = {
                                             let mut typed_updated_rows = Vec::with_capacity(updated_rows.len());
@@ -4473,124 +4473,392 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             quote::quote!{
-                impl #update_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                // impl #update_parameters_camel_case_token_stream {
+                //     pub async fn #prepare_and_execute_query_name_token_stream(
+                //         self,
+                //         #app_info_state_name_token_stream: &#app_info_state_path,
+                //     ) -> #try_update_response_variants_token_stream {
+                //         let #query_string_name_token_stream = {
+                //             #query_string_token_stream
+                //         };
+                //         let expected_updated_primary_keys = self
+                //             .#payload_lower_case_token_stream
+                //             .iter()
+                //             .map(|element| element.#id_field_ident.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
+                //             .collect::<Vec<#id_field_type>>();
+                //         let #binded_query_name_token_stream = {
+                //             #binded_query_token_stream
+                //         };
+                //         #acquire_pool_and_connection_token_stream
+                //         let mut #postgres_transaction_token_stream = match {
+                //             #use_sqlx_acquire_token_stream;
+                //             #pg_connection_token_stream.#begin_token_stream()
+                //         }
+                //         .await
+                //         {
+                //             Ok(value) => value,
+                //             Err(e) => {
+                //                 #from_log_and_return_error_token_stream;
+                //             }
+                //         };
+                //         //todo fetch instead of fetch_all
+                //         match #binded_query_name_token_stream.fetch_all(#postgres_transaction_token_stream.as_mut()).await {
+                //             Ok(updated_rows) => {
+                //                 let typed_updated_rows = {
+                //                     let mut typed_updated_rows = Vec::with_capacity(updated_rows.len());
+                //                     for updated_row in updated_rows {
+                //                         match #primary_key_try_from_sqlx_row_name_token_stream(&updated_row) {
+                //                             Ok(updated_row_primary_key) => {
+                //                                 typed_updated_rows.push(updated_row_primary_key);
+                //                             }
+                //                             Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
+                //                                 Ok(_) => {
+                //                                     #from_log_and_return_error_token_stream;
+                //                                 }
+                //                                 Err(rollback_error) => {
+                //                                     //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
+                //                                     let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
+                //                                         primary_key_from_row: e,
+                //                                         rollback_error,
+                //                                         #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                //                                     };
+                //                                     #error_log_call_token_stream
+                //                                     return #try_update_response_variants_token_stream::from(error);
+                //                                 }
+                //                             },
+                //                         }
+                //                     }
+                //                     typed_updated_rows
+                //                 };
+                //                 {
+                //                     let non_existing_primary_keys = {
+                //                         let mut non_existing_primary_keys =
+                //                             Vec::with_capacity(expected_updated_primary_keys.len());
+                //                         for expected_updated_primary_key in expected_updated_primary_keys {
+                //                             if let false = typed_updated_rows.contains(&expected_updated_primary_key) {
+                //                                 non_existing_primary_keys.push(expected_updated_primary_key);
+                //                             }
+                //                         }
+                //                         non_existing_primary_keys
+                //                     };
+                //                     if let false = non_existing_primary_keys.is_empty() {
+                //                         match #postgres_transaction_token_stream.#rollback_token_stream().await {
+                //                             Ok(_) => {
+                //                                 let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeys {
+                //                                     non_existing_primary_keys,
+                //                                     #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream, //todo how to show log from proc_macro
+                //                                 };
+                //                                 #error_log_call_token_stream
+                //                                 return #try_update_response_variants_token_stream::from(error);
+                //                             }
+                //                             Err(e) => {
+                //                                 let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
+                //                                     non_existing_primary_keys,
+                //                                     rollback_error: e,
+                //                                     #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream, //todo how to show log from proc_macro
+                //                                 };
+                //                                 #error_log_call_token_stream
+                //                                 return #try_update_response_variants_token_stream::from(error);
+                //                             }
+                //                         }
+                //                     }
+                //                 }
+                //                 // println!("{:#?}", expected_updated_primary_keys);
+                //                 match #postgres_transaction_token_stream.#commit_token_stream().await {
+                //                     Ok(_) => #try_update_response_variants_token_stream::#desirable_token_stream(()),
+                //                     Err(e) => {
+                //                         //todo  BIG QUESTION - WHAT TO DO IF COMMIT FAILED? INFINITE LOOP TRYING TO COMMIT?
+                //                         let error = #prepare_and_execute_query_error_token_stream::CommitFailed {
+                //                             commit_error: e,
+                //                             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                //                         };
+                //                         #error_log_call_token_stream
+                //                         return #try_update_response_variants_token_stream::from(error); //todo - few variants or return ResponseVariants::from - with return ; and not
+                //                     }
+                //                 }
+                //             }
+                //             Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
+                //                 Ok(_) => {
+                //                     #from_log_and_return_error_token_stream;
+                //                 }
+                //                 Err(rollback_error) => {
+                //                     //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
+                //                     let error = #prepare_and_execute_query_error_token_stream::UpdateAndRollbackFailed {
+                //                         update_error: e,
+                //                         rollback_error,
+                //                         #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                //                     };
+                //                     #error_log_call_token_stream
+                //                     return #try_update_response_variants_token_stream::from(error);
+                //                 }
+                //             },
+                //         }
+                //     }
+                // }
+                //
+                impl UpdateParameters {
+                    pub async fn prepare_and_execute_query(
                         self,
-                        #app_info_state_name_token_stream: &#app_info_state_path,
-                    ) -> #try_update_response_variants_token_stream {
-                        let #query_string_name_token_stream = {
-                            #query_string_token_stream
-                        };
+                        app_info_state : & crate ::repositories_types :: tufa_server :: routes :: api :: cats ::DynArcGetConfigGetPostgresPoolSendSync,
+                    ) -> TryUpdateResponseVariants {
                         let expected_updated_primary_keys = self
-                            .#payload_lower_case_token_stream
+                            .payload
                             .iter()
-                            .map(|element| element.#id_field_ident.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
-                            .collect::<Vec<#id_field_type>>();
-                        let #binded_query_name_token_stream = {
-                            #binded_query_token_stream
+                            .map(|element| element.id.to_inner().clone())
+                            .collect::<Vec<i64>>();
+                        let query_string = {
+                            let mut increment: u64 = 0;
+                            let mut values = std::string::String::default();
+                            for element in &self.payload {
+                                values.push_str(&format!("({}), ", {
+                                    let mut element_value = std::string::String::default();
+                                    match crate :: server :: postgres :: bind_query ::
+                                    BindQuery ::
+                                    try_generate_bind_increments(& element.id, & mut increment)
+                                    {
+                                        Ok(value) =>
+                                        { element_value.push_str(& format! ("{value}, ")) ; },
+                                        Err(e) =>
+                                        {
+                                            return TryUpdateResponseVariants :: BindQuery {
+                                                checked_add : e.into_serialize_deserialize_version(),
+                                                code_occurence : crate :: code_occurence_tufa_common! ()
+                                            } ;
+                                        },
+                                    } ;
+                                    match crate :: server :: postgres :: bind_query ::
+                                    BindQuery ::
+                                    try_generate_bind_increments(& element.name, & mut
+                                    increment)
+                                    {
+                                        Ok(value) =>
+                                        { element_value.push_str(& format! ("{value}, ")) ; },
+                                        Err(e) =>
+                                        {
+                                            return TryUpdateResponseVariants :: BindQuery
+                                            {
+                                                checked_add : e.into_serialize_deserialize_version(),
+                                                code_occurence : crate :: code_occurence_tufa_common! ()
+                                            } ;
+                                        },
+                                    } ;
+                                    match crate :: server :: postgres :: bind_query ::
+                                    BindQuery ::
+                                    try_generate_bind_increments(& element.color, & mut
+                                    increment)
+                                    {
+                                        Ok(value) =>
+                                        { element_value.push_str(& format! ("{value}, ")) ; },
+                                        Err(e) =>
+                                        {
+                                            return TryUpdateResponseVariants :: BindQuery
+                                            {
+                                                checked_add : e.into_serialize_deserialize_version(),
+                                                code_occurence : crate :: code_occurence_tufa_common! ()
+                                            } ;
+                                        },
+                                    } ;
+                                    element_value.pop();
+                                    element_value.pop();
+                                    element_value
+                                }));
+                            }
+                            values.pop();
+                            values.pop();
+                            format!
+                            ("update {} as t set name = data.name, color = data.color from (values {values}) as data(id, name, color) where t.id = data.id returning data.id",
+                            ROUTE_NAME,)
                         };
-                        #acquire_pool_and_connection_token_stream
-                        let mut #postgres_transaction_token_stream = match {
-                            #use_sqlx_acquire_token_stream;
-                            #pg_connection_token_stream.#begin_token_stream()
+                        let binded_query = {
+                            let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
+                            for element in self.payload {
+                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                    element.id, query,
+                                );
+                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                    element.name,
+                                    query,
+                                );
+                                query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
+                                    element.color,
+                                    query,
+                                );
+                            }
+                            query
+                        };
+                        let mut pool_connection = match app_info_state.get_postgres_pool().acquire().await {
+                            Ok(value) => value,
+                            Err(e) => {
+                                let error = TryUpdate::from(e);
+                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                    &error,
+                                    app_info_state.as_ref(),
+                                );
+                                return TryUpdateResponseVariants::from(error);
+                            }
+                        };
+                        let pg_connection = match sqlx::Acquire::acquire(&mut pool_connection).await {
+                            Ok(value) => value,
+                            Err(e) => {
+                                let error = TryUpdate::from(e);
+                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                    &error,
+                                    app_info_state.as_ref(),
+                                );
+                                return TryUpdateResponseVariants::from(error);
+                            }
+                        };
+                        let mut postgres_transaction = match {
+                            use sqlx::Acquire;
+                            pg_connection.begin()
                         }
                         .await
                         {
                             Ok(value) => value,
                             Err(e) => {
-                                #from_log_and_return_error_token_stream;
+                                let error = TryUpdate::from(e);
+                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                    &error,
+                                    app_info_state.as_ref(),
+                                );
+                                return TryUpdateResponseVariants::from(error);
                             }
                         };
-                        match #binded_query_name_token_stream.fetch_all(#postgres_transaction_token_stream.as_mut()).await {//todo maybe instead use fetch while try_next ? 
-                            Ok(updated_rows) => {
-                                let typed_updated_rows = {
-                                    let mut typed_updated_rows = Vec::with_capacity(updated_rows.len());
-                                    for updated_row in updated_rows {
-                                        match #primary_key_try_from_sqlx_row_name_token_stream(&updated_row) {
-                                            Ok(updated_row_primary_key) => {
-                                                typed_updated_rows.push(updated_row_primary_key);
-                                            }
-                                            Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
-                                                Ok(_) => {
-                                                    #from_log_and_return_error_token_stream;
-                                                }
-                                                Err(rollback_error) => {
-                                                    //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
-                                                    let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
-                                                        primary_key_from_row: e,
-                                                        rollback_error,
-                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                    };
-                                                    #error_log_call_token_stream
-                                                    return #try_update_response_variants_token_stream::from(error);
-                                                }
-                                            },
-                                        }
+                        let results_vec = {
+                            let mut results_vec: Vec<sqlx::postgres::PgRow> =
+                                Vec::with_capacity(expected_updated_primary_keys.len());
+                            let mut option_error: Option<sqlx::Error> = None;
+                            {
+                                let mut rows = binded_query.fetch(postgres_transaction.as_mut());
+                                while let (Some(Some(row)), None) = (
+                                    match {
+                                        use futures::TryStreamExt;
+                                        rows.try_next()
                                     }
-                                    typed_updated_rows
-                                };
-                                {
-                                    let non_existing_primary_keys = {
-                                        let mut non_existing_primary_keys =
-                                            Vec::with_capacity(expected_updated_primary_keys.len());
-                                        for expected_updated_primary_key in expected_updated_primary_keys {
-                                            if let false = typed_updated_rows.contains(&expected_updated_primary_key) {
-                                                non_existing_primary_keys.push(expected_updated_primary_key);
-                                            }
+                                    .await
+                                    {
+                                        Ok(value) => Some(value),
+                                        Err(e) => {
+                                            option_error = Some(e);
+                                            None
                                         }
-                                        non_existing_primary_keys
-                                    };
-                                    if let false = non_existing_primary_keys.is_empty() {
-                                        match #postgres_transaction_token_stream.#rollback_token_stream().await {
-                                            Ok(_) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeys {
-                                                    non_existing_primary_keys,
-                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream, //todo how to show log from proc_macro
-                                                };
-                                                #error_log_call_token_stream
-                                                return #try_update_response_variants_token_stream::from(error);
-                                            }
-                                            Err(e) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
-                                                    non_existing_primary_keys,
-                                                    rollback_error: e,
-                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream, //todo how to show log from proc_macro
-                                                };
-                                                #error_log_call_token_stream
-                                                return #try_update_response_variants_token_stream::from(error);
-                                            }
-                                        }
-                                    }
+                                    },
+                                    &option_error,
+                                ) {
+                                    results_vec.push(row);
                                 }
-                                // println!("{:#?}", expected_updated_primary_keys);
-                                match #postgres_transaction_token_stream.#commit_token_stream().await {
-                                    Ok(_) => #try_update_response_variants_token_stream::#desirable_token_stream(()),
-                                    Err(e) => {
-                                        //todo  BIG QUESTION - WHAT TO DO IF COMMIT FAILED? INFINITE LOOP TRYING TO COMMIT?
-                                        let error = #prepare_and_execute_query_error_token_stream::CommitFailed {
-                                            commit_error: e,
-                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                            }
+                            if let Some(e) = option_error {
+                                match postgres_transaction.rollback().await {
+                                    Ok(_) => {
+                                        let error = TryUpdate::from(e);
+                                        crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                            &error,
+                                            app_info_state.as_ref(),
+                                        );
+                                        return TryUpdateResponseVariants::from(error);
+                                    }
+                                    Err(rollback_error) => {
+                                        let error = TryUpdate::UpdateAndRollbackFailed {
+                                            update_error: e,
+                                            rollback_error,
+                                            code_occurence: crate::code_occurence_tufa_common!(),
                                         };
-                                        #error_log_call_token_stream
-                                        return #try_update_response_variants_token_stream::from(error); //todo - few variants or return ResponseVariants::from - with return ; and not
+                                        crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                            &error,
+                                            app_info_state.as_ref(),
+                                        );
+                                        return TryUpdateResponseVariants::from(error);
                                     }
                                 }
                             }
-                            Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
-                                Ok(_) => {
-                                    #from_log_and_return_error_token_stream;
+                            results_vec
+                        };
+                        let primary_key_vec = {
+                            let mut primary_key_vec = Vec::with_capacity(expected_updated_primary_keys.len());
+                            for element in results_vec {
+                                match primary_key_try_from_sqlx_row(&element) {
+                                    Ok(primary_key) => {
+                                        primary_key_vec.push(primary_key);
+                                    }
+                                    Err(e) => match postgres_transaction.rollback().await {
+                                        Ok(_) => {
+                                            let error = TryUpdate::from(e);
+                                            crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                                &error,
+                                                app_info_state.as_ref(),
+                                            );
+                                            return TryUpdateResponseVariants::from(error);
+                                        }
+                                        Err(rollback_error) => {
+                                            let error = TryUpdate::PrimaryKeyFromRowAndFailedRollback {
+                                                primary_key_from_row: e,
+                                                rollback_error,
+                                                code_occurence: crate::code_occurence_tufa_common!(),
+                                            };
+                                            crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                                &error,
+                                                app_info_state.as_ref(),
+                                            );
+                                            return TryUpdateResponseVariants::from(error);
+                                        }
+                                    },
                                 }
-                                Err(rollback_error) => {
-                                    //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
-                                    let error = #prepare_and_execute_query_error_token_stream::UpdateAndRollbackFailed {
-                                        update_error: e,
-                                        rollback_error,
-                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                    };
-                                    #error_log_call_token_stream
-                                    return #try_update_response_variants_token_stream::from(error);
+                            }
+                            primary_key_vec
+                        };
+                        {
+                            let non_existing_primary_keys = {
+                                let mut non_existing_primary_keys =
+                                    Vec::with_capacity(expected_updated_primary_keys.len());
+                                for expected_updated_primary_key in expected_updated_primary_keys {
+                                    if let false = primary_key_vec.contains(&expected_updated_primary_key) {
+                                        non_existing_primary_keys.push(expected_updated_primary_key);
+                                    }
                                 }
-                            },
+                                non_existing_primary_keys
+                            };
+                            if let false = non_existing_primary_keys.is_empty() {
+                                match postgres_transaction.rollback().await {
+                                    Ok(_) => {
+                                        let error = TryUpdate::NonExistingPrimaryKeys {
+                                            non_existing_primary_keys,
+                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                        };
+                                        crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                            &error,
+                                            app_info_state.as_ref(),
+                                        );
+                                        return TryUpdateResponseVariants::from(error);
+                                    }
+                                    Err(e) => {
+                                        let error = TryUpdate::NonExistingPrimaryKeysAndFailedRollback {
+                                            non_existing_primary_keys,
+                                            rollback_error: e,
+                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                        };
+                                        crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                            &error,
+                                            app_info_state.as_ref(),
+                                        );
+                                        return TryUpdateResponseVariants::from(error);
+                                    }
+                                }
+                            }
+                        }
+                        match postgres_transaction.commit().await {
+                            Ok(_) => TryUpdateResponseVariants::Desirable(()),
+                            Err(e) => {
+                                let error = TryUpdate::CommitFailed {
+                                    commit_error: e,
+                                    code_occurence: crate::code_occurence_tufa_common!(),
+                                };
+                                crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                    &error,
+                                    app_info_state.as_ref(),
+                                );
+                                TryUpdateResponseVariants::from(error)
+                            }
                         }
                     }
                 }
