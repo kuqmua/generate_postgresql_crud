@@ -552,6 +552,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         payload_extraction_result_lower_case.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {payload_extraction_result_lower_case} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+    let use_futures_try_stream_ext_token_stream = quote::quote!{use futures::TryStreamExt};
     let query_encode_token_stream = quote::quote!{QueryEncode};
     let url_encoding_token_stream = quote::quote!{url_encoding};
     let serde_urlencoded_ser_error_token_stream = quote::quote!{serde_urlencoded::ser::Error};
@@ -1823,7 +1824,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         let mut rows = #binded_query_name_token_stream.fetch(#postgres_transaction_token_stream.as_mut());
                                         while let (Some(Some(row)), None) = (
                                             match {
-                                                use futures::TryStreamExt;
+                                                #use_futures_try_stream_ext_token_stream;
                                                 rows.try_next()
                                             }
                                             .await
@@ -2514,7 +2515,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         let mut rows = #binded_query_name_token_stream.fetch(#postgres_transaction_token_stream.as_mut());
                                         while let (Some(Some(row)), None) = (
                                             match {
-                                                use futures::TryStreamExt;
+                                                #use_futures_try_stream_ext_token_stream;
                                                 rows.try_next()
                                             }
                                             .await
@@ -3354,7 +3355,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut vec_values = Vec::new();
                             while let Some(row) = {
                                 match {
-                                    use futures::TryStreamExt;
+                                    #use_futures_try_stream_ext_token_stream;
                                     rows.try_next()
                                 }
                                 .await
@@ -3823,7 +3824,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut vec_values = Vec::new();
                             while let Some(row) = {
                                 match {
-                                    use futures::TryStreamExt;
+                                    #use_futures_try_stream_ext_token_stream;
                                     rows.try_next()
                                 }
                                 .await
@@ -4512,7 +4513,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 let mut rows = binded_query.fetch(#postgres_transaction_token_stream.as_mut());
                                 while let (Some(Some(row)), None) = (
                                     match {
-                                        use futures::TryStreamExt;
+                                        #use_futures_try_stream_ext_token_stream;
                                         rows.try_next()
                                     }
                                     .await
