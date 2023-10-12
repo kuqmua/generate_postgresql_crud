@@ -894,7 +894,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #try_create_batch_response_variants_token_stream
                     {
                         let #query_string_name_token_stream = #query_string_token_stream;
-                        // println!("{query_string}");
+                        println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
                         };
@@ -1156,7 +1156,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #try_create_response_variants_token_stream
                     {
                         let #query_string_name_token_stream = #query_string_token_stream;
-                        // println!("{query_string}");
+                        println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
                         };
@@ -1384,6 +1384,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #query_string_name_token_stream = {
                             #query_string_token_stream
                         };
+                        println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
                         };
@@ -1558,15 +1559,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 error_path_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let check_for_none_token_stream_excluding_primary_key = crate::check_for_none::check_for_none(
-                &fields_named,
-                &id_field,
-                &proc_macro_name_ident_stringified,
-                dot_space,
-                &try_delete_with_body_response_variants_token_stream,
-                crate::check_for_none::QueryPart::Payload,
-                true
-            );
             let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                 &prepare_and_execute_query_error_token_stream,
                 &error_log_call_token_stream,
@@ -1613,7 +1605,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let query_string_primary_key_some_other_none_token_stream = {
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{{}} {{}} {{}} {{}} {id_field_ident} {{}} ({{}}) {returning_id_stringified}\"");
+                    let handle_stringified = format!("\"{{}} {{}} {{}} {{}} {id_field_ident} {{}} ({{}}){returning_id_stringified}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -2312,7 +2304,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let query_string_primary_key_some_other_none_token_stream = {
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{{}} {{}} {{}} {{}} {id_field_ident} {{}} ({{}}) {returning_id_stringified}\"");
+                    let handle_stringified = format!("\"{{}} {{}} {{}} {{}} {id_field_ident} {{}} ({{}}){returning_id_stringified}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -4172,6 +4164,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #query_string_name_token_stream = {
                             #query_string_token_stream
                         };
+                        println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
                         };
@@ -4497,6 +4490,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #query_string_name_token_stream = {
                             #query_string_token_stream
                         };
+                        println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
                         };
