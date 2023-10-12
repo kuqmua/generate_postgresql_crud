@@ -1772,16 +1772,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 }
             };
-            let binded_query_primary_key_some_other_none_token_stream = {
-                quote::quote!{
-                    let #binded_query_name_token_stream = {
-                        let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
-                        for element in #id_field_ident {
-                            query = query.bind(element.clone().into_inner());//todo think about - is clone needed?
-                        }
-                        query
-                    };
+            let binded_query_primary_key_some_other_none_token_stream = quote::quote!{
+                let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
+                for element in #id_field_ident {
+                    query = query.bind(element.clone().into_inner());//todo think about - is clone needed?
                 }
+                query
             };
             let binded_query_token_stream = {
                 let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
@@ -1828,7 +1824,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     #query_string_primary_key_some_other_none_token_stream
                                 };
                                 println!("{}", #query_string_name_token_stream);
-                                #binded_query_primary_key_some_other_none_token_stream
+                                let #binded_query_name_token_stream = {
+                                    #binded_query_primary_key_some_other_none_token_stream
+                                };
                                 #acquire_pool_and_connection_token_stream
                                 let mut #postgres_transaction_token_stream = match {
                                     #use_sqlx_acquire_token_stream;
@@ -2453,16 +2451,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 }
             };
-            let binded_query_primary_key_some_other_none_token_stream = {
-                quote::quote!{
-                    let #binded_query_name_token_stream = {
-                        let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
-                        for element in #id_field_ident {
-                            query = query.bind(element.clone().into_inner());//todo think about - is clone needed?
-                        }
-                        query
-                    };
+            let binded_query_primary_key_some_other_none_token_stream = quote::quote!{
+                let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
+                for element in #id_field_ident {
+                    query = query.bind(element.clone().into_inner());//todo think about - is clone needed?
                 }
+                query
             };
             let binded_query_token_stream = {
                 let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
@@ -2509,7 +2503,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     #query_string_primary_key_some_other_none_token_stream
                                 };
                                 println!("{}", #query_string_name_token_stream);
-                                #binded_query_primary_key_some_other_none_token_stream
+                                let #binded_query_name_token_stream = {
+                                    #binded_query_primary_key_some_other_none_token_stream
+                                };
                                 #acquire_pool_and_connection_token_stream
                                 let mut #postgres_transaction_token_stream = match {
                                     #use_sqlx_acquire_token_stream;
