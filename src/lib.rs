@@ -659,6 +659,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let non_existing_primary_keys_and_failedRollback_token_stream = quote::quote!{
+        NonExistingPrimaryKeysAndFailedRollback {
+            #non_existing_primary_keys_name_token_stream,
+            #rollback_error_name_token_stream: e,
+            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+        }
+    };
     let query_encode_variant_token_stream = quote::quote!{
         #query_encode_token_stream {
             #eo_display_attribute_token_stream
@@ -1901,11 +1908,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 return #try_delete_with_body_response_variants_token_stream::from(error);
                                             }
                                             Err(e) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
-                                                    #non_existing_primary_keys_name_token_stream,
-                                                    #rollback_error_name_token_stream: e,
-                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                };
+                                                let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_and_failedRollback_token_stream;
                                                 #error_log_call_token_stream
                                                 return #try_delete_with_body_response_variants_token_stream::from(error);
                                             }
@@ -2589,11 +2592,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 return #try_delete_response_variants_token_stream::from(error);
                                             }
                                             Err(e) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
-                                                    #non_existing_primary_keys_name_token_stream,
-                                                    #rollback_error_name_token_stream: e,
-                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                };
+                                                let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_and_failedRollback_token_stream;
                                                 #error_log_call_token_stream
                                                 return #try_delete_response_variants_token_stream::from(error);
                                             }
@@ -4585,11 +4584,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         return #try_update_response_variants_token_stream::from(error);
                                     }
                                     Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
-                                            #non_existing_primary_keys_name_token_stream,
-                                            #rollback_error_name_token_stream: e,
-                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                        };
+                                        let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_and_failedRollback_token_stream;
                                         #error_log_call_token_stream
                                         return #try_update_response_variants_token_stream::from(error);
                                     }
