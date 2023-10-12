@@ -10,7 +10,6 @@ mod from_log_and_return_error;
 //todo unnest allows to put multiple data(arrays) in sqlx compile time query(brookzerker twitch\youtube tutorial)
 //todo refactor scope visibility variables {}
 //todo unique(meaning not primary key unique column) and nullable support
-//todo fix before returning - two spaces symbols instead of one
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
     attributes(
@@ -1831,8 +1830,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 #from_log_and_return_error_token_stream
                                             }
                                             Err(rollback_error) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::DeleteAndRollbackFailed {
-                                                    delete_error: e,
+                                                let error = #prepare_and_execute_query_error_token_stream::QueryAndRollbackFailed {
+                                                    query_error: e,
                                                     rollback_error,
                                                     #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
@@ -2530,8 +2529,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 #from_log_and_return_error_token_stream
                                             }
                                             Err(rollback_error) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::DeleteAndRollbackFailed {
-                                                    delete_error: e,
+                                                let error = #prepare_and_execute_query_error_token_stream::QueryAndRollbackFailed {
+                                                    query_error: e,
                                                     rollback_error,
                                                     #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
@@ -4537,8 +4536,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                     Err(rollback_error) => {
                                     //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
-                                        let error = #prepare_and_execute_query_error_token_stream::UpdateAndRollbackFailed {
-                                            update_error: e,
+                                        let error = #prepare_and_execute_query_error_token_stream::QueryAndRollbackFailed {
+                                            query_error: e,
                                             rollback_error,
                                             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                         };
