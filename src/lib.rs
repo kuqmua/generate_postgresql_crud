@@ -1857,10 +1857,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 Ok(_) => {
                                                     #from_log_and_return_error_token_stream
                                                 }
-                                                Err(rollback_error) => {
+                                                Err(#rollback_error_name_token_stream) => {
                                                     let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
                                                         primary_key_from_row: e,
-                                                        rollback_error,
+                                                        #rollback_error_name_token_stream,
                                                         #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                     };
                                                     #error_log_call_token_stream
@@ -1895,7 +1895,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             Err(e) => {
                                                 let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
                                                     non_existing_primary_keys,
-                                                    rollback_error: e,
+                                                    #rollback_error_name_token_stream: e,
                                                     #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
                                                 #error_log_call_token_stream
@@ -2552,10 +2552,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 Ok(_) => {
                                                     #from_log_and_return_error_token_stream
                                                 }
-                                                Err(rollback_error) => {
+                                                Err(#rollback_error_name_token_stream) => {
                                                     let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
                                                         primary_key_from_row: e,
-                                                        rollback_error,
+                                                        #rollback_error_name_token_stream,
                                                         #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                     };
                                                     #error_log_call_token_stream
@@ -2590,7 +2590,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             Err(e) => {
                                                 let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
                                                     non_existing_primary_keys,
-                                                    rollback_error: e,
+                                                    #rollback_error_name_token_stream: e,
                                                     #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
                                                 #error_log_call_token_stream
@@ -4555,10 +4555,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         Ok(_) => {
                                             #from_log_and_return_error_token_stream;
                                         }
-                                        Err(rollback_error) => {
+                                        Err(#rollback_error_name_token_stream) => {
                                             let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
                                                 primary_key_from_row: e,
-                                                rollback_error,
+                                                #rollback_error_name_token_stream,
                                                 #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                             };
                                             #error_log_call_token_stream
@@ -4593,7 +4593,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Err(e) => {
                                         let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
                                             non_existing_primary_keys,
-                                            rollback_error: e,
+                                            #rollback_error_name_token_stream: e,
                                             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                         };
                                         #error_log_call_token_stream
