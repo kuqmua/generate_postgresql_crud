@@ -552,6 +552,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         payload_extraction_result_lower_case.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {payload_extraction_result_lower_case} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+    let non_existing_primary_keys_name_token_stream = quote::quote!{non_existing_primary_keys};
     let use_futures_try_stream_ext_token_stream = quote::quote!{use futures::TryStreamExt};
     let query_encode_token_stream = quote::quote!{QueryEncode};
     let url_encoding_token_stream = quote::quote!{url_encoding};
@@ -649,6 +650,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         PrimaryKeyFromRowAndFailedRollback {
             primary_key_from_row: e,
             #rollback_error_name_token_stream,
+            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+        }
+    };
+    let non_existing_primary_keys_token_stream = quote::quote!{
+        NonExistingPrimaryKeys {
+            #non_existing_primary_keys_name_token_stream,
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
@@ -1876,29 +1883,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     primary_key_vec
                                 };
                                 {
-                                    let non_existing_primary_keys = {
-                                        let mut non_existing_primary_keys =
+                                    let #non_existing_primary_keys_name_token_stream = {
+                                        let mut #non_existing_primary_keys_name_token_stream =
                                             Vec::with_capacity(expected_updated_primary_keys.len());
                                         for element in #expected_updated_primary_keys_name_token_stream {
                                             if let false = primary_key_vec.contains(&element) {
-                                                non_existing_primary_keys.push(element);
+                                                #non_existing_primary_keys_name_token_stream.push(element);
                                             }
                                         }
-                                        non_existing_primary_keys
+                                        #non_existing_primary_keys_name_token_stream
                                     };
-                                    if let false = non_existing_primary_keys.is_empty() {
+                                    if let false = #non_existing_primary_keys_name_token_stream.is_empty() {
                                         match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                             Ok(_) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeys {
-                                                    non_existing_primary_keys,
-                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                };
+                                                let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_token_stream;
                                                 #error_log_call_token_stream
                                                 return #try_delete_with_body_response_variants_token_stream::from(error);
                                             }
                                             Err(e) => {
                                                 let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
-                                                    non_existing_primary_keys,
+                                                    #non_existing_primary_keys_name_token_stream,
                                                     #rollback_error_name_token_stream: e,
                                                     #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
@@ -2567,29 +2571,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     primary_key_vec
                                 };
                                 {
-                                    let non_existing_primary_keys = {
-                                        let mut non_existing_primary_keys =
+                                    let #non_existing_primary_keys_name_token_stream = {
+                                        let mut #non_existing_primary_keys_name_token_stream =
                                             Vec::with_capacity(expected_updated_primary_keys.len());
                                         for element in expected_updated_primary_keys {
                                             if let false = primary_key_vec.contains(&element) {
-                                                non_existing_primary_keys.push(element);
+                                                #non_existing_primary_keys_name_token_stream.push(element);
                                             }
                                         }
-                                        non_existing_primary_keys
+                                        #non_existing_primary_keys_name_token_stream
                                     };
-                                    if let false = non_existing_primary_keys.is_empty() {
+                                    if let false = #non_existing_primary_keys_name_token_stream.is_empty() {
                                         match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                             Ok(_) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeys {
-                                                    non_existing_primary_keys,
-                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                };
+                                                let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_token_stream;
                                                 #error_log_call_token_stream
                                                 return #try_delete_response_variants_token_stream::from(error);
                                             }
                                             Err(e) => {
                                                 let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
-                                                    non_existing_primary_keys,
+                                                    #non_existing_primary_keys_name_token_stream,
                                                     #rollback_error_name_token_stream: e,
                                                     #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
@@ -4566,29 +4567,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             primary_key_vec
                         };
                         {
-                            let non_existing_primary_keys = {
-                                let mut non_existing_primary_keys =
+                            let #non_existing_primary_keys_name_token_stream = {
+                                let mut #non_existing_primary_keys_name_token_stream =
                                     Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
                                 for element in #expected_updated_primary_keys_name_token_stream {
                                     if let false = primary_key_vec.contains(&element) {
-                                        non_existing_primary_keys.push(element);
+                                        #non_existing_primary_keys_name_token_stream.push(element);
                                     }
                                 }
-                                non_existing_primary_keys
+                                #non_existing_primary_keys_name_token_stream
                             };
-                            if let false = non_existing_primary_keys.is_empty() {
+                            if let false = #non_existing_primary_keys_name_token_stream.is_empty() {
                                 match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                     Ok(_) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeys {
-                                            non_existing_primary_keys,
-                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                        };
+                                        let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_token_stream;
                                         #error_log_call_token_stream
                                         return #try_update_response_variants_token_stream::from(error);
                                     }
                                     Err(e) => {
                                         let error = #prepare_and_execute_query_error_token_stream::NonExistingPrimaryKeysAndFailedRollback {
-                                            non_existing_primary_keys,
+                                            #non_existing_primary_keys_name_token_stream,
                                             #rollback_error_name_token_stream: e,
                                             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                         };
