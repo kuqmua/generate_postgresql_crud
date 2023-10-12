@@ -644,6 +644,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let primary_key_from_row_and_failed_rollback_token_stream = quote::quote!{
+        PrimaryKeyFromRowAndFailedRollback {
+            primary_key_from_row: e,
+            #rollback_error_name_token_stream,
+            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+        }
+    };
     let query_encode_variant_token_stream = quote::quote!{
         #query_encode_token_stream {
             #eo_display_attribute_token_stream
@@ -1858,11 +1865,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                     #from_log_and_return_error_token_stream
                                                 }
                                                 Err(#rollback_error_name_token_stream) => {
-                                                    let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
-                                                        primary_key_from_row: e,
-                                                        #rollback_error_name_token_stream,
-                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                    };
+                                                    let error = #prepare_and_execute_query_error_token_stream::#primary_key_from_row_and_failed_rollback_token_stream;
                                                     #error_log_call_token_stream
                                                     return #try_delete_with_body_response_variants_token_stream::from(error);
                                                 }
@@ -2553,11 +2556,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                     #from_log_and_return_error_token_stream
                                                 }
                                                 Err(#rollback_error_name_token_stream) => {
-                                                    let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
-                                                        primary_key_from_row: e,
-                                                        #rollback_error_name_token_stream,
-                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                    };
+                                                    let error = #prepare_and_execute_query_error_token_stream::#primary_key_from_row_and_failed_rollback_token_stream;
                                                     #error_log_call_token_stream
                                                     return #try_delete_response_variants_token_stream::from(error);
                                                 }
@@ -4556,11 +4555,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             #from_log_and_return_error_token_stream;
                                         }
                                         Err(#rollback_error_name_token_stream) => {
-                                            let error = #prepare_and_execute_query_error_token_stream::PrimaryKeyFromRowAndFailedRollback {
-                                                primary_key_from_row: e,
-                                                #rollback_error_name_token_stream,
-                                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                            };
+                                            let error = #prepare_and_execute_query_error_token_stream::#primary_key_from_row_and_failed_rollback_token_stream;
                                             #error_log_call_token_stream
                                             return #try_update_response_variants_token_stream::from(error);
                                         }
