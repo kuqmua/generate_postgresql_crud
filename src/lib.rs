@@ -757,6 +757,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let order_by_name_stringified = "order by";
     let limit_name_stringified = "limit";
     let offset_name_stringified = "offset";
+    let in_name_stringified = "in";
     let create_batch_token_stream = {
         let create_batch_name_camel_case_stringified = "CreateBatch";
         let create_batch_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_batch_name_camel_case_stringified.to_string());
@@ -1644,18 +1645,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let query_string_primary_key_some_other_none_token_stream = {
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{{}} {{}} {{}} {{}} {id_field_ident} {{}} ({{}}){returning_id_stringified}\"");
+                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {{}} {where_name_stringified} {id_field_ident} {in_name_stringified} ({{}}){returning_id_stringified}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote!{
                     format!(
                         #handle_token_stream,
-                        crate::server::postgres::constants::DELETE_NAME,
-                        crate::server::postgres::constants::FROM_NAME,
                         ROUTE_NAME,
-                        crate::server::postgres::constants::WHERE_NAME,
-                        crate::server::postgres::constants::IN_NAME,
                         {
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
@@ -4512,8 +4509,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         };
                         let results_vec = {
-                            let mut results_vec =
-                                Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
+                            let mut results_vec = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
                             let mut option_error: Option<sqlx::Error> = None;
                             {
                                 let mut rows = binded_query.fetch(#postgres_transaction_token_stream.as_mut());
