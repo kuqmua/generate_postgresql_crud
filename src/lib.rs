@@ -928,7 +928,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_create_batch_response_variants_token_stream
                     {
-                        let #query_string_name_token_stream = #query_string_token_stream;
+                        let #query_string_name_token_stream = {
+                            #query_string_token_stream
+                        };
                         println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
@@ -1190,7 +1192,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_create_response_variants_token_stream
                     {
-                        let #query_string_name_token_stream = #query_string_token_stream;
+                        let #query_string_name_token_stream = {
+                            #query_string_token_stream
+                        };
                         println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
@@ -2891,7 +2895,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #try_read_by_id_response_variants_token_stream
                     {
                         let #select_token_stream = self.#query_lower_case_token_stream.#select_token_stream.unwrap_or_default();
-                        let #query_string_name_token_stream = #query_string_token_stream;
+                        let #query_string_name_token_stream = {
+                            #query_string_token_stream
+                        };
                         println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
@@ -3344,7 +3350,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_read_with_body_response_variants_token_stream
                     {
-                        let #query_string_name_token_stream = #query_string_token_stream;
+                        let #query_string_name_token_stream = {
+                            #query_string_token_stream
+                        };
                         println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
@@ -3813,7 +3821,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ) -> #try_read_response_variants_token_stream
                     {
                         let #select_token_stream = #column_select_ident_token_stream::from(self.#query_lower_case_token_stream.#select_token_stream.clone());
-                        let #query_string_name_token_stream = #query_string_token_stream;
+                        let #query_string_name_token_stream = {
+                            #query_string_token_stream
+                        };
                         println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
                             #binded_query_token_stream
