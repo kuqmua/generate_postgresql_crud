@@ -570,6 +570,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let request_error_camel_case_stringified = "RequestError";
     let returning_stringified = "returning";
     let returning_id_stringified = format!(" {returning_stringified} {id_field_ident}");
+    let rollback_error_name_token_stream = quote::quote!{rollback_error};
     let returning_id_quotes_token_stream = {
         let returning_id_quotes_stringified = format!("\"{returning_id_stringified}\"");
         returning_id_quotes_stringified.parse::<proc_macro2::TokenStream>()
@@ -634,6 +635,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         BindQuery { 
             checked_add: e.into_serialize_deserialize_version(), 
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream
+        }
+    };
+    let query_and_rollback_failed_token_stream = quote::quote!{
+        QueryAndRollbackFailed {
+            query_error: e,
+            #rollback_error_name_token_stream,
+            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
     let query_encode_variant_token_stream = quote::quote!{
@@ -1829,12 +1837,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             Ok(_) => {
                                                 #from_log_and_return_error_token_stream
                                             }
-                                            Err(rollback_error) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::QueryAndRollbackFailed {
-                                                    query_error: e,
-                                                    rollback_error,
-                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                };
+                                            Err(#rollback_error_name_token_stream) => {
+                                                let error = #prepare_and_execute_query_error_token_stream::#query_and_rollback_failed_token_stream;
                                                 #error_log_call_token_stream
                                                 return #try_delete_with_body_response_variants_token_stream::from(error);
                                             }
@@ -2528,12 +2532,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             Ok(_) => {
                                                 #from_log_and_return_error_token_stream
                                             }
-                                            Err(rollback_error) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::QueryAndRollbackFailed {
-                                                    query_error: e,
-                                                    rollback_error,
-                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                };
+                                            Err(#rollback_error_name_token_stream) => {
+                                                let error = #prepare_and_execute_query_error_token_stream::#query_and_rollback_failed_token_stream;
                                                 #error_log_call_token_stream
                                                 return #try_delete_response_variants_token_stream::from(error);
                                             }
@@ -4534,13 +4534,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Ok(_) => {
                                         #from_log_and_return_error_token_stream;
                                     }
-                                    Err(rollback_error) => {
+                                    Err(#rollback_error_name_token_stream) => {
                                     //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
-                                        let error = #prepare_and_execute_query_error_token_stream::QueryAndRollbackFailed {
-                                            query_error: e,
-                                            rollback_error,
-                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                        };
+                                        let error = #prepare_and_execute_query_error_token_stream::#query_and_rollback_failed_token_stream;
                                         #error_log_call_token_stream
                                         return #try_update_response_variants_token_stream::from(error);
                                     }
