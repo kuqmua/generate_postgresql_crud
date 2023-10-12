@@ -659,10 +659,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let non_existing_primary_keys_and_failedRollback_token_stream = quote::quote!{
+    let non_existing_primary_keys_and_failed_rollback_token_stream = quote::quote!{
         NonExistingPrimaryKeysAndFailedRollback {
             #non_existing_primary_keys_name_token_stream,
             #rollback_error_name_token_stream: e,
+            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+        }
+    };
+    let commit_failed_token_stream = quote::quote!{
+        CommitFailed {
+            commit_error: e,
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
@@ -1908,7 +1914,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 return #try_delete_with_body_response_variants_token_stream::from(error);
                                             }
                                             Err(e) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_and_failedRollback_token_stream;
+                                                let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_and_failed_rollback_token_stream;
                                                 #error_log_call_token_stream
                                                 return #try_delete_with_body_response_variants_token_stream::from(error);
                                             }
@@ -1918,10 +1924,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 match #postgres_transaction_token_stream.#commit_token_stream().await {
                                     Ok(_) => #try_delete_with_body_response_variants_token_stream::#desirable_token_stream(()),
                                     Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::CommitFailed {
-                                            commit_error: e,
-                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                        };
+                                        let error = #prepare_and_execute_query_error_token_stream::#commit_failed_token_stream;
                                         #error_log_call_token_stream
                                         #try_delete_with_body_response_variants_token_stream::from(error)
                                     }
@@ -2592,7 +2595,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 return #try_delete_response_variants_token_stream::from(error);
                                             }
                                             Err(e) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_and_failedRollback_token_stream;
+                                                let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_and_failed_rollback_token_stream;
                                                 #error_log_call_token_stream
                                                 return #try_delete_response_variants_token_stream::from(error);
                                             }
@@ -2602,10 +2605,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 match #postgres_transaction_token_stream.#commit_token_stream().await {
                                     Ok(_) => #try_delete_response_variants_token_stream::#desirable_token_stream(()),
                                     Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::CommitFailed {
-                                            commit_error: e,
-                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                        };
+                                        let error = #prepare_and_execute_query_error_token_stream::#commit_failed_token_stream;
                                         #error_log_call_token_stream
                                         #try_delete_response_variants_token_stream::from(error)
                                     }
@@ -4584,7 +4584,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         return #try_update_response_variants_token_stream::from(error);
                                     }
                                     Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_and_failedRollback_token_stream;
+                                        let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_and_failed_rollback_token_stream;
                                         #error_log_call_token_stream
                                         return #try_update_response_variants_token_stream::from(error);
                                     }
@@ -4594,10 +4594,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         match #postgres_transaction_token_stream.#commit_token_stream().await {
                             Ok(_) => #try_update_response_variants_token_stream::#desirable_token_stream(()),
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::CommitFailed {
-                                    commit_error: e,
-                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                };
+                                let error = #prepare_and_execute_query_error_token_stream::#commit_failed_token_stream;
                                 #error_log_call_token_stream
                                 #try_update_response_variants_token_stream::from(error)
                             }
