@@ -757,6 +757,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let limit_name_stringified = "limit";
     let offset_name_stringified = "offset";
     let in_name_stringified = "in";
+    let unnest_name_stringified = "unnest";
     let create_batch_token_stream = {
         let create_batch_name_camel_case_stringified = "CreateBatch";
         let create_batch_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_batch_name_camel_case_stringified.to_string());
@@ -828,7 +829,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &pg_connection_token_stream
             );
             let query_string_token_stream = {
-                let query_token_stream = {
+                let handle_token_stream = {
                     let column_names = {
                         let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
                         let fields_named_len = fields_named_filtered.len();
@@ -848,59 +849,76 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             acc
                         })
                     };
-                    let query_stringified = format!("\"{insert_name_stringified} {into_name_stringified} {{}}({column_names}) {values_name_stringified} {{}}\"");
+                    let column_increments = {
+                        let mut column_increments = fields_named.iter().filter(|field|*field != &id_field).enumerate().fold(std::string::String::default(), |mut acc, (index, _)| {
+                            acc.push_str(&format!("${}, ", index + 1));
+                            acc
+                        });
+                        column_increments.pop();
+                        column_increments.pop();
+                        column_increments
+                    };
+                    let query_stringified = format!(
+                        "\"{insert_name_stringified} {into_name_stringified} {{}} ({column_names}) {select_name_stringified} {column_names} {from_name_stringified} {unnest_name_stringified}({column_increments}) {as_name_stringified} a({column_names})\""
+                    );
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
-                let element_bind_increments_modificate_token_stream = {
-                    let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
-                    let field_named_filtered_len = fields_named_filtered.len();
-                    fields_named_filtered.iter().enumerate().map(|(index, field)|{
-                        let field_ident = field.ident.clone()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                        let possible_dot_space_format = match (index + 1) == field_named_filtered_len {
-                            true => quote::quote!{"{value}"},
-                            false => quote::quote!{"{value}, "},
-                        };
-                        quote::quote!{
-                            match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream(&element.#field_ident, &mut increment) {
-                                Ok(value) => {
-                                    element_bind_increments.push_str(&format!(#possible_dot_space_format));
-                                },
-                                Err(e) => {
-                                    return #try_create_batch_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
-                                },
-                            }
-                        }
-                    }).collect::<Vec<proc_macro2::TokenStream>>()
-                };
+                // let element_bind_increments_modificate_token_stream = {
+                //     let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+                //     let field_named_filtered_len = fields_named_filtered.len();
+                //     fields_named_filtered.iter().enumerate().map(|(index, field)|{
+                //         let field_ident = field.ident.clone()
+                //             .unwrap_or_else(|| {
+                //                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                //         });
+                //         let possible_dot_space_format = match (index + 1) == field_named_filtered_len {
+                //             true => quote::quote!{"{value}"},
+                //             false => quote::quote!{"{value}, "},
+                //         };
+                //         quote::quote!{
+                //             match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream(&element.#field_ident, &mut increment) {
+                //                 Ok(value) => {
+                //                     element_bind_increments.push_str(&format!(#possible_dot_space_format));
+                //                 },
+                //                 Err(e) => {
+                //                     return #try_create_batch_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                //                 },
+                //             }
+                //         }
+                //     }).collect::<Vec<proc_macro2::TokenStream>>()
+                // };
                 quote::quote!{
+                    // format!(
+                    //     #query_token_stream,
+                    //     ROUTE_NAME,
+                    //     {
+                    //         #increment_initialization_token_stream
+                    //         let mut bind_increments = std::string::String::default();
+                    //         for element in &self.#payload_lower_case_token_stream {
+                    //             bind_increments.push_str(&format!(
+                    //                 "({}), ",
+                    //                 {
+                    //                     let mut element_bind_increments = std::string::String::default();
+                    //                     #(#element_bind_increments_modificate_token_stream)*
+                    //                     element_bind_increments
+                    //                 }
+                    //             ));
+                    //         }
+                    //         bind_increments.pop();
+                    //         bind_increments.pop();
+                    //         bind_increments
+                    //     }
+                    // )
                     format!(
-                        #query_token_stream,
-                        ROUTE_NAME,
-                        {
-                            #increment_initialization_token_stream
-                            let mut bind_increments = std::string::String::default();
-                            for element in &self.#payload_lower_case_token_stream {
-                                bind_increments.push_str(&format!(
-                                    "({}), ",
-                                    {
-                                        let mut element_bind_increments = std::string::String::default();
-                                        #(#element_bind_increments_modificate_token_stream)*
-                                        element_bind_increments
-                                    }
-                                ));
-                            }
-                            bind_increments.pop();
-                            bind_increments.pop();
-                            bind_increments
-                        }
+                        // "insert into {} (color, name) select color, name from unnest($1, $2) as a(color, name)", 
+                        #handle_token_stream,
+                        ROUTE_NAME
                     )
                 }
             };
             let binded_query_token_stream = {
+                let current_vec_len_name_token_stream = quote::quote!{current_vec_len};
                 let bind_value_to_query_modificate_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                     true => None,
                     false => {
@@ -913,11 +931,29 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         })
                     },
                 });
+                
                 quote::quote!{
+                    // let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
+                    // for element in self.#payload_lower_case_token_stream {
+                    //     #(#bind_value_to_query_modificate_token_stream)*
+                    // }
+                    // query
+
                     let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
-                    for element in self.#payload_lower_case_token_stream {
-                        #(#bind_value_to_query_modificate_token_stream)*
-                    }
+                    let #current_vec_len_name_token_stream = self.#payload_lower_case_token_stream.len();
+                    let (
+                        name_vec,
+                        color_vec
+                    ) = self.#payload_lower_case_token_stream.into_iter().fold((
+                        Vec::with_capacity(#current_vec_len_name_token_stream),
+                        Vec::with_capacity(#current_vec_len_name_token_stream)
+                    ), |mut acc, element| {
+                        acc.0.push(element.name);
+                        acc.1.push(element.color);
+                        acc
+                    });
+                    query = query.bind(name_vec);
+                    query = query.bind(color_vec);
                     query
                 }
             };
