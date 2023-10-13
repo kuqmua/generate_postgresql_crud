@@ -10,6 +10,7 @@ mod from_log_and_return_error;
 //todo unnest allows to put multiple data(arrays) in sqlx compile time query(brookzerker twitch\youtube tutorial)
 //todo refactor scope visibility variables {}
 //todo unique(meaning not primary key unique column) and nullable support
+//todo add check on max postgresql bind elements
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
     attributes(
