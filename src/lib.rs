@@ -865,54 +865,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
-                // let element_bind_increments_modificate_token_stream = {
-                //     let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
-                //     let field_named_filtered_len = fields_named_filtered.len();
-                //     fields_named_filtered.iter().enumerate().map(|(index, field)|{
-                //         let field_ident = field.ident.clone()
-                //             .unwrap_or_else(|| {
-                //                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                //         });
-                //         let possible_dot_space_format = match (index + 1) == field_named_filtered_len {
-                //             true => quote::quote!{"{value}"},
-                //             false => quote::quote!{"{value}, "},
-                //         };
-                //         quote::quote!{
-                //             match #crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream(&element.#field_ident, &mut increment) {
-                //                 Ok(value) => {
-                //                     element_bind_increments.push_str(&format!(#possible_dot_space_format));
-                //                 },
-                //                 Err(e) => {
-                //                     return #try_create_batch_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
-                //                 },
-                //             }
-                //         }
-                //     }).collect::<Vec<proc_macro2::TokenStream>>()
-                // };
                 quote::quote!{
-                    // format!(
-                    //     #query_token_stream,
-                    //     ROUTE_NAME,
-                    //     {
-                    //         #increment_initialization_token_stream
-                    //         let mut bind_increments = std::string::String::default();
-                    //         for element in &self.#payload_lower_case_token_stream {
-                    //             bind_increments.push_str(&format!(
-                    //                 "({}), ",
-                    //                 {
-                    //                     let mut element_bind_increments = std::string::String::default();
-                    //                     #(#element_bind_increments_modificate_token_stream)*
-                    //                     element_bind_increments
-                    //                 }
-                    //             ));
-                    //         }
-                    //         bind_increments.pop();
-                    //         bind_increments.pop();
-                    //         bind_increments
-                    //     }
-                    // )
                     format!(
-                        // "insert into {} (color, name) select color, name from unnest($1, $2) as a(color, name)", 
                         #handle_token_stream,
                         ROUTE_NAME
                     )
@@ -920,31 +874,28 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let binded_query_token_stream = {
                 let current_vec_len_name_token_stream = quote::quote!{current_vec_len};
-                let bind_value_to_query_modificate_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                let underscore_vec_name_stringified = "_vec";
+                let column_vecs_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                     true => None,
                     false => {
-                        let field_ident = field.ident.clone()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                            });
-                        Some(quote::quote!{
-                            query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(element.#field_ident, query);  
-                        })
+                        let field_ident_underscore_vec_token_stream = {
+                            let field_ident = field.ident.clone()
+                                .unwrap_or_else(|| {
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                                });
+                            let field_ident_underscore_vec_stringified = format!("{field_ident}{underscore_vec_name_stringified}");
+                            field_ident_underscore_vec_stringified.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_underscore_vec_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        };
+                        Some(field_ident_underscore_vec_token_stream)
                     },
                 });
                 
                 quote::quote!{
-                    // let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
-                    // for element in self.#payload_lower_case_token_stream {
-                    //     #(#bind_value_to_query_modificate_token_stream)*
-                    // }
-                    // query
-
                     let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     let #current_vec_len_name_token_stream = self.#payload_lower_case_token_stream.len();
                     let (
-                        name_vec,
-                        color_vec
+                        #(#column_vecs_token_stream),*
                     ) = self.#payload_lower_case_token_stream.into_iter().fold((
                         Vec::with_capacity(#current_vec_len_name_token_stream),
                         Vec::with_capacity(#current_vec_len_name_token_stream)
