@@ -11,6 +11,7 @@ mod from_log_and_return_error;
 //todo refactor scope visibility variables {}
 //todo unique(meaning not primary key unique column) and nullable support
 //todo add check on max postgresql bind elements
+//todo add route name as argument for macro - generation constant + add to generation logic
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
     attributes(
@@ -874,39 +875,73 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let binded_query_token_stream = {
                 let current_vec_len_name_token_stream = quote::quote!{current_vec_len};
+                let element_name_token_stream = quote::quote!{element};
+                let acc_name_token_stream = quote::quote!{acc};
+                let query_name_token_stream = quote::quote!{query};
                 let underscore_vec_name_stringified = "_vec";
                 let column_vecs_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                     true => None,
                     false => {
                         let field_ident_underscore_vec_token_stream = {
-                            let field_ident = field.ident.clone()
-                                .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                                });
-                            let field_ident_underscore_vec_stringified = format!("{field_ident}{underscore_vec_name_stringified}");
+                            let field_ident_underscore_vec_stringified = {
+                                let field_ident = field.ident.clone()
+                                    .unwrap_or_else(|| {
+                                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                                    });
+                                format!("{field_ident}{underscore_vec_name_stringified}")
+                            };
                             field_ident_underscore_vec_stringified.parse::<proc_macro2::TokenStream>()
                             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_underscore_vec_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
                         Some(field_ident_underscore_vec_token_stream)
                     },
                 });
-                
+                let column_vecs_with_capacity_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                    true => None,
+                    false => Some(quote::quote!{Vec::with_capacity(#current_vec_len_name_token_stream)}),
+                });
+                let columns_acc_push_elements_token_stream = fields_named.iter().filter(|field|*field != &id_field).enumerate().map(|(index, field)|{
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    let index_token_stream = {
+                        let index_stringified = format!("{index}");
+                        index_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {index_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    quote::quote!{#acc_name_token_stream.#index_token_stream.push(#element_name_token_stream.#field_ident);}
+                });
+                let column_query_bind_vecs_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                    true => None,
+                    false => {
+                        let field_ident_underscore_vec_token_stream = {
+                            let field_ident_underscore_vec_stringified = {
+                                let field_ident = field.ident.clone()
+                                    .unwrap_or_else(|| {
+                                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                                    });
+                                format!("{field_ident}{underscore_vec_name_stringified}")
+                            };
+                            field_ident_underscore_vec_stringified.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_underscore_vec_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        };
+                        Some(quote::quote!{#query_name_token_stream = #query_name_token_stream.bind(#field_ident_underscore_vec_token_stream);})
+                    },
+                });
                 quote::quote!{
-                    let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
+                    let mut #query_name_token_stream = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                     let #current_vec_len_name_token_stream = self.#payload_lower_case_token_stream.len();
                     let (
                         #(#column_vecs_token_stream),*
                     ) = self.#payload_lower_case_token_stream.into_iter().fold((
-                        Vec::with_capacity(#current_vec_len_name_token_stream),
-                        Vec::with_capacity(#current_vec_len_name_token_stream)
-                    ), |mut acc, element| {
-                        acc.0.push(element.name);
-                        acc.1.push(element.color);
-                        acc
+                        #(#column_vecs_with_capacity_token_stream),*
+                    ), |mut #acc_name_token_stream, #element_name_token_stream| {
+                        #(#columns_acc_push_elements_token_stream)*
+                        #acc_name_token_stream
                     });
-                    query = query.bind(name_vec);
-                    query = query.bind(color_vec);
-                    query
+                    #(#column_query_bind_vecs_token_stream)*
+                    #query_name_token_stream
                 }
             };
             quote::quote!{
