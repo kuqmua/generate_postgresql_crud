@@ -3125,7 +3125,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 true => #where_name_qoutes_token_stream,
                                 false => #prefix_false_handle_token_stream,
                             };
-                            increment += 1;
+                            match increment.checked_add(1) {
+                                Some(value) => {
+                                    increment = value;
+                                },
+                                None => {
+                                    //todo - think what to do with TryGenerateBindIncrementsErrorNamed and how handle it 
+                                    let e = crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed::CheckedAdd { 
+                                        checked_add: std::string::String::from("checked_add is None"), 
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream, 
+                                    };
+                                    return #try_read_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                                },
+                            }
                             additional_parameters.push_str(&format!(
                                 #handle_token_stream,
                                 prefix,
@@ -3645,6 +3657,34 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &pg_connection_token_stream
             );
             let query_string_token_stream = {
+                //
+                // let additional_parameters_id_modification_token_stream = {
+                //     let prefix_false_handle_token_stream = {
+                //         let prefix_false_handle_stringified = format!("\" {and_name_stringified}\"");
+                //         prefix_false_handle_stringified.parse::<proc_macro2::TokenStream>()
+                //         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {prefix_false_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                //     };
+                //     let handle_token_stream = {
+                //         let handle_stringified = format!("\"{{}} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}(${{}}))\"");
+                //         handle_stringified.parse::<proc_macro2::TokenStream>()
+                //         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                //     };
+                //     quote::quote!{
+                //         if let Some(value) = &self.#payload_lower_case_token_stream.#id_field_ident {
+                //             let prefix = match additional_parameters.is_empty() {
+                //                 true => #where_name_qoutes_token_stream,
+                //                 false => #prefix_false_handle_token_stream,
+                //             };
+                //             increment += 1;
+                //             additional_parameters.push_str(&format!(
+                //                 #handle_token_stream,
+                //                 prefix,
+                //                 increment
+                //             ));
+                //         }
+                //     }
+                // };
+                //
                 let additional_parameters_modification_token_stream = fields_named.iter().map(|field| {
                     let field_ident = field.ident.clone()
                         .unwrap_or_else(|| {
