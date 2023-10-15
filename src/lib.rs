@@ -2,6 +2,35 @@ mod column_names_factorial;
 mod check_for_none;
 mod acquire_pool_and_connection;
 mod from_log_and_return_error;
+
+fn get_macro_attribute<'a>(
+    attrs: &'a [syn::Attribute],
+    proc_macro_name_ident_stringified: &std::string::String
+) -> &'a syn::Attribute {
+    let attribute_path: &str = "generate_postgresql_crud::generate_postgresql_crud_route_name";
+    let option_attribute = attrs.iter().find(|attr| {
+        attribute_path == {
+            let mut stringified_path = quote::ToTokens::to_token_stream(&attr.path).to_string();
+            stringified_path.retain(|c| !c.is_whitespace());
+            stringified_path
+        }
+    });
+    if let Some(attribute) = option_attribute {
+        attribute
+    }
+    else {
+        panic!("{proc_macro_name_ident_stringified} no {attribute_path}");
+    }
+}
+
+#[proc_macro_attribute]
+pub fn generate_postgresql_crud_route_name(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+
 //todo created at and updated at fields
 //todo handle situation - duplicate delet\update or something primary key in parameters
 //todo attributes for activation generation crud methods(like generate create, update_by_id, delete_by_id)
@@ -16,6 +45,7 @@ mod from_log_and_return_error;
 //todo add int overflow check panic
 //todo maybe add unnest sql types?
 //todo maybe add unnest to filter parameters if its array ?
+//todo remove url part /api/
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
     attributes(
@@ -35,6 +65,41 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let ident = &ast.ident;
     // let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
     let proc_macro_name_ident_stringified = format!("{proc_macro_name} {ident}");
+    let stringified_tokens = {
+        let attribute = get_macro_attribute(
+            &ast.attrs,
+            &proc_macro_name_ident_stringified
+        );
+        let mut stringified_tokens = quote::ToTokens::to_token_stream(&attribute.tokens).to_string();
+        stringified_tokens.retain(|c| !c.is_whitespace());
+        stringified_tokens
+    };
+    let table_name_stringified = {
+        match stringified_tokens.len() > 3 {
+            true => {
+                let chars = &mut stringified_tokens.chars();
+                match (&chars.next(), &chars.last()) {
+                        (None, None) => panic!("{proc_macro_name_ident_stringified} no first and last token attribute"),
+                        (None, Some(_)) => panic!("{proc_macro_name_ident_stringified} no first token attribute"),
+                        (Some(_), None) => panic!("{proc_macro_name_ident_stringified} no last token attribute"),
+                        (Some(first), Some(last)) => match (first == &'(', last == &')') {
+                            (true, true) => {
+                                match stringified_tokens.get(1..(stringified_tokens.len()-1)) {
+                                    Some(inner_tokens_str) => {
+                                        inner_tokens_str
+                                    },
+                                    None => panic!("{proc_macro_name_ident_stringified} cannot get inner_token"),
+                                }
+                            },
+                            (true, false) => panic!("{proc_macro_name_ident_stringified} last token attribute is not )"),
+                            (false, true) => panic!("{proc_macro_name_ident_stringified} first token attribute is not ("),
+                            (false, false) => panic!("{proc_macro_name_ident_stringified} first token attribute is not ( and last token attribute is not )"),
+                        },
+                    }
+            }
+            false => panic!("{proc_macro_name_ident_stringified} {stringified_tokens}.len() > 3 == false"),
+        }
+    };
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
         data_struct
     } else {
@@ -90,6 +155,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #field_vis #field_ident: Option<#field_type_path>
         }
     });
+    let table_name_declaration_token_stream = {
+        let table_name_quotes_token_stream = {
+            let table_name_quotes_stringified = format!("\"{table_name_stringified}\"");
+            table_name_quotes_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {table_name_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        quote::quote! {pub const TABLE_NAME: &str = #table_name_quotes_token_stream;}
+    };
     let struct_options_token_stream = quote::quote! {
         #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
         pub struct #struct_options_ident_token_stream {
@@ -558,7 +631,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         payload_extraction_result_lower_case.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {payload_extraction_result_lower_case} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    let route_name_lower_case_stringified = "cats";
     let non_existing_primary_keys_name_token_stream = quote::quote!{non_existing_primary_keys};
     let use_futures_try_stream_ext_token_stream = quote::quote!{use futures::TryStreamExt};
     let query_encode_token_stream = quote::quote!{QueryEncode};
@@ -870,7 +942,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     column_increments
                 };
                 let query_stringified = format!(
-                    "\"{insert_name_stringified} {into_name_stringified} {route_name_lower_case_stringified} ({column_names}) {select_name_stringified} {column_names} {from_name_stringified} {unnest_name_stringified}({column_increments}) {as_name_stringified} a({column_names})\""
+                    "\"{insert_name_stringified} {into_name_stringified} {table_name_stringified} ({column_names}) {select_name_stringified} {column_names} {from_name_stringified} {unnest_name_stringified}({column_increments}) {as_name_stringified} a({column_names})\""
                 );
                 query_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -1007,7 +1079,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}\"");//todo what to do with api?
+                let url_handle_stringified = format!("\"{{}}/api/{table_name_stringified}\"");//todo what to do with api?
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -1180,7 +1252,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         acc
                     })
                 };
-                let query_stringified = format!("\"{insert_name_stringified} {into_name_stringified} {route_name_lower_case_stringified}({column_names}) {values_name_stringified} ({column_increments})\"");
+                let query_stringified = format!("\"{insert_name_stringified} {into_name_stringified} {table_name_stringified}({column_names}) {values_name_stringified} ({column_increments})\"");
                 query_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -1269,7 +1341,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}\"");
+                let url_handle_stringified = format!("\"{{}}/api/{table_name_stringified}\"");
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -1413,7 +1485,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} \"");//todo where
+                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {table_name_stringified} {where_name_stringified} \"");//todo where
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -1494,7 +1566,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/{{}}\"");//todo where
+                let url_handle_stringified = format!("\"{{}}/api/{table_name_stringified}/{{}}\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -1668,7 +1740,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     .collect::<Vec<#id_field_type>>()
             };
             let query_string_primary_key_some_other_none_token_stream = {
-                let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
+                let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {table_name_stringified} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
                 handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -1751,7 +1823,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} {{}}\"");
+                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {table_name_stringified} {where_name_stringified} {{}}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -1985,7 +2057,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/search\"");//todo where
+                let url_handle_stringified = format!("\"{{}}/api/{table_name_stringified}/search\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -2325,7 +2397,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let query_string_primary_key_some_other_none_token_stream = {
-                let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
+                let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {table_name_stringified} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
                 handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -2408,7 +2480,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} {{}}\"");
+                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {table_name_stringified} {where_name_stringified} {{}}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -2642,7 +2714,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}?{{}}\"");//todo where
+                let url_handle_stringified = format!("\"{{}}/api/{table_name_stringified}?{{}}\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -2840,7 +2912,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let query_string_token_stream = {
                 let query_token_stream = {
-                    let query_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} {id_field_ident} = $1\"");
+                    let query_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {table_name_stringified} {where_name_stringified} {id_field_ident} = $1\"");
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -2927,7 +2999,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/{{}}?{{}}\"");//todo where
+                let url_handle_stringified = format!("\"{{}}/api/{table_name_stringified}/{{}}?{{}}\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -3193,7 +3265,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     },
                 });
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {route_name_lower_case_stringified} {{}}\"");
+                    let handle_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {table_name_stringified} {{}}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -3409,7 +3481,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/search\"");//todo where
+                let url_handle_stringified = format!("\"{{}}/api/{table_name_stringified}/search\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -3726,7 +3798,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     },
                 });
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {route_name_lower_case_stringified} {{}}\"");
+                    let handle_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {table_name_stringified} {{}}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -3941,7 +4013,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}?{{}}\"");//todo where
+                let url_handle_stringified = format!("\"{{}}/api/{table_name_stringified}?{{}}\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -4165,7 +4237,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{update_name_stringified} {route_name_lower_case_stringified} {set_name_stringified} \"");//todo where
+                    let handle_stringified = format!("\"{update_name_stringified} {table_name_stringified} {set_name_stringified} \"");//todo where
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -4272,7 +4344,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/{{}}\"");//todo where
+                let url_handle_stringified = format!("\"{{}}/api/{table_name_stringified}/{{}}\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -4480,7 +4552,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         acc
                     })
                 };
-                let query_stringified = format!("\"{update_name_stringified} {route_name_lower_case_stringified} {as_name_stringified} t {set_name_stringified} {declarations} {from_name_stringified} ({select_name_stringified} * {from_name_stringified} {unnest_name_stringified}({column_increments})) as data({column_names}) where t.{id_field_ident} = data.{id_field_ident} {returning_stringified} data.{id_field_ident}\"");
+                let query_stringified = format!("\"{update_name_stringified} {table_name_stringified} {as_name_stringified} t {set_name_stringified} {declarations} {from_name_stringified} ({select_name_stringified} * {from_name_stringified} {unnest_name_stringified}({column_increments})) as data({column_names}) where t.{id_field_ident} = data.{id_field_ident} {returning_stringified} data.{id_field_ident}\"");
                 query_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -4715,7 +4787,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/\"");//todo where
+                let url_handle_stringified = format!("\"{{}}/api/{table_name_stringified}/\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -4792,6 +4864,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{update_token_stream}");
     let gen = quote::quote! {
+        #table_name_declaration_token_stream
         #struct_options_token_stream
         #from_ident_for_ident_options_token_stream
         #(#structs_variants_token_stream)*
