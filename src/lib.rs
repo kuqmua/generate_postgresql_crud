@@ -354,6 +354,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let std_primitive_str_sqlx_column_index_token_stream = quote::quote!{&'a std::primitive::str: sqlx::ColumnIndex<R>,};
     let sqlx_decode_decode_database_token_stream = quote::quote!{sqlx::decode::Decode<'a, R::Database>};
     let sqlx_types_type_database_token_stream = quote::quote!{sqlx::types::Type<R::Database>};
+    let crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream = quote::quote!{crate::common::serde_urlencoded::SerdeUrlencodedParameter};
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
@@ -467,7 +468,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let serde_urlencoded_parameter_token_stream = {
             quote::quote! {
-                impl crate::common::serde_urlencoded::SerdeUrlencodedParameter for #column_select_ident_token_stream {
+                impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #column_select_ident_token_stream {
                     fn serde_urlencoded_parameter(self) -> std::string::String {
                         self.to_string()
                     }
@@ -589,12 +590,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     let crate_server_postgres_order_by_order_by_token_stream = quote::quote!{crate::server::postgres::order_by::OrderBy};
+    let ident_order_by_wrapper_token_stream = {
+        let ident_order_by_wrapper_stringified = format!("{ident}OrderByWrapper");
+        ident_order_by_wrapper_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_order_by_wrapper_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let order_by_wrapper_token_stream = {
-        let ident_order_by_wrapper_token_stream = {
-            let ident_order_by_wrapper_stringified = format!("{ident}OrderByWrapper");
-            ident_order_by_wrapper_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_order_by_wrapper_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
         let deserialize_with_name_quotes_token_stream = {
             let deserialize_with_name_quotes_stringified = format!("\"deserialize_{ident_lower_case_stringified}_order_by\"");
             deserialize_with_name_quotes_stringified.parse::<proc_macro2::TokenStream>()
@@ -606,6 +607,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[serde(deserialize_with = #deserialize_with_name_quotes_token_stream)]
                 pub #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
             );
+        }
+    };
+    let impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream = {
+        quote::quote!{
+            impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #ident_order_by_wrapper_token_stream {
+                fn serde_urlencoded_parameter(self) -> std::string::String {
+                    let column = &self.0.column;
+                    let order = self.0.order.unwrap_or_default();
+                    format!("column={column},order={order}")
+                }
+            }
         }
     };
     let extraction_result_lower_case_stringified = "extraction_result";
@@ -810,7 +822,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::bind_value_to_query};
     let crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments};
     let crate_server_postgres_bind_query_bind_query_try_increment_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::try_increment};
-    let crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream = quote::quote!{crate::common::serde_urlencoded::SerdeUrlencodedParameter::serde_urlencoded_parameter};
+    let crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream = quote::quote!{#crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream::serde_urlencoded_parameter};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     // let pg_temp_stringified = "pg_temp";
@@ -3635,7 +3647,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub #select_token_stream: Option<#column_select_ident_token_stream>,
                     pub #id_field_ident: Option<crate::server::postgres::bigserial_ids::BigserialIds>,
                     #(#fields_with_excluded_id_token_stream)*
-                    pub #order_by_token_stream: Option<CatOrderByWrapper>,//todo
+                    pub #order_by_token_stream: Option<#ident_order_by_wrapper_token_stream>,//todo
                     pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
                     pub offset: Option<crate::server::postgres::postgres_bigint::PostgresBigint>,
                 }
@@ -4898,6 +4910,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #column_select_token_stream
         #primary_key_try_from_sqlx_row_token_stream
         #order_by_wrapper_token_stream
+        #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
 
         #create_batch_token_stream
         #create_token_stream
