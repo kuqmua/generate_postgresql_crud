@@ -39,7 +39,7 @@ pub fn generate_postgresql_crud_route_name(
 //todo refactor scope visibility variables {}
 //todo unique(meaning not primary key unique column) and nullable support
 //todo add check on max postgresql bind elements
-//todo add route name as argument for macro - generation constant + add to generation logic
+//todo add route name as argument for macro - generation constant and add to generation logic
 //todo make sqlx macros instead of just queries?
 //todo support for arrays as column values
 //todo add int overflow check panic
@@ -919,7 +919,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let field_ident = field.ident.clone().unwrap_or_else(|| {
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
-                        let incremented_index = index + 1;
+                        let incremented_index = index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE));
                         match incremented_index == fields_named_len {
                             true => {
                                 acc.push_str(&format!("{field_ident}"));
@@ -933,7 +933,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 let column_increments = {
                     let mut column_increments = fields_named.iter().filter(|field|*field != &id_field).enumerate().fold(std::string::String::default(), |mut acc, (index, _)| {
-                        acc.push_str(&format!("${}, ", index + 1));
+                        acc.push_str(&format!("${}, ", index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE))));
                         acc
                     });
                     column_increments.pop();
@@ -1237,7 +1237,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let field_ident = field.ident.clone().unwrap_or_else(|| {
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
-                        let incremented_index = index + 1;
+                        let incremented_index = index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE));
                         match incremented_index == fields_named_len {
                             true => {
                                 acc.0.push_str(&format!("{field_ident}"));
@@ -3934,7 +3934,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 impl #read_parameters_camel_case_token_stream {
                     pub async fn #prepare_and_execute_query_name_token_stream(
-                        self, //impl crate::server::routes::helpers::bind_sqlx_query::BindSqlxQuer + crate::server::postgres::generate_query::GenerateQuery
+                        self, //impl crate::server::routes::helpers::bind_sqlx_query::BindSqlxQuer with crate::server::postgres::generate_query::GenerateQuery
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_read_response_variants_token_stream
                     {
@@ -4196,7 +4196,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                         let handle_token_stream = {
-                            let possible_dot_space = match (index + 1) == fields_named_len {
+                            let possible_dot_space = match (
+                                index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE))
+                            ) == fields_named_len {
                                 true => "",
                                 false => dot_space,
                             };
@@ -4520,7 +4522,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|| {
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
-                    let possible_dot_space = match (index + 1) == fields_named_len {
+                    let possible_dot_space = match (
+                        index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE))
+                    ) == fields_named_len {
                         true => "",
                         false => dot_space,
                     };
@@ -4528,7 +4532,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     acc
                 });
                 let column_increments = fields_named.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, _)| {
-                    let incremented_index = index + 1;
+                    let incremented_index = index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE));
                     let possible_dot_space = match (incremented_index) == fields_named_len {
                         true => "",
                         false => dot_space,
@@ -4543,7 +4547,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let field_ident = field.ident.clone().unwrap_or_else(|| {
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
-                        let possible_dot_space = match (index + 1) == fields_named_len {
+                        let possible_dot_space = match (
+                            index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE))
+                        ) == fields_named_len {
                             true => "",
                             false => dot_space,
                         };
@@ -4893,13 +4899,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 //     // CreateBatch,
 //     // Create,
 //     DeleteById,
-//     // DeleteWithBody,//+
-//     // Delete,//+
+//     // DeleteWithBody,
+//     // Delete,
 //     // ReadById,
-//     // ReadWithBody,//+
-//     // Read,//+
+//     // ReadWithBody,
+//     // Read,
 //     UpdateById,
-//     // Update//+
+//     // Update
 // }
 
 // impl std::fmt::Display for Operation {
