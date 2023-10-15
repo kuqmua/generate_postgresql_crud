@@ -36,7 +36,6 @@ pub fn generate_postgresql_crud_route_name(
 //todo attributes for activation generation crud methods(like generate create, update_by_id, delete_by_id)
 //todo authorization for returning concrete error or just minimal info(user role)
 //todo generate rules and roles
-//todo refactor scope visibility variables {}
 //todo unique(meaning not primary key unique column) and nullable support
 //todo add check on max postgresql bind elements
 //todo add route name as argument for macro - generation constant and add to generation logic
@@ -45,6 +44,7 @@ pub fn generate_postgresql_crud_route_name(
 //todo add int overflow check panic
 //todo maybe add unnest sql types?
 //todo maybe add unnest to filter parameters if its array ?
+//todo reuse non_existing_primary_keys_name_token_stream
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
     attributes(
@@ -1021,11 +1021,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_create_batch_response_variants_token_stream
                     {
-                        let #query_string_name_token_stream = {
-                            #query_string_token_stream
-                        };
-                        println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
+                            let #query_string_name_token_stream = {
+                                #query_string_token_stream
+                            };
+                            println!("{}", #query_string_name_token_stream);
                             #binded_query_token_stream
                         };
                         #acquire_pool_and_connection_token_stream
@@ -1283,11 +1283,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_create_response_variants_token_stream
                     {
-                        let #query_string_name_token_stream = {
-                            #query_string_token_stream
-                        };
-                        println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
+                            let #query_string_name_token_stream = {
+                                #query_string_token_stream
+                            };
+                            println!("{}", #query_string_name_token_stream);
                             #binded_query_token_stream
                         };
                         #acquire_pool_and_connection_token_stream
@@ -1890,11 +1890,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 let #expected_updated_primary_keys_name_token_stream = {
                                     #expected_updated_primary_keys_token_stream
                                 };
-                                let #query_string_name_token_stream = {
-                                    #query_string_primary_key_some_other_none_token_stream
-                                };
-                                println!("{}", #query_string_name_token_stream);
                                 let #binded_query_name_token_stream = {
+                                    let #query_string_name_token_stream = {
+                                        #query_string_primary_key_some_other_none_token_stream
+                                    };
+                                    println!("{}", #query_string_name_token_stream);
                                     #binded_query_primary_key_some_other_none_token_stream
                                 };
                                 #acquire_pool_and_connection_token_stream
@@ -2547,11 +2547,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 let #expected_updated_primary_keys_name_token_stream = {
                                     #expected_updated_primary_keys_token_stream
                                 };
-                                let #query_string_name_token_stream = {
-                                    #query_string_primary_key_some_other_none_token_stream
-                                };
-                                println!("{}", #query_string_name_token_stream);
                                 let #binded_query_name_token_stream = {
+                                    let #query_string_name_token_stream = {
+                                        #query_string_primary_key_some_other_none_token_stream
+                                    };
+                                    println!("{}", #query_string_name_token_stream);
                                     #binded_query_primary_key_some_other_none_token_stream
                                 };
                                 #acquire_pool_and_connection_token_stream
@@ -4643,11 +4643,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #expected_updated_primary_keys_name_token_stream = {
                             #expected_updated_primary_keys_token_stream
                         };
-                        let #query_string_name_token_stream = {
-                            #query_string_token_stream
-                        };
-                        println!("{}", #query_string_name_token_stream);
                         let #binded_query_name_token_stream = {
+                            let #query_string_name_token_stream = {
+                                #query_string_token_stream
+                            };
+                            println!("{}", #query_string_name_token_stream);
                             #binded_query_token_stream
                         };
                         #acquire_pool_and_connection_token_stream
