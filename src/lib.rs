@@ -558,6 +558,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         payload_extraction_result_lower_case.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {payload_extraction_result_lower_case} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+    let route_name_lower_case_stringified = "cats";
     let non_existing_primary_keys_name_token_stream = quote::quote!{non_existing_primary_keys};
     let use_futures_try_stream_ext_token_stream = quote::quote!{use futures::TryStreamExt};
     let query_encode_token_stream = quote::quote!{QueryEncode};
@@ -840,47 +841,39 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &pg_connection_token_stream
             );
             let query_string_token_stream = {
-                let handle_token_stream = {
-                    let column_names = {
-                        let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
-                        let fields_named_len = fields_named_filtered.len();
-                        fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
-                            let field_ident = field.ident.clone().unwrap_or_else(|| {
-                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                            });
-                            let incremented_index = index + 1;
-                            match incremented_index == fields_named_len {
-                                true => {
-                                    acc.push_str(&format!("{field_ident}"));
-                                },
-                                false => {
-                                    acc.push_str(&format!("{field_ident}{dot_space}"));
-                                },
-                            }
-                            acc
-                        })
-                    };
-                    let column_increments = {
-                        let mut column_increments = fields_named.iter().filter(|field|*field != &id_field).enumerate().fold(std::string::String::default(), |mut acc, (index, _)| {
-                            acc.push_str(&format!("${}, ", index + 1));
-                            acc
+                let column_names = {
+                    let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+                    let fields_named_len = fields_named_filtered.len();
+                    fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
+                        let field_ident = field.ident.clone().unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
-                        column_increments.pop();
-                        column_increments.pop();
-                        column_increments
-                    };
-                    let query_stringified = format!(
-                        "\"{insert_name_stringified} {into_name_stringified} {{}} ({column_names}) {select_name_stringified} {column_names} {from_name_stringified} {unnest_name_stringified}({column_increments}) {as_name_stringified} a({column_names})\""
-                    );
-                    query_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        let incremented_index = index + 1;
+                        match incremented_index == fields_named_len {
+                            true => {
+                                acc.push_str(&format!("{field_ident}"));
+                            },
+                            false => {
+                                acc.push_str(&format!("{field_ident}{dot_space}"));
+                            },
+                        }
+                        acc
+                    })
                 };
-                quote::quote!{
-                    format!(
-                        #handle_token_stream,
-                        ROUTE_NAME
-                    )
-                }
+                let column_increments = {
+                    let mut column_increments = fields_named.iter().filter(|field|*field != &id_field).enumerate().fold(std::string::String::default(), |mut acc, (index, _)| {
+                        acc.push_str(&format!("${}, ", index + 1));
+                        acc
+                    });
+                    column_increments.pop();
+                    column_increments.pop();
+                    column_increments
+                };
+                let query_stringified = format!(
+                    "\"{insert_name_stringified} {into_name_stringified} {route_name_lower_case_stringified} ({column_names}) {select_name_stringified} {column_names} {from_name_stringified} {unnest_name_stringified}({column_increments}) {as_name_stringified} a({column_names})\""
+                );
+                query_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             // println!("{query_string_token_stream}");
             let binded_query_token_stream = {
@@ -1013,6 +1006,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let url_handle_token_stream = {
+                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}\"");//todo what to do with api?
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 pub async fn #try_create_batch_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -1025,9 +1023,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     let url = format!(
-                        "{}/api/{}",
+                        #url_handle_token_stream,
                         #server_location_name_token_stream,
-                        ROUTE_NAME
                     );
                     // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
@@ -1156,44 +1153,36 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &pg_connection_token_stream
             );
             let query_string_token_stream = {
-                let query_token_stream = {
-                    let (
-                        column_names,
-                        column_increments
-                    ) = {
-                        let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
-                        let fields_named_len = fields_named_filtered.len();
-                        fields_named_filtered.iter().enumerate().fold((
-                            std::string::String::default(),
-                            std::string::String::default()
-                        ), |mut acc, (index, field)| {
-                            let field_ident = field.ident.clone().unwrap_or_else(|| {
-                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                            });
-                            let incremented_index = index + 1;
-                            match incremented_index == fields_named_len {
-                                true => {
-                                    acc.0.push_str(&format!("{field_ident}"));
-                                    acc.1.push_str(&format!("${incremented_index}"));
-                                },
-                                false => {
-                                    acc.0.push_str(&format!("{field_ident}{dot_space}"));
-                                    acc.1.push_str(&format!("${incremented_index}{dot_space}"));
-                                },
-                            }
-                            acc
-                        })
-                    };
-                    let query_stringified = format!("\"{insert_name_stringified} {into_name_stringified} {{}}({column_names}) {values_name_stringified} ({column_increments})\"");
-                    query_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                let (
+                    column_names,
+                    column_increments
+                ) = {
+                    let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+                    let fields_named_len = fields_named_filtered.len();
+                    fields_named_filtered.iter().enumerate().fold((
+                        std::string::String::default(),
+                        std::string::String::default()
+                    ), |mut acc, (index, field)| {
+                        let field_ident = field.ident.clone().unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                        let incremented_index = index + 1;
+                        match incremented_index == fields_named_len {
+                            true => {
+                                acc.0.push_str(&format!("{field_ident}"));
+                                acc.1.push_str(&format!("${incremented_index}"));
+                            },
+                            false => {
+                                acc.0.push_str(&format!("{field_ident}{dot_space}"));
+                                acc.1.push_str(&format!("${incremented_index}{dot_space}"));
+                            },
+                        }
+                        acc
+                    })
                 };
-                quote::quote!{
-                    format!(
-                        #query_token_stream,
-                        ROUTE_NAME,
-                    )
-                }
+                let query_stringified = format!("\"{insert_name_stringified} {into_name_stringified} {route_name_lower_case_stringified}({column_names}) {values_name_stringified} ({column_increments})\"");
+                query_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             // println!("{query_string_token_stream}");
             let binded_query_token_stream = {
@@ -1279,6 +1268,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let url_handle_token_stream = {
+                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}\"");
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 pub async fn #try_create_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -1291,9 +1285,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     let url = format!(
-                        "{}/api/{}",
-                        #server_location_name_token_stream,
-                        ROUTE_NAME
+                        #url_handle_token_stream,
+                        #server_location_name_token_stream
                     );
                     // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
@@ -1420,15 +1413,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {{}} {where_name_stringified} \"");//todo where
+                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} \"");//todo where
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote!{
-                    let mut query = format!(
-                        #handle_token_stream,
-                        ROUTE_NAME
-                    );
+                    let mut query = format!(#handle_token_stream);
                     #additional_parameters_id_modification_token_stream
                     query.push_str(&format!(#returning_id_quotes_token_stream));
                     query
@@ -1503,16 +1493,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let url_handle_token_stream = {
+                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/{{}}\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 pub async fn #try_delete_by_id_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #delete_by_id_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_by_id_error_named_camel_case_token_stream> {
                     let url = format!(
-                        "{}/api/{}/{}",
+                        #url_handle_token_stream,
                         #server_location_name_token_stream,
-                        ROUTE_NAME,
-                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.id
+                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.#id_field_ident
                     );
                     // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
@@ -1674,17 +1668,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     .collect::<Vec<#id_field_type>>()
             };
             let query_string_primary_key_some_other_none_token_stream = {
-                let handle_token_stream = {
-                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {{}} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
-                    handle_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
-                quote::quote!{
-                    format!(
-                        #handle_token_stream,
-                        ROUTE_NAME
-                    )
-                }
+                let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
+                handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let query_string_token_stream = {
                 let additional_parameters_modification_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
@@ -1765,14 +1751,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {{}} {where_name_stringified} {{}}\"");
+                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} {{}}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote!{
                     format!(
                         #handle_token_stream,
-                        ROUTE_NAME,
                         {
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
@@ -1999,6 +1984,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let url_handle_token_stream = {
+                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/search\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 pub async fn #try_delete_with_body_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -2011,9 +2001,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     let url = format!(
-                        "{}/api/{}/search",
+                        #url_handle_token_stream,
                         #server_location_name_token_stream,
-                        ROUTE_NAME
                     );
                     // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
@@ -2336,17 +2325,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let query_string_primary_key_some_other_none_token_stream = {
-                let handle_token_stream = {
-                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {{}} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
-                    handle_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
-                quote::quote!{
-                    format!(
-                        #handle_token_stream,
-                        ROUTE_NAME
-                    )
-                }
+                let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
+                handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let query_string_token_stream = {
                 let additional_parameters_modification_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
@@ -2427,14 +2408,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {{}} {where_name_stringified} {{}}\"");
+                    let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} {{}}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote!{
                     format!(
                         #handle_token_stream,
-                        ROUTE_NAME,
                         {
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
@@ -2661,6 +2641,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let url_handle_token_stream = {
+                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}?{{}}\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 pub async fn #try_delete_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -2673,9 +2658,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     let url = format!(
-                        "{}/api/{}?{}",
+                        #url_handle_token_stream,
                         #server_location_name_token_stream,
-                        ROUTE_NAME,
                         encoded_query
                     );
                     // println!("{}", url);
@@ -2856,7 +2840,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let query_string_token_stream = {
                 let query_token_stream = {
-                    let query_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {{}} {where_name_stringified} {id_field_ident} = $1\"");
+                    let query_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {route_name_lower_case_stringified} {where_name_stringified} {id_field_ident} = $1\"");
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -2864,7 +2848,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     format!(
                         #query_token_stream,
                         crate::server::postgres::generate_query::GenerateQuery::generate_query(&#select_token_stream),
-                        ROUTE_NAME
                     )
                 }
             };
@@ -2943,6 +2926,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let url_handle_token_stream = {
+                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/{{}}?{{}}\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 pub async fn #try_read_by_id_lower_case_token_stream(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -2958,9 +2946,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     let url = format!(
-                        "{}/api/{}/{}?{}",
+                        #url_handle_token_stream,
                         #server_location_name_token_stream,
-                        ROUTE_NAME,
                         #parameters_lower_case_token_stream.#path_lower_case_token_stream.id,
                         encoded_query
                     );
@@ -3206,7 +3193,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     },
                 });
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {{}} {{}}\"");
+                    let handle_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {route_name_lower_case_stringified} {{}}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -3231,7 +3218,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         crate::server::postgres::generate_query::GenerateQuery::generate_query(
                             &self.#payload_lower_case_token_stream.#select_token_stream
                         ),
-                        ROUTE_NAME,
                         {
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
@@ -3422,6 +3408,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let url_handle_token_stream = {
+                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/search\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 pub async fn #try_read_with_body_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -3437,9 +3428,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     let url = format!(
-                        "{}/api/{}/search",
-                        #server_location_name_token_stream,
-                        ROUTE_NAME
+                        #url_handle_token_stream ,
+                        #server_location_name_token_stream
                     );
                     // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
@@ -3736,7 +3726,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     },
                 });
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {{}} {{}}\"");
+                    let handle_stringified = format!("\"{select_name_stringified} {{}} {from_name_stringified} {route_name_lower_case_stringified} {{}}\"");
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -3759,7 +3749,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     format!(
                         #handle_token_stream,
                         crate::server::postgres::generate_query::GenerateQuery::generate_query(&#select_token_stream),
-                        ROUTE_NAME,
                         {
                             #increment_initialization_token_stream
                             let mut additional_parameters = std::string::String::default();
@@ -3951,6 +3940,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let url_handle_token_stream = {
+                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}?{{}}\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 pub async fn #try_read_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -3966,9 +3960,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     let url = format!(
-                        "{}/api/{}?{}",
+                        #url_handle_token_stream,
                         #server_location_name_token_stream,
-                        ROUTE_NAME,
                         encoded_query
                     );
                     // println!("{}", url);
@@ -4172,16 +4165,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let handle_token_stream = {
-                    let handle_stringified = format!("\"{update_name_stringified} {{}} {set_name_stringified} \"");//todo where
+                    let handle_stringified = format!("\"{update_name_stringified} {route_name_lower_case_stringified} {set_name_stringified} \"");//todo where
                     handle_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote!{
                     #increment_initialization_token_stream
-                    let mut query = format!(
-                        #handle_token_stream,
-                        ROUTE_NAME
-                    );
+                    let mut query = std::string::String::from(#handle_token_stream);
                     #(#additional_parameters_modification_token_stream)*
                     #additional_parameters_id_modification_token_stream
                     query.push_str(&format!(#returning_id_quotes_token_stream));
@@ -4281,6 +4271,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let url_handle_token_stream = {
+                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/{{}}\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 pub async fn #try_update_by_id_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -4293,10 +4288,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     let url = format!(
-                        "{}/api/{}/{}",
+                        #url_handle_token_stream,
                         #server_location_name_token_stream,
-                        ROUTE_NAME,
-                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.id.to_inner()
+                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.#id_field_ident.to_inner()
                     );
                     // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
@@ -4450,53 +4444,45 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .collect::<Vec<#id_field_type>>()
             };
             let query_string_token_stream = {
-                let handle_token_stream = {
-                    let column_names = fields_named.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
-                        let field_ident = field.ident.clone()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                            });
+                let column_names = fields_named.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    let possible_dot_space = match (index + 1) == fields_named_len {
+                        true => "",
+                        false => dot_space,
+                    };
+                    acc.push_str(&format!("{field_ident}{possible_dot_space}"));
+                    acc
+                });
+                let column_increments = fields_named.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, _)| {
+                    let incremented_index = index + 1;
+                    let possible_dot_space = match (incremented_index) == fields_named_len {
+                        true => "",
+                        false => dot_space,
+                    };
+                    acc.push_str(&format!("${incremented_index}{possible_dot_space}"));
+                    acc
+                });
+                let declarations = {
+                    let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
+                    let fields_named_len = fields_named_filtered.len();
+                    fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
+                        let field_ident = field.ident.clone().unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
                         let possible_dot_space = match (index + 1) == fields_named_len {
                             true => "",
                             false => dot_space,
                         };
-                        acc.push_str(&format!("{field_ident}{possible_dot_space}"));
+                        acc.push_str(&format!("{field_ident} = data.{field_ident}{possible_dot_space}"));
                         acc
-                    });
-                    let column_increments = fields_named.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, _)| {
-                        let incremented_index = index + 1;
-                        let possible_dot_space = match (incremented_index) == fields_named_len {
-                            true => "",
-                            false => dot_space,
-                        };
-                        acc.push_str(&format!("${incremented_index}{possible_dot_space}"));
-                        acc
-                    });
-                    let declarations = {
-                        let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<Vec<&syn::Field>>();
-                        let fields_named_len = fields_named_filtered.len();
-                        fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
-                            let field_ident = field.ident.clone().unwrap_or_else(|| {
-                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                            });
-                            let possible_dot_space = match (index + 1) == fields_named_len {
-                                true => "",
-                                false => dot_space,
-                            };
-                            acc.push_str(&format!("{field_ident} = data.{field_ident}{possible_dot_space}"));
-                            acc
-                        })
-                    };
-                    let query_stringified = format!("\"{update_name_stringified} {{}} {as_name_stringified} t {set_name_stringified} {declarations} {from_name_stringified} ({select_name_stringified} * {from_name_stringified} {unnest_name_stringified}({column_increments})) as data({column_names}) where t.{id_field_ident} = data.{id_field_ident} {returning_stringified} data.{id_field_ident}\"");
-                    query_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    })
                 };
-                quote::quote!{
-                    format!(
-                        #handle_token_stream,
-                        ROUTE_NAME
-                    )
-                }
+                let query_stringified = format!("\"{update_name_stringified} {route_name_lower_case_stringified} {as_name_stringified} t {set_name_stringified} {declarations} {from_name_stringified} ({select_name_stringified} * {from_name_stringified} {unnest_name_stringified}({column_increments})) as data({column_names}) where t.{id_field_ident} = data.{id_field_ident} {returning_stringified} data.{id_field_ident}\"");
+                query_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let binded_query_token_stream = {
                 let column_vecs_token_stream = fields_named.iter().map(|field|{
@@ -4510,7 +4496,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     field_ident_underscore_vec_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_underscore_vec_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 });
-                let column_vecs_with_capacity_token_stream = fields_named.iter().map(|field|quote::quote!{Vec::with_capacity(#current_vec_len_name_token_stream)});
+                let column_vecs_with_capacity_token_stream = fields_named.iter().map(|_|quote::quote!{Vec::with_capacity(#current_vec_len_name_token_stream)});
                 let columns_acc_push_elements_token_stream = fields_named.iter().enumerate().map(|(index, field)|{
                     let field_ident = field.ident.clone()
                         .unwrap_or_else(|| {
@@ -4728,6 +4714,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
+            let url_handle_token_stream = {
+                let url_handle_stringified = format!("\"{{}}/api/{route_name_lower_case_stringified}/\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 pub async fn #try_update_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -4740,9 +4731,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     let url = format!(
-                        "{}/api/{}/",
-                        #server_location_name_token_stream,
-                        ROUTE_NAME,
+                        #url_handle_token_stream,
+                        #server_location_name_token_stream
                     );
                     // println!("{}", url);
                     match #tvfrr_extraction_logic_token_stream(
