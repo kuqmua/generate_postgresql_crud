@@ -48,7 +48,7 @@ pub fn generate_postgresql_crud_route_name(
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
     attributes(
-        generate_postgresql_crud_id,
+        generate_postgresql_crud_primary_key,
         //todo add attributes for postgresql types
     )
 )]//todo check on postgresql max length value of type
@@ -110,7 +110,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         panic!("{proc_macro_name_ident_stringified} supports only syn::Fields::Named");
     };
     let id_field = {
-        let id_attr_name = "generate_postgresql_crud_id";
+        let id_attr_name = "generate_postgresql_crud_primary_key";
         let mut id_field_option = None;
         for field_named in &fields_named {
             let attrs = &field_named.attrs;
@@ -4970,13 +4970,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 
 // #[derive(strum_macros::Display)]//strum_macros::EnumIter, 
 // enum Attribute {
-//     GeneratePostgresqlCrudId,
+//     GeneratePostgresqlCrudPrimaryKey,
 // }
 
 // impl Attribute {
 //     pub fn to_str(&self) -> &str {
 //         match self {
-//             Attribute::GeneratePostgresqlCrudId => "generate_postgresql_crud_id",
+//             Attribute::GeneratePostgresqlCrudPrimaryKey => "generate_postgresql_crud_primary_key",
 //         }
 //     }
 //     pub fn attribute_view(&self) -> String {
