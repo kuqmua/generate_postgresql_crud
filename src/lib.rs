@@ -44,7 +44,7 @@ pub fn generate_postgresql_crud_route_name(
 //todo add int overflow check panic
 //todo maybe add unnest sql types?
 //todo maybe add unnest to filter parameters if its array ?
-//todo reuse non_existing_primary_keys_name_token_stream
+//todo swagger ui https://github.com/juhaku/utoipa/blob/master/examples/todo-axum/src/main.rs
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
     attributes(
@@ -802,6 +802,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {payload_extraction_result_lower_case} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let non_existing_primary_keys_name_token_stream = quote::quote!{non_existing_primary_keys};
+    let expected_updated_primary_keys_name_token_stream = quote::quote!{expected_updated_primary_keys};
+    let non_existing_primary_keys_generation_token_stream = quote::quote!{
+        let #non_existing_primary_keys_name_token_stream = {
+            let mut #non_existing_primary_keys_name_token_stream =
+                Vec::with_capacity(expected_updated_primary_keys.len());
+            for element in #expected_updated_primary_keys_name_token_stream {
+                if let false = primary_key_vec.contains(&element) {
+                    #non_existing_primary_keys_name_token_stream.push(element);
+                }
+            }
+            #non_existing_primary_keys_name_token_stream
+        };
+    };
     let use_futures_try_stream_ext_token_stream = quote::quote!{use futures::TryStreamExt};
     let query_encode_token_stream = quote::quote!{QueryEncode};
     let url_encoding_token_stream = quote::quote!{url_encoding};
@@ -983,7 +996,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let begin_token_stream = quote::quote!{begin};
     let use_sqlx_acquire_token_stream = quote::quote!{use sqlx::Acquire};
     let increment_initialization_token_stream = quote::quote!{let mut increment: u64 = 0;};
-    let expected_updated_primary_keys_name_token_stream = quote::quote!{expected_updated_primary_keys};
     let current_vec_len_name_token_stream = quote::quote!{current_vec_len};
     let element_name_token_stream = quote::quote!{element};
     let acc_name_token_stream = quote::quote!{acc};
@@ -1770,6 +1782,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let delete_by_id_lower_case_token_stream = delete_by_id_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_by_id_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             quote::quote!{
+                #[utoipa::path(
+                    delete,
+                    path = "/api/cats",
+                    responses(
+                        (status = 200, description = "delete cat by id", body = [TryDeleteById])
+                    )
+                )]
                 pub async fn #delete_by_id_lower_case_token_stream<'a>(
                     #path_extraction_result_lower_case_token_stream: Result<
                         #axum_extract_path_token_stream<#delete_by_id_path_camel_case_token_stream>,
@@ -2139,16 +2158,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     primary_key_vec
                                 };
                                 {
-                                    let #non_existing_primary_keys_name_token_stream = {
-                                        let mut #non_existing_primary_keys_name_token_stream =
-                                            Vec::with_capacity(expected_updated_primary_keys.len());
-                                        for element in #expected_updated_primary_keys_name_token_stream {
-                                            if let false = primary_key_vec.contains(&element) {
-                                                #non_existing_primary_keys_name_token_stream.push(element);
-                                            }
-                                        }
-                                        #non_existing_primary_keys_name_token_stream
-                                    };
+                                    #non_existing_primary_keys_generation_token_stream
                                     if let false = #non_existing_primary_keys_name_token_stream.is_empty() {
                                         match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                             Ok(_) => {
@@ -2796,16 +2806,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     primary_key_vec
                                 };
                                 {
-                                    let #non_existing_primary_keys_name_token_stream = {
-                                        let mut #non_existing_primary_keys_name_token_stream =
-                                            Vec::with_capacity(expected_updated_primary_keys.len());
-                                        for element in expected_updated_primary_keys {
-                                            if let false = primary_key_vec.contains(&element) {
-                                                #non_existing_primary_keys_name_token_stream.push(element);
-                                            }
-                                        }
-                                        #non_existing_primary_keys_name_token_stream
-                                    };
+                                    #non_existing_primary_keys_generation_token_stream
                                     if let false = #non_existing_primary_keys_name_token_stream.is_empty() {
                                         match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                             Ok(_) => {
@@ -4893,16 +4894,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             primary_key_vec
                         };
                         {
-                            let #non_existing_primary_keys_name_token_stream = {
-                                let mut #non_existing_primary_keys_name_token_stream =
-                                    Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
-                                for element in #expected_updated_primary_keys_name_token_stream {
-                                    if let false = primary_key_vec.contains(&element) {
-                                        #non_existing_primary_keys_name_token_stream.push(element);
-                                    }
-                                }
-                                #non_existing_primary_keys_name_token_stream
-                            };
+                            #non_existing_primary_keys_generation_token_stream
                             if let false = #non_existing_primary_keys_name_token_stream.is_empty() {
                                 match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                     Ok(_) => {
