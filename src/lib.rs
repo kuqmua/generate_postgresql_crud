@@ -2,7 +2,6 @@ mod column_names_factorial;
 mod check_for_none;
 mod acquire_pool_and_connection;
 mod from_log_and_return_error;
-mod if_non_existing_primary_keys_is_not_empty;
 mod postgres_transaction_commit_match;
 
 fn get_macro_attribute<'a>(
@@ -43,7 +42,6 @@ pub fn generate_postgresql_crud_route_name(
 //todo add route name as argument for macro - generation constant and add to generation logic
 //todo make sqlx macros instead of just queries?
 //todo support for arrays as column values
-//todo add int overflow check panic
 //todo maybe add unnest sql types?
 //todo maybe add unnest to filter parameters if its array ?
 //todo swagger ui https://github.com/juhaku/utoipa/blob/master/examples/todo-axum/src/main.rs
@@ -1202,14 +1200,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #binded_query_token_stream
                         };
                         #acquire_pool_and_connection_token_stream
-                        match #binded_query_name_token_stream
-                            .execute(#pg_connection_token_stream.as_mut())
-                            .await
-                        {
-                            Ok(_) => {
-                                //todo - is need to return rows affected?
-                                #try_create_batch_response_variants_token_stream::#desirable_token_stream(())
-                            }
+                        match #binded_query_name_token_stream.execute(#pg_connection_token_stream.as_mut()).await {
+                            //todo - is need to return rows affected?
+                            Ok(_) => #try_create_batch_response_variants_token_stream::#desirable_token_stream(()),
                             Err(e) => {
                                 #from_log_and_return_error_token_stream
                             }
@@ -1464,14 +1457,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #binded_query_token_stream
                         };
                         #acquire_pool_and_connection_token_stream
-                        match #binded_query_name_token_stream
-                            .execute(#pg_connection_token_stream.as_mut())
-                            .await
-                        {
-                            Ok(_) => {
-                                //todo - is need to return rows affected?
-                                #try_create_response_variants_token_stream::#desirable_token_stream(())
-                            }
+                        match #binded_query_name_token_stream.execute(#pg_connection_token_stream.as_mut()).await {
+                            //todo - is need to return rows affected?
+                            Ok(_) => #try_create_response_variants_token_stream::#desirable_token_stream(()),
                             Err(e) => {
                                 #from_log_and_return_error_token_stream
                             }
@@ -2058,18 +2046,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     query
                 }
             };
-            let if_non_existing_primary_keys_is_not_empty_token_stream = crate::if_non_existing_primary_keys_is_not_empty::if_non_existing_primary_keys_is_not_empty(
+            let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
                 &non_existing_primary_keys_name_token_stream,
                 &expected_updated_primary_keys_name_token_stream,
-                &postgres_transaction_token_stream,
                 &rollback_token_stream,
-                &prepare_and_execute_query_error_token_stream,
-                &error_log_call_token_stream,
-                &try_delete_with_body_response_variants_token_stream,
                 &non_existing_primary_keys_token_stream,
-                &non_existing_primary_keys_and_failed_rollback_token_stream
-            );
-            let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &non_existing_primary_keys_and_failed_rollback_token_stream,
                 &postgres_transaction_token_stream,
                 &commit_token_stream,
                 &try_delete_with_body_response_variants_token_stream,
@@ -2167,9 +2149,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                     primary_key_vec
                                 };
-                                {
-                                    #if_non_existing_primary_keys_is_not_empty_token_stream
-                                }
                                 #postgres_transaction_commit_match_token_stream
                             }
                             _ => {
@@ -2182,6 +2161,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 };
                                 #acquire_pool_and_connection_token_stream
                                 match #binded_query_name_token_stream.execute(#pg_connection_token_stream.as_mut()).await {
+                                    //todo - is need to return rows affected?
                                     Ok(_) => #try_delete_with_body_response_variants_token_stream::#desirable_token_stream(()),
                                     Err(e) => {
                                          #from_log_and_return_error_token_stream
@@ -2705,18 +2685,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     query
                 }
             };
-            let if_non_existing_primary_keys_is_not_empty_token_stream = crate::if_non_existing_primary_keys_is_not_empty::if_non_existing_primary_keys_is_not_empty(
+            let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
                 &non_existing_primary_keys_name_token_stream,
                 &expected_updated_primary_keys_name_token_stream,
-                &postgres_transaction_token_stream,
                 &rollback_token_stream,
-                &prepare_and_execute_query_error_token_stream,
-                &error_log_call_token_stream,
-                &try_delete_response_variants_token_stream,
                 &non_existing_primary_keys_token_stream,
-                &non_existing_primary_keys_and_failed_rollback_token_stream
-            );
-            let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &non_existing_primary_keys_and_failed_rollback_token_stream,
                 &postgres_transaction_token_stream,
                 &commit_token_stream,
                 &try_delete_response_variants_token_stream,
@@ -2814,9 +2788,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                     primary_key_vec
                                 };
-                                {
-                                    #if_non_existing_primary_keys_is_not_empty_token_stream
-                                }
                                 #postgres_transaction_commit_match_token_stream
                             }
                             _ => {
@@ -2829,6 +2800,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 };
                                 #acquire_pool_and_connection_token_stream
                                 match #binded_query_name_token_stream.execute(#pg_connection_token_stream.as_mut()).await {
+                                    //todo - is need to return rows affected?
                                     Ok(_) => #try_delete_response_variants_token_stream::#desirable_token_stream(()),
                                     Err(e) => {
                                         #from_log_and_return_error_token_stream
@@ -4794,18 +4766,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #query_name_token_stream
                 }
             };
-            let if_non_existing_primary_keys_is_not_empty_token_stream = crate::if_non_existing_primary_keys_is_not_empty::if_non_existing_primary_keys_is_not_empty(
+            let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
                 &non_existing_primary_keys_name_token_stream,
                 &expected_updated_primary_keys_name_token_stream,
-                &postgres_transaction_token_stream,
                 &rollback_token_stream,
-                &prepare_and_execute_query_error_token_stream,
-                &error_log_call_token_stream,
-                &try_update_response_variants_token_stream,
                 &non_existing_primary_keys_token_stream,
-                &non_existing_primary_keys_and_failed_rollback_token_stream
-            );
-            let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &non_existing_primary_keys_and_failed_rollback_token_stream,
                 &postgres_transaction_token_stream,
                 &commit_token_stream,
                 &try_update_response_variants_token_stream,
@@ -4901,9 +4867,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                             primary_key_vec
                         };
-                        {
-                            #if_non_existing_primary_keys_is_not_empty_token_stream
-                        }
                         #postgres_transaction_commit_match_token_stream
                     }
                 }
