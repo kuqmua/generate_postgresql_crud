@@ -1,9 +1,11 @@
 pub fn postgres_transaction_commit_match(
+    binded_query_name_token_stream: &proc_macro2::TokenStream,
+    use_futures_try_stream_ext_token_stream: &proc_macro2::TokenStream,
+    query_and_rollback_failed_token_stream: &proc_macro2::TokenStream,
     primary_key_try_from_sqlx_row_name_token_stream: &proc_macro2::TokenStream,
     from_log_and_return_error_token_stream: &proc_macro2::TokenStream,
     rollback_error_name_token_stream: &proc_macro2::TokenStream,
     primary_key_from_row_and_failed_rollback_token_stream: &proc_macro2::TokenStream,
-    //
     non_existing_primary_keys_name_token_stream: &proc_macro2::TokenStream,
     expected_updated_primary_keys_name_token_stream: &proc_macro2::TokenStream,
     primary_key_vec_name_token_stream: &proc_macro2::TokenStream,
@@ -19,6 +21,44 @@ pub fn postgres_transaction_commit_match(
     error_log_call_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
     quote::quote! {
+        let results_vec = {
+            let mut results_vec = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
+            let mut option_error: Option<sqlx::Error> = None;
+            {
+                let mut rows = #binded_query_name_token_stream.fetch(#postgres_transaction_token_stream.as_mut());
+                while let (Some(Some(row)), None) = (
+                    match {
+                        #use_futures_try_stream_ext_token_stream;
+                        rows.try_next()
+                    }
+                    .await
+                    {
+                        Ok(value) => Some(value),
+                        Err(e) => {
+                            option_error = Some(e);
+                            None
+                        }
+                    },
+                    &option_error,
+                ) {
+                    results_vec.push(row);
+                }
+            }
+            if let Some(e) = option_error {
+                match #postgres_transaction_token_stream.#rollback_token_stream().await {
+                    Ok(_) => {
+                        #from_log_and_return_error_token_stream;
+                    }
+                    Err(#rollback_error_name_token_stream) => {
+                        //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
+                        let error = #prepare_and_execute_query_error_token_stream::#query_and_rollback_failed_token_stream;
+                        #error_log_call_token_stream
+                        return #response_variants_token_stream::from(error);
+                    }
+                }
+            }
+            results_vec
+        };
         let #primary_key_vec_name_token_stream = {
             let mut #primary_key_vec_name_token_stream = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
             for element in results_vec {

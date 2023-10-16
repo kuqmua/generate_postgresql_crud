@@ -2048,6 +2048,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &binded_query_name_token_stream,
+                &use_futures_try_stream_ext_token_stream,
+                &query_and_rollback_failed_token_stream,
                 &primary_key_try_from_sqlx_row_name_token_stream,
                 &from_log_and_return_error_token_stream,
                 &rollback_error_name_token_stream,
@@ -2096,43 +2099,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Err(e) => {
                                         #from_log_and_return_error_token_stream
                                     }
-                                };
-                                let results_vec = {
-                                    let mut results_vec = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
-                                    let mut option_error: Option<sqlx::Error> = None;
-                                    {
-                                        let mut rows = #binded_query_name_token_stream.fetch(#postgres_transaction_token_stream.as_mut());
-                                        while let (Some(Some(row)), None) = (
-                                            match {
-                                                #use_futures_try_stream_ext_token_stream;
-                                                rows.try_next()
-                                            }
-                                            .await
-                                            {
-                                                Ok(value) => Some(value),
-                                                Err(e) => {
-                                                    option_error = Some(e);
-                                                    None
-                                                }
-                                            },
-                                            &option_error,
-                                        ) {
-                                            results_vec.push(row);
-                                        }
-                                    }
-                                    if let Some(e) = option_error {
-                                        match #postgres_transaction_token_stream.#rollback_token_stream().await {
-                                            Ok(_) => {
-                                                #from_log_and_return_error_token_stream
-                                            }
-                                            Err(#rollback_error_name_token_stream) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::#query_and_rollback_failed_token_stream;
-                                                #error_log_call_token_stream
-                                                return #try_delete_with_body_response_variants_token_stream::from(error);
-                                            }
-                                        }
-                                    }
-                                    results_vec
                                 };
                                 #postgres_transaction_commit_match_token_stream
                             }
@@ -2671,6 +2637,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &binded_query_name_token_stream,
+                &use_futures_try_stream_ext_token_stream,
+                &query_and_rollback_failed_token_stream,
                 &primary_key_try_from_sqlx_row_name_token_stream,
                 &from_log_and_return_error_token_stream,
                 &rollback_error_name_token_stream,
@@ -2719,43 +2688,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Err(e) => {
                                         #from_log_and_return_error_token_stream
                                     }
-                                };
-                                let results_vec = {
-                                    let mut results_vec = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
-                                    let mut option_error: Option<sqlx::Error> = None;
-                                    {
-                                        let mut rows = #binded_query_name_token_stream.fetch(#postgres_transaction_token_stream.as_mut());
-                                        while let (Some(Some(row)), None) = (
-                                            match {
-                                                #use_futures_try_stream_ext_token_stream;
-                                                rows.try_next()
-                                            }
-                                            .await
-                                            {
-                                                Ok(value) => Some(value),
-                                                Err(e) => {
-                                                    option_error = Some(e);
-                                                    None
-                                                }
-                                            },
-                                            &option_error,
-                                        ) {
-                                            results_vec.push(row);
-                                        }
-                                    }
-                                    if let Some(e) = option_error {
-                                        match #postgres_transaction_token_stream.#rollback_token_stream().await {
-                                            Ok(_) => {
-                                                #from_log_and_return_error_token_stream
-                                            }
-                                            Err(#rollback_error_name_token_stream) => {
-                                                let error = #prepare_and_execute_query_error_token_stream::#query_and_rollback_failed_token_stream;
-                                                #error_log_call_token_stream
-                                                return #try_delete_response_variants_token_stream::from(error);
-                                            }
-                                        }
-                                    }
-                                    results_vec
                                 };
                                 #postgres_transaction_commit_match_token_stream
                             }
@@ -4736,6 +4668,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &binded_query_name_token_stream,
+                &use_futures_try_stream_ext_token_stream,
+                &query_and_rollback_failed_token_stream,
                 &primary_key_try_from_sqlx_row_name_token_stream,
                 &from_log_and_return_error_token_stream,
                 &rollback_error_name_token_stream,
@@ -4781,44 +4716,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Err(e) => {
                                 #from_log_and_return_error_token_stream;
                             }
-                        };
-                        let results_vec = {
-                            let mut results_vec = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
-                            let mut option_error: Option<sqlx::Error> = None;
-                            {
-                                let mut rows = binded_query.fetch(#postgres_transaction_token_stream.as_mut());
-                                while let (Some(Some(row)), None) = (
-                                    match {
-                                        #use_futures_try_stream_ext_token_stream;
-                                        rows.try_next()
-                                    }
-                                    .await
-                                    {
-                                        Ok(value) => Some(value),
-                                        Err(e) => {
-                                            option_error = Some(e);
-                                            None
-                                        }
-                                    },
-                                    &option_error,
-                                ) {
-                                    results_vec.push(row);
-                                }
-                            }
-                            if let Some(e) = option_error {
-                                match #postgres_transaction_token_stream.#rollback_token_stream().await {
-                                    Ok(_) => {
-                                        #from_log_and_return_error_token_stream;
-                                    }
-                                    Err(#rollback_error_name_token_stream) => {
-                                    //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
-                                        let error = #prepare_and_execute_query_error_token_stream::#query_and_rollback_failed_token_stream;
-                                        #error_log_call_token_stream
-                                        return #try_update_response_variants_token_stream::from(error);
-                                    }
-                                }
-                            }
-                            results_vec
                         };
                         #postgres_transaction_commit_match_token_stream
                     }
