@@ -804,18 +804,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let non_existing_primary_keys_name_token_stream = quote::quote!{non_existing_primary_keys};
     let expected_updated_primary_keys_name_token_stream = quote::quote!{expected_updated_primary_keys};
-    let non_existing_primary_keys_generation_token_stream = quote::quote!{
-        let #non_existing_primary_keys_name_token_stream = {
-            let mut #non_existing_primary_keys_name_token_stream =
-                Vec::with_capacity(expected_updated_primary_keys.len());
-            for element in #expected_updated_primary_keys_name_token_stream {
-                if let false = primary_key_vec.contains(&element) {
-                    #non_existing_primary_keys_name_token_stream.push(element);
-                }
-            }
-            #non_existing_primary_keys_name_token_stream
-        };
-    };
     let use_futures_try_stream_ext_token_stream = quote::quote!{use futures::TryStreamExt};
     let query_encode_token_stream = quote::quote!{QueryEncode};
     let url_encoding_token_stream = quote::quote!{url_encoding};
@@ -2071,6 +2059,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let if_non_existing_primary_keys_is_not_empty_token_stream = crate::if_non_existing_primary_keys_is_not_empty::if_non_existing_primary_keys_is_not_empty(
                 &non_existing_primary_keys_name_token_stream,
+                &expected_updated_primary_keys_name_token_stream,
                 &postgres_transaction_token_stream,
                 &rollback_token_stream,
                 &prepare_and_execute_query_error_token_stream,
@@ -2169,7 +2158,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     primary_key_vec
                                 };
                                 {
-                                    #non_existing_primary_keys_generation_token_stream
                                     #if_non_existing_primary_keys_is_not_empty_token_stream
                                 }
                                 match #postgres_transaction_token_stream.#commit_token_stream().await {
@@ -2716,6 +2704,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let if_non_existing_primary_keys_is_not_empty_token_stream = crate::if_non_existing_primary_keys_is_not_empty::if_non_existing_primary_keys_is_not_empty(
                 &non_existing_primary_keys_name_token_stream,
+                &expected_updated_primary_keys_name_token_stream,
                 &postgres_transaction_token_stream,
                 &rollback_token_stream,
                 &prepare_and_execute_query_error_token_stream,
@@ -2814,7 +2803,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     primary_key_vec
                                 };
                                 {
-                                    #non_existing_primary_keys_generation_token_stream
                                     #if_non_existing_primary_keys_is_not_empty_token_stream
                                 }
                                 match #postgres_transaction_token_stream.#commit_token_stream().await {
@@ -4803,6 +4791,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let if_non_existing_primary_keys_is_not_empty_token_stream = crate::if_non_existing_primary_keys_is_not_empty::if_non_existing_primary_keys_is_not_empty(
                 &non_existing_primary_keys_name_token_stream,
+                &expected_updated_primary_keys_name_token_stream,
                 &postgres_transaction_token_stream,
                 &rollback_token_stream,
                 &prepare_and_execute_query_error_token_stream,
@@ -4899,7 +4888,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             primary_key_vec
                         };
                         {
-                            #non_existing_primary_keys_generation_token_stream
                             #if_non_existing_primary_keys_is_not_empty_token_stream
                         }
                         match #postgres_transaction_token_stream.#commit_token_stream().await {
