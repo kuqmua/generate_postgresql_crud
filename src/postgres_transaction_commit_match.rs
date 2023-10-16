@@ -1,6 +1,7 @@
 pub fn postgres_transaction_commit_match(
     non_existing_primary_keys_name_token_stream: &proc_macro2::TokenStream,
     expected_updated_primary_keys_name_token_stream: &proc_macro2::TokenStream,
+    primary_key_vec_name_token_stream: &proc_macro2::TokenStream,
     rollback_token_stream: &proc_macro2::TokenStream,
     non_existing_primary_keys_token_stream: &proc_macro2::TokenStream,
     non_existing_primary_keys_and_failed_rollback_token_stream: &proc_macro2::TokenStream,
@@ -15,10 +16,11 @@ pub fn postgres_transaction_commit_match(
     quote::quote! {
         {
             let #non_existing_primary_keys_name_token_stream = {
+                //todo rewrite it as fold?
                 let mut #non_existing_primary_keys_name_token_stream =
                     Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
                 for element in #expected_updated_primary_keys_name_token_stream {
-                    if let false = primary_key_vec.contains(&element) {//todo primary_key_vec reuse token stream
+                    if let false = #primary_key_vec_name_token_stream.contains(&element) {
                         #non_existing_primary_keys_name_token_stream.push(element);
                     }
                 }

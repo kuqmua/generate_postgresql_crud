@@ -822,6 +822,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let request_error_camel_case_stringified = "RequestError";
     let returning_stringified = "returning";
     let returning_id_stringified = format!(" {returning_stringified} {id_field_ident}");
+    let primary_key_vec_name_token_stream = quote::quote!{primary_key_vec};
     let rollback_error_name_token_stream = quote::quote!{rollback_error};
     let returning_id_quotes_token_stream = {
         let returning_id_quotes_stringified = format!("\"{returning_id_stringified}\"");
@@ -2049,6 +2050,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
                 &non_existing_primary_keys_name_token_stream,
                 &expected_updated_primary_keys_name_token_stream,
+                &primary_key_vec_name_token_stream,
                 &rollback_token_stream,
                 &non_existing_primary_keys_token_stream,
                 &non_existing_primary_keys_and_failed_rollback_token_stream,
@@ -2128,12 +2130,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                     results_vec
                                 };
-                                let primary_key_vec = {
-                                    let mut primary_key_vec = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
+                                let #primary_key_vec_name_token_stream = {
+                                    let mut #primary_key_vec_name_token_stream = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
                                     for element in results_vec {
                                         match #primary_key_try_from_sqlx_row_name_token_stream(&element) {
                                             Ok(primary_key) => {
-                                                primary_key_vec.push(primary_key);
+                                                #primary_key_vec_name_token_stream.push(primary_key);
                                             }
                                             Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                                 Ok(_) => {
@@ -2147,7 +2149,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             },
                                         }
                                     }
-                                    primary_key_vec
+                                    #primary_key_vec_name_token_stream
                                 };
                                 #postgres_transaction_commit_match_token_stream
                             }
@@ -2688,6 +2690,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
                 &non_existing_primary_keys_name_token_stream,
                 &expected_updated_primary_keys_name_token_stream,
+                &primary_key_vec_name_token_stream,
                 &rollback_token_stream,
                 &non_existing_primary_keys_token_stream,
                 &non_existing_primary_keys_and_failed_rollback_token_stream,
@@ -2767,12 +2770,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                     results_vec
                                 };
-                                let primary_key_vec = {
-                                    let mut primary_key_vec = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
+                                let #primary_key_vec_name_token_stream = {
+                                    let mut #primary_key_vec_name_token_stream = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
                                     for element in results_vec {
                                         match #primary_key_try_from_sqlx_row_name_token_stream(&element) {
                                             Ok(primary_key) => {
-                                                primary_key_vec.push(primary_key);
+                                                #primary_key_vec_name_token_stream.push(primary_key);
                                             }
                                             Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                                 Ok(_) => {
@@ -2786,7 +2789,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             },
                                         }
                                     }
-                                    primary_key_vec
+                                    #primary_key_vec_name_token_stream
                                 };
                                 #postgres_transaction_commit_match_token_stream
                             }
@@ -4769,6 +4772,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
                 &non_existing_primary_keys_name_token_stream,
                 &expected_updated_primary_keys_name_token_stream,
+                &primary_key_vec_name_token_stream,
                 &rollback_token_stream,
                 &non_existing_primary_keys_token_stream,
                 &non_existing_primary_keys_and_failed_rollback_token_stream,
@@ -4846,12 +4850,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                             results_vec
                         };
-                        let primary_key_vec = {
-                            let mut primary_key_vec = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
+                        let #primary_key_vec_name_token_stream = {
+                            let mut #primary_key_vec_name_token_stream = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
                             for element in results_vec {
                                 match #primary_key_try_from_sqlx_row_name_token_stream(&element) {
                                     Ok(primary_key) => {
-                                        primary_key_vec.push(primary_key);
+                                        #primary_key_vec_name_token_stream.push(primary_key);
                                     }
                                     Err(e) => match #postgres_transaction_token_stream.#rollback_token_stream().await {
                                         Ok(_) => {
@@ -4865,7 +4869,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     },
                                 }
                             }
-                            primary_key_vec
+                            #primary_key_vec_name_token_stream
                         };
                         #postgres_transaction_commit_match_token_stream
                     }
