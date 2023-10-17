@@ -1,4 +1,8 @@
 pub fn postgres_transaction_commit_match(
+    acquire_pool_and_connection_token_stream: &proc_macro2::TokenStream,
+    use_sqlx_acquire_token_stream: &proc_macro2::TokenStream,
+    pg_connection_token_stream: &proc_macro2::TokenStream,
+    begin_token_stream: &proc_macro2::TokenStream,
     binded_query_name_token_stream: &proc_macro2::TokenStream,
     use_futures_try_stream_ext_token_stream: &proc_macro2::TokenStream,
     query_and_rollback_failed_token_stream: &proc_macro2::TokenStream,
@@ -21,6 +25,18 @@ pub fn postgres_transaction_commit_match(
     error_log_call_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
     quote::quote! {
+        #acquire_pool_and_connection_token_stream
+        let mut #postgres_transaction_token_stream = match {
+            #use_sqlx_acquire_token_stream;
+            #pg_connection_token_stream.#begin_token_stream()
+        }
+        .await
+        {
+            Ok(value) => value,
+            Err(e) => {
+                #from_log_and_return_error_token_stream
+            }
+        };
         let results_vec = {
             let mut results_vec = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
             let mut option_error: Option<sqlx::Error> = None;

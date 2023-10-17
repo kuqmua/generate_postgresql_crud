@@ -2048,6 +2048,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &acquire_pool_and_connection_token_stream,
+                &use_sqlx_acquire_token_stream,
+                &pg_connection_token_stream,
+                &begin_token_stream,
                 &binded_query_name_token_stream,
                 &use_futures_try_stream_ext_token_stream,
                 &query_and_rollback_failed_token_stream,
@@ -2087,18 +2091,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     };
                                     println!("{}", #query_string_name_token_stream);
                                     #binded_query_primary_key_some_other_none_token_stream
-                                };
-                                #acquire_pool_and_connection_token_stream
-                                let mut #postgres_transaction_token_stream = match {
-                                    #use_sqlx_acquire_token_stream;
-                                    #pg_connection_token_stream.#begin_token_stream()
-                                }
-                                .await
-                                {
-                                    Ok(value) => value,
-                                    Err(e) => {
-                                        #from_log_and_return_error_token_stream
-                                    }
                                 };
                                 #postgres_transaction_commit_match_token_stream
                             }
@@ -2637,6 +2629,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &acquire_pool_and_connection_token_stream,
+                &use_sqlx_acquire_token_stream,
+                &pg_connection_token_stream,
+                &begin_token_stream,
                 &binded_query_name_token_stream,
                 &use_futures_try_stream_ext_token_stream,
                 &query_and_rollback_failed_token_stream,
@@ -2676,18 +2672,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     };
                                     println!("{}", #query_string_name_token_stream);
                                     #binded_query_primary_key_some_other_none_token_stream
-                                };
-                                #acquire_pool_and_connection_token_stream
-                                let mut #postgres_transaction_token_stream = match {
-                                    #use_sqlx_acquire_token_stream;
-                                    #pg_connection_token_stream.#begin_token_stream()
-                                }
-                                .await
-                                {
-                                    Ok(value) => value,
-                                    Err(e) => {
-                                        #from_log_and_return_error_token_stream
-                                    }
                                 };
                                 #postgres_transaction_commit_match_token_stream
                             }
@@ -4668,6 +4652,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &acquire_pool_and_connection_token_stream,
+                &use_sqlx_acquire_token_stream,
+                &pg_connection_token_stream,
+                &begin_token_stream,
                 &binded_query_name_token_stream,
                 &use_futures_try_stream_ext_token_stream,
                 &query_and_rollback_failed_token_stream,
@@ -4704,18 +4692,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             };
                             println!("{}", #query_string_name_token_stream);
                             #binded_query_token_stream
-                        };
-                        #acquire_pool_and_connection_token_stream
-                        let mut #postgres_transaction_token_stream = match {
-                            #use_sqlx_acquire_token_stream;
-                            #pg_connection_token_stream.#begin_token_stream()
-                        }
-                        .await
-                        {
-                            Ok(value) => value,
-                            Err(e) => {
-                                #from_log_and_return_error_token_stream;
-                            }
                         };
                         #postgres_transaction_commit_match_token_stream
                     }
