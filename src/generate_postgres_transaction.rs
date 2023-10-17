@@ -1,9 +1,8 @@
-pub fn postgres_transaction_commit_match(
+pub fn generate_postgres_transaction(
     expected_updated_primary_keys_token_stream: &proc_macro2::TokenStream,
     query_string_name_token_stream: &proc_macro2::TokenStream,
     query_string_token_stream: &proc_macro2::TokenStream,
     binded_query_token_stream: &proc_macro2::TokenStream,
-
     acquire_pool_and_connection_token_stream: &proc_macro2::TokenStream,
     use_sqlx_acquire_token_stream: &proc_macro2::TokenStream,
     pg_connection_token_stream: &proc_macro2::TokenStream,

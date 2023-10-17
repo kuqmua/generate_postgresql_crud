@@ -2,7 +2,7 @@ mod column_names_factorial;
 mod check_for_none;
 mod acquire_pool_and_connection;
 mod from_log_and_return_error;
-mod postgres_transaction_commit_match;
+mod generate_postgres_transaction;
 
 fn get_macro_attribute<'a>(
     attrs: &'a [syn::Attribute],
@@ -2047,7 +2047,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     query
                 }
             };
-            let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+            let generate_postgres_transaction_token_stream = crate::generate_postgres_transaction::generate_postgres_transaction(
                 &expected_updated_primary_keys_token_stream,
                 &query_string_name_token_stream,
                 &query_string_primary_key_some_other_none_token_stream,
@@ -2086,7 +2086,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #check_for_none_token_stream
                         match (#(#parameters_match_token_stream),*) {
                             (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
-                                #postgres_transaction_commit_match_token_stream
+                                #generate_postgres_transaction_token_stream
                             }
                             _ => {
                                 let #query_string_name_token_stream = {
@@ -2622,7 +2622,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     query
                 }
             };
-            let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+            let generate_postgres_transaction_token_stream = crate::generate_postgres_transaction::generate_postgres_transaction(
                 &expected_updated_primary_keys_token_stream,
                 &query_string_name_token_stream,
                 &query_string_primary_key_some_other_none_token_stream,
@@ -2661,7 +2661,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #check_for_none_token_stream
                         match (#(#parameters_match_token_stream),*) {
                             (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
-                                #postgres_transaction_commit_match_token_stream
+                                #generate_postgres_transaction_token_stream
                             }
                             _ => {
                                 let #query_string_name_token_stream = {
@@ -4639,7 +4639,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #query_name_token_stream
                 }
             };
-            let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+            let generate_postgres_transaction_token_stream = crate::generate_postgres_transaction::generate_postgres_transaction(
                 &expected_updated_primary_keys_token_stream,
                 &query_string_name_token_stream,
                 &query_string_token_stream,
@@ -4675,7 +4675,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_update_response_variants_token_stream {
-                        #postgres_transaction_commit_match_token_stream
+                        #generate_postgres_transaction_token_stream
                     }
                 }
             }
