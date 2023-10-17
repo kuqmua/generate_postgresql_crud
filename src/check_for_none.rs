@@ -101,51 +101,6 @@ pub fn check_for_none(
                     false => dot_space,
                 };
                 acc.0.push_str(&format!("None{possible_dot_space}"));
-                acc.1.push_str(&format!("&self.{query_part}.{field_ident}{possible_dot_space}"));
-                acc
-            })
-    };
-    let none_elements_token_stream = none_elements.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {none_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-    let match_elements_token_stream = match_elements.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {match_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-    let response_variant_token_stream = query_part.get_response_variant();
-    quote::quote!{
-        if let (#none_elements_token_stream) = (#match_elements_token_stream) {
-            return #prepare_and_execute_query_response_variants_token_stream::#response_variant_token_stream;
-        }
-    }
-}
-
-pub fn check_for_none_parameters(
-    fields_named: &syn::punctuated::Punctuated<syn::Field, syn::token::Comma>,
-    id_field: &syn::Field,
-    proc_macro_name_ident_stringified: &std::string::String,
-    dot_space: &str,
-    prepare_and_execute_query_response_variants_token_stream: &proc_macro2::TokenStream,
-    query_part: QueryPart,
-    should_exclude_primary_key: bool
-) -> proc_macro2::TokenStream {
-    let (none_elements, match_elements) = {
-        let fields_named_handle = match should_exclude_primary_key {
-            true => fields_named.iter().filter(|field|*field != id_field).collect::<Vec<&syn::Field>>(),
-            false => fields_named.iter().collect::<Vec<&syn::Field>>()
-        };
-        let fields_named_handle_len = fields_named_handle.len();
-        fields_named_handle.iter().enumerate().fold(
-            (
-                std::string::String::default(),
-                std::string::String::default()
-            ), |mut acc, (index, field)| {
-                let field_ident = field.ident.clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                    });
-                let possible_dot_space = match (index + 1) == fields_named_handle_len {
-                    true => "",
-                    false => dot_space,
-                };
-                acc.0.push_str(&format!("None{possible_dot_space}"));
                 acc.1.push_str(&format!("&parameters.{query_part}.{field_ident}{possible_dot_space}"));//todo parameters reuse naming
                 acc
             })
