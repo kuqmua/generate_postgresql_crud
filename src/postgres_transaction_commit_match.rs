@@ -1,4 +1,8 @@
 pub fn postgres_transaction_commit_match(
+    expected_updated_primary_keys_token_stream: &proc_macro2::TokenStream,
+    query_string_name_token_stream: &proc_macro2::TokenStream,
+    query_string_token_stream: &proc_macro2::TokenStream,
+    binded_query_token_stream: &proc_macro2::TokenStream,
     acquire_pool_and_connection_token_stream: &proc_macro2::TokenStream,
     use_sqlx_acquire_token_stream: &proc_macro2::TokenStream,
     pg_connection_token_stream: &proc_macro2::TokenStream,
@@ -25,6 +29,16 @@ pub fn postgres_transaction_commit_match(
     error_log_call_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
     quote::quote! {
+        let #expected_updated_primary_keys_name_token_stream = {
+            #expected_updated_primary_keys_token_stream
+        };
+        let #query_string_name_token_stream = {
+            #query_string_token_stream
+        };
+        let #binded_query_name_token_stream = {
+            println!("{}", #query_string_name_token_stream);
+            #binded_query_token_stream
+        };
         #acquire_pool_and_connection_token_stream
         let mut #postgres_transaction_token_stream = match {
             #use_sqlx_acquire_token_stream;

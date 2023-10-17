@@ -2048,6 +2048,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &expected_updated_primary_keys_token_stream,
+                &query_string_name_token_stream,
+                &query_string_token_stream,
+                &binded_query_token_stream,
                 &acquire_pool_and_connection_token_stream,
                 &use_sqlx_acquire_token_stream,
                 &pg_connection_token_stream,
@@ -2082,16 +2086,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #check_for_none_token_stream
                         match (#(#parameters_match_token_stream),*) {
                             (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
-                                let #expected_updated_primary_keys_name_token_stream = {
-                                    #expected_updated_primary_keys_token_stream
-                                };
-                                let #binded_query_name_token_stream = {
-                                    let #query_string_name_token_stream = {
-                                        #query_string_primary_key_some_other_none_token_stream
-                                    };
-                                    println!("{}", #query_string_name_token_stream);
-                                    #binded_query_primary_key_some_other_none_token_stream
-                                };
                                 #postgres_transaction_commit_match_token_stream
                             }
                             _ => {
@@ -2629,6 +2623,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &expected_updated_primary_keys_token_stream,
+                &query_string_name_token_stream,
+                &query_string_token_stream,
+                &binded_query_token_stream,
                 &acquire_pool_and_connection_token_stream,
                 &use_sqlx_acquire_token_stream,
                 &pg_connection_token_stream,
@@ -2663,16 +2661,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #check_for_none_token_stream
                         match (#(#parameters_match_token_stream),*) {
                             (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
-                                let #expected_updated_primary_keys_name_token_stream = {
-                                    #expected_updated_primary_keys_token_stream
-                                };
-                                let #binded_query_name_token_stream = {
-                                    let #query_string_name_token_stream = {
-                                        #query_string_primary_key_some_other_none_token_stream
-                                    };
-                                    println!("{}", #query_string_name_token_stream);
-                                    #binded_query_primary_key_some_other_none_token_stream
-                                };
                                 #postgres_transaction_commit_match_token_stream
                             }
                             _ => {
@@ -4652,6 +4640,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             let postgres_transaction_commit_match_token_stream = crate::postgres_transaction_commit_match::postgres_transaction_commit_match(
+                &expected_updated_primary_keys_token_stream,
+                &query_string_name_token_stream,
+                &query_string_token_stream,
+                &binded_query_token_stream,
                 &acquire_pool_and_connection_token_stream,
                 &use_sqlx_acquire_token_stream,
                 &pg_connection_token_stream,
@@ -4683,16 +4675,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_update_response_variants_token_stream {
-                        let #expected_updated_primary_keys_name_token_stream = {
-                            #expected_updated_primary_keys_token_stream
-                        };
-                        let #binded_query_name_token_stream = {
-                            let #query_string_name_token_stream = {
-                                #query_string_token_stream
-                            };
-                            println!("{}", #query_string_name_token_stream);
-                            #binded_query_token_stream
-                        };
                         #postgres_transaction_commit_match_token_stream
                     }
                 }
