@@ -1200,7 +1200,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             quote::quote!{
                 impl #create_batch_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                    async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_create_batch_response_variants_token_stream
@@ -1454,7 +1454,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             quote::quote!{
                 impl #create_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                    async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_create_response_variants_token_stream
@@ -1664,7 +1664,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 impl #delete_by_id_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                    async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_delete_by_id_response_variants_token_stream
@@ -2085,7 +2085,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             quote::quote!{
                 impl #delete_with_body_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                    async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_delete_with_body_response_variants_token_stream {
@@ -2657,7 +2657,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             quote::quote!{
                 impl #delete_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                    async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_delete_response_variants_token_stream {
@@ -2930,7 +2930,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 impl #read_by_id_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                    async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_read_by_id_response_variants_token_stream
@@ -3396,7 +3396,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 impl #read_with_body_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                    async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_read_with_body_response_variants_token_stream
@@ -3927,7 +3927,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 impl #read_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                    async fn #prepare_and_execute_query_name_token_stream(
                         self, //impl crate::server::routes::helpers::bind_sqlx_query::BindSqlxQuer with crate::server::postgres::generate_query::GenerateQuery
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_read_response_variants_token_stream
@@ -4279,7 +4279,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 impl #update_by_id_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                    async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_update_by_id_response_variants_token_stream
@@ -4660,7 +4660,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             quote::quote!{
                 impl #update_parameters_camel_case_token_stream {
-                    pub async fn #prepare_and_execute_query_name_token_stream(
+                    async fn #prepare_and_execute_query_name_token_stream(
                         self,
                         #app_info_state_name_token_stream: &#app_info_state_path,
                     ) -> #try_update_response_variants_token_stream {
