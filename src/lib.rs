@@ -3528,6 +3528,32 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 quote::quote!{
+                    if let Some(#id_field_ident) = &#parameters_lower_case_token_stream.#payload_lower_case_token_stream.#id_field_ident {
+                        let not_unique_primary_keys = {
+                            let mut vec = Vec::with_capacity(#id_field_ident.len());
+                            let mut not_unique_primary_keys = Vec::with_capacity(#id_field_ident.len());
+                            for element in #id_field_ident {
+                                let handle = element.to_inner();
+                                match vec.contains(&handle) {
+                                    true => {
+                                        not_unique_primary_keys.push(*element.to_inner());
+                                    },
+                                    false => {
+                                        vec.push(element.to_inner());
+                                    }
+                                }
+                            }
+                            not_unique_primary_keys
+                        };
+                        if let false = not_unique_primary_keys.is_empty() {
+                            let error = #prepare_and_execute_query_error_token_stream::NotUniquePrimeryKey {
+                                not_unique_primary_keys,
+                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                            };
+                            #error_log_call_token_stream
+                            return #try_read_with_body_response_variants_token_stream::from(error);
+                        }
+                    }
                     let #query_string_name_token_stream = {
                         #query_string_token_stream
                     };
