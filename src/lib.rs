@@ -33,10 +33,8 @@ pub fn generate_postgresql_crud_route_name(
     item
 }
 
-//todo - check if primary keys are unique in the input array
 //todo - check if fields for filter are unique in the input array
 //todo created at and updated at fields
-//todo handle situation - duplicate delet\update or something primary key in parameters
 //todo attributes for activation generation crud methods(like generate create, update_by_id, delete_by_id)
 //todo authorization for returning concrete error or just minimal info(user role)
 //todo generate rules and roles
