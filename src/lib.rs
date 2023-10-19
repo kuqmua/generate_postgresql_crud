@@ -2226,7 +2226,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #payload_token_stream
             #try_delete_with_body_error_named_token_stream
             #http_request_token_stream
-            #route_handler_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{delete_with_body_token_stream}");
