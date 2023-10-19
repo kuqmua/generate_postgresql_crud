@@ -925,6 +925,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let not_unique_primary_keys_name_token_stream = quote::quote!{not_unique_primary_keys};
+    let not_unique_primery_key_token_stream = quote::quote!{
+        NotUniquePrimeryKey {
+            not_unique_primary_keys,
+            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+        }
+    };
     let query_encode_variant_token_stream = quote::quote!{
         #query_encode_token_stream {
             #eo_display_attribute_token_stream
@@ -2134,27 +2141,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match (#(#parameters_match_token_stream),*) {
                         (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
                             {
-                                let not_unique_primary_keys = {
+                                let #not_unique_primary_keys_name_token_stream = {
                                     let mut vec = Vec::with_capacity(#id_field_ident.len());
-                                    let mut not_unique_primary_keys = Vec::with_capacity(#id_field_ident.len());
+                                    let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
                                     for element in #id_field_ident {
                                         let handle = element.to_inner();
                                         match vec.contains(&handle) {
                                             true => {
-                                                not_unique_primary_keys.push(*element.to_inner());
+                                                #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
                                             },
                                             false => {
                                                 vec.push(element.to_inner());
                                             }
                                         }
                                     }
-                                    not_unique_primary_keys
+                                    #not_unique_primary_keys_name_token_stream
                                 };
-                                if let false = not_unique_primary_keys.is_empty() {
-                                    let error = #prepare_and_execute_query_error_token_stream::NotUniquePrimeryKey {
-                                        not_unique_primary_keys,
-                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                    };
+                                if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
+                                    let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
                                     #error_log_call_token_stream
                                     return #try_delete_with_body_response_variants_token_stream::from(error);
                                 }
@@ -2163,27 +2167,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                         _ => {
                             if let Some(#id_field_ident) = &#parameters_lower_case_token_stream.#payload_lower_case_token_stream.#id_field_ident {
-                                let not_unique_primary_keys = {
+                                let #not_unique_primary_keys_name_token_stream = {
                                     let mut vec = Vec::with_capacity(#id_field_ident.len());
-                                    let mut not_unique_primary_keys = Vec::with_capacity(#id_field_ident.len());
+                                    let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
                                     for element in #id_field_ident {
                                         let handle = element.to_inner();
                                         match vec.contains(&handle) {
                                             true => {
-                                                not_unique_primary_keys.push(*element.to_inner());
+                                                #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
                                             },
                                             false => {
                                                 vec.push(element.to_inner());
                                             }
                                         }
                                     }
-                                    not_unique_primary_keys
+                                    #not_unique_primary_keys_name_token_stream
                                 };
-                                if let false = not_unique_primary_keys.is_empty() {
-                                    let error = #prepare_and_execute_query_error_token_stream::NotUniquePrimeryKey {
-                                        not_unique_primary_keys,
-                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                    };
+                                if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
+                                    let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
                                     #error_log_call_token_stream
                                     return #try_delete_with_body_response_variants_token_stream::from(error);
                                 }
@@ -2756,27 +2757,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match (#(#parameters_match_token_stream),*) {
                         (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
                             {
-                                let not_unique_primary_keys = {
+                                let #not_unique_primary_keys_name_token_stream = {
                                     let mut vec = Vec::with_capacity(#id_field_ident.len());
-                                    let mut not_unique_primary_keys = Vec::with_capacity(#id_field_ident.len());
+                                    let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
                                     for element in #id_field_ident {
                                         let handle = element.to_inner();
                                         match vec.contains(&handle) {
                                             true => {
-                                                not_unique_primary_keys.push(*element.to_inner());
+                                                #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
                                             },
                                             false => {
                                                 vec.push(element.to_inner());
                                             }
                                         }
                                     }
-                                    not_unique_primary_keys
+                                    #not_unique_primary_keys_name_token_stream
                                 };
-                                if let false = not_unique_primary_keys.is_empty() {
-                                    let error = #prepare_and_execute_query_error_token_stream::NotUniquePrimeryKey {
-                                        not_unique_primary_keys,
-                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                    };
+                                if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
+                                    let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
                                     #error_log_call_token_stream
                                     return #try_delete_response_variants_token_stream::from(error);
                                 }
@@ -2785,27 +2783,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                         _ => {
                             if let Some(#id_field_ident) = &#parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
-                                let not_unique_primary_keys = {
+                                let #not_unique_primary_keys_name_token_stream = {
                                     let mut vec = Vec::with_capacity(#id_field_ident.len());
-                                    let mut not_unique_primary_keys = Vec::with_capacity(#id_field_ident.len());
+                                    let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
                                     for element in #id_field_ident {
                                         let handle = element.to_inner();
                                         match vec.contains(&handle) {
                                             true => {
-                                                not_unique_primary_keys.push(*element.to_inner());
+                                                #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
                                             },
                                             false => {
                                                 vec.push(element.to_inner());
                                             }
                                         }
                                     }
-                                    not_unique_primary_keys
+                                    #not_unique_primary_keys_name_token_stream
                                 };
-                                if let false = not_unique_primary_keys.is_empty() {
-                                    let error = #prepare_and_execute_query_error_token_stream::NotUniquePrimeryKey {
-                                        not_unique_primary_keys,
-                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                    };
+                                if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
+                                    let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
                                     #error_log_call_token_stream
                                     return #try_delete_response_variants_token_stream::from(error);
                                 }
@@ -3529,27 +3524,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 quote::quote!{
                     if let Some(#id_field_ident) = &#parameters_lower_case_token_stream.#payload_lower_case_token_stream.#id_field_ident {
-                        let not_unique_primary_keys = {
+                        let #not_unique_primary_keys_name_token_stream = {
                             let mut vec = Vec::with_capacity(#id_field_ident.len());
-                            let mut not_unique_primary_keys = Vec::with_capacity(#id_field_ident.len());
+                            let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
                             for element in #id_field_ident {
                                 let handle = element.to_inner();
                                 match vec.contains(&handle) {
                                     true => {
-                                        not_unique_primary_keys.push(*element.to_inner());
+                                        #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
                                     },
                                     false => {
                                         vec.push(element.to_inner());
                                     }
                                 }
                             }
-                            not_unique_primary_keys
+                            #not_unique_primary_keys_name_token_stream
                         };
-                        if let false = not_unique_primary_keys.is_empty() {
-                            let error = #prepare_and_execute_query_error_token_stream::NotUniquePrimeryKey {
-                                not_unique_primary_keys,
-                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            };
+                        if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
+                            let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
                             #error_log_call_token_stream
                             return #try_read_with_body_response_variants_token_stream::from(error);
                         }
@@ -4078,27 +4070,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 quote::quote!{
                     if let Some(#id_field_ident) = &#parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
-                        let not_unique_primary_keys = {
+                        let #not_unique_primary_keys_name_token_stream = {
                             let mut vec = Vec::with_capacity(#id_field_ident.0.len());
-                            let mut not_unique_primary_keys = Vec::with_capacity(#id_field_ident.0.len());
+                            let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.0.len());
                             for element in &#id_field_ident.0 {
                                 let handle = element.to_inner();
                                 match vec.contains(&handle) {
                                     true => {
-                                        not_unique_primary_keys.push(*element.to_inner());
+                                        #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
                                     },
                                     false => {
                                         vec.push(element.to_inner());
                                     }
                                 }
                             }
-                            not_unique_primary_keys
+                            #not_unique_primary_keys_name_token_stream
                         };
-                        if let false = not_unique_primary_keys.is_empty() {
-                            let error = #prepare_and_execute_query_error_token_stream::NotUniquePrimeryKey {
-                                not_unique_primary_keys,
-                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            };
+                        if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
+                            let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
                             #error_log_call_token_stream
                             return #try_read_response_variants_token_stream::from(error);
                         }
@@ -4829,27 +4818,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 );
                 quote::quote!{
                     {
-                        let not_unique_primary_keys = {
+                        let #not_unique_primary_keys_name_token_stream = {
                             let mut vec = Vec::with_capacity(#parameters_lower_case_token_stream.#payload_lower_case_token_stream.len());
-                            let mut not_unique_primary_keys = Vec::with_capacity(#parameters_lower_case_token_stream.#payload_lower_case_token_stream.len());
+                            let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#parameters_lower_case_token_stream.#payload_lower_case_token_stream.len());
                             for element in &parameters.payload {
                                 let handle = element.#id_field_ident.to_inner();
                                 match vec.contains(&handle) {
                                     true => {
-                                        not_unique_primary_keys.push(*element.#id_field_ident.to_inner());
+                                        #not_unique_primary_keys_name_token_stream.push(*element.#id_field_ident.to_inner());
                                     },
                                     false => {
                                         vec.push(element.#id_field_ident.to_inner());
                                     }
                                 }
                             }
-                            not_unique_primary_keys
+                            #not_unique_primary_keys_name_token_stream
                         };
-                        if let false = not_unique_primary_keys.is_empty() {
-                            let error = #prepare_and_execute_query_error_token_stream::NotUniquePrimeryKey {
-                                not_unique_primary_keys,
-                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                            };
+                        if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
+                            let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
                             #error_log_call_token_stream
                             return #try_update_response_variants_token_stream::from(error);
                         }
