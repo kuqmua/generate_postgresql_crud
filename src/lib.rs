@@ -4797,7 +4797,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #query_name_token_stream
                     }
                 };
-                crate::generate_postgres_transaction::generate_postgres_transaction(
+                let generate_postgres_transaction_token_stream = crate::generate_postgres_transaction::generate_postgres_transaction(
                     &expected_updated_primary_keys_token_stream,
                     &query_string_name_token_stream,
                     &query_string_token_stream,
@@ -4826,7 +4826,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &prepare_and_execute_query_error_token_stream,
                     &commit_failed_token_stream,
                     &error_log_call_token_stream,
-                )
+                );
+                quote::quote!{
+
+                    #generate_postgres_transaction_token_stream
+                }  
             };
             // println!("{prepare_and_execute_query_token_stream}");
             quote::quote!{
@@ -4862,7 +4866,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #payload_token_stream
             #try_update_error_named_token_stream
             #http_request_token_stream
-            #route_handler_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{update_token_stream}");
