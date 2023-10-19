@@ -4830,31 +4830,28 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     {
                         let not_unique_primary_keys = {
-                            let mut vec = Vec::with_capacity(parameters.payload.len());
-                            let mut not_unique_primary_keys = Vec::with_capacity(parameters.payload.len());
+                            let mut vec = Vec::with_capacity(#parameters_lower_case_token_stream.#payload_lower_case_token_stream.len());
+                            let mut not_unique_primary_keys = Vec::with_capacity(#parameters_lower_case_token_stream.#payload_lower_case_token_stream.len());
                             for element in &parameters.payload {
-                                let handle = element.id.to_inner();
+                                let handle = element.#id_field_ident.to_inner();
                                 match vec.contains(&handle) {
                                     true => {
-                                        not_unique_primary_keys.push(*element.id.to_inner());
+                                        not_unique_primary_keys.push(*element.#id_field_ident.to_inner());
                                     },
                                     false => {
-                                        vec.push(element.id.to_inner());
+                                        vec.push(element.#id_field_ident.to_inner());
                                     }
                                 }
                             }
                             not_unique_primary_keys
                         };
                         if let false = not_unique_primary_keys.is_empty() {
-                            let error = TryUpdate::NotUniquePrimeryKey {
+                            let error = #prepare_and_execute_query_error_token_stream::NotUniquePrimeryKey {
                                 not_unique_primary_keys,
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             };
-                            crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                &error, 
-                                app_info_state.as_ref()
-                            );
-                            return TryUpdateResponseVariants::from(error);
+                            #error_log_call_token_stream
+                            return #try_update_response_variants_token_stream::from(error);
                         }
                     }
                     #generate_postgres_transaction_token_stream
