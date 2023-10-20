@@ -33,6 +33,7 @@ pub fn generate_postgresql_crud_route_name(
     item
 }
 
+//todo regex filter support only for string-like types postgresql
 //todo generate route what will return columns of the table and their rust and postgersql types
 //todo - check if fields for filter are unique in the input array
 //todo created at and updated at fields
@@ -2252,7 +2253,52 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             };
                             let color_handle = match parameters.payload.color {
                                 Some(value) => {
-                                    Some(value)
+                                    let is_unique = {
+                                        let mut vec = Vec::with_capacity(value.len());
+                                        let mut is_unique = true;
+                                        for element in &value {
+                                            match vec.contains(&element) {
+                                                true => {
+                                                    is_unique = false;
+                                                    break;
+                                                }
+                                                false => {
+                                                    vec.push(element);
+                                                }
+                                            }
+                                        }
+                                        is_unique
+                                    };
+                                    println!("is_unique {:#?}", is_unique);
+                                    match is_unique {
+                                        true => Some(value),
+                                        false => {
+                                            let not_unique_color_vec = {
+                                                let mut vec = Vec::with_capacity(value.len());
+                                                let mut not_unique_color_vec = Vec::with_capacity(value.len());
+                                                for element in value {
+                                                    match vec.contains(&element) {
+                                                        true => {
+                                                            not_unique_color_vec.push(element);
+                                                        }
+                                                        false => {
+                                                            vec.push(element);
+                                                        }
+                                                    }
+                                                }
+                                                not_unique_color_vec
+                                            };
+                                            let error = TryDeleteWithBody::NotUniqueColorVec {
+                                                not_unique_color_vec,
+                                                code_occurence: crate::code_occurence_tufa_common!(),
+                                            };
+                                            crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                                &error,
+                                                app_info_state.as_ref(),
+                                            );
+                                            return TryDeleteWithBodyResponseVariants::from(error);
+                                        }
+                                    }
                                 },
                                 None => None
                             };
