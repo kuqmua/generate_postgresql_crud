@@ -1967,13 +1967,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 .unwrap_or_else(|| {
                                     panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 });
+                            let field_handle_token_stream = {
+                                let field_handle_stringified = format!("{field_ident}_handle");
+                                field_handle_stringified.parse::<proc_macro2::TokenStream>()
+                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                            };
                             let handle_token_stream = {
                                 let handle_stringified = format!("\"{field_ident} = ${{increment}}\"");
                                 handle_stringified.parse::<proc_macro2::TokenStream>()
                                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                             };
                             Some(quote::quote!{
-                                if let Some(value) = &#parameters_lower_case_token_stream.#payload_lower_case_token_stream.#field_ident {
+                                if let Some(value) = &#field_handle_token_stream {
                                     match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(
                                         value,
                                         &mut increment
@@ -2073,8 +2078,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 .unwrap_or_else(|| {
                                     panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                 });
+                            let field_handle_token_stream = {
+                                let field_handle_stringified = format!("{field_ident}_handle");
+                                field_handle_stringified.parse::<proc_macro2::TokenStream>()
+                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                            };
                             Some(quote::quote!{
-                                if let Some(value) = #parameters_lower_case_token_stream.#payload_lower_case_token_stream.#field_ident {
+                                if let Some(value) = #field_handle_token_stream {
                                     query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(value, query);
                                 }
                             })
@@ -2124,17 +2134,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &commit_failed_token_stream,
                     &error_log_call_token_stream,
                 );
-                // let generate_postgres_execute_query_token_stream = crate::generate_postgres_execute_query::generate_postgres_execute_query(
-                //     &query_string_name_token_stream,
-                //     &query_string_token_stream,
-                //     &binded_query_name_token_stream,
-                //     &binded_query_token_stream,
-                //     &acquire_pool_and_connection_token_stream,
-                //     &pg_connection_token_stream,
-                //     &try_delete_with_body_response_variants_token_stream,
-                //     &desirable_token_stream,
-                //     &from_log_and_return_error_token_stream,
-                // );
+                let generate_postgres_execute_query_token_stream = crate::generate_postgres_execute_query::generate_postgres_execute_query(
+                    &query_string_name_token_stream,
+                    &query_string_token_stream,
+                    &binded_query_name_token_stream,
+                    &binded_query_token_stream,
+                    &acquire_pool_and_connection_token_stream,
+                    &pg_connection_token_stream,
+                    &try_delete_with_body_response_variants_token_stream,
+                    &desirable_token_stream,
+                    &from_log_and_return_error_token_stream,
+                );
                 quote::quote!{
                     #check_for_none_token_stream
                     match (#(#parameters_match_token_stream),*) {
@@ -2189,23 +2199,64 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 }
                             }
                             //
-        let #query_string_name_token_stream = {
-            #query_string_token_stream
-        };
-        println!("{}", #query_string_name_token_stream);
-        let #binded_query_name_token_stream = {
-            #binded_query_token_stream
-        };
-        #acquire_pool_and_connection_token_stream
-        match #binded_query_name_token_stream.execute(#pg_connection_token_stream.as_mut()).await {
-            //todo - is need to return rows affected?
-            Ok(_) => #response_variants_token_stream::#desirable_token_stream(()),
-            Err(e) => {
-                 #from_log_and_return_error_token_stream
-            }
-        }
-                            //
-                            // #generate_postgres_execute_query_token_stream
+                            let name_handle = match parameters.payload.name {
+                                Some(value) => {
+                                    let is_unique = {
+                                        let mut vec = Vec::with_capacity(value.len());
+                                        let mut is_unique = true;
+                                        for element in &value {
+                                            match vec.contains(&element) {
+                                                true => {
+                                                    is_unique = false;
+                                                    break;
+                                                }
+                                                false => {
+                                                    vec.push(element);
+                                                }
+                                            }
+                                        }
+                                        is_unique
+                                    };
+                                    println!("is_unique {:#?}", is_unique);
+                                    match is_unique {
+                                        true => Some(value),
+                                        false => {
+                                            let not_unique_name_vec = {
+                                                let mut vec = Vec::with_capacity(value.len());
+                                                let mut not_unique_name_vec = Vec::with_capacity(value.len());
+                                                for element in value {
+                                                    match vec.contains(&element) {
+                                                        true => {
+                                                            not_unique_name_vec.push(element);
+                                                        }
+                                                        false => {
+                                                            vec.push(element);
+                                                        }
+                                                    }
+                                                }
+                                                not_unique_name_vec
+                                            };
+                                            let error = TryDeleteWithBody::NotUniqueNameVec {
+                                                not_unique_name_vec,
+                                                code_occurence: crate::code_occurence_tufa_common!(),
+                                            };
+                                            crate::common::error_logs_logic::error_log::ErrorLog::error_log(
+                                                &error,
+                                                app_info_state.as_ref(),
+                                            );
+                                            return TryDeleteWithBodyResponseVariants::from(error);
+                                        }
+                                    }
+                                },
+                                None => None
+                            };
+                            let color_handle = match parameters.payload.color {
+                                Some(value) => {
+                                    Some(value)
+                                },
+                                None => None
+                            };
+                            #generate_postgres_execute_query_token_stream
                         }
                     }
                 }
@@ -2244,7 +2295,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #payload_token_stream
             #try_delete_with_body_error_named_token_stream
             #http_request_token_stream
-            // #route_handler_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{delete_with_body_token_stream}");
