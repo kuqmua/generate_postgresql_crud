@@ -4535,32 +4535,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 quote::quote!{
-                    // impl #update_by_id_parameters_camel_case_token_stream {
-                    //     async fn #prepare_and_execute_query_name_token_stream(
-                    //         self,
-                    //         #app_info_state_name_token_stream: &#app_info_state_path,
-                    //     ) -> #try_update_by_id_response_variants_token_stream
-                    //     {
-                            #check_for_none_token_stream_excluding_primary_key
-                            let #query_string_name_token_stream = {
-                                #query_string_token_stream
-                            };
-                            println!("{}", #query_string_name_token_stream);
-                            let #binded_query_name_token_stream = {
-                                #binded_query_token_stream
-                            };
-                            #acquire_pool_and_connection_token_stream
-                            match #binded_query_name_token_stream
-                                .fetch_one(#pg_connection_token_stream.as_mut())
-                                .await
-                            {
-                                Ok(_) => #try_update_by_id_response_variants_token_stream::#desirable_token_stream(()),//todo () type token_stream
-                                Err(e) => {
-                                    #from_log_and_return_error_token_stream;
-                                }
-                            }
-                    //     }
-                    // }
+                    #check_for_none_token_stream_excluding_primary_key
+                    let #query_string_name_token_stream = {
+                        #query_string_token_stream
+                    };
+                    println!("{}", #query_string_name_token_stream);
+                    let #binded_query_name_token_stream = {
+                        #binded_query_token_stream
+                    };
+                    #acquire_pool_and_connection_token_stream
+                    match #binded_query_name_token_stream
+                        .fetch_one(#pg_connection_token_stream.as_mut())
+                        .await
+                    {
+                        Ok(_) => #try_update_by_id_response_variants_token_stream::#desirable_token_stream(()),//todo () type token_stream
+                        Err(e) => {
+                            #from_log_and_return_error_token_stream;
+                        }
+                    }
                 }
             };
             // println!("{prepare_and_execute_query_token_stream}");
