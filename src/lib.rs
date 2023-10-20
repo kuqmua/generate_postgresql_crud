@@ -33,6 +33,7 @@ pub fn generate_postgresql_crud_route_name(
     item
 }
 
+//todo generate route what will return columns of the table and their rust and postgersql types
 //todo - check if fields for filter are unique in the input array
 //todo created at and updated at fields
 //todo attributes for activation generation crud methods(like generate create, update_by_id, delete_by_id)
@@ -2123,17 +2124,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &commit_failed_token_stream,
                     &error_log_call_token_stream,
                 );
-                let generate_postgres_execute_query_token_stream = crate::generate_postgres_execute_query::generate_postgres_execute_query(
-                    &query_string_name_token_stream,
-                    &query_string_token_stream,
-                    &binded_query_name_token_stream,
-                    &binded_query_token_stream,
-                    &acquire_pool_and_connection_token_stream,
-                    &pg_connection_token_stream,
-                    &try_delete_with_body_response_variants_token_stream,
-                    &desirable_token_stream,
-                    &from_log_and_return_error_token_stream,
-                );
+                // let generate_postgres_execute_query_token_stream = crate::generate_postgres_execute_query::generate_postgres_execute_query(
+                //     &query_string_name_token_stream,
+                //     &query_string_token_stream,
+                //     &binded_query_name_token_stream,
+                //     &binded_query_token_stream,
+                //     &acquire_pool_and_connection_token_stream,
+                //     &pg_connection_token_stream,
+                //     &try_delete_with_body_response_variants_token_stream,
+                //     &desirable_token_stream,
+                //     &from_log_and_return_error_token_stream,
+                // );
                 quote::quote!{
                     #check_for_none_token_stream
                     match (#(#parameters_match_token_stream),*) {
@@ -2187,7 +2188,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     return #try_delete_with_body_response_variants_token_stream::from(error);
                                 }
                             }
-                            #generate_postgres_execute_query_token_stream
+                            //
+        let #query_string_name_token_stream = {
+            #query_string_token_stream
+        };
+        println!("{}", #query_string_name_token_stream);
+        let #binded_query_name_token_stream = {
+            #binded_query_token_stream
+        };
+        #acquire_pool_and_connection_token_stream
+        match #binded_query_name_token_stream.execute(#pg_connection_token_stream.as_mut()).await {
+            //todo - is need to return rows affected?
+            Ok(_) => #response_variants_token_stream::#desirable_token_stream(()),
+            Err(e) => {
+                 #from_log_and_return_error_token_stream
+            }
+        }
+                            //
+                            // #generate_postgres_execute_query_token_stream
                         }
                     }
                 }
