@@ -2399,91 +2399,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{query_token_stream}");
-        let delete_query_try_from_url_encoding_error_named_token_stream = quote::quote!{
-            #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
-            pub enum #delete_query_try_from_url_encoding_error_named_camel_case_token_stream {
-                IdIsEmpty {
-                    #[eo_display_with_serialize_deserialize]
-                    id_is_empty: std::string::String,
-                    #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
-                },
-                BigserialTryFromStr {
-                    #[eo_error_occurence]
-                    bigserial_try_from_str: crate::server::postgres::bigserial::BigserialTryFromStrErrorNamed,//todo
-                    #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
-                },
-            }
-        };
-        // println!("{delete_query_try_from_url_encoding_error_named_token_stream}");
-        let impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream = {
-            let impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_id_token_stream = {
-                quote::quote!{
-                    let #id_field_ident = {
-                        match value.#id_field_ident {
-                            Some(#id_field_ident) => {
-                                let splitted = #id_field_ident.split(',').collect::<Vec<&str>>();
-                                let mut bigserial_vec = Vec::with_capacity(splitted.len());
-                                for splitted_element in splitted {
-                                    match crate::server::postgres::bigserial::Bigserial::try_from(splitted_element) {
-                                        Ok(bigserial) => {
-                                            bigserial_vec.push(bigserial);
-                                        }
-                                        Err(e) => {
-                                            return Err(
-                                                #delete_query_try_from_url_encoding_error_named_camel_case_token_stream::BigserialTryFromStr {
-                                                    bigserial_try_from_str: e,
-                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                },
-                                            );
-                                        }
-                                    }
-                                }
-                                match bigserial_vec.is_empty() {
-                                    true => {
-                                        return Err(#delete_query_try_from_url_encoding_error_named_camel_case_token_stream::IdIsEmpty {
-                                            id_is_empty: std::string::String::from("id is empty"),
-                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
-                                        });
-                                    }
-                                    false => Some(bigserial_vec),
-                                }
-                            },
-                            None => None,
-                        }
-                    };
-                }
-            };
-            let impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_others_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    Some(quote::quote!{
-                        let #field_ident = { value.#field_ident };
-                    })
-                },
-            });
-            let fields_idents_token_stream = fields_named.iter().map(|field|{
-                let field_ident = field.ident.clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                    });
-                quote::quote!{#field_ident}
-            });
-            quote::quote!{
-                impl std::convert::TryFrom<#delete_query_for_url_encoding_camel_case_token_stream> for #delete_query_camel_case_token_stream {
-                    type Error = #delete_query_try_from_url_encoding_error_named_camel_case_token_stream;
-                    fn try_from(value: #delete_query_for_url_encoding_camel_case_token_stream) -> Result<Self, Self::Error> {
-                        #impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_id_token_stream
-                        #(#impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_others_token_stream)*
-                        Ok(#delete_query_camel_case_token_stream { #(#fields_idents_token_stream),* })
-                    }
-                }
-            }
-        };
-        // println!("{impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream}");
         let query_for_url_encoding_token_stream = {
             let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.iter().map(|field|{
                 let field_ident = field.ident.clone()
@@ -3031,8 +2946,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             // #query_token_stream
-            #delete_query_try_from_url_encoding_error_named_token_stream
-            // #impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream
             #query_for_url_encoding_token_stream
             #impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_token_stream
             #try_delete_error_named_token_stream
