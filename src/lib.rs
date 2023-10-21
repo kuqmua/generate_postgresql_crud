@@ -2721,26 +2721,38 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     handle_stringified.parse::<proc_macro2::TokenStream>()
                                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                                 };
+                                let field_handle_token_stream = {
+                                    let field_handle_stringified = format!("{field_ident}_handle");
+                                    field_handle_stringified.parse::<proc_macro2::TokenStream>()
+                                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                                };
                                 Some(quote::quote!{
-                                    if let Some(value) = &#parameters_lower_case_token_stream.#query_lower_case_token_stream.#field_ident {
-                                        match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(
-                                            value,
-                                            &mut increment
-                                        ) {
-                                            Ok(_) => {
-                                                let handle = format!(#handle_token_stream);
-                                                match additional_parameters.is_empty() {
-                                                    true => {
-                                                        additional_parameters.push_str(&handle);
-                                                    },
-                                                    false => {
-                                                        additional_parameters.push_str(&format!(" AND {handle}"));
-                                                    },
-                                                }
-                                            },
-                                            Err(e) => {
-                                                return #try_delete_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
-                                            },
+                                    if let Some(value) = &#field_handle_token_stream {
+                                        for _ in &value.0 {
+                                            match increment.checked_add(1) {
+                                                Some(incr) => {
+                                                    increment = incr;
+                                                    let handle = format!("name = ${increment}");
+                                                    match additional_parameters.is_empty() {
+                                                        true => {
+                                                            additional_parameters.push_str(&handle);
+                                                        }
+                                                        false => {
+                                                            additional_parameters
+                                                                .push_str(&format!(" or {handle}"));
+                                                        }
+                                                    }
+                                                },
+                                                None => {
+                                                    return #try_delete_response_variants_token_stream::BindQuery {
+                                                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed::CheckedAdd { //todo remove it? refactor it?
+                                                            checked_add: std::string::String::from("checked_add is None"), 
+                                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream, 
+                                                        }.into_serialize_deserialize_version(),
+                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                                    };
+                                                },
+                                            }
                                         }
                                     }
                                 })
@@ -2758,28 +2770,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {additional_parameters_empty_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                             };
                             quote::quote!{
-                                if let Some(#id_field_ident) = &#parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
+                                if let Some(id) = &#parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
                                     if let false = additional_parameters.is_empty() {
-                                        additional_parameters.push_str(#additional_parameters_empty_handle_token_stream);
+                                        additional_parameters.push_str(" and");//todo
                                     }
                                     additional_parameters.push_str(&format!(
                                         #handle_token_stream,
                                         {
-                                            let mut additional_parameters = std::string::String::default();
-                                            for element in #id_field_ident {
-                                                match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(
-                                                    element,
-                                                    &mut increment,
-                                                ) {
+                                            let mut additional_parameters = std::string::String::default(); 
+                                            for element in &#id_field_ident.0 {
+                                                match crate::server::postgres::bind_query::BindQuery::try_increment(element, &mut increment) {
                                                     Ok(_) => {
                                                         additional_parameters.push_str(&format!("${increment},"));
-                                                    }
+                                                    } 
                                                     Err(e) => {
-                                                        return #try_delete_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                                                        return TryDeleteResponseVariants::#bind_query_variant_initialization_token_stream;
                                                     }
                                                 }
-                                            }
-                                            additional_parameters.pop();
+                                            } 
+                                            additional_parameters.pop(); 
                                             additional_parameters
                                         }
                                     ));
@@ -2812,8 +2821,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     .unwrap_or_else(|| {
                                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                                     });
+                                let field_handle_token_stream = {
+                                    let field_handle_stringified = format!("{field_ident}_handle");
+                                    field_handle_stringified.parse::<proc_macro2::TokenStream>()
+                                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                                };
                                 Some(quote::quote!{
-                                    if let Some(value) = #parameters_lower_case_token_stream.#query_lower_case_token_stream.#field_ident {
+                                    if let Some(value) = #field_handle_token_stream {
                                         query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(value, query);
                                     }
                                 })
@@ -2821,7 +2835,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         });
                         let binded_query_id_modifications_token_stream = quote::quote!{
                             if let Some(#id_field_ident) = #parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
-                                for element in #id_field_ident {
+                                for element in #id_field_ident.0 {
                                     query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(element, query);
                                 }
                             }
@@ -2846,63 +2860,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 };
                 quote::quote!{
-                    // #check_for_none_token_stream
-                    // match (#(#parameters_match_token_stream),*) {
-                    //     (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
-                    //         {
-                    //             let #not_unique_primary_keys_name_token_stream = {
-                    //                 let mut vec = Vec::with_capacity(#id_field_ident.len());
-                    //                 let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
-                    //                 for element in #id_field_ident {
-                    //                     let handle = element.to_inner();
-                    //                     match vec.contains(&handle) {
-                    //                         true => {
-                    //                             #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
-                    //                         },
-                    //                         false => {
-                    //                             vec.push(element.to_inner());
-                    //                         }
-                    //                     }
-                    //                 }
-                    //                 #not_unique_primary_keys_name_token_stream
-                    //             };
-                    //             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                    //                 let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
-                    //                 #error_log_call_token_stream
-                    //                 return #try_delete_response_variants_token_stream::from(error);
-                    //             }
-                    //         }
-                    //         #generate_postgres_transaction_token_stream
-                    //     }
-                    //     _ => {
-                    //         if let Some(#id_field_ident) = &#parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
-                    //             let #not_unique_primary_keys_name_token_stream = {
-                    //                 let mut vec = Vec::with_capacity(#id_field_ident.len());
-                    //                 let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
-                    //                 for element in #id_field_ident {
-                    //                     let handle = element.to_inner();
-                    //                     match vec.contains(&handle) {
-                    //                         true => {
-                    //                             #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
-                    //                         },
-                    //                         false => {
-                    //                             vec.push(element.to_inner());
-                    //                         }
-                    //                     }
-                    //                 }
-                    //                 #not_unique_primary_keys_name_token_stream
-                    //             };
-                    //             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                    //                 let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
-                    //                 #error_log_call_token_stream
-                    //                 return #try_delete_response_variants_token_stream::from(error);
-                    //             }
-                    //         }
-                    //         #(#check_regex_filter_unique_token_stream)*
-                    //         #generate_postgres_execute_query_token_stream
-                    //     }
-                    // }
-                    //
                     #check_for_none_token_stream
                     match (#(#parameters_match_token_stream),*) {
                         (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
@@ -2956,175 +2913,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 }
                             }
                             #(#check_regex_filter_unique_token_stream)*
-                            let query_string = {
-                                format!("delete from cats where {}", {
-                                    let mut increment: u64 = 0;
-                                    let mut additional_parameters = std::string::String::default();
-                                    //
-                                    // if let Some(value) = &name_handle {
-                                    //     let prefix = match additional_parameters.is_empty() {
-                                    //         true => "where",
-                                    //         false => " and",
-                                    //     };
-                                    //     let value = match crate :: server :: postgres :: bind_query :: BindQuery ::try_generate_bind_increments(value, & mut increment) {
-                                    //         Ok(value) => value, 
-                                    //         Err(e) =>
-                                    //         {
-                                    //             return TryDeleteResponseVariants :: BindQuery
-                                    //             {
-                                    //                checked_add : e.into_serialize_deserialize_version(),
-                                    //                code_occurence : crate :: code_occurence_tufa_common! ()
-                                    //             };
-                                    //         },
-                                    //     };
-                                    //     additional_parameters
-                                    //         .push_str(&format!("{prefix} name = any(array[{value}])"));
-                                    // }
-                                    //
-                                    if let Some(value) = &name_handle {
-                                        for _ in &value.0 {
-                                            match increment.checked_add(1) {
-                                                Some(incr) => {
-                                                    increment = incr;
-                                                    let handle = format!("name = ${increment}");
-                                                    match additional_parameters.is_empty() {
-                                                        true => {
-                                                            additional_parameters.push_str(&handle);
-                                                        }
-                                                        false => {
-                                                            additional_parameters
-                                                                .push_str(&format!(" or {handle}"));
-                                                        }
-                                                    }
-                                                },
-                                                None => {
-                                                    return TryDeleteResponseVariants::BindQuery {
-                                                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed::CheckedAdd { 
-                                                            checked_add: std::string::String::from("checked_add is None"), 
-                                                            code_occurence: crate::code_occurence_tufa_common!(), 
-                                                        }.into_serialize_deserialize_version(),
-                                                        code_occurence: crate::code_occurence_tufa_common!(),
-                                                    };
-                                                },
-                                            }
-                                        }
-                                    }
-                                    if let Some(value) = &color_handle {
-                                        for _ in &value.0 {
-                                            match increment.checked_add(1) {
-                                                Some(incr) => {
-                                                    increment = incr;
-                                                    let handle = format!("color = ${increment}");
-                                                    match additional_parameters.is_empty() {
-                                                        true => {
-                                                            additional_parameters.push_str(&handle);
-                                                        }
-                                                        false => {
-                                                            additional_parameters
-                                                                .push_str(&format!(" or {handle}"));
-                                                        }
-                                                    }
-                                                },
-                                                None => {
-                                                    return TryDeleteResponseVariants::BindQuery {
-                                                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed::CheckedAdd { 
-                                                            checked_add: std::string::String::from("checked_add is None"), 
-                                                            code_occurence: crate::code_occurence_tufa_common!(), 
-                                                        }.into_serialize_deserialize_version(),
-                                                        code_occurence: crate::code_occurence_tufa_common!(),
-                                                    };
-                                                },
-                                            }
-                                        }
-                                    }
-                                    if let Some(id) = &parameters.query.id {
-                                        if let false = additional_parameters.is_empty() {
-                                            additional_parameters.push_str(" and");
-                                        }
-                                        additional_parameters.push_str(& format!
-                                        (" id in ({})",
-                                        {
-                                            let mut additional_parameters = std :: string :: String ::
-                                            default() ; for element in &id.0
-                                            {
-                                                match crate :: server :: postgres :: bind_query :: BindQuery
-                                                :: try_increment(element, & mut increment,)
-                                                {
-                                                    Ok(_) =>
-                                                    {
-                                                        additional_parameters.push_str(& format! ("${increment},"))
-                                                        ;
-                                                    } Err(e) =>
-                                                    {
-                                                        return TryDeleteResponseVariants :: BindQuery
-                                                        {
-                                                            checked_add : e.into_serialize_deserialize_version(),
-                                                            code_occurence : crate :: code_occurence_tufa_common! ()
-                                                        } ;
-                                                    }
-                                                }
-                                            } additional_parameters.pop() ; additional_parameters
-                                        }));
-                                    }
-                                    println!("additional_parameters {additional_parameters}");
-                                    additional_parameters
-                                })
-                            };
-                            println!("{}", query_string);
-                            let binded_query = {
-                                let mut query = sqlx::query::<sqlx::Postgres>(&query_string);
-                                if let Some(value) = name_handle {
-                                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                                        value, query,
-                                    );
-                                }
-                                if let Some(value) = color_handle {
-                                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                                        value, query,
-                                    );
-                                }
-                                if let Some(id) = parameters.query.id {
-                                    for element in id.0 {
-                                        query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(
-                                            element, query,
-                                        );
-                                    }
-                                }
-                                query
-                            };
-                            let mut pool_connection = match app_info_state.get_postgres_pool().acquire().await {
-                                Ok(value) => value,
-                                Err(e) => {
-                                    let error = TryDelete::from(e);
-                                    crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                        &error,
-                                        app_info_state.as_ref(),
-                                    );
-                                    return TryDeleteResponseVariants::from(error);
-                                }
-                            };
-                            let pg_connection = match sqlx::Acquire::acquire(&mut pool_connection).await {
-                                Ok(value) => value,
-                                Err(e) => {
-                                    let error = TryDelete::from(e);
-                                    crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                        &error,
-                                        app_info_state.as_ref(),
-                                    );
-                                    return TryDeleteResponseVariants::from(error);
-                                }
-                            };
-                            match binded_query.execute(pg_connection.as_mut()).await {
-                                Ok(_) => TryDeleteResponseVariants::Desirable(()),
-                                Err(e) => {
-                                    let error = TryDelete::from(e);
-                                    crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                        &error,
-                                        app_info_state.as_ref(),
-                                    );
-                                    return TryDeleteResponseVariants::from(error);
-                                }
-                            }
+                            #generate_postgres_execute_query_token_stream
                         }
                     }
                 }
