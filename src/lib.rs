@@ -2984,7 +2984,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     return #try_delete_response_variants_token_stream::from(error);
                                 }
                             }
-                            // #(#check_regex_filter_unique_token_stream)*
+                            #(#check_regex_filter_unique_token_stream)*
                             #generate_postgres_execute_query_token_stream
                         }
                     }
@@ -3029,15 +3029,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{route_handler_token_stream}");
         quote::quote!{
-            #parameters_token_stream
-            #query_token_stream
-            #delete_query_try_from_url_encoding_error_named_token_stream
-            #impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream
+            // #parameters_token_stream
+            // #query_token_stream
+            // #delete_query_try_from_url_encoding_error_named_token_stream
+            // #impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream
             #query_for_url_encoding_token_stream
             #impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_token_stream
             #try_delete_error_named_token_stream
             #http_request_token_stream
-            #route_handler_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{delete_token_stream}");
@@ -4344,12 +4344,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
-            #query_token_stream
+            // #query_token_stream
             #query_for_url_encoding_token_stream
             #into_url_encoding_version_token_stream
             #try_read_error_named_token_stream
             #http_request_token_stream
-            #route_handler_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{read_token_stream}");
