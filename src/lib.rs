@@ -2909,9 +2909,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
                             {
                                 let #not_unique_primary_keys_name_token_stream = {
-                                    let mut vec = Vec::with_capacity(id.0.len());
-                                    let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(id.0.len());
-                                    for element in &id.0 {
+                                    let mut vec = Vec::with_capacity(#id_field_ident.0.len());
+                                    let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.0.len());
+                                    for element in &#id_field_ident.0 {
                                         let handle = element.to_inner();
                                         match vec.contains(&handle) {
                                             true => {
@@ -2924,16 +2924,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     }
                                     #not_unique_primary_keys_name_token_stream
                                 };
-                                if let false = not_unique_primary_keys.is_empty() {
-                                    let error = TryDelete::NotUniquePrimaryKey {
-                                        not_unique_primary_keys,
-                                        code_occurence: crate::code_occurence_tufa_common!(),
-                                    };
-                                    crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                                        &error,
-                                        app_info_state.as_ref(),
-                                    );
-                                    return TryDeleteResponseVariants::from(error);
+                                if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
+                                    let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
+                                    #error_log_call_token_stream
+                                    return #try_delete_response_variants_token_stream::from(error);
                                 }
                             }
                             let expected_updated_primary_keys = {
