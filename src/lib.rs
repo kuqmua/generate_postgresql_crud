@@ -1949,12 +1949,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         false => quote::quote!{None}
                     }
                 });
-                let expected_updated_primary_keys_token_stream = quote::quote!{
-                    #id_field_ident
-                        .iter()
-                        .map(|element| element.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
-                        .collect::<Vec<#id_field_type>>()
-                };
                 let check_regex_filter_unique_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                     true => None,
                     false => {
@@ -2035,6 +2029,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     },
                 });
                 let generate_postgres_transaction_token_stream = {
+                    let expected_updated_primary_keys_token_stream = quote::quote!{
+                        #id_field_ident
+                        .iter()
+                        .map(|element| element.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
+                        .collect::<Vec<#id_field_type>>()
+                    };
                     let query_string_primary_key_some_other_none_token_stream = {
                         let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {table_name_stringified} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
                         handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -2657,15 +2657,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         false => quote::quote!{None}
                     }
                 });
-                let expected_updated_primary_keys_token_stream = {
-                    quote::quote!{
-                        #id_field_ident
+                let generate_postgres_transaction_token_stream = {
+                    let expected_updated_primary_keys_token_stream = {
+                        quote::quote!{
+                            #id_field_ident
                             .iter()
                             .map(|element| element.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
                             .collect::<Vec<#id_field_type>>()
-                    }
-                };
-                let generate_postgres_transaction_token_stream = {
+                        }
+                    };
                     let query_string_primary_key_some_other_none_token_stream = {
                         let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {table_name_stringified} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
                         handle_stringified.parse::<proc_macro2::TokenStream>()
