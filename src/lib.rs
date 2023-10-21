@@ -3031,7 +3031,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             // #query_token_stream
-            // #delete_query_try_from_url_encoding_error_named_token_stream
+            #delete_query_try_from_url_encoding_error_named_token_stream
             // #impl_std_convert_try_from_delete_query_for_url_encoding_for_delete_query_token_stream
             #query_for_url_encoding_token_stream
             #impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_token_stream
