@@ -4257,12 +4257,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
-            // #query_token_stream
+            #query_token_stream
             #query_for_url_encoding_token_stream
             #into_url_encoding_version_token_stream
             #try_read_error_named_token_stream
             #http_request_token_stream
-            // #route_handler_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{read_token_stream}");
