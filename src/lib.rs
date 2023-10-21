@@ -815,7 +815,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let url_encoding_camel_case_stringified = "UrlEncoding";
     let for_url_encoding_camel_case_stringified = format!("For{url_encoding_camel_case_stringified}");
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
-    let from_camel_case_stringified = "From";
+    // let from_camel_case_stringified = "From";
     let try_camel_case_stringified = "Try";
     let try_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&try_camel_case_stringified.to_string());
     let response_variants_camel_case_stringified = "ResponseVariants";
@@ -2206,7 +2206,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let binded_query_id_modifications_token_stream = quote::quote!{
                             if let Some(#id_field_ident) = #parameters_lower_case_token_stream.#payload_lower_case_token_stream.#id_field_ident {
                                 for element in #id_field_ident {
-                                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(element, query);
+                                    query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(element, query);
                                 }
                             }
                         };
@@ -2354,11 +2354,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             try_delete_response_variants_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_delete_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let delete_query_try_from_url_encoding_error_named_camel_case_token_stream = {
-            let delete_query_try_from_url_encoding_error_named_camel_case_stringified = format!("{delete_name_camel_case_stringified}{query_camel_case_stringified}{try_camel_case_stringified}{from_camel_case_stringified}{url_encoding_camel_case_stringified}{error_named_camel_case_stringified}");
-            delete_query_try_from_url_encoding_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_query_try_from_url_encoding_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
         let prepare_and_execute_query_error_token_stream = {
             let error_path_stringified = format!("{try_camel_case_stringified}{delete_name_camel_case_stringified}");
             error_path_stringified.parse::<proc_macro2::TokenStream>()
@@ -2384,7 +2379,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|| {
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
-                    let field_type = &field.ty;
                     Some(quote::quote!{
                         pub #field_ident: Option<crate::server::routes::helpers::strings_deserialized_from_string_splitted_by_comma::StringsDeserializedFromStringSplittedByComma>
                     })
@@ -2526,11 +2520,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let delete_lower_case_token_stream = delete_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let delete_query_try_from_url_encoding_camel_case_token_stream = {
-                let delete_query_try_from_url_encoding_camel_case_stringified = format!("{delete_name_camel_case_stringified}{query_camel_case_stringified}{try_camel_case_stringified}From{url_encoding_camel_case_stringified}");
-                delete_query_try_from_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_query_try_from_url_encoding_camel_case_stringified} {}",     proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
             let prepare_and_execute_query_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                     &prepare_and_execute_query_error_token_stream,
@@ -2732,14 +2721,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             match increment.checked_add(1) {
                                                 Some(incr) => {
                                                     increment = incr;
-                                                    let handle = format!("name = ${increment}");
+                                                    let handle = format!(#handle_token_stream);
                                                     match additional_parameters.is_empty() {
                                                         true => {
                                                             additional_parameters.push_str(&handle);
                                                         }
                                                         false => {
-                                                            additional_parameters
-                                                                .push_str(&format!(" or {handle}"));
+                                                            additional_parameters.push_str(&format!(" or {handle}"));//todo
                                                         }
                                                     }
                                                 },
@@ -2772,19 +2760,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             quote::quote!{
                                 if let Some(id) = &#parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
                                     if let false = additional_parameters.is_empty() {
-                                        additional_parameters.push_str(" and");//todo
+                                        additional_parameters.push_str(#additional_parameters_empty_handle_token_stream);//todo
                                     }
                                     additional_parameters.push_str(&format!(
                                         #handle_token_stream,
                                         {
                                             let mut additional_parameters = std::string::String::default(); 
                                             for element in &#id_field_ident.0 {
-                                                match crate::server::postgres::bind_query::BindQuery::try_increment(element, &mut increment) {
+                                                match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(element, &mut increment) {
                                                     Ok(_) => {
                                                         additional_parameters.push_str(&format!("${increment},"));
                                                     } 
                                                     Err(e) => {
-                                                        return TryDeleteResponseVariants::#bind_query_variant_initialization_token_stream;
+                                                        return #try_delete_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                                     }
                                                 }
                                             } 
@@ -2836,7 +2824,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let binded_query_id_modifications_token_stream = quote::quote!{
                             if let Some(#id_field_ident) = #parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
                                 for element in #id_field_ident.0 {
-                                    query = crate::server::postgres::bind_query::BindQuery::bind_value_to_query(element, query);
+                                    query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(element, query);
                                 }
                             }
                         };
