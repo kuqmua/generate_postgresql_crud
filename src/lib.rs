@@ -2375,7 +2375,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let query_token_stream = {
             let query_id_field_token_stream = quote::quote!{
-                pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>, //there is an alternative BigserialIds but its not worth to migrate to it coz planing to migrate to uuid v7
+                pub #id_field_ident: Option<crate::server::postgres::bigserial_ids::BigserialIds>,
             };
             let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -2386,7 +2386,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         });
                     let field_type = &field.ty;
                     Some(quote::quote!{
-                        pub #field_ident: Option<#field_type>
+                        pub #field_ident: Option<crate::server::routes::helpers::strings_deserialized_from_string_splitted_by_comma::StringsDeserializedFromStringSplittedByComma>
                     })
                 },
             });
@@ -2945,7 +2945,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
-            // #query_token_stream
+            #query_token_stream
             #query_for_url_encoding_token_stream
             #impl_std_convert_from_delete_query_for_delete_query_for_url_encoding_token_stream
             #try_delete_error_named_token_stream
