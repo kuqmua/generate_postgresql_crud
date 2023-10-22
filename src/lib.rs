@@ -2663,6 +2663,34 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     },
                 });
                 let generate_postgres_transaction_token_stream = {
+                    let filter_unique_parameters_token_stream = {
+                        let filter_unique_parameters_primary_key_token_stream = quote::quote!{
+                            let #not_unique_primary_keys_name_token_stream = {
+                                let mut vec = Vec::with_capacity(#id_field_ident.0.len());
+                                let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.0.len());
+                                for element in &#id_field_ident.0 {
+                                    let handle = element.to_inner();
+                                    match vec.contains(&handle) {
+                                        true => {
+                                            #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
+                                        }
+                                        false => {
+                                            vec.push(element.to_inner());
+                                        }
+                                    }
+                                }
+                                #not_unique_primary_keys_name_token_stream
+                            };
+                            if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
+                                let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
+                                #error_log_call_token_stream
+                                return #try_delete_response_variants_token_stream::from(error);
+                            }
+                        };
+                        quote::quote!{
+                            #filter_unique_parameters_primary_key_token_stream
+                        }
+                    };
                     let expected_updated_primary_keys_token_stream = {
                         quote::quote!{
                             #id_field_ident.0
@@ -2686,7 +2714,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         );
                         query
                     };
-                    crate::generate_postgres_transaction::generate_postgres_transaction(
+                    let generate_postgres_transaction_token_stream = crate::generate_postgres_transaction::generate_postgres_transaction(
                         &expected_updated_primary_keys_token_stream,
                         &query_string_name_token_stream,
                         &query_string_primary_key_some_other_none_token_stream,
@@ -2715,7 +2743,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &prepare_and_execute_query_error_token_stream,
                         &commit_failed_token_stream,
                         &error_log_call_token_stream,
-                    )
+                    );
+                    quote::quote!{
+                        #filter_unique_parameters_token_stream
+                        #generate_postgres_transaction_token_stream
+                    }
                 };
                 let generate_postgres_execute_query_token_stream = {
                     let query_string_token_stream = {
@@ -2872,29 +2904,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #check_for_none_token_stream
                     match (#(#parameters_match_token_stream),*) {
                         (#(#parameters_match_primary_key_some_other_none_token_stream),*) => {
-                            {
-                                let #not_unique_primary_keys_name_token_stream = {
-                                    let mut vec = Vec::with_capacity(#id_field_ident.0.len());
-                                    let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.0.len());
-                                    for element in &#id_field_ident.0 {
-                                        let handle = element.to_inner();
-                                        match vec.contains(&handle) {
-                                            true => {
-                                                #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
-                                            }
-                                            false => {
-                                                vec.push(element.to_inner());
-                                            }
-                                        }
-                                    }
-                                    #not_unique_primary_keys_name_token_stream
-                                };
-                                if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                    let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
-                                    #error_log_call_token_stream
-                                    return #try_delete_response_variants_token_stream::from(error);
-                                }
-                            }
                             #generate_postgres_transaction_token_stream
                         }
                         _ => {
