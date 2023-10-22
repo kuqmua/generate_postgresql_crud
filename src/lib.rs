@@ -763,6 +763,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    let allow_methods_token_stream = {
+        quote::quote!{
+            pub const ALLOW_METHODS: [http::Method;4] = [http::Method::GET, http::Method::POST, http::Method::PATCH, http::Method::DELETE];
+        }
+    };
     let extraction_result_lower_case_stringified = "extraction_result";
     let parameters_camel_case_stringified = "Parameters";
     // let parameters_camel_case_token_stream = parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -5206,6 +5211,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #order_by_wrapper_token_stream
         #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
         #deserialize_ident_order_by_token_stream
+        #allow_methods_token_stream
 
         #create_many_token_stream
         #create_one_token_stream
