@@ -768,6 +768,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             pub const ALLOW_METHODS: [http::Method;4] = [http::Method::GET, http::Method::POST, http::Method::PATCH, http::Method::DELETE];
         }
     };
+    let ident_column_read_permission_token_stream = {
+        let ident_column_read_permission_name_token_stream = {
+            let ident_column_read_permission_name = format!("{ident}ColumnReadPermission");
+            ident_column_read_permission_name.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_column_read_permission_name} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let fields_permission_token_stream = fields_named.iter().map(|field| {
+            let field_ident = field.ident.clone()
+                .unwrap_or_else(|| {
+                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                });
+            quote::quote!{
+                #field_ident: bool
+            }
+        });
+        quote::quote!{
+            pub struct #ident_column_read_permission_name_token_stream {
+                #(#fields_permission_token_stream),*
+            }
+        }
+    };
     let extraction_result_lower_case_stringified = "extraction_result";
     let parameters_camel_case_stringified = "Parameters";
     // let parameters_camel_case_token_stream = parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -5212,11 +5233,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
         #deserialize_ident_order_by_token_stream
         #allow_methods_token_stream
-        pub struct CatColumnReadPermission {
-            id: bool,
-            name: bool,
-            color: bool,
-        }
+        #ident_column_read_permission_token_stream
 
         #create_many_token_stream
         #create_one_token_stream
