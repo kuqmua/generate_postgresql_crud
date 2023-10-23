@@ -626,10 +626,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let deserialize_ident_order_by_token_stream = {
         //todo
+        let ivalid_ident_order_by_handle_token_stream = {
+            let ivalid_ident_order_by_handle = format!("\"Invalid {ident}OrderBy:\"");
+            ivalid_ident_order_by_handle.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ivalid_ident_order_by_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
             fn deserialize_cat_order_by<'de, D>(
                 deserializer: D,
-            ) -> Result<crate::server::postgres::order_by::OrderBy<CatColumn>, D::Error>
+            ) -> Result<crate::server::postgres::order_by::OrderBy<#column_ident_token_stream>, D::Error>
             where
                 D: serde::de::Deserializer<'de>,
             {
@@ -638,7 +643,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     String::deserialize(deserializer)?
                 };
                 let split_inner_url_parameters_symbol = ',';
-                let default_message = "Invalid CatOrderBy:";
+                let default_message = format!(#ivalid_ident_order_by_handle_token_stream);
                 let column_equal_str = "column=";
                 let order_equal_str = "order=";
                 let column = match string_deserialized.find(column_equal_str) {
@@ -649,7 +654,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     match offset_slice.get(0..offset_slice_next_comma_index) {
                                         Some(possible_column) => match {
                                             use std::str::FromStr;
-                                            CatColumn::from_str(possible_column)
+                                            #column_ident_token_stream::from_str(possible_column)
                                         } {
                                             Ok(column) => column,
                                             Err(e) => {
@@ -668,7 +673,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 None => match offset_slice.get(0..) {
                                     Some(possible_column) => match {
                                         use std::str::FromStr;
-                                        CatColumn::from_str(possible_column)
+                                        #column_ident_token_stream::from_str(possible_column)
                                     } {
                                         Ok(column) => column,
                                         Err(e) => {
