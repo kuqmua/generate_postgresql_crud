@@ -631,8 +631,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ivalid_ident_order_by_handle.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ivalid_ident_order_by_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let deserialize_ident_order_by_lower_case_name_token_stream = {
+            let deserialize_ident_order_by_lower_case_name = format!("deserialize_{ident_lower_case_stringified}_order_by");
+            deserialize_ident_order_by_lower_case_name.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {deserialize_ident_order_by_lower_case_name} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote!{
-            fn deserialize_cat_order_by<'de, D>(
+            fn #deserialize_ident_order_by_lower_case_name_token_stream<'de, D>(
                 deserializer: D,
             ) -> Result<crate::server::postgres::order_by::OrderBy<#column_ident_token_stream>, D::Error>
             where
@@ -1923,7 +1928,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #payload_derive_token_stream
                 pub struct #read_many_with_body_payload_camel_case_token_stream {
                     pub #select_token_stream: #column_select_ident_token_stream,
-                    pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,
+                    pub #id_field_ident: Option<Vec<std::string::String>>,//crate::server::postgres::bigserial::Bigserial todo uuid builder
                     #(#fields_with_excluded_id_token_stream)*
                     pub #order_by_token_stream: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
                     pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
@@ -2025,13 +2030,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 let mut vec = Vec::with_capacity(#id_field_ident.len());
                                 let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
                                 for element in #id_field_ident {
-                                    let handle = element.to_inner();
+                                    let handle = element;
                                     match vec.contains(&handle) {
                                         true => {
-                                            #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
+                                            #not_unique_primary_keys_name_token_stream.push(element.clone());
                                         },
                                         false => {
-                                            vec.push(element.to_inner());
+                                            vec.push(element);
                                         }
                                     }
                                 }
@@ -2327,7 +2332,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             query = query.bind(
                                 value
                                 .into_iter()
-                                .map(|element| element.clone().into_inner())
+                                .map(|element| element.clone())
                                 .collect::<Vec<#id_field_type>>()
                             );
                         }
@@ -5228,22 +5233,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let gen = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
-        // #from_ident_for_ident_options_token_stream
-        // #(#structs_variants_token_stream)*
-        // #(#structs_variants_impl_from_token_stream)*
-        // #column_token_stream
-        // #column_select_token_stream
-        // #primary_key_try_from_sqlx_row_token_stream
-        // #order_by_wrapper_token_stream
-        // #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
-        // #deserialize_ident_order_by_token_stream
-        // #allow_methods_token_stream
-        // #ident_column_read_permission_token_stream
+        #from_ident_for_ident_options_token_stream
+        #(#structs_variants_token_stream)*
+        #(#structs_variants_impl_from_token_stream)*
+        #column_token_stream
+        #column_select_token_stream
+        #primary_key_try_from_sqlx_row_token_stream
+        #order_by_wrapper_token_stream
+        #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
+        #deserialize_ident_order_by_token_stream
+        #allow_methods_token_stream
+        #ident_column_read_permission_token_stream
 
-        // #create_many_token_stream
-        // #create_one_token_stream
-        // #read_one_token_stream
-        // #read_many_with_body_token_stream
+        #create_many_token_stream
+        #create_one_token_stream
+        #read_one_token_stream
+        #read_many_with_body_token_stream
         // #read_many_token_stream
         // #update_one_token_stream
         // #update_many_token_stream
