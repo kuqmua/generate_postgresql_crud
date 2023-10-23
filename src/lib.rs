@@ -5228,28 +5228,28 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let gen = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
-        #from_ident_for_ident_options_token_stream
-        #(#structs_variants_token_stream)*
-        #(#structs_variants_impl_from_token_stream)*
-        #column_token_stream
-        #column_select_token_stream
-        #primary_key_try_from_sqlx_row_token_stream
-        #order_by_wrapper_token_stream
-        #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
-        #deserialize_ident_order_by_token_stream
-        #allow_methods_token_stream
-        #ident_column_read_permission_token_stream
+        // #from_ident_for_ident_options_token_stream
+        // #(#structs_variants_token_stream)*
+        // #(#structs_variants_impl_from_token_stream)*
+        // #column_token_stream
+        // #column_select_token_stream
+        // #primary_key_try_from_sqlx_row_token_stream
+        // #order_by_wrapper_token_stream
+        // #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
+        // #deserialize_ident_order_by_token_stream
+        // #allow_methods_token_stream
+        // #ident_column_read_permission_token_stream
 
-        #create_many_token_stream
-        #create_one_token_stream
-        #read_one_token_stream
-        #read_many_with_body_token_stream
-        #read_many_token_stream
-        #update_one_token_stream
-        #update_many_token_stream
-        #delete_one_token_stream
-        #delete_many_with_body_token_stream
-        #delete_many_token_stream
+        // #create_many_token_stream
+        // #create_one_token_stream
+        // #read_one_token_stream
+        // #read_many_with_body_token_stream
+        // #read_many_token_stream
+        // #update_one_token_stream
+        // #update_many_token_stream
+        // #delete_one_token_stream
+        // #delete_many_with_body_token_stream
+        // #delete_many_token_stream
     };
     // if ident == "" {
     //     println!("{gen}");
