@@ -5212,6 +5212,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
         #deserialize_ident_order_by_token_stream
         #allow_methods_token_stream
+        pub struct CatColumnReadPermission {
+            id: bool,
+            name: bool,
+            color: bool,
+        }
 
         #create_many_token_stream
         #create_one_token_stream
