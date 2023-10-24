@@ -4636,7 +4636,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let query_token_stream = {
             let query_id_field_token_stream = quote::quote!{
-                pub #id_field_ident: Option<crate::server::postgres::bigserial_ids::BigserialIds>,
+                pub #id_field_ident: Option<Vec<std::string::String>>,//crate::server::postgres::bigserial_ids::BigserialIds
             };
             let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -4831,16 +4831,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let filter_unique_parameters_token_stream = {
                         let filter_unique_parameters_primary_key_token_stream = quote::quote!{
                             let #not_unique_primary_keys_name_token_stream = {
-                                let mut vec = Vec::with_capacity(#id_field_ident.0.len());
-                                let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.0.len());
-                                for element in &#id_field_ident.0 {
-                                    let handle = element.to_inner();
+                                let mut vec = Vec::with_capacity(#id_field_ident.len());
+                                let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
+                                for element in #id_field_ident {
+                                    let handle = element;
                                     match vec.contains(&handle) {
                                         true => {
-                                            #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
+                                            #not_unique_primary_keys_name_token_stream.push(element.clone());
                                         }
                                         false => {
-                                            vec.push(element.to_inner());
+                                            vec.push(element);
                                         }
                                     }
                                 }
@@ -4858,9 +4858,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     let expected_updated_primary_keys_token_stream = {
                         quote::quote!{
-                            #id_field_ident.0
+                            #id_field_ident
                             .iter()
-                            .map(|element| element.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
+                            .map(|element| element.clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
                             .collect::<Vec<#id_field_type>>()
                         }
                     };
@@ -4872,9 +4872,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let binded_query_primary_key_some_other_none_token_stream = quote::quote!{
                         let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                         query = query.bind(
-                            #id_field_ident.0.clone()//todo remove .clone
+                            #id_field_ident.clone()//todo remove .clone
                             .into_iter()
-                            .map(|element| element.clone().into_inner())
+                            .map(|element| element.clone())
                             .collect::<Vec<#id_field_type>>()
                         );
                         query
@@ -4919,16 +4919,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let filter_unique_parameters_primary_key_token_stream = quote::quote!{
                             if let Some(#id_field_ident) = &#parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
                                 let #not_unique_primary_keys_name_token_stream = {
-                                    let mut vec = Vec::with_capacity(#id_field_ident.0.len());
-                                    let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.0.len());
-                                    for element in &#id_field_ident.0 {
-                                        let handle = element.to_inner();
+                                    let mut vec = Vec::with_capacity(#id_field_ident.len());
+                                    let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
+                                    for element in #id_field_ident {
+                                        let handle = element;
                                         match vec.contains(&handle) {
                                             true => {
-                                                #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
+                                                #not_unique_primary_keys_name_token_stream.push(element.clone());
                                             }
                                             false => {
-                                                vec.push(element.to_inner());
+                                                vec.push(element);
                                             }
                                         }
                                     }
@@ -5095,7 +5095,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         #handle_token_stream,
                                         {
                                             let mut additional_parameters = std::string::String::default(); 
-                                            for element in &#id_field_ident.0 {
+                                            for element in #id_field_ident {
                                                 match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(element, &mut increment) {
                                                     Ok(_) => {
                                                         additional_parameters.push_str(&format!("${increment},"));
@@ -5152,7 +5152,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         });
                         let binded_query_id_modifications_token_stream = quote::quote!{
                             if let Some(#id_field_ident) = #parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
-                                for element in #id_field_ident.0 {
+                                for element in #id_field_ident {
                                     query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(element, query);
                                 }
                             }
@@ -5255,7 +5255,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #update_many_token_stream
         #delete_one_token_stream
         #delete_many_with_body_token_stream
-        // #delete_many_token_stream
+        #delete_many_token_stream
     };
     // if ident == "" {
     //     println!("{gen}");
