@@ -33,6 +33,7 @@ pub fn generate_postgresql_crud_route_name(
     item
 }
 
+//todo validate uuid
 //todo add regex filter to query parameters - now supports only in body variants
 //todo regex filter support only for string-like types postgresql
 //todo generate route what will return columns of the table and their rust and postgersql types
@@ -2511,7 +2512,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #query_derive_token_stream
                 pub struct #read_many_query_camel_case_token_stream {
                     pub #select_token_stream: Option<#column_select_ident_token_stream>,
-                    pub #id_field_ident: Option<crate::server::postgres::bigserial_ids::BigserialIds>,
+                    pub #id_field_ident: Option<Vec<std::string::String>>,//crate::server::postgres::bigserial_ids::BigserialIds
                     #(#fields_with_excluded_id_token_stream)*
                     pub #order_by_token_stream: Option<#ident_order_by_wrapper_token_stream>,//todo
                     pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
@@ -2687,16 +2688,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let filter_unique_parameters_primary_key_token_stream = quote::quote!{
                         if let Some(#id_field_ident) = &#parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
                             let #not_unique_primary_keys_name_token_stream = {
-                                let mut vec = Vec::with_capacity(#id_field_ident.0.len());
-                                let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.0.len());
-                                for element in &#id_field_ident.0 {
-                                    let handle = element.to_inner();
+                                let mut vec = Vec::with_capacity(#id_field_ident.len());
+                                let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
+                                for element in #id_field_ident {
+                                    let handle = element;
                                     match vec.contains(&handle) {
                                         true => {
-                                            #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
+                                            #not_unique_primary_keys_name_token_stream.push(element.clone());
                                         },
                                         false => {
-                                            vec.push(element.to_inner());
+                                            vec.push(element);
                                         }
                                     }
                                 }
@@ -2969,9 +2970,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         quote::quote!{
                             if let Some(value) = #parameters_lower_case_token_stream.#query_lower_case_token_stream.#id_field_ident {
                                 query = query.bind(
-                                    value.0
+                                    value
                                     .into_iter()
-                                    .map(|element| element.clone().into_inner())
+                                    .map(|element| element.clone())
                                     .collect::<Vec<#id_field_type>>()
                                 );
                             }
@@ -3105,7 +3106,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    // println!("{read_token_stream}");
+    // println!("{read_many_token_stream}");
     let update_one_token_stream = {//todo WHY ITS RETURN SUCCESS EVEN IF ROW DOES NOT EXISTS?
         let update_one_name_camel_case_stringified = "UpdateOne";
         let update_one_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_one_name_camel_case_stringified.to_string());
@@ -5249,8 +5250,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #create_one_token_stream
         #read_one_token_stream
         #read_many_with_body_token_stream
-        // #read_many_token_stream
-        // #update_one_token_stream
+        #read_many_token_stream
+        #update_one_token_stream
         // #update_many_token_stream
         // #delete_one_token_stream
         // #delete_many_with_body_token_stream
