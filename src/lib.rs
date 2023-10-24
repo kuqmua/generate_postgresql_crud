@@ -4073,7 +4073,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #payload_derive_token_stream
                 pub struct #delete_many_with_body_payload_camel_case_token_stream {
-                    pub #id_field_ident: Option<Vec<crate::server::postgres::bigserial::Bigserial>>,//todo
+                    pub #id_field_ident: Option<Vec<std::string::String>>,//crate::server::postgres::bigserial::Bigserial
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
@@ -4202,13 +4202,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 let mut vec = Vec::with_capacity(#id_field_ident.len());
                                 let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
                                 for element in #id_field_ident {
-                                    let handle = element.to_inner();
+                                    let handle = element;
                                     match vec.contains(&handle) {
                                         true => {
-                                            #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
+                                            #not_unique_primary_keys_name_token_stream.push(element.clone());
                                         },
                                         false => {
-                                            vec.push(element.to_inner());
+                                            vec.push(element);
                                         }
                                     }
                                 }
@@ -4227,7 +4227,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let expected_updated_primary_keys_token_stream = quote::quote!{
                         #id_field_ident
                         .iter()
-                        .map(|element| element.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
+                        .map(|element| element.clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
                         .collect::<Vec<#id_field_type>>()
                     };
                     let query_string_primary_key_some_other_none_token_stream = {
@@ -4240,7 +4240,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         query = query.bind(
                             #id_field_ident
                             .into_iter()
-                            .map(|element| element.clone().into_inner())
+                            .map(|element| element.clone())
                             .collect::<Vec<#id_field_type>>()
                         );
                         query
@@ -4288,13 +4288,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     let mut vec = Vec::with_capacity(#id_field_ident.len());
                                     let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#id_field_ident.len());
                                     for element in #id_field_ident {
-                                        let handle = element.to_inner();
+                                        let handle = element;
                                         match vec.contains(&handle) {
                                             true => {
-                                                #not_unique_primary_keys_name_token_stream.push(*element.to_inner());
+                                                #not_unique_primary_keys_name_token_stream.push(element.clone());
                                             },
                                             false => {
-                                                vec.push(element.to_inner());
+                                                vec.push(element);
                                             }
                                         }
                                     }
@@ -5254,7 +5254,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #update_one_token_stream
         #update_many_token_stream
         #delete_one_token_stream
-        // #delete_many_with_body_token_stream
+        #delete_many_with_body_token_stream
         // #delete_many_token_stream
     };
     // if ident == "" {
