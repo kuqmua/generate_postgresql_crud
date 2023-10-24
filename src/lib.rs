@@ -3494,7 +3494,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #payload_derive_token_stream
                 pub struct #update_many_payload_element_camel_case_token_stream {
-                    pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,
+                    pub #id_field_ident: std::string::String,//crate::server::postgres::bigserial::Bigserial
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
@@ -3587,7 +3587,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #parameters_lower_case_token_stream
                     .#payload_lower_case_token_stream
                     .iter()
-                    .map(|element| element.#id_field_ident.to_inner().clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
+                    .map(|element| element.#id_field_ident.clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
                     .collect::<Vec<#id_field_type>>()
                 };
                 let query_string_token_stream = {
@@ -3670,7 +3670,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #query_name_token_stream = #query_name_token_stream.bind(
                                 #field_ident_underscore_vec_token_stream
                                 .into_iter()
-                                .map(|element| element.clone().into_inner())
+                                .map(|element| element.clone())
                                 .collect::<Vec<#id_field_type>>()
                             );
                         }
@@ -3748,13 +3748,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut vec = Vec::with_capacity(#parameters_lower_case_token_stream.#payload_lower_case_token_stream.len());
                             let mut #not_unique_primary_keys_name_token_stream = Vec::with_capacity(#parameters_lower_case_token_stream.#payload_lower_case_token_stream.len());
                             for element in &parameters.payload {
-                                let handle = element.#id_field_ident.to_inner();
+                                let handle = &element.#id_field_ident;
                                 match vec.contains(&handle) {
                                     true => {
-                                        #not_unique_primary_keys_name_token_stream.push(*element.#id_field_ident.to_inner());
+                                        #not_unique_primary_keys_name_token_stream.push(element.#id_field_ident.clone());
                                     },
                                     false => {
-                                        vec.push(element.#id_field_ident.to_inner());
+                                        vec.push(&element.#id_field_ident);
                                     }
                                 }
                             }
@@ -5252,7 +5252,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #read_many_with_body_token_stream
         #read_many_token_stream
         #update_one_token_stream
-        // #update_many_token_stream
+        #update_many_token_stream
         // #delete_one_token_stream
         // #delete_many_with_body_token_stream
         // #delete_many_token_stream
