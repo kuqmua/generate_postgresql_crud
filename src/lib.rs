@@ -1836,9 +1836,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 let binded_query_token_stream = {
                     let binded_query_modifications_token_stream = quote::quote!{
-                        query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
-                            #parameters_lower_case_token_stream.#path_lower_case_token_stream.#id_field_ident, query,
-                        );
+                        let try_into_result: Result<
+                            sqlx::types::Uuid,//todo reuse
+                            crate::server::postgres::uuid_wrapper::UuidWrapperTryIntoSqlxTypesUuidErrorNamed,//todo reuse
+                        > = #parameters_lower_case_token_stream.#path_lower_case_token_stream.#id_field_ident.try_into();
+                            match try_into_result {
+                                Ok(value) => {
+                                    query = query.bind(value);
+                                }
+                                Err(e) => {
+                                    let error = #prepare_and_execute_query_error_token_stream::UuidWrapperTryIntoSqlxTypesUuid {
+                                        uuid_wrapper_try_into_sqlx_types: e,
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream
+                                    };
+                                    #error_log_call_token_stream
+                                    return #try_read_one_response_variants_token_stream::from(error);
+                                }
+                            }
                     };
                     quote::quote!{
                         let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
@@ -1925,7 +1939,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #into_url_encoding_version_token_stream
             #try_read_one_error_named_token_stream
             #http_request_token_stream
-            // #route_handler_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{read_one_token_stream}");
