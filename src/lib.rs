@@ -1695,7 +1695,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #path_derive_token_stream
                 pub struct #read_one_path_camel_case_token_stream {
-                    pub #id_field_ident: crate::server::postgres::bigserial::Bigserial//#id_field_type,
+                    pub #id_field_ident: crate::server::postgres::uuid_wrapper::UuidWrapper,
                 }
             }
         };
@@ -1925,7 +1925,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #into_url_encoding_version_token_stream
             #try_read_one_error_named_token_stream
             #http_request_token_stream
-            #route_handler_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{read_one_token_stream}");
@@ -5297,7 +5297,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 
         #create_many_token_stream
         #create_one_token_stream
-        // #read_one_token_stream
+        #read_one_token_stream
         // #read_many_with_body_token_stream
         #read_many_token_stream
         // #update_one_token_stream
