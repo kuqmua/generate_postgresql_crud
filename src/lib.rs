@@ -33,6 +33,10 @@ pub fn generate_postgresql_crud_route_name(
     item
 }
 
+//todo clear unnesesary generated returns.
+// unneeded `return` statement
+// for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
+// `#[warn(clippy::needless_return)]` 
 //todo validate uuid
 //todo add regex filter to query parameters - now supports only in body variants
 //todo regex filter support only for string-like types postgresql
