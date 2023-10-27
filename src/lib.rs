@@ -2393,12 +2393,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let binded_query_token_stream = {
                     let binded_query_id_modification_token_stream = quote::quote!{
                         if let Some(value) = #parameters_lower_case_token_stream.#payload_lower_case_token_stream.#id_field_ident {
-                            query = query.bind(
-                                value
-                                .into_iter()
-                                .map(|element| element.clone())
-                                .collect::<Vec<#id_field_type>>()
-                            );
+                            let mut vec_for_bind = Vec::with_capacity(value.len());
+                            for element in value {
+                                match sqlx::types::Uuid::parse_str(&element) {
+                                    Ok(value) => {
+                                        vec_for_bind.push(value);
+                                    }
+                                    Err(e) => {
+                                        let error = #prepare_and_execute_query_error_token_stream::NotUuid {
+                                            not_uuid: e,
+                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                        };
+                                        #error_log_call_token_stream
+                                        return #try_read_many_with_body_response_variants_token_stream::from(error);
+                                    }
+                                }
+                            }
+                            query = query.bind(vec_for_bind);
                         }
                     };
                     let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
@@ -2520,7 +2531,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    println!("{read_many_with_body_token_stream}");
+    // println!("{read_many_with_body_token_stream}");
     let read_many_token_stream = {
         let read_many_name_camel_case_stringified = "ReadMany";
         let read_many_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_many_name_camel_case_stringified.to_string());
@@ -5312,7 +5323,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #create_many_token_stream
         #create_one_token_stream
         #read_one_token_stream
-        // #read_many_with_body_token_stream
+        #read_many_with_body_token_stream
         #read_many_token_stream
         // #update_one_token_stream
         // #update_many_token_stream
