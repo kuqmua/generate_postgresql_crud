@@ -5306,7 +5306,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{delete_many_token_stream}");
-    let gen = quote::quote! {
+    let f = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
         #from_ident_for_ident_options_token_stream
@@ -5320,6 +5320,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #deserialize_ident_order_by_token_stream
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
+    };
+    // println!("{f}");
+    let gen = quote::quote! {
+        #f
 
         #create_many_token_stream
         #create_one_token_stream
