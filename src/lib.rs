@@ -1045,7 +1045,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
     let parameters_derive_token_stream = quote::quote!{#[derive(Debug, serde::Deserialize)]};
     let path_derive_token_stream = quote::quote!{#[derive(Debug, serde::Deserialize)]};
-    let query_derive_token_stream = quote::quote!{#[derive(Debug, serde::Serialize, serde::Deserialize)]};
+    let derive_serialize_deserialize_token_stream = quote::quote!{#[derive(Debug, serde::Serialize, serde::Deserialize)]};
     let payload_derive_token_stream = quote::quote!{#[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]};
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
     let crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor};
@@ -1662,6 +1662,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             read_one_path_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_one_path_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)) 
         };
+        let read_one_path_for_url_encoding_camel_case_token_stream = {
+            let read_one_path_for_url_encoding_camel_case_stringified = format!("{read_one_name_camel_case_stringified}{path_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
+            read_one_path_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_one_path_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         let read_one_query_camel_case_token_stream = {
             let read_one_query_camel_case_stringified = format!("{read_one_name_camel_case_stringified}{query_camel_case_stringified}");
             read_one_query_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -1701,9 +1706,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{path_token_stream}");
+        let path_for_url_encoding_token_stream = {
+            quote::quote!{
+                #derive_serialize_deserialize_token_stream
+                pub struct #read_one_path_for_url_encoding_camel_case_token_stream {
+                    #id_field_ident: crate::server::postgres::uuid_wrapper::PossibleUuidWrapper,
+                }
+            }
+        };
+        // println!("{path_for_url_encoding_token_stream}");
         let query_token_stream = {
             quote::quote!{
-                #query_derive_token_stream
+                #derive_serialize_deserialize_token_stream
                 pub struct #read_one_query_camel_case_token_stream {
                     pub #select_token_stream: Option<#column_select_ident_token_stream>,
                 }
@@ -2584,7 +2598,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #query_derive_token_stream
+                #derive_serialize_deserialize_token_stream
                 pub struct #read_many_query_camel_case_token_stream {
                     pub #select_token_stream: Option<#column_select_ident_token_stream>,
                     pub #id_field_ident: Option<Vec<std::string::String>>,//crate::server::postgres::bigserial_ids::BigserialIds
@@ -4726,7 +4740,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #query_derive_token_stream
+                #derive_serialize_deserialize_token_stream
                 pub struct #delete_many_query_camel_case_token_stream {
                     #query_id_field_token_stream
                     #(#fields_with_excluded_id_token_stream),*
