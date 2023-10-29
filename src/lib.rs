@@ -4021,7 +4021,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    // println!("{update_many_token_stream}");
+    println!("{update_many_token_stream}");
     let delete_one_token_stream = {
         let delete_one_name_camel_case_stringified = "DeleteOne";
         let delete_one_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_one_name_camel_case_stringified.to_string());
