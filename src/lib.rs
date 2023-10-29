@@ -1666,15 +1666,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             read_one_path_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_one_path_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let read_one_path_try_from_read_one_path_for_url_encoding_camel_case_stringified = format!("{read_one_name_camel_case_stringified}{path_camel_case_stringified}TryFrom{read_one_name_camel_case_stringified}{path_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
         let read_one_path_try_from_read_one_path_for_url_encoding_error_named_camel_case_token_stream = {//todo reuse TryFrom
-            let read_one_path_try_from_read_one_path_for_url_encoding_error_named_camel_case_stringified = format!("{read_one_name_camel_case_stringified}{path_camel_case_stringified}TryFrom{read_one_name_camel_case_stringified}{path_camel_case_stringified}{for_url_encoding_camel_case_stringified}{error_named_camel_case_stringified}");
+            let read_one_path_try_from_read_one_path_for_url_encoding_error_named_camel_case_stringified = format!("{read_one_path_try_from_read_one_path_for_url_encoding_camel_case_stringified}{error_named_camel_case_stringified}");
             read_one_path_try_from_read_one_path_for_url_encoding_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_one_path_try_from_read_one_path_for_url_encoding_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         let read_one_path_try_from_read_one_path_for_url_encoding_camel_case_token_stream = {//todo reuse TryFrom
-            let read_one_path_try_from_read_one_path_for_url_encoding_camel_case_stringified = format!("{read_one_name_camel_case_stringified}{path_camel_case_stringified}TryFrom{read_one_name_camel_case_stringified}{path_camel_case_stringified}{for_url_encoding_camel_case_stringified}{error_named_camel_case_stringified}");
             read_one_path_try_from_read_one_path_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_one_path_try_from_read_one_path_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let read_one_path_try_from_read_one_path_for_url_encoding_lower_case_token_stream = {//todo reuse TryFrom
+            let read_one_path_try_from_read_one_path_for_url_encoding_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_one_path_try_from_read_one_path_for_url_encoding_camel_case_stringified.to_string());
+            read_one_path_try_from_read_one_path_for_url_encoding_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_one_path_try_from_read_one_path_for_url_encoding_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         let read_one_query_camel_case_token_stream = {
             let read_one_query_camel_case_stringified = format!("{read_one_name_camel_case_stringified}{query_camel_case_stringified}");
@@ -1952,9 +1957,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(value) => match #read_one_path_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::ReadOnePathTryFromReadOnePathForUrlEncoding {
-                                        read_one_path_try_from_read_one_path_for_url_encoding: e,
-                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                    let error = #prepare_and_execute_query_error_token_stream::#read_one_path_try_from_read_one_path_for_url_encoding_camel_case_token_stream {
+                                        #read_one_path_try_from_read_one_path_for_url_encoding_lower_case_token_stream: e,//todo generate name
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
                                     #error_log_call_token_stream
                                     return #try_read_one_response_variants_token_stream::from(error);
@@ -3250,6 +3255,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             update_one_path_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        //
+        let update_one_path_for_url_encoding_camel_case_token_stream = {
+            let update_one_path_for_url_encoding_camel_case_stringified = format!("{update_one_name_camel_case_stringified}{path_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
+            update_one_path_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_token_stream = {//todo reuse TryFrom
+            let update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_stringified = format!("{update_one_name_camel_case_stringified}{path_camel_case_stringified}TryFrom{update_one_name_camel_case_stringified}{path_camel_case_stringified}{for_url_encoding_camel_case_stringified}{error_named_camel_case_stringified}");
+            update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let update_one_path_try_from_update_one_path_for_url_encoding_camel_case_token_stream = {//todo reuse TryFrom
+            let update_one_path_try_from_update_one_path_for_url_encoding_camel_case_stringified = format!("{update_one_name_camel_case_stringified}{path_camel_case_stringified}TryFrom{update_one_name_camel_case_stringified}{path_camel_case_stringified}{for_url_encoding_camel_case_stringified}{error_named_camel_case_stringified}");
+            update_one_path_try_from_update_one_path_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_try_from_update_one_path_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        //
         let update_one_payload_camel_case_token_stream = {
             let update_one_payload_camel_case_stringified = format!("{update_one_name_camel_case_stringified}{payload_camel_case_stringified}");
             update_one_payload_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -3267,7 +3289,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #derive_debug_deserialize_token_stream
+                #derive_debug_token_stream
                 pub struct #update_one_parameters_camel_case_token_stream {
                     pub #path_lower_case_token_stream: #update_one_path_camel_case_token_stream,
                     pub #payload_lower_case_token_stream: #update_one_payload_camel_case_token_stream,
@@ -3277,13 +3299,57 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let path_token_stream = {
             quote::quote!{
-                #derive_debug_deserialize_token_stream
+                #derive_debug_token_stream
                 pub struct #update_one_path_camel_case_token_stream {
-                    pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
+                    pub #id_field_ident: crate::server::postgres::uuid_wrapper::UuidWrapper,
                 }
             }
         };
         // println!("{path_token_stream}");
+        let path_for_url_encoding_token_stream = {
+            quote::quote!{
+                #derive_serialize_deserialize_token_stream
+                pub struct #update_one_path_for_url_encoding_camel_case_token_stream {
+                    #id_field_ident: crate::server::postgres::uuid_wrapper::PossibleUuidWrapper,
+                }
+            }
+        };
+        // println!("{path_for_url_encoding_token_stream}");
+        let update_one_path_try_from_update_one_path_for_url_encoding_error_named_token_stream = {
+            quote::quote!{
+                #error_named_derive_token_stream
+                pub enum #update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_token_stream {
+                    NotUuid {
+                        #eo_error_occurence_attribute_token_stream
+                        not_uuid: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                } 
+            }
+        };
+        // println!("{update_one_path_try_from_update_one_path_for_url_encoding_error_named_token_stream}");
+        let impl_std_convert_try_from_update_one_path_for_url_encoding_for_update_one_path_token_stream = {
+            quote::quote!{
+                impl std::convert::TryFrom<#update_one_path_for_url_encoding_camel_case_token_stream> for #update_one_path_camel_case_token_stream {
+                    type Error = #update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_token_stream;
+                    fn try_from(value: #update_one_path_for_url_encoding_camel_case_token_stream) -> Result<Self, Self::Error> {
+                        let #id_field_ident = match crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(value.#id_field_ident) {
+                            Ok(value) => value,
+                            Err(e) => {
+                                return Err(Self::Error::NotUuid {
+                                    not_uuid: e,
+                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                });
+                            }
+                        };
+                        Ok(Self {
+                            #id_field_ident
+                        })
+                    }
+                }      
+            }
+        };
+        // println!("{impl_std_convert_try_from_update_one_path_for_url_encoding_for_update_one_path_token_stream}");
         let payload_token_stream = {
             let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -3379,12 +3445,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let update_one_lower_case_token_stream = update_one_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+            let prepare_and_execute_query_error_token_stream = {
+                let error_path_stringified = format!("{try_camel_case_stringified}{update_one_name_camel_case_stringified}");
+                error_path_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             let prepare_and_execute_query_token_stream = {
-                let prepare_and_execute_query_error_token_stream = {
-                    let error_path_stringified = format!("{try_camel_case_stringified}{update_one_name_camel_case_stringified}");
-                    error_path_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_path_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
                 let check_for_none_token_stream_excluding_primary_key = crate::check_for_none::check_for_none(
                     &fields_named,
                     &id_field,
@@ -3540,7 +3606,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #try_update_one_response_variants_token_stream,
                         >::#try_extract_value_token_stream(#path_extraction_result_lower_case_token_stream, &#app_info_state_name_token_stream)
                         {
-                            Ok(value) => value,
+                            Ok(value) => match #update_one_path_camel_case_token_stream::try_from(value) {
+                                Ok(value) => value,
+                                Err(e) => {
+                                    let error = #prepare_and_execute_query_error_token_stream::#update_one_path_try_from_update_one_path_for_url_encoding_camel_case_token_stream {
+                                        update_one_path_try_from_update_one_path_for_url_encoding: e,//todo generate naming
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                    };
+                                    #error_log_call_token_stream
+                                    return #try_update_one_response_variants_token_stream::from(error);
+                                }
+                            },
                             Err(err) => {
                                 return err;
                             }
@@ -5361,7 +5437,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{delete_many_token_stream}");
-    let f = quote::quote! {
+    let gen = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
         #from_ident_for_ident_options_token_stream
@@ -5375,10 +5451,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #deserialize_ident_order_by_token_stream
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
-    };
-    // println!("{f}");
-    let gen = quote::quote! {
-        #f
 
         #create_many_token_stream
         #create_one_token_stream
