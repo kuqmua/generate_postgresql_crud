@@ -627,6 +627,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{column_select_token_stream}");
+    //todo remove primary_key_try_from_sqlx_row_name_token_stream and primary_key_try_from_sqlx_row_token_stream later - primary_key_uuid_wrapper_try_from_sqlx_row_token_stream is new version
     let primary_key_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_try_from_sqlx_row};
     let primary_key_try_from_sqlx_row_token_stream = {
         let primary_key_str_token_stream = {
@@ -649,6 +650,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{primary_key_try_from_sqlx_row_token_stream}");
+    //
+    let primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_uuid_wrapper_try_from_sqlx_row};
+    let primary_key_uuid_wrapper_try_from_sqlx_row_token_stream = {
+        let primary_key_str_token_stream = {
+            let primary_key_str_stringified = format!("\"{id_field_ident}\"");
+            primary_key_str_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {primary_key_str_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let row_name_token_stream = quote::quote!{row};
+        let primary_key_name_token_stream = quote::quote!{primary_key};
+        quote::quote! {
+            fn #primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(#row_name_token_stream: &'a R) -> sqlx::Result<crate::server::postgres::uuid_wrapper::UuidWrapper>
+            where
+                #std_primitive_str_sqlx_column_index_token_stream
+                sqlx::types::Uuid: #sqlx_decode_decode_database_token_stream,
+                sqlx::types::Uuid: #sqlx_types_type_database_token_stream,
+            {
+                let #primary_key_name_token_stream: sqlx::types::Uuid = #row_name_token_stream.try_get(#primary_key_str_token_stream)?;
+                Ok(crate::server::postgres::uuid_wrapper::UuidWrapper::from(#primary_key_name_token_stream))
+            }
+        }
+    };
+    println!("{primary_key_uuid_wrapper_try_from_sqlx_row_token_stream}");
+    //
     let crate_server_postgres_order_by_order_by_token_stream = quote::quote!{crate::server::postgres::order_by::OrderBy};
     let ident_order_by_wrapper_token_stream = {
         let ident_order_by_wrapper_stringified = format!("{ident}OrderByWrapper");
@@ -5453,7 +5478,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #(#structs_variants_impl_from_token_stream)*
         #column_token_stream
         #column_select_token_stream
-        // #primary_key_try_from_sqlx_row_token_stream
+        #primary_key_try_from_sqlx_row_token_stream
+        //
+        #primary_key_uuid_wrapper_try_from_sqlx_row_token_stream
+        //
         #order_by_wrapper_token_stream
         #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
         #deserialize_ident_order_by_token_stream
