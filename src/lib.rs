@@ -3770,6 +3770,41 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{payload_with_serialize_deserialize_token_stream}");
+        let impl_std_convert_from_update_many_payload_elemen_for_update_many_payload_element_with_serialize_deserialize_token_stream = {
+            let fields_assignments_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                true => None,
+                false => {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    Some(quote::quote!{
+                        let #field_ident = value.#field_ident;
+                    })
+                },
+            });
+            let self_init_fields_token_stream = fields_named.iter().map(|field|{
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    #field_ident
+                }
+            });
+            quote::quote!{
+                impl std::convert::From<#update_many_payload_element_camel_case_token_stream> for #update_many_payload_element_with_serialize_deserialize_camel_case_token_stream {
+                    fn from(value: #update_many_payload_element_camel_case_token_stream) -> Self {
+                        let #id_field_ident = crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(value.#id_field_ident);
+                        #(#fields_assignments_token_stream)*
+                        Self {
+                            #(#self_init_fields_token_stream),*
+                        }
+                    }
+                }
+            }
+        };
+        // println!("{impl_std_convert_from_update_many_payload_elemen_for_update_many_payload_element_with_serialize_deserialize_token_stream}");
         let try_update_many_error_named_token_stream = {
             let try_update_many_request_error_camel_case_token_stream = {
                 let try_update_many_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{update_many_name_camel_case_stringified}{request_error_camel_case_stringified}");
@@ -4072,6 +4107,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #payload_with_serialize_deserialize_token_stream
+            #impl_std_convert_from_update_many_payload_elemen_for_update_many_payload_element_with_serialize_deserialize_token_stream
             // #try_update_many_error_named_token_stream
             // #http_request_token_stream
             // #route_handler_token_stream
