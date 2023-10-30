@@ -3709,7 +3709,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #derive_debug_deserialize_token_stream
+                #derive_debug_token_stream
                 pub struct #update_many_parameters_camel_case_token_stream {
                     pub #payload_lower_case_token_stream: #update_many_payload_camel_case_token_stream,
                 }
@@ -4039,10 +4039,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
-            #payload_token_stream
-            #try_update_many_error_named_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
+            // #payload_token_stream
+            // #try_update_many_error_named_token_stream
+            // #http_request_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{update_many_token_stream}");
@@ -5494,7 +5494,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #read_many_with_body_token_stream
         #read_many_token_stream
         #update_one_token_stream
-        // #update_many_token_stream
+        #update_many_token_stream
         // #delete_one_token_stream
         // #delete_many_with_body_token_stream
         // #delete_many_token_stream
