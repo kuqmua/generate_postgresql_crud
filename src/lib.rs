@@ -932,6 +932,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let url_encoding_camel_case_stringified = "UrlEncoding";
     let for_url_encoding_camel_case_stringified = format!("For{url_encoding_camel_case_stringified}");
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
+    let payload_element_with_serialize_deserialize_camel_case_stringified = format!("{payload_element_camel_case_stringified}WithSerializeDeserialize");
     // let from_camel_case_stringified = "From";
     let try_camel_case_stringified = "Try";
     let try_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&try_camel_case_stringified.to_string());
@@ -3696,6 +3697,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_many_payload_element_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         let update_many_payload_camel_case_token_stream = quote::quote!{Vec<#update_many_payload_element_camel_case_token_stream>};
+        //
+        let update_many_payload_element_with_serialize_deserialize_camel_case_token_stream = {
+            let update_many_payload_element_with_serialize_deserialize_camel_case_stringified = format!("{update_many_name_camel_case_stringified}{payload_element_with_serialize_deserialize_camel_case_stringified}");
+            update_many_payload_element_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_many_payload_element_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let update_many_payload_with_serialize_deserialize_camel_case_token_stream = quote::quote!{Vec<#update_many_payload_element_with_serialize_deserialize_camel_case_token_stream>};
+        //
         let try_update_many_error_named_camel_case_token_stream = {
             let try_update_many_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{update_many_name_camel_case_stringified}{error_named_camel_case_stringified}");
             try_update_many_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -3738,6 +3747,29 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{payload_token_stream}");
+        let payload_with_serialize_deserialize_token_stream = {
+            let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                true => None,
+                false => {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    let field_type = &field.ty;
+                    Some(quote::quote!{
+                        pub #field_ident: #field_type
+                    })
+                },
+            });
+            quote::quote!{
+                #derive_debug_serialize_deserialize_token_stream
+                pub struct #update_many_payload_element_with_serialize_deserialize_camel_case_token_stream {
+                    pub #id_field_ident: crate::server::postgres::uuid_wrapper::PossibleUuidWrapper,
+                    #(#fields_with_excluded_id_token_stream),*
+                }
+            }
+        };
+        // println!("{payload_with_serialize_deserialize_token_stream}");
         let try_update_many_error_named_token_stream = {
             let try_update_many_request_error_camel_case_token_stream = {
                 let try_update_many_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{update_many_name_camel_case_stringified}{request_error_camel_case_stringified}");
@@ -4039,6 +4071,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
+            #payload_with_serialize_deserialize_token_stream
             // #try_update_many_error_named_token_stream
             // #http_request_token_stream
             // #route_handler_token_stream
