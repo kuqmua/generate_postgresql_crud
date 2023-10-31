@@ -4293,6 +4293,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_token_stream}");
+        let impl_std_convert_try_from_delete_one_path_with_serialize_deserialize_for_delete_one_path_token_stream = {
+            quote::quote!{
+                impl std::convert::TryFrom<#delete_one_path_with_serialize_deserialize_camel_case_token_stream> for #delete_one_path_camel_case_token_stream {
+                    type Error = #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream;
+                    fn try_from(value: #delete_one_path_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
+                        match crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(value.#id_field_ident) {
+                            Ok(value) => Ok(Self { #id_field_ident: value }),
+                            Err(e) => Err(#delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream::NotUuid {
+                                not_uuid: e,
+                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                            }),
+                        }
+                    }
+                }
+            }
+        };
+        // println!("{impl_std_convert_try_from_delete_one_path_with_serialize_deserialize_for_delete_one_path_token_stream}");
         let try_delete_one_error_named_token_stream = {
             let try_delete_one_request_error_camel_case_token_stream = {
                 let try_delete_one_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{delete_one_name_camel_case_stringified}{request_error_camel_case_stringified}");
@@ -4466,6 +4483,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #path_token_stream
             #path_with_serialize_deserialize_token_stream
             #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_token_stream
+            #impl_std_convert_try_from_delete_one_path_with_serialize_deserialize_for_delete_one_path_token_stream
             // #try_delete_one_error_named_token_stream
             // #http_request_token_stream
             // #route_handler_token_stream
