@@ -4228,6 +4228,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             delete_one_path_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_one_path_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        //
+        let delete_one_path_with_serialize_deserialize_camel_case_token_stream = {
+            let delete_one_path_with_serialize_deserialize_camel_case_stringified = format!("{delete_one_name_camel_case_stringified}{path_camel_case_stringified}WithSerializeDeserialize");
+            delete_one_path_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_one_path_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        //
         let try_delete_one_error_named_camel_case_token_stream = {
             let try_delete_one_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{delete_one_name_camel_case_stringified}{error_named_camel_case_stringified}");
             try_delete_one_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -4240,7 +4247,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #derive_debug_deserialize_token_stream
+                #derive_debug_token_stream
                 pub struct #delete_one_parameters_camel_case_token_stream {
                     pub #path_lower_case_token_stream: #delete_one_path_camel_case_token_stream,
                 }
@@ -4249,13 +4256,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let path_token_stream = {
             quote::quote!{
-                #derive_debug_deserialize_token_stream
+                #derive_debug_token_stream
                 pub struct #delete_one_path_camel_case_token_stream {
-                    pub #id_field_ident: crate::server::postgres::bigserial::Bigserial,//#id_field_type
+                    pub #id_field_ident: crate::server::postgres::uuid_wrapper::UuidWrapper,
                 }
             }
         };
         // println!("{path_token_stream}");
+        let path_with_serialize_deserialize_token_stream = {
+            quote::quote!{
+                #derive_debug_serialize_deserialize_token_stream
+                pub struct #delete_one_path_with_serialize_deserialize_camel_case_token_stream {
+                    pub #id_field_ident: crate::server::postgres::uuid_wrapper::PossibleUuidWrapper,
+                }
+            }
+        };
+        // println!("{path_with_serialize_deserialize_token_stream}");
         let try_delete_one_error_named_token_stream = {
             let try_delete_one_request_error_camel_case_token_stream = {
                 let try_delete_one_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{delete_one_name_camel_case_stringified}{request_error_camel_case_stringified}");
@@ -4427,9 +4443,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
-            #try_delete_one_error_named_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
+            #path_with_serialize_deserialize_token_stream
+            // #try_delete_one_error_named_token_stream
+            // #http_request_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{delete_one_token_stream}");
@@ -5664,7 +5681,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #read_many_token_stream
         #update_one_token_stream
         #update_many_token_stream
-        // #delete_one_token_stream
+        #delete_one_token_stream
         // #delete_many_with_body_token_stream
         // #delete_many_token_stream
     };
