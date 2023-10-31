@@ -4485,7 +4485,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_token_stream
             #impl_std_convert_try_from_delete_one_path_with_serialize_deserialize_for_delete_one_path_token_stream
             #try_delete_one_error_named_token_stream
-            // #http_request_token_stream
+            #http_request_token_stream
             // #route_handler_token_stream
         }
     };
