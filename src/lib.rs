@@ -4555,9 +4555,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_token_stream
                 pub struct #delete_many_with_body_payload_camel_case_token_stream {
-                    pub #id_field_ident: Option<Vec<std::string::String>>,//crate::server::postgres::bigserial::Bigserial
+                    pub #id_field_ident: Option<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>>,
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
@@ -5069,7 +5069,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
-            // #payload_token_stream
+            #payload_token_stream
             // #try_delete_many_with_body_error_named_token_stream
             // #http_request_token_stream
             // #route_handler_token_stream
