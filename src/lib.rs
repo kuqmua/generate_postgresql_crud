@@ -4529,6 +4529,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_with_body_payload_with_serialize_deserialize_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         //
+        let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_stream = {
+            let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_stringified = format!(
+                "{delete_many_with_body_name_camel_case_stringified}{payload_camel_case_stringified}TryFrom{delete_many_with_body_name_camel_case_stringified}{payload_camel_case_stringified}WithSerializeDeserialize{error_named_camel_case_stringified}"
+            );
+            delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        //
         let try_delete_many_with_body_error_named_camel_case_token_stream = {
             let try_delete_many_with_body_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{delete_many_with_body_name_camel_case_stringified}{error_named_camel_case_stringified}");
             try_delete_many_with_body_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -4592,6 +4600,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{delete_many_with_body_payload_with_serialize_deserialize_token_stream}");
+        //
+        let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_token_stream = {
+            quote::quote!{
+                #error_named_derive_token_stream
+                pub enum #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_stream {
+                    NotUuid {
+                        #eo_display_attribute_token_stream
+                        not_uuid: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                }
+            }
+        };
+        //
         let try_delete_many_with_body_error_named_token_stream = {
             let try_delete_many_with_body_request_error_camel_case_token_stream = {
                 let try_delete_many_with_body_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{delete_many_with_body_name_camel_case_stringified}{request_error_camel_case_stringified}");
@@ -5100,6 +5122,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #delete_many_with_body_payload_with_serialize_deserialize_token_stream
+            #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_token_stream
             // #try_delete_many_with_body_error_named_token_stream
             // #http_request_token_stream
             // #route_handler_token_stream
