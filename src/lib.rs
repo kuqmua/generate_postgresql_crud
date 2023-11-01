@@ -4534,7 +4534,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #derive_debug_deserialize_token_stream
+                #derive_debug_token_stream
                 pub struct #delete_many_with_body_parameters_camel_case_token_stream {
                     pub #payload_lower_case_token_stream: #delete_many_with_body_payload_camel_case_token_stream,
                 }
@@ -5069,10 +5069,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
-            #payload_token_stream
-            #try_delete_many_with_body_error_named_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
+            // #payload_token_stream
+            // #try_delete_many_with_body_error_named_token_stream
+            // #http_request_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{delete_many_with_body_token_stream}");
@@ -5741,7 +5741,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #update_one_token_stream
         #update_many_token_stream
         #delete_one_token_stream
-        // #delete_many_with_body_token_stream
+        #delete_many_with_body_token_stream
         // #delete_many_token_stream
     };
     // if ident == "" {
