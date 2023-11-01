@@ -4523,13 +4523,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_with_body_payload_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         //
-        let delete_many_with_body_payload_with_serialize_deserialize_camel_case_stream = {
+        let delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream = {
             let delete_many_with_body_payload_with_serialize_deserialize_stringified = format!("{delete_many_with_body_name_camel_case_stringified}{payload_camel_case_stringified}WithSerializeDeserialize");
             delete_many_with_body_payload_with_serialize_deserialize_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_with_body_payload_with_serialize_deserialize_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         //
-        let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_stream = {
+        let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream = {
             let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_stringified = format!(
                 "{delete_many_with_body_name_camel_case_stringified}{payload_camel_case_stringified}TryFrom{delete_many_with_body_name_camel_case_stringified}{payload_camel_case_stringified}WithSerializeDeserialize{error_named_camel_case_stringified}"
             );
@@ -4593,23 +4593,73 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
-                pub struct #delete_many_with_body_payload_with_serialize_deserialize_camel_case_stream {
+                pub struct #delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
                     pub #id_field_ident: Option<Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>>,
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
         };
         // println!("{delete_many_with_body_payload_with_serialize_deserialize_token_stream}");
-        //
         let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_token_stream = {
             quote::quote!{
                 #error_named_derive_token_stream
-                pub enum #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_stream {
+                pub enum #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream {
                     NotUuid {
                         #eo_display_attribute_token_stream
                         not_uuid: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
+                }
+            }
+        };
+        // println!("{delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_token_stream}");
+        //
+        let impl_std_convert_try_from_delete_many_with_body_payload_with_serialize_deserialize_for_delete_many_with_body_payload_token_stream = {
+            let fields_assignments_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                true => None,
+                false => {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    Some(quote::quote!{
+                        let #field_ident = value.#field_ident;
+                    })
+                },
+            });
+            let self_init_fields_token_stream = fields_named.iter().map(|field|{
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    #field_ident
+                }
+            });
+            quote::quote!{
+                impl std::convert::TryFrom<#delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream> for #delete_many_with_body_payload_camel_case_token_stream {
+                    type Error = #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream;
+                    fn try_from(value: #delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
+                        let #id_field_ident = match value.#id_field_ident {
+                            Some(value) => match value.into_iter().map(|element|crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(element)).collect::<Result<
+                                Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,                                    
+                                crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed
+                            >>() {
+                                Ok(value) => Some(value),
+                                Err(e) => {
+                                    return Err(#delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream::NotUuid {
+                                        not_uuid: e,
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                    });
+                                },
+                            },
+                            None => None,
+                        };
+                        #(#fields_assignments_token_stream)*
+                        Ok(Self {
+                            #(#self_init_fields_token_stream),*
+                        })
+                    }
                 }
             }
         };
@@ -5123,6 +5173,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #payload_token_stream
             #delete_many_with_body_payload_with_serialize_deserialize_token_stream
             #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_token_stream
+            #impl_std_convert_try_from_delete_many_with_body_payload_with_serialize_deserialize_for_delete_many_with_body_payload_token_stream
             // #try_delete_many_with_body_error_named_token_stream
             // #http_request_token_stream
             // #route_handler_token_stream
