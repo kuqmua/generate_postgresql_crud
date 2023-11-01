@@ -4745,7 +4745,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #delete_many_with_body_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_many_with_body_error_named_camel_case_token_stream> {
-                    let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
+                    let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(
+                        &DeleteManyWithBodyPayloadWithSerializeDeserialize::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)
+                    ) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_delete_many_with_body_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
@@ -5215,8 +5217,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_token_stream
             #impl_std_convert_try_from_delete_many_with_body_payload_with_serialize_deserialize_for_delete_many_with_body_payload_token_stream
             #impl_std_convert_from_delete_many_with_body_payload_for_delete_many_with_body_payload_with_serialize_deserialize_token_stream
-            // #try_delete_many_with_body_error_named_token_stream
-            // #http_request_token_stream
+            #try_delete_many_with_body_error_named_token_stream
+            #http_request_token_stream
             // #route_handler_token_stream
         }
     };
