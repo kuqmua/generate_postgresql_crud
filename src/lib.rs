@@ -4664,6 +4664,46 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         //
+        let impl_std_convert_from_delete_many_with_body_payload_for_delete_many_with_body_payload_with_serialize_deserialize_token_stream = {
+            let fields_assignments_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                true => None,
+                false => {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    Some(quote::quote!{
+                        let #field_ident = value.#field_ident;
+                    })
+                },
+            });
+            let self_init_fields_token_stream = fields_named.iter().map(|field|{
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    #field_ident
+                }
+            });
+            quote::quote!{
+                impl std::convert::From<#delete_many_with_body_payload_camel_case_token_stream> for #delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
+                    fn from(value: #delete_many_with_body_payload_camel_case_token_stream) -> Self {
+                        let #id_field_ident = match value.#id_field_ident {
+                            Some(value) => Some(value.into_iter()
+                                .map(|element|crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(element))
+                                .collect::<Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>>()),
+                            None => None,
+                        };
+                        #(#fields_assignments_token_stream)*
+                        Self{
+                            #(#self_init_fields_token_stream),*
+                        }
+                    }
+                }
+            }
+        };
+        //
         let try_delete_many_with_body_error_named_token_stream = {
             let try_delete_many_with_body_request_error_camel_case_token_stream = {
                 let try_delete_many_with_body_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{delete_many_with_body_name_camel_case_stringified}{request_error_camel_case_stringified}");
@@ -5174,6 +5214,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #delete_many_with_body_payload_with_serialize_deserialize_token_stream
             #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_token_stream
             #impl_std_convert_try_from_delete_many_with_body_payload_with_serialize_deserialize_for_delete_many_with_body_payload_token_stream
+            #impl_std_convert_from_delete_many_with_body_payload_for_delete_many_with_body_payload_with_serialize_deserialize_token_stream
             // #try_delete_many_with_body_error_named_token_stream
             // #http_request_token_stream
             // #route_handler_token_stream
