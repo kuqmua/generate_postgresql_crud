@@ -5263,6 +5263,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             delete_many_query_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        //
+        let delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_token_stream = {
+            let delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_stringified = format!("{delete_many_name_camel_case_stringified}{query_camel_case_stringified}TryFrom{delete_many_name_camel_case_stringified}{query_camel_case_stringified}{for_url_encoding_camel_case_stringified}ErrorNamed");
+            delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        //
         let try_delete_many_error_named_camel_case_token_stream = {
             let try_delete_many_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{delete_many_name_camel_case_stringified}{error_named_camel_case_stringified}");
             try_delete_many_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -5280,7 +5287,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #derive_debug_deserialize_token_stream
+                #derive_debug_token_stream
                 pub struct #delete_many_parameters_camel_case_token_stream {
                     pub #query_lower_case_token_stream: #delete_many_query_camel_case_token_stream,
                 }
@@ -5289,7 +5296,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let query_token_stream = {
             let query_id_field_token_stream = quote::quote!{
-                pub #id_field_ident: Option<Vec<std::string::String>>,//crate::server::postgres::bigserial_ids::BigserialIds
+                pub #id_field_ident: Option<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>>,
             };
             let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -5304,7 +5311,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_token_stream
                 pub struct #delete_many_query_camel_case_token_stream {
                     #query_id_field_token_stream
                     #(#fields_with_excluded_id_token_stream),*
@@ -5330,6 +5337,90 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{query_for_url_encoding_token_stream}");
+        let delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_token_stream = {
+            quote::quote!{
+                #error_named_derive_token_stream
+                pub enum #delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_token_stream {
+                    NotUuid {
+                        #[eo_display]
+                        not_uuid: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                }
+            }
+        };
+        // println!("{delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_token_stream}");
+        let impl_std_convert_try_from_delete_many_query_for_url_encoding_for_delete_many_query_token_stream = {
+            let id_field_assignment_token_stream = quote::quote!{
+                let #id_field_ident = match value.#id_field_ident {
+                    Some(value) => match value.split(',')
+                        .map(|element| crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(element.to_string()))
+                        .collect::<Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>>()
+                        .into_iter()
+                        .map(|element|crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(element)).collect::<Result<
+                            Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                            crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed 
+                        >>() 
+                    {
+                        Ok(value) => Some(value),
+                        Err(e) => {
+                            return Err(#delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_token_stream::NotUuid {
+                                not_uuid: e,
+                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                            });
+                        }
+                    },
+                    None => None,
+                };
+            };
+            let fields_assignment_excluding_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                true => None,
+                false => {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    let field_handle_token_stream = {
+                        let field_handle_stringified = format!("{field_ident}_handle");
+                        field_handle_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    let handle_token_stream = {
+                        let handle_stringified = format!("\"{field_ident} = ${{increment}}\"");
+                        handle_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    };
+                    Some(quote::quote!{
+                        let #field_ident = match value.#field_ident {
+                            Some(value) => Some(crate::server::routes::helpers::strings_deserialized_from_string_splitted_by_comma::StringsDeserializedFromStringSplittedByComma::from(value)),
+                            None => None,
+                        };
+                    })
+                },
+            });
+            let self_init_fields_token_stream = fields_named.iter().map(|field|{
+                let field_ident = field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    #field_ident
+                }
+            });
+            quote::quote!{
+                impl std::convert::TryFrom<#delete_many_query_for_url_encoding_camel_case_token_stream> for #delete_many_query_camel_case_token_stream {
+                    type Error = #delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_token_stream;
+                    fn try_from(value: #delete_many_query_for_url_encoding_camel_case_token_stream) -> Result<Self, Self::Error> {
+                        #id_field_assignment_token_stream
+                        #(#fields_assignment_excluding_id_token_stream)*
+                        Ok(Self {
+                            #(#self_init_fields_token_stream),*
+                        })
+                    }
+                }
+            }
+        };
+        //
         let impl_std_convert_from_delete_many_query_for_delete_many_query_for_url_encoding_token_stream = {
             let impl_std_convert_from_delete_many_query_for_delete_many_query_for_url_encoding_id_token_stream = quote::quote!{
                 let #id_field_ident = value.#id_field_ident.map(|value| {
@@ -5877,10 +5968,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #query_token_stream
             #query_for_url_encoding_token_stream
+            #delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_token_stream
+            #impl_std_convert_try_from_delete_many_query_for_url_encoding_for_delete_many_query_token_stream
             #impl_std_convert_from_delete_many_query_for_delete_many_query_for_url_encoding_token_stream
             #try_delete_many_error_named_token_stream
             #http_request_token_stream
-            #route_handler_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{delete_many_token_stream}");
@@ -5911,7 +6004,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #update_many_token_stream
         #delete_one_token_stream
         #delete_many_with_body_token_stream
-        // #delete_many_token_stream
+        #delete_many_token_stream
     };
     // if ident == "" {
     //    println!("{gen}");
