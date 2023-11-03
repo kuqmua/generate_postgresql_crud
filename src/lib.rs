@@ -1134,7 +1134,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let limit_name_stringified = "limit";
     let offset_name_stringified = "offset";
     let in_name_stringified = "in";
-    let unnest_name_stringified = "unnest";
+    let unnest_name_stringified = "unnest";//
     let create_many_token_stream = {
         let create_many_name_camel_case_stringified = "CreateMany";
         let create_many_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_many_name_camel_case_stringified.to_string());
