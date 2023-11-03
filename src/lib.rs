@@ -2632,10 +2632,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             read_many_query_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_many_query_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)) 
         };
-        let read_many_query_for_url_encoding_camel_case_token_stream = {
-            let read_many_query_for_url_encoding_camel_case_stringified = format!("{read_many_name_camel_case_stringified}{query_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
-            read_many_query_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_many_query_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)) 
+        let read_many_query_with_serialize_deserialize_camel_case_token_stream = {
+            let read_many_query_with_serialize_deserialize_camel_case_stringified = format!("{read_many_name_camel_case_stringified}{query_camel_case_stringified}WithSerializeDeserialize");
+            read_many_query_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_many_query_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)) 
         };
         let try_read_many_error_named_camel_case_token_stream = {
             let try_read_many_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{read_many_name_camel_case_stringified}{error_named_camel_case_stringified}");
@@ -2682,8 +2682,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{query_token_stream}");
-        let query_for_url_encoding_token_stream = {
-            let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+        let query_with_serialize_deserialize_token_stream = {
+            let fields_with_serialize_deserialize_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
                 false => {
                     let field_ident = field.ident.clone()
@@ -2697,17 +2697,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
-                struct #read_many_query_for_url_encoding_camel_case_token_stream {
+                struct #read_many_query_with_serialize_deserialize_camel_case_token_stream {
                     #select_token_stream: Option<std::string::String>,
                     pub #id_field_ident: Option<std::string::String>,
-                    #(#fields_for_url_encoding_with_excluded_id_token_stream)*
+                    #(#fields_with_serialize_deserialize_with_excluded_id_token_stream)*
                     #order_by_token_stream: Option<std::string::String>,
                     limit: std::string::String,
                     offset: Option<std::string::String>,
                 }
             }
         };
-        // println!("{query_for_url_encoding_token_stream}");
+        // println!("{query_with_serialize_deserialize_token_stream}");
         let into_url_encoding_version_token_stream = {
             let fields_into_url_encoding_version_with_excluded_id_token_stream = fields_named.iter().map(|field| {
                 let field_ident = field.ident.clone()
@@ -2733,7 +2733,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 impl #read_many_query_camel_case_token_stream {
-                    fn #into_url_encoding_version_name_token_stream(self) -> #read_many_query_for_url_encoding_camel_case_token_stream {
+                    fn #into_url_encoding_version_name_token_stream(self) -> #read_many_query_with_serialize_deserialize_camel_case_token_stream {
                         let #select_token_stream = self.#select_token_stream.map(|value| {
                             #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(
                                 value,
@@ -2753,7 +2753,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 value,
                             )
                         });
-                        #read_many_query_for_url_encoding_camel_case_token_stream {
+                        #read_many_query_with_serialize_deserialize_camel_case_token_stream {
                             #select_token_stream,
                             #(#fields_into_url_encoding_version_constract_with_excluded_id_token_stream)*
                             #order_by_token_stream,
@@ -3260,7 +3260,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #query_token_stream
-            #query_for_url_encoding_token_stream
+            #query_with_serialize_deserialize_token_stream
             #into_url_encoding_version_token_stream
             #try_read_many_error_named_token_stream
             #http_request_token_stream
