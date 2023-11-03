@@ -5258,26 +5258,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             delete_many_query_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let delete_many_query_for_url_encoding_camel_case_token_stream = {
-            let delete_many_query_for_url_encoding_camel_case_stringified = format!("{delete_many_name_camel_case_stringified}{query_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
-            delete_many_query_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let delete_many_query_with_serialize_deserialize_camel_case_token_stream = {
+            let delete_many_query_with_serialize_deserialize_camel_case_stringified = format!("{delete_many_name_camel_case_stringified}{query_camel_case_stringified}WithSerializeDeserialize");
+            delete_many_query_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         //
-        let delete_many_query_try_from_delete_many_query_for_url_encoding_camel_case_stringified = format!("{delete_many_name_camel_case_stringified}{query_camel_case_stringified}TryFrom{delete_many_name_camel_case_stringified}{query_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
-        let delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_token_stream = {
-            let delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_stringified = format!("{delete_many_query_try_from_delete_many_query_for_url_encoding_camel_case_stringified}ErrorNamed");
-            delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_stringified = format!("{delete_many_name_camel_case_stringified}{query_camel_case_stringified}TryFrom{delete_many_name_camel_case_stringified}{query_camel_case_stringified}WithSerializeDeserialize");
+        let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream = {
+            let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_stringified = format!("{delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_stringified}ErrorNamed");
+            delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let delete_many_query_try_from_delete_many_query_for_url_encoding_camel_case_token_stream = {
-            delete_many_query_try_from_delete_many_query_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_try_from_delete_many_query_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_token_stream = {
+            delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let delete_many_query_try_from_delete_many_query_for_url_encoding_lower_case_token_stream = {
-            let delete_many_query_try_from_delete_many_query_for_url_encoding_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_many_query_try_from_delete_many_query_for_url_encoding_camel_case_stringified);
-            delete_many_query_try_from_delete_many_query_for_url_encoding_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_try_from_delete_many_query_for_url_encoding_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_lower_case_token_stream = {
+            let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_stringified);
+            delete_many_query_try_from_delete_many_query_with_serialize_deserialize_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_try_from_delete_many_query_with_serialize_deserialize_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         //
         let try_delete_many_error_named_camel_case_token_stream = {
@@ -5329,8 +5329,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{query_token_stream}");
-        let query_for_url_encoding_token_stream = {
-            let fields_for_url_encoding_with_excluded_id_token_stream = fields_named.iter().map(|field|{
+        let query_with_serialize_deserialize_token_stream = {
+            let fields_with_serialize_deserialize_with_excluded_id_token_stream = fields_named.iter().map(|field|{
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
@@ -5341,16 +5341,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
-                pub struct #delete_many_query_for_url_encoding_camel_case_token_stream {
-                    #(#fields_for_url_encoding_with_excluded_id_token_stream),*
+                pub struct #delete_many_query_with_serialize_deserialize_camel_case_token_stream {
+                    #(#fields_with_serialize_deserialize_with_excluded_id_token_stream),*
                 }
             }
         };
-        // println!("{query_for_url_encoding_token_stream}");
-        let delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_token_stream = {
+        // println!("{query_with_serialize_deserialize_token_stream}");
+        let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_token_stream = {
             quote::quote!{
                 #error_named_derive_token_stream
-                pub enum #delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_token_stream {
+                pub enum #delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream {
                     NotUuid {
                         #[eo_display]
                         not_uuid: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
@@ -5359,8 +5359,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        // println!("{delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_token_stream}");
-        let impl_std_convert_try_from_delete_many_query_for_url_encoding_for_delete_many_query_token_stream = {
+        // println!("{delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_token_stream}");
+        let impl_std_convert_try_from_delete_many_query_with_serialize_deserialize_for_delete_many_query_token_stream = {
             let id_field_assignment_token_stream = quote::quote!{
                 let #id_field_ident = match value.#id_field_ident {
                     Some(value) => match value.split(',')
@@ -5374,7 +5374,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     {
                         Ok(value) => Some(value),
                         Err(e) => {
-                            return Err(#delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_token_stream::NotUuid {
+                            return Err(#delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream::NotUuid {
                                 not_uuid: e,
                                 #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
@@ -5418,9 +5418,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                impl std::convert::TryFrom<#delete_many_query_for_url_encoding_camel_case_token_stream> for #delete_many_query_camel_case_token_stream {
-                    type Error = #delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_camel_case_token_stream;
-                    fn try_from(value: #delete_many_query_for_url_encoding_camel_case_token_stream) -> Result<Self, Self::Error> {
+                impl std::convert::TryFrom<#delete_many_query_with_serialize_deserialize_camel_case_token_stream> for #delete_many_query_camel_case_token_stream {
+                    type Error = #delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream;
+                    fn try_from(value: #delete_many_query_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
                         #id_field_assignment_token_stream
                         #(#fields_assignment_excluding_id_token_stream)*
                         Ok(Self {
@@ -5431,13 +5431,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         //
-        let impl_std_convert_from_delete_many_query_for_delete_many_query_for_url_encoding_token_stream = {
-            let impl_std_convert_from_delete_many_query_for_delete_many_query_for_url_encoding_id_token_stream = quote::quote!{
+        let impl_std_convert_from_delete_many_query_for_delete_many_query_with_serialize_deserialize_token_stream = {
+            let impl_std_convert_from_delete_many_query_for_delete_many_query_with_serialize_deserialize_id_token_stream = quote::quote!{
                 let #id_field_ident = value.#id_field_ident.map(|value| {
                     #crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream(value)
                 });
             };
-            let impl_std_convert_from_delete_many_query_for_delete_many_query_for_url_encoding_others_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+            let impl_std_convert_from_delete_many_query_for_delete_many_query_with_serialize_deserialize_others_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
                 false => {
                     let field_ident = field.ident.clone()
@@ -5459,16 +5459,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{#field_ident}
             });
             quote::quote!{
-                impl std::convert::From<#delete_many_query_camel_case_token_stream> for #delete_many_query_for_url_encoding_camel_case_token_stream {
+                impl std::convert::From<#delete_many_query_camel_case_token_stream> for #delete_many_query_with_serialize_deserialize_camel_case_token_stream {
                     fn from(value: #delete_many_query_camel_case_token_stream) -> Self {
-                        #impl_std_convert_from_delete_many_query_for_delete_many_query_for_url_encoding_id_token_stream
-                        #(#impl_std_convert_from_delete_many_query_for_delete_many_query_for_url_encoding_others_token_stream)*
+                        #impl_std_convert_from_delete_many_query_for_delete_many_query_with_serialize_deserialize_id_token_stream
+                        #(#impl_std_convert_from_delete_many_query_for_delete_many_query_with_serialize_deserialize_others_token_stream)*
                         Self { #(#fields_idents_token_stream),* }
                     }
                 }
             }
         };
-        // println!("{impl_std_convert_from_delete_many_query_for_delete_many_query_for_url_encoding_token_stream}");
+        // println!("{impl_std_convert_from_delete_many_query_for_delete_many_query_with_serialize_deserialize_token_stream}");
         let try_delete_many_error_named_token_stream = {
             let try_delete_many_request_error_camel_case_token_stream = {
                 let try_delete_many_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{delete_many_name_camel_case_stringified}{request_error_camel_case_stringified}");
@@ -5510,7 +5510,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #delete_many_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_many_error_named_camel_case_token_stream> {
-                    let encoded_query = match serde_urlencoded::to_string(#delete_many_query_for_url_encoding_camel_case_token_stream::from(#parameters_lower_case_token_stream.query)) {
+                    let encoded_query = match serde_urlencoded::to_string(#delete_many_query_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.query)) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_delete_many_error_named_camel_case_token_stream::#query_encode_variant_initialization_token_stream);
@@ -5949,22 +5949,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #delete_many_lower_case_token_stream<'a>(
                     #query_extraction_result_lower_case_token_stream: Result<
-                        #axum_extract_query_token_stream<#delete_many_query_for_url_encoding_camel_case_token_stream>,
+                        #axum_extract_query_token_stream<#delete_many_query_with_serialize_deserialize_camel_case_token_stream>,
                         #axum_extract_rejection_query_rejection_token_stream,
                     >,
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let #parameters_lower_case_token_stream = #delete_many_parameters_camel_case_token_stream {
                         #query_lower_case_token_stream: match #crate_server_routes_helpers_query_extractor_error_query_value_result_extractor_token_stream::<
-                            #delete_many_query_for_url_encoding_camel_case_token_stream,
+                            #delete_many_query_with_serialize_deserialize_camel_case_token_stream,
                             #try_delete_many_response_variants_token_stream,
                         >::#try_extract_value_token_stream(#query_extraction_result_lower_case_token_stream, &#app_info_state_name_token_stream)
                         {
                             Ok(value) => match #delete_many_query_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::#delete_many_query_try_from_delete_many_query_for_url_encoding_camel_case_token_stream {
-                                        #delete_many_query_try_from_delete_many_query_for_url_encoding_lower_case_token_stream: e,
+                                    let error = #prepare_and_execute_query_error_token_stream::#delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_token_stream {
+                                        #delete_many_query_try_from_delete_many_query_with_serialize_deserialize_lower_case_token_stream: e,
                                         #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
                                     #error_log_call_token_stream
@@ -5987,10 +5987,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #query_token_stream
-            #query_for_url_encoding_token_stream
-            #delete_many_query_try_from_delete_many_query_for_url_encoding_error_named_token_stream
-            #impl_std_convert_try_from_delete_many_query_for_url_encoding_for_delete_many_query_token_stream
-            #impl_std_convert_from_delete_many_query_for_delete_many_query_for_url_encoding_token_stream
+            #query_with_serialize_deserialize_token_stream
+            #delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_token_stream
+            #impl_std_convert_try_from_delete_many_query_with_serialize_deserialize_for_delete_many_query_token_stream
+            #impl_std_convert_from_delete_many_query_for_delete_many_query_with_serialize_deserialize_token_stream
             #try_delete_many_error_named_token_stream
             #http_request_token_stream
             #route_handler_token_stream
