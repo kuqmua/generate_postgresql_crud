@@ -3282,25 +3282,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         //
-        let update_one_path_for_url_encoding_camel_case_token_stream = {
-            let update_one_path_for_url_encoding_camel_case_stringified = format!("{update_one_name_camel_case_stringified}{path_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
-            update_one_path_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let update_one_path_with_serialize_deserialize_camel_case_token_stream = {
+            let update_one_path_with_serialize_deserialize_camel_case_stringified = format!("{update_one_name_camel_case_stringified}{path_camel_case_stringified}WithSerializeDeserialize");
+            update_one_path_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let update_one_path_try_from_update_one_path_for_url_encoding_camel_case_stringified = format!("{update_one_name_camel_case_stringified}{path_camel_case_stringified}TryFrom{update_one_name_camel_case_stringified}{path_camel_case_stringified}{for_url_encoding_camel_case_stringified}");
-        let update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_token_stream = {//todo reuse TryFrom
-            let update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_stringified = format!("{update_one_path_try_from_update_one_path_for_url_encoding_camel_case_stringified}{error_named_camel_case_stringified}");
-            update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_stringified = format!("{update_one_name_camel_case_stringified}{path_camel_case_stringified}TryFrom{update_one_name_camel_case_stringified}{path_camel_case_stringified}WithSerializeDeserialize");
+        let update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_token_stream = {//todo reuse TryFrom
+            let update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_stringified = format!("{update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_stringified}{error_named_camel_case_stringified}");
+            update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let update_one_path_try_from_update_one_path_for_url_encoding_camel_case_token_stream = {//todo reuse TryFrom
-            update_one_path_try_from_update_one_path_for_url_encoding_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_try_from_update_one_path_for_url_encoding_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_token_stream = {//todo reuse TryFrom
+            update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let update_one_path_try_from_update_one_path_for_url_encoding_lower_case_token_stream = {//todo reuse TryFrom
-            let update_one_path_try_from_update_one_path_for_url_encoding_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_one_path_try_from_update_one_path_for_url_encoding_camel_case_stringified.to_string());
-            update_one_path_try_from_update_one_path_for_url_encoding_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_try_from_update_one_path_for_url_encoding_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let update_one_path_try_from_update_one_path_with_serialize_deserialize_lower_case_token_stream = {//todo reuse TryFrom
+            let update_one_path_try_from_update_one_path_with_serialize_deserialize_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_stringified.to_string());
+            update_one_path_try_from_update_one_path_with_serialize_deserialize_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_try_from_update_one_path_with_serialize_deserialize_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         let update_one_payload_camel_case_token_stream = {
             let update_one_payload_camel_case_stringified = format!("{update_one_name_camel_case_stringified}{payload_camel_case_stringified}");
@@ -3336,19 +3336,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{path_token_stream}");
-        let path_for_url_encoding_token_stream = {
+        let path_with_serialize_deserialize_token_stream = {
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
-                pub struct #update_one_path_for_url_encoding_camel_case_token_stream {
+                pub struct #update_one_path_with_serialize_deserialize_camel_case_token_stream {
                     #id_field_ident: crate::server::postgres::uuid_wrapper::PossibleUuidWrapper,
                 }
             }
         };
-        // println!("{path_for_url_encoding_token_stream}");
-        let update_one_path_try_from_update_one_path_for_url_encoding_error_named_token_stream = {
+        // println!("{path_with_serialize_deserialize_token_stream}");
+        let update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_token_stream = {
             quote::quote!{
                 #error_named_derive_token_stream
-                pub enum #update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_token_stream {
+                pub enum #update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_token_stream {
                     NotUuid {
                         #eo_error_occurence_attribute_token_stream
                         not_uuid: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
@@ -3357,12 +3357,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 } 
             }
         };
-        // println!("{update_one_path_try_from_update_one_path_for_url_encoding_error_named_token_stream}");
-        let impl_std_convert_try_from_update_one_path_for_url_encoding_for_update_one_path_token_stream = {
+        // println!("{update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_token_stream}");
+        let impl_std_convert_try_from_update_one_path_with_serialize_deserialize_for_update_one_path_token_stream = {
             quote::quote!{
-                impl std::convert::TryFrom<#update_one_path_for_url_encoding_camel_case_token_stream> for #update_one_path_camel_case_token_stream {
-                    type Error = #update_one_path_try_from_update_one_path_for_url_encoding_error_named_camel_case_token_stream;
-                    fn try_from(value: #update_one_path_for_url_encoding_camel_case_token_stream) -> Result<Self, Self::Error> {
+                impl std::convert::TryFrom<#update_one_path_with_serialize_deserialize_camel_case_token_stream> for #update_one_path_camel_case_token_stream {
+                    type Error = #update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_token_stream;
+                    fn try_from(value: #update_one_path_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
                         let #id_field_ident = match crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(value.#id_field_ident) {
                             Ok(value) => value,
                             Err(e) => {
@@ -3379,7 +3379,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }      
             }
         };
-        // println!("{impl_std_convert_try_from_update_one_path_for_url_encoding_for_update_one_path_token_stream}");
+        // println!("{impl_std_convert_try_from_update_one_path_with_serialize_deserialize_for_update_one_path_token_stream}");
         let payload_token_stream = {
             let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -3621,7 +3621,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #update_one_lower_case_token_stream<'a>(
                     #path_extraction_result_lower_case_token_stream: Result<
-                        #axum_extract_path_token_stream<#update_one_path_for_url_encoding_camel_case_token_stream>,
+                        #axum_extract_path_token_stream<#update_one_path_with_serialize_deserialize_camel_case_token_stream>,
                         #axum_extract_rejection_path_rejection_token_stream,
                     >,
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
@@ -3632,15 +3632,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ) -> #impl_axum_response_into_response_token_stream {
                     let #parameters_lower_case_token_stream = #update_one_parameters_camel_case_token_stream {
                         #path_lower_case_token_stream: match #crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream::<
-                            #update_one_path_for_url_encoding_camel_case_token_stream,
+                            #update_one_path_with_serialize_deserialize_camel_case_token_stream,
                             #try_update_one_response_variants_token_stream,
                         >::#try_extract_value_token_stream(#path_extraction_result_lower_case_token_stream, &#app_info_state_name_token_stream)
                         {
                             Ok(value) => match #update_one_path_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::#update_one_path_try_from_update_one_path_for_url_encoding_camel_case_token_stream {
-                                        #update_one_path_try_from_update_one_path_for_url_encoding_lower_case_token_stream: e,
+                                    let error = #prepare_and_execute_query_error_token_stream::#update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_token_stream {
+                                        #update_one_path_try_from_update_one_path_with_serialize_deserialize_lower_case_token_stream: e,
                                         #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
                                     #error_log_call_token_stream
@@ -3673,9 +3673,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
-            #path_for_url_encoding_token_stream
-            #update_one_path_try_from_update_one_path_for_url_encoding_error_named_token_stream
-            #impl_std_convert_try_from_update_one_path_for_url_encoding_for_update_one_path_token_stream
+            #path_with_serialize_deserialize_token_stream
+            #update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_token_stream
+            #impl_std_convert_try_from_update_one_path_with_serialize_deserialize_for_update_one_path_token_stream
             #payload_token_stream
             #try_update_one_error_named_token_stream
             #http_request_token_stream
