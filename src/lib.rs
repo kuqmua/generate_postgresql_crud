@@ -929,8 +929,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let serde_urlencoded_ser_error_token_stream = quote::quote!{serde_urlencoded::ser::Error};
     let serde_json_to_string_token_stream = quote::quote!{serde_json::to_string};
     let into_url_encoding_version_name_token_stream = quote::quote!{into_url_encoding_version}; 
-    let url_encoding_camel_case_stringified = "UrlEncoding";
-    let for_url_encoding_camel_case_stringified = format!("For{url_encoding_camel_case_stringified}");
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
     let payload_element_with_serialize_deserialize_camel_case_stringified = format!("{payload_element_camel_case_stringified}WithSerializeDeserialize");
     // let from_camel_case_stringified = "From";
@@ -5390,16 +5388,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|| {
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
-                    let field_handle_token_stream = {
-                        let field_handle_stringified = format!("{field_ident}_handle");
-                        field_handle_stringified.parse::<proc_macro2::TokenStream>()
-                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                    };
-                    let handle_token_stream = {
-                        let handle_stringified = format!("\"{field_ident} = ${{increment}}\"");
-                        handle_stringified.parse::<proc_macro2::TokenStream>()
-                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                    };
                     Some(quote::quote!{
                         let #field_ident = match value.#field_ident {
                             Some(value) => Some(crate::server::routes::helpers::strings_deserialized_from_string_splitted_by_comma::StringsDeserializedFromStringSplittedByComma::from(value)),
