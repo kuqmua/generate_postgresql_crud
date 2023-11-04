@@ -359,8 +359,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    let column_select_camel_case_stringified = "ColumnSelect";
     let column_select_ident_token_stream = {
-        let column_select_ident_stringified = format!("{ident}ColumnSelect");
+        let column_select_ident_stringified = format!("{ident}{column_select_camel_case_stringified}");
         column_select_ident_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {column_select_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
@@ -369,6 +370,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let sqlx_decode_decode_database_token_stream = quote::quote!{sqlx::decode::Decode<'a, R::Database>};
     let sqlx_types_type_database_token_stream = quote::quote!{sqlx::types::Type<R::Database>};
     let crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream = quote::quote!{crate::common::serde_urlencoded::SerdeUrlencodedParameter};
+    let code_occurence_camel_case_stringified = "CodeOccurence";
+    let code_occurence_camel_case_token_stream = code_occurence_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {code_occurence_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+    let code_occurence_lower_case_token_stream = {
+        let code_occurence_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case_stringified);
+        code_occurence_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {code_occurence_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let crate_common_code_occurence_code_occurence_token_stream = quote::quote!{crate::common::#code_occurence_lower_case_token_stream::#code_occurence_camel_case_token_stream};
+    let crate_code_occurence_tufa_common_macro_call_token_stream = quote::quote!{crate::code_occurence_tufa_common!()};
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
@@ -480,6 +491,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        //
+        let ident_column_select_from_str_error_named_camel_case_token_stream = {
+            let ident_column_select_from_str_error_named_camel_case_stringified = format!("{ident}{column_select_camel_case_stringified}FromStrErrorNamed");
+            ident_column_select_from_str_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_column_select_from_str_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let ident_column_select_from_str_error_named_token_stream = {
+            quote::quote! {
+                #error_named_derive_token_stream
+                pub enum #ident_column_select_from_str_error_named_camel_case_token_stream {
+                    NotCorrect {
+                        #[eo_display_with_serialize_deserialize]
+                        not_correct_value: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        supported_values: std::string::String,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                }
+            }
+        };
+        //
         let serde_urlencoded_parameter_token_stream = {
             quote::quote! {
                 impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #column_select_ident_token_stream {
@@ -622,6 +654,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #generate_query_token_stream
             #impl_default_token_stream
             #from_option_self_token_stream
+            #ident_column_select_from_str_error_named_token_stream
+            
             #serde_urlencoded_parameter_token_stream
             #options_try_from_sqlx_row_token_stream
         }
@@ -963,16 +997,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #app_info_state_name_token_stream.as_ref(),
         );
     };
-    let code_occurence_camel_case_stringified = "CodeOccurence";
-    let code_occurence_camel_case_token_stream = code_occurence_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {code_occurence_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-    let code_occurence_lower_case_token_stream = {
-        let code_occurence_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case_stringified);
-        code_occurence_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {code_occurence_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
-    let crate_common_code_occurence_code_occurence_token_stream = quote::quote!{crate::common::#code_occurence_lower_case_token_stream::#code_occurence_camel_case_token_stream};
-    let crate_code_occurence_tufa_common_macro_call_token_stream = quote::quote!{crate::code_occurence_tufa_common!()};
     let request_error_variant_initialization_token_stream = quote::quote!{
         #request_error_camel_case_token_stream {
             #request_error_lower_case_token_stream: e,
@@ -3266,7 +3290,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{read_many_token_stream}");
-    let update_one_token_stream = {//todo WHY ITS RETURN SUCCESS EVEN IF ROW DOES NOT EXISTS?
+    //todo WHY ITS RETURN SUCCESS EVEN IF ROW DOES NOT EXISTS?
+    let update_one_token_stream = {
         let update_one_name_camel_case_stringified = "UpdateOne";
         let update_one_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_one_name_camel_case_stringified.to_string());
         let update_one_parameters_camel_case_token_stream = {
@@ -4615,7 +4640,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #error_named_derive_token_stream
                 pub enum #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream {
                     NotUuid {
-                        #eo_display_attribute_token_stream
+                        #eo_error_occurence_attribute_token_stream
                         not_uuid: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -5350,7 +5375,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #error_named_derive_token_stream
                 pub enum #delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream {
                     NotUuid {
-                        #[eo_display]
+                        #eo_error_occurence_attribute_token_stream
                         not_uuid: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -6007,7 +6032,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #create_one_token_stream
         #read_one_token_stream
         #read_many_with_body_token_stream
-        #read_many_token_stream
+        // #read_many_token_stream
         #update_one_token_stream
         #update_many_token_stream
         #delete_one_token_stream
