@@ -380,6 +380,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let crate_common_code_occurence_code_occurence_token_stream = quote::quote!{crate::common::#code_occurence_lower_case_token_stream::#code_occurence_camel_case_token_stream};
     let crate_code_occurence_tufa_common_macro_call_token_stream = quote::quote!{crate::code_occurence_tufa_common!()};
+    let ident_column_select_from_str_error_named_camel_case_token_stream = {
+        let ident_column_select_from_str_error_named_camel_case_stringified = format!("{ident}{column_select_camel_case_stringified}FromStrErrorNamed");
+        ident_column_select_from_str_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_column_select_from_str_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
@@ -409,6 +414,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        // println!("{column_select_struct_token_stream}");
         let generate_query_token_stream = {
             let generate_query_variants_token_stream = column_variants.iter().map(|column_variant|{
                 let write_ident_token_stream = {
@@ -455,6 +461,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        // println!("{generate_query_token_stream}");
         let impl_default_token_stream = {
             let default_select_variant_ident_token_stream = {
                 let default_select_variant_ident_stringified = fields_named.iter()
@@ -479,6 +486,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        // println!("{impl_default_token_stream}");
         let from_option_self_token_stream = {
             quote::quote! {
                 impl std::convert::From<Option<Self>> for #column_select_ident_token_stream {
@@ -491,12 +499,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        //
-        let ident_column_select_from_str_error_named_camel_case_token_stream = {
-            let ident_column_select_from_str_error_named_camel_case_stringified = format!("{ident}{column_select_camel_case_stringified}FromStrErrorNamed");
-            ident_column_select_from_str_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_column_select_from_str_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
+        // println!("{from_option_self_token_stream}");
         let ident_column_select_from_str_error_named_token_stream = {
             quote::quote! {
                 #error_named_derive_token_stream
@@ -511,7 +514,84 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        //
+        // println!("{ident_column_select_from_str_error_named_token_stream}");
+        let impl_std_str_from_str_for_ident_column_select_token_stream = {
+            let match_acceptable_variants_token_stream = column_variants.iter().map(|column_variant|{
+                let write_ident_token_stream = {
+                    let mut write_ident_stringified_handle = column_variant.iter()
+                        .fold(std::string::String::default(), |mut acc, field| {
+                            let field_ident_stringified = field.ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                                });
+                            acc.push_str(&format!("{field_ident_stringified},"));
+                            acc
+                        });
+                    write_ident_stringified_handle.pop();
+                    format!("\"{write_ident_stringified_handle}\"").parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {write_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                let variant_ident_token_stream = {
+                    let variant_ident_stringified_handle = column_variant.iter()
+                        .fold(std::string::String::default(), |mut acc, field| {
+                            use convert_case::Casing;
+                            let field_ident_stringified = field.ident
+                                .clone()
+                                .unwrap_or_else(|| {
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                                }).to_string().to_case(convert_case::Case::Title);
+                            acc.push_str(&field_ident_stringified);
+                            acc
+                        });
+                    variant_ident_stringified_handle.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote! {
+                    #write_ident_token_stream => Ok(Self::#variant_ident_token_stream)
+                }
+            });
+            let supported_values_handle_token_stream = {
+                let mut column_variants_stringified = column_variants.iter().fold(std::string::String::default(), |mut acc, column_variant| {
+                    let write_ident_stringified_handle = {
+                        let mut write_ident_stringified_handle = column_variant.iter()
+                            .fold(std::string::String::default(), |mut acc, field| {
+                                let field_ident_stringified = field.ident
+                                    .clone()
+                                    .unwrap_or_else(|| {
+                                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                                    });
+                                acc.push_str(&format!("{field_ident_stringified},"));
+                                acc
+                            });
+                        write_ident_stringified_handle.pop();
+                        write_ident_stringified_handle
+                    };
+                    acc.push_str(&format!("\\\"{write_ident_stringified_handle}\\\","));
+                    acc
+                });
+                column_variants_stringified.pop();
+                let supported_values_handle_stringified = format!("\"{column_variants_stringified}\"");
+                supported_values_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {supported_values_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            quote::quote! {
+                impl std::str::FromStr for #column_select_ident_token_stream {
+                    type Err = #ident_column_select_from_str_error_named_camel_case_token_stream;
+                    fn from_str(value: &str) -> Result<Self, Self::Err> {
+                        match value {
+                            #(#match_acceptable_variants_token_stream),*,
+                            _ => Err(Self::Err::NotCorrect {
+                                not_correct_value: std::string::String::from(value),
+                                supported_values: std::string::String::from(#supported_values_handle_token_stream),
+                                #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                            }),
+                        }
+                    }
+                }
+            }
+        };
+        // println!("{impl_std_str_from_str_for_ident_column_select_token_stream}");
         let serde_urlencoded_parameter_token_stream = {
             quote::quote! {
                 impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #column_select_ident_token_stream {
@@ -521,6 +601,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        // println!("{serde_urlencoded_parameter_token_stream}");
         let options_try_from_sqlx_row_token_stream = {
             let declaration_token_stream = fields_named.iter().map(|field|{
                 let field_ident = field.ident
@@ -655,7 +736,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #impl_default_token_stream
             #from_option_self_token_stream
             #ident_column_select_from_str_error_named_token_stream
-            
+            #impl_std_str_from_str_for_ident_column_select_token_stream
             #serde_urlencoded_parameter_token_stream
             #options_try_from_sqlx_row_token_stream
         }
