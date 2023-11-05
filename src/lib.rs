@@ -2357,7 +2357,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+                #[derive(Debug)]
                 pub struct #read_many_with_body_parameters_camel_case_token_stream {
                     pub #payload_lower_case_token_stream: #read_many_with_body_payload_camel_case_token_stream,
                 }
@@ -2378,10 +2378,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             });
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_token_stream
                 pub struct #read_many_with_body_payload_camel_case_token_stream {
                     pub #select_token_stream: #column_select_ident_token_stream,
-                    pub #id_field_ident: Option<Vec<std::string::String>>,//crate::server::postgres::bigserial::Bigserial todo uuid builder
+                    pub #id_field_ident: Option<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>>,
                     #(#fields_with_excluded_id_token_stream)*
                     pub #order_by_token_stream: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
                     pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
@@ -2915,9 +2915,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
-            #try_read_many_with_body_error_named_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
+            // #try_read_many_with_body_error_named_token_stream
+            // #http_request_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{read_many_with_body_token_stream}");
@@ -6480,7 +6480,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #create_many_token_stream
         #create_one_token_stream
         #read_one_token_stream
-        // #read_many_with_body_token_stream
+        #read_many_with_body_token_stream
         #read_many_token_stream
         #update_one_token_stream
         #update_many_token_stream
