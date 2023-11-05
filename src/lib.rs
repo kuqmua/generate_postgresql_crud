@@ -723,7 +723,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #impl_default_token_stream
             #from_option_self_token_stream
             #ident_column_select_from_str_error_named_token_stream
-            #impl_std_st    r_from_str_for_ident_column_select_token_stream
+            #impl_std_str_from_str_for_ident_column_select_token_stream
             #serde_urlencoded_parameter_token_stream
             #options_try_from_sqlx_row_token_stream
         }
@@ -782,31 +782,37 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_order_by_wrapper_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let order_by_wrapper_token_stream = {
-        let deserialize_with_name_quotes_token_stream = {
-            let deserialize_with_name_quotes_stringified = format!("\"deserialize_{ident_lower_case_stringified}_order_by\"");
-            deserialize_with_name_quotes_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {deserialize_with_name_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        let struct_token_stream = {
+            let deserialize_with_name_quotes_token_stream = {
+                let deserialize_with_name_quotes_stringified = format!("\"deserialize_{ident_lower_case_stringified}_order_by\"");
+                deserialize_with_name_quotes_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {deserialize_with_name_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
+            quote::quote!{
+                #derive_debug_serialize_deserialize_token_stream
+                pub struct #ident_order_by_wrapper_token_stream(
+                    #[serde(deserialize_with = #deserialize_with_name_quotes_token_stream)]
+                    pub #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
+                );
+            }
+        };
+        let impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream = {
+            quote::quote!{
+                impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #ident_order_by_wrapper_token_stream {
+                    fn serde_urlencoded_parameter(self) -> std::string::String {
+                        let column = &self.0.column;
+                        let order = self.0.order.unwrap_or_default();
+                        format!("column={column},order={order}")
+                    }
+                }
+            }
         };
         quote::quote!{
-            #derive_debug_serialize_deserialize_token_stream
-            pub struct #ident_order_by_wrapper_token_stream(
-                #[serde(deserialize_with = #deserialize_with_name_quotes_token_stream)]
-                pub #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
-            );
+            #struct_token_stream
+            #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
         }
     };
     // println!("{order_by_wrapper_token_stream}");
-    let impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream = {
-        quote::quote!{
-            impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #ident_order_by_wrapper_token_stream {
-                fn serde_urlencoded_parameter(self) -> std::string::String {
-                    let column = &self.0.column;
-                    let order = self.0.order.unwrap_or_default();
-                    format!("column={column},order={order}")
-                }
-            }
-        }
-    };
     let deserialize_ident_order_by_token_stream = {
         //todo
         let ivalid_ident_order_by_handle_token_stream = {
@@ -6079,7 +6085,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{delete_many_token_stream}");
-    let f = quote::quote! {
+    let common_token_stream = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
         #from_ident_for_ident_options_token_stream
@@ -6092,14 +6098,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #primary_key_uuid_wrapper_try_from_sqlx_row_token_stream
         //
         #order_by_wrapper_token_stream
-        #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
+        // #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
         #deserialize_ident_order_by_token_stream
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
     };
-    // println!("{f}");
+    // println!("common_token_stream}");
     let gen = quote::quote! {
-        #f
+        #common_token_stream
 
         #create_many_token_stream
         #create_one_token_stream
