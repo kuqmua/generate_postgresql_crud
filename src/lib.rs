@@ -3010,7 +3010,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{query_with_serialize_deserialize_token_stream}");
-        //
         let read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_token_stream ={
             let read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_stringified = format!("{read_many_query_camel_case_token_stream}TryFrom{read_many_query_camel_case_token_stream}WithSerializeDeserializeErrorNamed");
             read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -3048,7 +3047,118 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        //
+        // println!("{read_many_query_try_trom_read_many_query_with_serialize_deserialize_error_named_token_stream}");
+        let impl_std_convert_try_from_read_many_query_with_serialize_deserialize_for_read_many_query_token_stream = {
+            let id_field_assignment_token_stream = {
+                quote::quote!{
+                    let #id_field_ident = match value.#id_field_ident {
+                        Some(value) => match value.split(',')
+                            .map(|element| crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(element.to_string())))
+                            .collect::<Result<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>, crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed>>() {
+                                Ok(value) => Some(value),
+                                Err(e) => {
+                                    return Err(Self::Error::NotUuid {
+                                        not_uuid: e,
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                    });
+                                }
+                            }
+                        None => None
+                    };
+                }
+            };
+            let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+                true => None,
+                false => {
+                    let field_ident = field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                        });
+                    Some(quote::quote!{
+                        let #field_ident = match value.#field_ident {
+                            Some(value) => Some(crate::server::routes::helpers::strings_deserialized_from_string_splitted_by_comma::StringsDeserializedFromStringSplittedByComma::from(value)),
+                            None => None
+                        };
+                    })
+                },
+            });
+            quote::quote!{
+                impl std::convert::TryFrom<#read_many_query_with_serialize_deserialize_camel_case_token_stream> for #read_many_query_camel_case_token_stream {
+                    type Error = #read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_token_stream;
+                    fn try_from(value: #read_many_query_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
+                        let select = match value.select {
+                            Some(value) => match {
+                                use std::str::FromStr;
+                                #column_select_ident_token_stream::from_str(&value)
+                            } {
+                                Ok(value) => Some(value),
+                                Err(e) => {
+                                    return Err(Self::Error::ColumnSelectFromStr {
+                                        column_select_from_str: e,
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                    });
+                                }
+                            },
+                            None => None
+                        };
+                        #id_field_assignment_token_stream
+                        #(#fields_with_excluded_id_token_stream)*
+                        let order_by = match value.order_by {
+                            Some(value) => match {
+                                use std::str::FromStr;
+                                #ident_order_by_wrapper_name_token_stream::from_str(&value)
+                            } {
+                                Ok(value) => Some(value),
+                                Err(e) => {
+                                    return Err(Self::Error::OrderByWrapperFromStr {
+                                        order_by_wrapper_from_str: e,
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                    });
+                                }
+                            },
+                            None => None
+                        };
+                        let limit = match {
+                            use std::str::FromStr;
+                            crate::server::postgres::postgres_bigint::PostgresBigint::from_str(&value.limit)
+                        } {
+                            Ok(value) => value,
+                            Err(e) => {
+                                return Err(Self::Error::LimitPostgresBigintFromStr {
+                                    limit_postgres_bigint_from_str: e,
+                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                });
+                            }
+                        };
+                        let offset = match value.offset {
+                            Some(value) => match {
+                                use std::str::FromStr;
+                                crate::server::postgres::postgres_bigint::PostgresBigint::from_str(&value)
+                            } {
+                                Ok(value) => Some(value),
+                                Err(e) => {
+                                    return Err(Self::Error::OffsetPostgresBigintFromStr {
+                                        offset_postgres_bigint_from_str: e,
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                    });
+                                }
+                            },
+                            None => None,
+                        };
+                        Ok(Self {
+                            select, 
+                            id, 
+                            name, 
+                            color, 
+                            order_by, 
+                            limit, 
+                            offset,   
+                        })
+                    }
+                }
+            }
+        };
+        // println!("{impl_std_convert_try_from_read_many_query_with_serialize_deserialize_for_read_many_query_token_stream}");
         let into_url_encoding_version_token_stream = {
             let fields_into_url_encoding_version_with_excluded_id_token_stream = fields_named.iter().map(|field| {
                 let field_ident = field.ident.clone()
@@ -3603,6 +3713,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #query_token_stream
             #query_with_serialize_deserialize_token_stream
             #read_many_query_try_trom_read_many_query_with_serialize_deserialize_error_named_token_stream
+            #impl_std_convert_try_from_read_many_query_with_serialize_deserialize_for_read_many_query_token_stream
             // #into_url_encoding_version_token_stream
             // #try_read_many_error_named_token_stream
             // #http_request_token_stream
