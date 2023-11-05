@@ -2999,7 +2999,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
-                struct #read_many_query_with_serialize_deserialize_camel_case_token_stream {
+                pub struct #read_many_query_with_serialize_deserialize_camel_case_token_stream {
                     #select_token_stream: Option<std::string::String>,
                     pub #id_field_ident: Option<std::string::String>,
                     #(#fields_with_serialize_deserialize_with_excluded_id_token_stream)*
@@ -3562,7 +3562,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #query_token_stream
-            // #query_with_serialize_deserialize_token_stream
+            #query_with_serialize_deserialize_token_stream
             // #into_url_encoding_version_token_stream
             // #try_read_many_error_named_token_stream
             // #http_request_token_stream
