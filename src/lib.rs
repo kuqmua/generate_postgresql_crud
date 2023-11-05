@@ -780,7 +780,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     // println!("{primary_key_uuid_wrapper_try_from_sqlx_row_token_stream}");
     let crate_server_postgres_order_by_order_by_token_stream = quote::quote!{crate::server::postgres::order_by::OrderBy};
     let ident_order_by_wrapper_stringified = format!("{ident}OrderByWrapper");
-    let ident_order_by_wrapper_token_stream = {
+    let ident_order_by_wrapper_name_token_stream = {
         ident_order_by_wrapper_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_order_by_wrapper_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
@@ -798,7 +798,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
-                pub struct #ident_order_by_wrapper_token_stream(
+                pub struct #ident_order_by_wrapper_name_token_stream(
                     #[serde(deserialize_with = #deserialize_with_name_quotes_token_stream)]
                     pub #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
                 );
@@ -806,7 +806,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream = {
             quote::quote!{
-                impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #ident_order_by_wrapper_token_stream {
+                impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #ident_order_by_wrapper_name_token_stream {
                     fn serde_urlencoded_parameter(self) -> std::string::String {
                         let column = &self.0.column;
                         let order = self.0.order.unwrap_or_default();
@@ -873,10 +873,145 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        let impl_std_str_from_str_for_ident_order_by_wrapper_token_stream = {
+            quote::quote!{
+                impl std::str::FromStr for #ident_order_by_wrapper_name_token_stream {
+                    type Err = #ident_order_by_wrapper_from_str_error_named_name_token_stream;
+                    fn from_str(value: &str) -> Result<Self, Self::Err> {
+                        let string_deserialized = value.to_string();
+                        let split_inner_url_parameters_symbol = ',';
+                        let default_message = format!("Invalid DogOrderBy:");
+                        let column_equal_str = "column=";
+                        let order_equal_str = "order=";
+                        let column = match string_deserialized.find(column_equal_str) {
+                            Some(index) => match index.checked_add(column_equal_str.len()) {
+                                Some(offset) => match string_deserialized.get(offset..) {
+                                    Some(offset_slice) => match offset_slice.find(split_inner_url_parameters_symbol) {
+                                        Some(offset_slice_next_comma_index) => {
+                                            match offset_slice.get(0..offset_slice_next_comma_index) {
+                                                Some(possible_column) => match DogColumn::from_str(possible_column) {
+                                                    Ok(column) => column,
+                                                    Err(e) => {
+                                                        return Err(Self::Err::ColumnFromStr {
+                                                            column_from_str: e,
+                                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                                        });
+                                                    }
+                                                },
+                                                None => {
+                                                    return Err(Self::Err::ColumnNoOffsetValue {
+                                                        column_no_offset_value: std::string::String::from("no offset value"),
+                                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                                    });
+                                                }
+                                            }
+                                        }
+                                        None => match offset_slice.get(0..) {
+                                            Some(possible_column) => match DogColumn::from_str(possible_column) {
+                                                Ok(column) => column,
+                                                Err(e) => {
+                                                    return Err(Self::Err::ColumnFromStr {
+                                                        column_from_str: e,
+                                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                                    });
+                                                }
+                                            },
+                                            None => {
+                                                return Err(Self::Err::ColumnOffsetSliceGet {
+                                                    column_offset_slice_get: std::string::String::from("offset_slice_get"),
+                                                    code_occurence: crate::code_occurence_tufa_common!(),
+                                                });
+                                            }
+                                        },
+                                    },
+                                    None => {
+                                        return Err(Self::Err::ColumnStringDeserializedGet {
+                                            column_string_deserialized_get: std::string::String::from("string_deserialized_get"),
+                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                        });
+                                    }
+                                },
+                                None => {
+                                    return Err(Self::Err::ColumnIndexCheckedAdd {
+                                        column_index_checked_add: std::string::String::from("index_checked_add"),
+                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                    });
+                                }
+                            },
+                            None => {
+                                return Err(Self::Err::ColumnStringDeserializedFind {
+                                    column_string_deserialized_find: std::string::String::from("string_deserialized_find"),
+                                    code_occurence: crate::code_occurence_tufa_common!(),
+                                });
+                            }
+                        };
+                        let order = match string_deserialized.find(order_equal_str) {
+                            Some(index) => match index.checked_add(order_equal_str.len()) {
+                                Some(offset) => match string_deserialized.get(offset..) {
+                                    Some(offset_slice) => match offset_slice.find(split_inner_url_parameters_symbol) {
+                                        Some(offset_slice_next_comma_index) => {
+                                            match offset_slice.get(0..offset_slice_next_comma_index) {
+                                                Some(possible_order) => match crate::server::postgres::order::Order::from_str(possible_order) {
+                                                    Ok(order) => Some(order),
+                                                    Err(e) => {
+                                                        return Err(Self::Err::OrderFromStr {
+                                                            order_from_str: e,
+                                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                                        });
+                                                    }
+                                                },
+                                                None => {
+                                                    return Err(Self::Err::OrderOffsetSliceGetNone {
+                                                        order_offset_slice_get_none: std::string::String::from("order_offset_slice_get_none"),
+                                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                                    });
+                                                }
+                                            }
+                                        }
+                                        None => match offset_slice.get(0..) {
+                                            Some(possible_order) => match crate::server::postgres::order::Order::from_str(possible_order) {
+                                                Ok(order) => Some(order),
+                                                Err(e) => {
+                                                    return Err(Self::Err::OrderFromStr {
+                                                        order_from_str: e,
+                                                        code_occurence: crate::code_occurence_tufa_common!()
+                                                    });
+                                                }
+                                            },
+                                            None => {
+                                                return Err(Self::Err::OrderOffsetSliceGetNone {
+                                                    order_offset_slice_get_none: std::string::String::from("order_offset_slice_get_none"),
+                                                    code_occurence: crate::code_occurence_tufa_common!(),
+                                                });
+                                            }
+                                        },
+                                    },
+                                    None => {
+                                        return Err(Self::Err::OrderStringDeserializedGetNone {
+                                            order_string_deserialized_get_none: std::string::String::from("string_deserialized_get_none"),
+                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                        });
+                                    }
+                                },
+                                None => {
+                                    return Err(Self::Err::OrderIndexCheckedAdd {
+                                        order_index_checked_add: std::string::String::from("order_index_checked_add"),
+                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                    });
+                                }
+                            },
+                            None => None,
+                        };
+                        Ok(Self(crate::server::postgres::order_by::OrderBy { column, order }))
+                    }
+                }
+            }
+        };
         quote::quote!{
             #struct_token_stream
             #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
             #ident_order_by_wrapper_from_str_error_named_token_stream
+            #impl_std_str_from_str_for_ident_order_by_wrapper_token_stream
         }
     };
     // println!("{order_by_wrapper_token_stream}");
@@ -2837,7 +2972,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub #select_token_stream: Option<#column_select_ident_token_stream>,
                     pub #id_field_ident: Option<Vec<std::string::String>>,//crate::server::postgres::bigserial_ids::BigserialIds
                     #(#fields_with_excluded_id_token_stream)*
-                    pub #order_by_token_stream: Option<#ident_order_by_wrapper_token_stream>,//todo
+                    pub #order_by_token_stream: Option<#ident_order_by_wrapper_name_token_stream>,//todo
                     pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
                     pub offset: Option<crate::server::postgres::postgres_bigint::PostgresBigint>,
                 }
@@ -6163,7 +6298,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #primary_key_uuid_wrapper_try_from_sqlx_row_token_stream
         //
         #order_by_wrapper_token_stream
-        // #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
         #deserialize_ident_order_by_token_stream
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
