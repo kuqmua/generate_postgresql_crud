@@ -3010,6 +3010,45 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{query_with_serialize_deserialize_token_stream}");
+        //
+        let read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_token_stream ={
+            let read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_stringified = format!("{read_many_query_camel_case_token_stream}TryFrom{read_many_query_camel_case_token_stream}WithSerializeDeserializeErrorNamed");
+            read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let read_many_query_try_trom_read_many_query_with_serialize_deserialize_error_named_token_stream = {
+            quote::quote!{
+                #error_named_derive_token_stream
+                pub enum #read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_token_stream {
+                    ColumnSelectFromStr {
+                        #eo_error_occurence_attribute_token_stream
+                        column_select_from_str: #ident_column_select_from_str_error_named_camel_case_token_stream,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    NotUuid {
+                        #eo_error_occurence_attribute_token_stream
+                        not_uuid: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    OrderByWrapperFromStr {
+                        #eo_error_occurence_attribute_token_stream
+                        order_by_wrapper_from_str: #ident_order_by_wrapper_from_str_error_named_name_token_stream,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    LimitPostgresBigintFromStr {
+                        #eo_error_occurence_attribute_token_stream
+                        limit_postgres_bigint_from_str: crate::server::postgres::postgres_bigint::PostgresBigintFromStrErrorNamed,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    OffsetPostgresBigintFromStr {
+                        #eo_error_occurence_attribute_token_stream
+                        offset_postgres_bigint_from_str: crate::server::postgres::postgres_bigint::PostgresBigintFromStrErrorNamed,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                }
+            }
+        };
+        //
         let into_url_encoding_version_token_stream = {
             let fields_into_url_encoding_version_with_excluded_id_token_stream = fields_named.iter().map(|field| {
                 let field_ident = field.ident.clone()
@@ -3563,6 +3602,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #query_token_stream
             #query_with_serialize_deserialize_token_stream
+            #read_many_query_try_trom_read_many_query_with_serialize_deserialize_error_named_token_stream
             // #into_url_encoding_version_token_stream
             // #try_read_many_error_named_token_stream
             // #http_request_token_stream
