@@ -385,6 +385,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         ident_column_select_from_str_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_column_select_from_str_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+    let eo_error_occurence_attribute_token_stream = quote::quote!{#[eo_error_occurence]};
+    let eo_display_attribute_token_stream = quote::quote!{#[eo_display]};
+    let eo_display_with_serialize_deserialize_token_stream = quote::quote!{#[eo_display_with_serialize_deserialize]};
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
@@ -505,9 +508,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #error_named_derive_token_stream
                 pub enum #ident_column_select_from_str_error_named_camel_case_token_stream {
                     NotCorrect {
-                        #[eo_display_with_serialize_deserialize]
+                        #eo_display_with_serialize_deserialize_token_stream
                         not_correct_value: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
+                        #eo_display_with_serialize_deserialize_token_stream
                         supported_values: std::string::String,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
@@ -776,10 +779,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{primary_key_uuid_wrapper_try_from_sqlx_row_token_stream}");
     let crate_server_postgres_order_by_order_by_token_stream = quote::quote!{crate::server::postgres::order_by::OrderBy};
+    let ident_order_by_wrapper_stringified = format!("{ident}OrderByWrapper");
     let ident_order_by_wrapper_token_stream = {
-        let ident_order_by_wrapper_stringified = format!("{ident}OrderByWrapper");
         ident_order_by_wrapper_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_order_by_wrapper_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let ident_order_by_wrapper_from_str_error_named_name_token_stream = {
+        let ident_order_by_wrapper_from_str_error_named_name_stringified = format!("{ident_order_by_wrapper_stringified}FromStrErrorNamed");
+        ident_order_by_wrapper_from_str_error_named_name_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_order_by_wrapper_from_str_error_named_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let order_by_wrapper_token_stream = {
         let struct_token_stream = {
@@ -807,9 +815,68 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
+        let ident_order_by_wrapper_from_str_error_named_token_stream = {
+            quote::quote!{
+                #error_named_derive_token_stream
+                pub enum #ident_order_by_wrapper_from_str_error_named_name_token_stream {
+                    ColumnFromStr {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        column_from_str: std::string::String,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    ColumnNoOffsetValue {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        column_no_offset_value: std::string::String,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    ColumnOffsetSliceGet {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        column_offset_slice_get: std::string::String,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    ColumnStringDeserializedGet {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        column_string_deserialized_get: std::string::String,
+                        code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
+                    },   
+                    ColumnIndexCheckedAdd {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        column_index_checked_add: std::string::String,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    ColumnStringDeserializedFind {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        column_string_deserialized_find: std::string::String,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },    
+                    //todo make client explicitly write order and column
+                    OrderFromStr {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        order_from_str: std::string::String,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    OrderOffsetSliceGetNone {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        order_offset_slice_get_none: std::string::String,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    OrderStringDeserializedGetNone {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        order_string_deserialized_get_none: std::string::String,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    OrderIndexCheckedAdd {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        order_index_checked_add: std::string::String,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                }
+            }
+        };
         quote::quote!{
             #struct_token_stream
             #impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream
+            #ident_order_by_wrapper_from_str_error_named_token_stream
         }
     };
     // println!("{order_by_wrapper_token_stream}");
@@ -1078,8 +1145,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let eo_error_occurence_attribute_token_stream = quote::quote!{#[eo_error_occurence]};
-    let eo_display_attribute_token_stream = quote::quote!{#[eo_display]};
     let serde_json_to_string_camel_case_stringified = "SerdeJsonToString";
     let serde_json_to_string_camel_case_token_stream = serde_json_to_string_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {serde_json_to_string_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
