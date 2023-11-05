@@ -874,13 +874,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         let impl_std_str_from_str_for_ident_order_by_wrapper_token_stream = {
+            let default_message_handle_token_stream = {
+                let default_message_handle_stringified = format!("\"Invalid {ident}OrderBy:\"");
+                default_message_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {default_message_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             quote::quote!{
                 impl std::str::FromStr for #ident_order_by_wrapper_name_token_stream {
                     type Err = #ident_order_by_wrapper_from_str_error_named_name_token_stream;
                     fn from_str(value: &str) -> Result<Self, Self::Err> {
                         let string_deserialized = value.to_string();
                         let split_inner_url_parameters_symbol = ',';
-                        let default_message = format!("Invalid DogOrderBy:");
+                        let default_message = format!(#default_message_handle_token_stream);
                         let column_equal_str = "column=";
                         let order_equal_str = "order=";
                         let column = match string_deserialized.find(column_equal_str) {
@@ -889,37 +894,37 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     Some(offset_slice) => match offset_slice.find(split_inner_url_parameters_symbol) {
                                         Some(offset_slice_next_comma_index) => {
                                             match offset_slice.get(0..offset_slice_next_comma_index) {
-                                                Some(possible_column) => match DogColumn::from_str(possible_column) {
+                                                Some(possible_column) => match #column_ident_token_stream::from_str(possible_column) {
                                                     Ok(column) => column,
                                                     Err(e) => {
                                                         return Err(Self::Err::ColumnFromStr {
                                                             column_from_str: e,
-                                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                         });
                                                     }
                                                 },
                                                 None => {
                                                     return Err(Self::Err::ColumnNoOffsetValue {
                                                         column_no_offset_value: std::string::String::from("no offset value"),
-                                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                     });
                                                 }
                                             }
                                         }
                                         None => match offset_slice.get(0..) {
-                                            Some(possible_column) => match DogColumn::from_str(possible_column) {
+                                            Some(possible_column) => match #column_ident_token_stream::from_str(possible_column) {
                                                 Ok(column) => column,
                                                 Err(e) => {
                                                     return Err(Self::Err::ColumnFromStr {
                                                         column_from_str: e,
-                                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                     });
                                                 }
                                             },
                                             None => {
                                                 return Err(Self::Err::ColumnOffsetSliceGet {
                                                     column_offset_slice_get: std::string::String::from("offset_slice_get"),
-                                                    code_occurence: crate::code_occurence_tufa_common!(),
+                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 });
                                             }
                                         },
@@ -927,21 +932,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     None => {
                                         return Err(Self::Err::ColumnStringDeserializedGet {
                                             column_string_deserialized_get: std::string::String::from("string_deserialized_get"),
-                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                         });
                                     }
                                 },
                                 None => {
                                     return Err(Self::Err::ColumnIndexCheckedAdd {
                                         column_index_checked_add: std::string::String::from("index_checked_add"),
-                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                     });
                                 }
                             },
                             None => {
                                 return Err(Self::Err::ColumnStringDeserializedFind {
                                     column_string_deserialized_find: std::string::String::from("string_deserialized_find"),
-                                    code_occurence: crate::code_occurence_tufa_common!(),
+                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                 });
                             }
                         };
@@ -956,14 +961,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                     Err(e) => {
                                                         return Err(Self::Err::OrderFromStr {
                                                             order_from_str: e,
-                                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                         });
                                                     }
                                                 },
                                                 None => {
                                                     return Err(Self::Err::OrderOffsetSliceGetNone {
                                                         order_offset_slice_get_none: std::string::String::from("order_offset_slice_get_none"),
-                                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                     });
                                                 }
                                             }
@@ -974,14 +979,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 Err(e) => {
                                                     return Err(Self::Err::OrderFromStr {
                                                         order_from_str: e,
-                                                        code_occurence: crate::code_occurence_tufa_common!()
+                                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream
                                                     });
                                                 }
                                             },
                                             None => {
                                                 return Err(Self::Err::OrderOffsetSliceGetNone {
                                                     order_offset_slice_get_none: std::string::String::from("order_offset_slice_get_none"),
-                                                    code_occurence: crate::code_occurence_tufa_common!(),
+                                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 });
                                             }
                                         },
@@ -989,14 +994,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     None => {
                                         return Err(Self::Err::OrderStringDeserializedGetNone {
                                             order_string_deserialized_get_none: std::string::String::from("string_deserialized_get_none"),
-                                            code_occurence: crate::code_occurence_tufa_common!(),
+                                            #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                         });
                                     }
                                 },
                                 None => {
                                     return Err(Self::Err::OrderIndexCheckedAdd {
                                         order_index_checked_add: std::string::String::from("order_index_checked_add"),
-                                        code_occurence: crate::code_occurence_tufa_common!(),
+                                        #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                                     });
                                 }
                             },
