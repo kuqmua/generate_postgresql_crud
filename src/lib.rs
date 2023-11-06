@@ -33,6 +33,7 @@ pub fn generate_postgresql_crud_route_name(
     item
 }
 
+//todo decide where to do error log (maybe add in some places)
 //todo rename ForUrlEncoding prefix
 //todo clear unnesesary generated returns.
 // unneeded `return` statement
@@ -6628,7 +6629,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #common_token_stream
 
         #create_many_token_stream
-        #create_one_token_stream
+        // #create_one_token_stream
         #read_one_token_stream
         #read_many_with_body_token_stream
         #read_many_token_stream
