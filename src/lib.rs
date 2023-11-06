@@ -3063,7 +3063,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_error_named_token_stream
             #impl_std_convert_try_from_read_many_with_body_payload_with_serialize_deserialize_for_read_many_with_body_payload_token_stream
             #impl_std_convert_from_read_many_with_body_payload_for_read_many_with_body_payload_with_serialize_deserialize_token_stream
-            // #try_read_many_with_body_error_named_token_stream
+            #try_read_many_with_body_error_named_token_stream
             // #http_request_token_stream
             // #route_handler_token_stream
         }
