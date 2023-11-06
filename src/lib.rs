@@ -2345,6 +2345,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             read_many_with_body_payload_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_many_with_body_payload_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        //
+        let read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream = {
+            let read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified = format!("{read_many_with_body_name_camel_case_stringified}{payload_camel_case_stringified}WithSerializeDeserialize");
+            read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        //
         let try_read_many_with_body_error_named_camel_case_token_stream = {
             let try_read_many_with_body_error_named_camel_case_stringified = format!("{try_camel_case_stringified}{read_many_with_body_name_camel_case_stringified}{error_named_camel_case_stringified}");
             try_read_many_with_body_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -2390,6 +2397,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{payload_token_stream}");
+        let payload_with_serialize_deserialize_token_stream = {
+            quote::quote!{
+                #derive_debug_serialize_deserialize_token_stream
+                pub struct #read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
+                    pub select: #column_select_ident_token_stream,
+                    pub id: Option<Vec<std::string::String>>,
+                    pub name: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>,
+                    pub color: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>,
+                    pub order_by: crate::server::postgres::order_by::OrderBy<#column_ident_token_stream>,
+                    pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
+                    pub offset: crate::server::postgres::postgres_bigint::PostgresBigint,
+                }    
+            }
+        };
+        // println!("{payload_with_serialize_deserialize_token_stream}");
         let try_read_many_with_body_error_named_token_stream = {
             let try_read_many_with_body_request_error_camel_case_token_stream = {
                 let try_read_many_with_body_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{read_many_with_body_name_camel_case_stringified}{request_error_camel_case_stringified}");
@@ -2915,6 +2937,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
+            #payload_with_serialize_deserialize_token_stream
             // #try_read_many_with_body_error_named_token_stream
             // #http_request_token_stream
             // #route_handler_token_stream
