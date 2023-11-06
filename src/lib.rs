@@ -1802,6 +1802,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
+                    CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInClient {
+                        #eo_error_occurence_attribute_token_stream
+                        uuid_wrapper_try_from_possible_uuid_wrapper_in_client: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
                 }
             }
         };
@@ -1972,8 +1977,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #try_create_one_error_named_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
+            // #http_request_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{create_one_token_stream}");
@@ -6629,7 +6634,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #common_token_stream
 
         #create_many_token_stream
-        // #create_one_token_stream
+        #create_one_token_stream
         #read_one_token_stream
         #read_many_with_body_token_stream
         #read_many_token_stream
