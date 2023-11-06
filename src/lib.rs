@@ -151,6 +151,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|| {
             panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
         });
+    let id_field_ident_quotes_token_stream = {
+        let id_field_ident_quotes_stringified = format!("\"{id_field_ident}\"");
+        id_field_ident_quotes_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {id_field_ident_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let struct_options_ident_token_stream = {
         let struct_options_ident_stringified = format!("{ident}Options");
         struct_options_ident_stringified.parse::<proc_macro2::TokenStream>()
@@ -1909,7 +1914,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             acc
                         })
                     };
-                    let query_stringified = format!("\"{insert_name_stringified} {into_name_stringified} {table_name_stringified}({column_names}) {values_name_stringified} ({column_increments})\"");
+                    let query_stringified = format!("\"{insert_name_stringified} {into_name_stringified} {table_name_stringified}({column_names}) {values_name_stringified} ({column_increments}) {returning_id_stringified}\"");
                     query_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
@@ -1938,17 +1943,46 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &from_log_and_return_error_token_stream,
                     &pg_connection_token_stream
                 );
-                crate::generate_postgres_execute_query::generate_postgres_execute_query(
-                    &query_string_name_token_stream,
-                    &query_string_token_stream,
-                    &binded_query_name_token_stream,
-                    &binded_query_token_stream,
-                    &acquire_pool_and_connection_token_stream,
-                    &pg_connection_token_stream,
-                    &try_create_one_response_variants_token_stream,
-                    &desirable_token_stream,
-                    &from_log_and_return_error_token_stream,
-                )
+                // crate::generate_postgres_execute_query::generate_postgres_execute_query(
+                //     &query_string_name_token_stream,
+                //     &query_string_token_stream,
+                //     &binded_query_name_token_stream,
+                //     &binded_query_token_stream,
+                //     &acquire_pool_and_connection_token_stream,
+                //     &pg_connection_token_stream,
+                //     &try_create_one_response_variants_token_stream,
+                //     &desirable_token_stream,
+                //     &from_log_and_return_error_token_stream,
+                // )
+                quote::quote! {
+                    let #query_string_name_token_stream = {
+                        #query_string_token_stream
+                    };
+                    println!("{}", #query_string_name_token_stream);
+                    let #binded_query_name_token_stream = {
+                        #binded_query_token_stream
+                    };
+                    #acquire_pool_and_connection_token_stream
+                    match #binded_query_name_token_stream.fetch_one(#pg_connection_token_stream.as_mut()).await {
+                        Ok(value) => match {
+                            use sqlx::Row;
+                            value.try_get::<sqlx::types::Uuid, &str>(#id_field_ident_quotes_token_stream)
+                        } {
+                            Ok(value) => #try_create_one_response_variants_token_stream::#desirable_token_stream(crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(value)),
+                            Err(e) => {
+                                let error = #prepare_and_execute_query_error_token_stream::CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
+                                    uuid_wrapper_try_from_possible_uuid_wrapper_in_server: e,
+                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
+                                };
+                                #error_log_call_token_stream
+                                return #try_create_one_response_variants_token_stream::from(error);
+                            }
+                        },
+                        Err(e) => {
+                            #from_log_and_return_error_token_stream
+                        }
+                    }
+                }
             };
             // println!("{prepare_and_execute_query_token_stream}");
             quote::quote!{
@@ -1984,7 +2018,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #payload_token_stream
             #try_create_one_error_named_token_stream
             #http_request_token_stream
-            // #route_handler_token_stream
+            #route_handler_token_stream
         }
     };
     // println!("{create_one_token_stream}");
