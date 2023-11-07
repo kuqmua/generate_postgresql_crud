@@ -5291,7 +5291,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_token_stream}");
-        //
         let impl_std_convert_try_from_delete_many_with_body_payload_with_serialize_deserialize_for_delete_many_with_body_payload_token_stream = {
             let fields_assignments_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -6674,7 +6673,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let gen = quote::quote! {
         #common_token_stream
 
-        #create_many_token_stream
+        // #create_many_token_stream
         #create_one_token_stream
         #read_one_token_stream
         #read_many_with_body_token_stream
