@@ -1470,7 +1470,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+                #derive_debug_serialize_deserialize_token_stream
                 pub struct #create_many_parameters_camel_case_token_stream {
                     pub #payload_lower_case_token_stream: #create_many_payload_camel_case_token_stream,
                 }
@@ -1733,9 +1733,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
-            #try_create_many_error_named_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
+            // #try_create_many_error_named_token_stream
+            // #http_request_token_stream
+            // #route_handler_token_stream
         }
     };
     // println!("{create_many_token_stream}");
@@ -1764,7 +1764,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug, serde_derive::Serialize, serde_derive::Deserialize)]
+                #derive_debug_serialize_deserialize_token_stream
                 pub struct #create_one_parameters_camel_case_token_stream {
                     pub #payload_lower_case_token_stream: #create_one_payload_camel_case_token_stream,
                 }
@@ -6673,7 +6673,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let gen = quote::quote! {
         #common_token_stream
 
-        // #create_many_token_stream
+        #create_many_token_stream
         #create_one_token_stream
         #read_one_token_stream
         #read_many_with_body_token_stream
