@@ -1569,7 +1569,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #try_create_many_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #create_many_parameters_camel_case_token_stream,
-                ) -> Result<(), #try_create_many_error_named_camel_case_token_stream> {
+                ) -> Result<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>, #try_create_many_error_named_camel_case_token_stream> {
                     let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
                         Err(e) => {
@@ -1591,7 +1591,29 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                     .await
                     {
-                        Ok(_) => Ok(()),
+                        Ok(value) => {
+                            let mut vec_values = Vec::with_capacity(value.len());
+                            let mut vec_errors = Vec::with_capacity(value.len());
+                            for element in value {
+                                match crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(element) {
+                                    Ok(value) => {
+                                        vec_values.push(value);
+                                    }
+                                    Err(e) => {
+                                        vec_errors.push(
+                                            #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream(e)
+                                        );
+                                    }
+                                }
+                            }
+                            if let false = vec_errors.is_empty() {
+                                return Err(#try_create_many_error_named_camel_case_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
+                                    #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_token_stream: vec_errors,
+                                    #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream
+                                });
+                            }
+                            Ok(vec_values)
+                        },
                         Err(e) => Err(#try_create_many_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
                     }
                 }
@@ -1765,7 +1787,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #payload_token_stream
             #try_create_many_error_named_token_stream
             #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream
-            // #http_request_token_stream
+            #http_request_token_stream
             // #route_handler_token_stream
         }
     };
