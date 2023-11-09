@@ -1539,6 +1539,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{try_create_many_error_named_token_stream}");
+        let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream = {
+            quote::quote!{
+                #error_named_derive_token_stream
+                pub enum #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream {
+                    #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream(crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed),
+                }
+            }
+        };
+        // println!("{created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream}");
         let http_request_token_stream = {
             let try_create_many_lower_case_token_stream = {
                 let try_create_many_lower_case_stringified = format!("{try_lower_case_stringified}_{create_many_name_lower_case_stringified}");
@@ -1755,6 +1764,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #try_create_many_error_named_token_stream
+            #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream
             // #http_request_token_stream
             // #route_handler_token_stream
         }
@@ -1829,7 +1839,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
-                    CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInClient {
+                    #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
                         #eo_error_occurence_attribute_token_stream
                         uuid_wrapper_try_from_possible_uuid_wrapper_in_client: crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
@@ -1883,7 +1893,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     {
                         Ok(value) => match crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(value) {
                             Ok(value) => Ok(value),
-                            Err(e) => Err(#try_create_one_error_named_camel_case_token_stream::CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInClient {
+                            Err(e) => Err(#try_create_one_error_named_camel_case_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
                                 uuid_wrapper_try_from_possible_uuid_wrapper_in_client: e,
                                 #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream,
                             })
