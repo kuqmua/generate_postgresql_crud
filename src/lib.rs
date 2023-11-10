@@ -770,6 +770,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     // println!("{primary_key_try_from_sqlx_row_token_stream}");
     //
     let primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_uuid_wrapper_try_from_sqlx_row};
+    let crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream = quote::quote!{crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed};
+    let crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream = quote::quote!{crate::server::postgres::uuid_wrapper::UuidWrapper};
     let primary_key_uuid_wrapper_try_from_sqlx_row_token_stream = {
         let primary_key_str_token_stream = {
             let primary_key_str_stringified = format!("\"{id_field_ident}\"");
@@ -779,14 +781,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let row_name_token_stream = quote::quote!{row};
         let primary_key_name_token_stream = quote::quote!{primary_key};
         quote::quote! {
-            fn #primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(#row_name_token_stream: &'a R) -> sqlx::Result<crate::server::postgres::uuid_wrapper::UuidWrapper>
+            fn #primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(#row_name_token_stream: &'a R) -> sqlx::Result<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>
             where
                 #std_primitive_str_sqlx_column_index_token_stream
                 sqlx::types::Uuid: #sqlx_decode_decode_database_token_stream,
                 sqlx::types::Uuid: #sqlx_types_type_database_token_stream,
             {
                 let #primary_key_name_token_stream: sqlx::types::Uuid = #row_name_token_stream.try_get(#primary_key_str_token_stream)?;
-                Ok(crate::server::postgres::uuid_wrapper::UuidWrapper::from(#primary_key_name_token_stream))
+                Ok(#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::from(#primary_key_name_token_stream))
             }
         }
     };
@@ -1424,7 +1426,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments};
     let crate_server_postgres_bind_query_bind_query_try_increment_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::try_increment};
     let crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream = quote::quote!{#crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream::serde_urlencoded_parameter};
-    let crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream = quote::quote!{crate::server::postgres::uuid_wrapper::UuidWrapperTryFromPossibleUuidWrapperErrorNamed};
     let fields_named_len = fields_named.len();
     let dot_space = ", ";
     // let pg_temp_stringified = "pg_temp";
@@ -1585,7 +1586,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #try_create_many_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #create_many_parameters_camel_case_token_stream,
-                ) -> Result<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>, #try_create_many_error_named_camel_case_token_stream> {
+                ) -> Result<Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>, #try_create_many_error_named_camel_case_token_stream> {
                     let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
                         Err(e) => {
@@ -1611,7 +1612,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut vec_values = Vec::with_capacity(value.len());
                             let mut vec_errors = Vec::with_capacity(value.len());
                             for element in value {
-                                match crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(element) {
+                                match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(element) {
                                     Ok(value) => {
                                         vec_values.push(value);
                                     }
@@ -1954,7 +1955,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #try_create_one_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #create_one_parameters_camel_case_token_stream,
-                ) -> Result<crate::server::postgres::uuid_wrapper::UuidWrapper, #try_create_one_error_named_camel_case_token_stream> {
+                ) -> Result<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream, #try_create_one_error_named_camel_case_token_stream> {
                     let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
                         Err(e) => {
@@ -1976,7 +1977,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                     .await
                     {
-                        Ok(value) => match crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(value) {
+                        Ok(value) => match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
                             Ok(value) => Ok(value),
                             Err(e) => Err(#try_create_one_error_named_camel_case_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
                                 uuid_wrapper_try_from_possible_uuid_wrapper_in_client: e,
@@ -2206,7 +2207,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_token_stream
                 pub struct #read_one_path_camel_case_token_stream {
-                    pub #id_field_ident: crate::server::postgres::uuid_wrapper::UuidWrapper,
+                    pub #id_field_ident: #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                 }
             }
         };
@@ -2238,7 +2239,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 impl std::convert::TryFrom<#read_one_path_with_serialize_deserialize_camel_case_token_stream> for #read_one_path_camel_case_token_stream {
                     type Error = #read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_token_stream;
                     fn try_from(value: #read_one_path_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
-                        let #id_field_ident = match crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(value.#id_field_ident) {
+                        let #id_field_ident = match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value.#id_field_ident) {
                             Ok(value) => value,
                             Err(e) => {
                                 return Err(Self::Error::NotUuid {
@@ -2563,7 +2564,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #derive_debug_token_stream
                 pub struct #read_many_with_body_payload_camel_case_token_stream {
                     pub #select_token_stream: #column_select_ident_token_stream,
-                    pub #id_field_ident: Option<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>>,
+                    pub #id_field_ident: Option<Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_id_token_stream)*
                     pub #order_by_token_stream: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
                     pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
@@ -2605,9 +2606,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     let #id_field_ident = match value.#id_field_ident {
                         Some(value) => match value.into_iter()
-                            .map(|element|crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(element)))
+                            .map(|element|#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(element)))
                             .collect::<Result<
-                                Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                                Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
                                 #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream
                             >>() 
                         {
@@ -3293,7 +3294,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #derive_debug_token_stream
                 pub struct #read_many_query_camel_case_token_stream {
                     pub #select_token_stream: Option<#column_select_ident_token_stream>,
-                    pub #id_field_ident: Option<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>>,
+                    pub #id_field_ident: Option<Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_id_token_stream)*
                     pub #order_by_token_stream: Option<#ident_order_by_wrapper_name_token_stream>,//todo
                     pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
@@ -3371,9 +3372,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     let #id_field_ident = match value.#id_field_ident {
                         Some(value) => match value.split(',')
-                            .map(|element| crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(element.to_string())))
+                            .map(|element| #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(element.to_string())))
                             .collect::<Result<
-                                Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>, 
+                                Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>, 
                                 #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream
                             >>() {
                                 Ok(value) => Some(value),
@@ -4117,7 +4118,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_token_stream
                 pub struct #update_one_path_camel_case_token_stream {
-                    pub #id_field_ident: crate::server::postgres::uuid_wrapper::UuidWrapper,
+                    pub #id_field_ident: #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                 }
             }
         };
@@ -4149,7 +4150,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 impl std::convert::TryFrom<#update_one_path_with_serialize_deserialize_camel_case_token_stream> for #update_one_path_camel_case_token_stream {
                     type Error = #update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_token_stream;
                     fn try_from(value: #update_one_path_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
-                        let #id_field_ident = match crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(value.#id_field_ident) {
+                        let #id_field_ident = match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value.#id_field_ident) {
                             Ok(value) => value,
                             Err(e) => {
                                 return Err(Self::Error::NotUuid {
@@ -4545,7 +4546,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_token_stream
                 pub struct #update_many_payload_element_camel_case_token_stream {
-                    pub #id_field_ident: crate::server::postgres::uuid_wrapper::UuidWrapper,
+                    pub #id_field_ident: #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
@@ -4650,7 +4651,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type Error = #update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_error_named_camel_case_token_stream;
                     fn try_from(value: #update_many_payload_element_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
                         let #id_field_ident = match sqlx::types::Uuid::parse_str(value.#id_field_ident.to_inner()) {
-                            Ok(value) => crate::server::postgres::uuid_wrapper::UuidWrapper::from(value),
+                            Ok(value) => #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::from(value),
                             Err(e) => {
                                 return Err(#update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_error_named_camel_case_token_stream::NotUuid {
                                     not_uuid: e,
@@ -4763,7 +4764,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     .#payload_lower_case_token_stream
                     .iter()
                     .map(|element| element.#id_field_ident.clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
-                    .collect::<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>>()
+                    .collect::<Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>()
                 };
                 let query_string_token_stream = {
                     let column_names = fields_named.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
@@ -5062,7 +5063,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_token_stream
                 pub struct #delete_one_path_camel_case_token_stream {
-                    pub #id_field_ident: crate::server::postgres::uuid_wrapper::UuidWrapper,
+                    pub #id_field_ident: #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                 }
             }
         };
@@ -5094,7 +5095,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 impl std::convert::TryFrom<#delete_one_path_with_serialize_deserialize_camel_case_token_stream> for #delete_one_path_camel_case_token_stream {
                     type Error = #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream;
                     fn try_from(value: #delete_one_path_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
-                        match crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(value.#id_field_ident) {
+                        match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value.#id_field_ident) {
                             Ok(value) => Ok(Self { #id_field_ident: value }),
                             Err(e) => Err(#delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream::NotUuid {
                                 not_uuid: e,
@@ -5371,7 +5372,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_token_stream
                 pub struct #delete_many_with_body_payload_camel_case_token_stream {
-                    pub #id_field_ident: Option<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>>,
+                    pub #id_field_ident: Option<Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
@@ -5439,8 +5440,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type Error = #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream;
                     fn try_from(value: #delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
                         let #id_field_ident = match value.#id_field_ident {
-                            Some(value) => match value.into_iter().map(|element|crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(element)).collect::<Result<
-                                Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,                                    
+                            Some(value) => match value.into_iter().map(|element|#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(element)).collect::<Result<
+                                Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,                                    
                                 #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream
                             >>() {
                                 Ok(value) => Some(value),
@@ -5653,7 +5654,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #id_field_ident
                         .iter()
                         .map(|element| element.clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
-                        .collect::<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>>()
+                        .collect::<Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>()
                     };
                     let query_string_primary_key_some_other_none_token_stream = {
                         let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {table_name_stringified} {where_name_stringified} {id_field_ident} {in_name_stringified} ({select_name_stringified} {unnest_name_stringified}($1)){returning_id_stringified}\"");
@@ -6092,7 +6093,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let query_token_stream = {
             let query_id_field_token_stream = quote::quote!{
-                pub #id_field_ident: Option<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>>,
+                pub #id_field_ident: Option<Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
             };
             let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -6153,8 +6154,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .map(|element| crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(element.to_string()))
                         .collect::<Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>>()
                         .into_iter()
-                        .map(|element|crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(element)).collect::<Result<
-                            Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        .map(|element|#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(element)).collect::<Result<
+                            Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
                             #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream 
                         >>() 
                     {
@@ -6391,7 +6392,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #id_field_ident
                             .iter()
                             .map(|element| element.clone()) //todo - maybe its not a good idea to remove .clone here coz in macro dont know what type
-                            .collect::<Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>>()
+                            .collect::<Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>()
                         }
                     };
                     let query_string_primary_key_some_other_none_token_stream = {
