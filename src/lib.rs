@@ -776,6 +776,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::UuidWrapperTryFromPossibleUuidWrapperErrorNamed};
     let crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::UuidWrapper};
     let crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::PossibleUuidWrapper};
+    let crate_server_postgres_regex_filter_regex_filter_token_stream = quote::quote!{crate::server::postgres::regex_filter::RegexFilter};
+    let crate_server_postgres_postgres_bigint_postgres_bigint_token_stream = quote::quote!{crate::server::postgres::postgres_bigint::PostgresBigint};
+    let crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_token_stream = quote::quote!{crate::server::postgres::postgres_bigint::PostgresBigintFromStrErrorNamed};
     let primary_key_uuid_wrapper_try_from_sqlx_row_token_stream = {
         let primary_key_str_token_stream = {
             let primary_key_str_stringified = format!("\"{id_field_ident}\"");
@@ -2570,7 +2573,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
                     Some(quote::quote!{
-                        pub #field_ident: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>,
+                        pub #field_ident: Option<Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
                     })
                 },
             });
@@ -2581,8 +2584,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub #id_field_ident: Option<Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_id_token_stream)*
                     pub #order_by_token_stream: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
-                    pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
-                    pub offset: crate::server::postgres::postgres_bigint::PostgresBigint,
+                    pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
+                    pub offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
                 }
             }
         };
@@ -2593,11 +2596,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub struct #read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
                     pub select: #column_select_ident_token_stream,
                     pub id: Option<Vec<std::string::String>>,
-                    pub name: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>,
-                    pub color: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>,
+                    pub name: Option<Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
+                    pub color: Option<Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
                     pub order_by: crate::server::postgres::order_by::OrderBy<#column_ident_token_stream>,
-                    pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
-                    pub offset: crate::server::postgres::postgres_bigint::PostgresBigint,
+                    pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
+                    pub offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
                 }    
             }
         };
@@ -3311,8 +3314,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub #id_field_ident: Option<Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_id_token_stream)*
                     pub #order_by_token_stream: Option<#ident_order_by_wrapper_name_token_stream>,//todo
-                    pub limit: crate::server::postgres::postgres_bigint::PostgresBigint,
-                    pub offset: Option<crate::server::postgres::postgres_bigint::PostgresBigint>,
+                    pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
+                    pub offset: Option<#crate_server_postgres_postgres_bigint_postgres_bigint_token_stream>,
                 }
             }
         };
@@ -3369,12 +3372,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     },
                     LimitPostgresBigintFromStr {
                         #eo_error_occurence_attribute_token_stream
-                        limit_postgres_bigint_from_str: crate::server::postgres::postgres_bigint::PostgresBigintFromStrErrorNamed,
+                        limit_postgres_bigint_from_str: #crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     OffsetPostgresBigintFromStr {
                         #eo_error_occurence_attribute_token_stream
-                        offset_postgres_bigint_from_str: crate::server::postgres::postgres_bigint::PostgresBigintFromStrErrorNamed,
+                        offset_postgres_bigint_from_str: #crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 }
@@ -3456,7 +3459,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         let limit = match {
                             use std::str::FromStr;
-                            crate::server::postgres::postgres_bigint::PostgresBigint::from_str(&value.limit)
+                            #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream::from_str(&value.limit)
                         } {
                             Ok(value) => value,
                             Err(e) => {
@@ -3469,7 +3472,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let offset = match value.offset {
                             Some(value) => match {
                                 use std::str::FromStr;
-                                crate::server::postgres::postgres_bigint::PostgresBigint::from_str(&value)
+                                #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream::from_str(&value)
                             } {
                                 Ok(value) => Some(value),
                                 Err(e) => {
@@ -5379,7 +5382,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
                     Some(quote::quote!{
-                        pub #field_ident: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>//todo
+                        pub #field_ident: Option<Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>//todo
                     })
                 },
             });
@@ -5401,7 +5404,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             panic!("{proc_macro_name_ident_stringified} field.ident is None")
                         });
                     Some(quote::quote!{
-                        pub #field_ident: Option<Vec<crate::server::postgres::regex_filter::RegexFilter>>
+                        pub #field_ident: Option<Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>
                     })
                 },
             });
