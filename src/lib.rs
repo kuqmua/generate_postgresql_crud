@@ -401,6 +401,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let eo_display_attribute_token_stream = quote::quote!{#[eo_display]};
     let eo_display_with_serialize_deserialize_token_stream = quote::quote!{#[eo_display_with_serialize_deserialize]};
     let eo_vec_error_occurence_token_stream = quote::quote!{#[eo_vec_error_occurence]};
+    let sqlx_types_uuid_token_stream = quote::quote!{sqlx::types::Uuid};
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
@@ -640,7 +641,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_string_quotes} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
                     quote::quote!{
-                        let primary_key_try_get_result: Result<Option<sqlx::types::Uuid>, sqlx::Error> = row.try_get(#field_ident_string_quotes_token_stream);
+                        let primary_key_try_get_result: Result<Option<#sqlx_types_uuid_token_stream>, sqlx::Error> = row.try_get(#field_ident_string_quotes_token_stream);
                         #id_field_ident = match primary_key_try_get_result {
                             Ok(option_primary_key) => option_primary_key.map(|value| value.to_string()),
                             Err(e) => {
@@ -697,8 +698,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     })
             });
             let sqlx_decode_decode_and_sqlx_types_type_primary_key_token_stream = quote::quote!{
-                Option<sqlx::types::Uuid>: #sqlx_decode_decode_database_token_stream,
-                Option<sqlx::types::Uuid>: #sqlx_types_type_database_token_stream,
+                Option<#sqlx_types_uuid_token_stream>: #sqlx_decode_decode_database_token_stream,
+                Option<#sqlx_types_uuid_token_stream>: #sqlx_types_type_database_token_stream,
             };
             let sqlx_decode_decode_and_sqlx_types_type_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
                 true => None,
@@ -784,10 +785,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             fn #primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(#row_name_token_stream: &'a R) -> sqlx::Result<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>
             where
                 #std_primitive_str_sqlx_column_index_token_stream
-                sqlx::types::Uuid: #sqlx_decode_decode_database_token_stream,
-                sqlx::types::Uuid: #sqlx_types_type_database_token_stream,
+                #sqlx_types_uuid_token_stream: #sqlx_decode_decode_database_token_stream,
+                #sqlx_types_uuid_token_stream: #sqlx_types_type_database_token_stream,
             {
-                let #primary_key_name_token_stream: sqlx::types::Uuid = #row_name_token_stream.try_get(#primary_key_str_token_stream)?;
+                let #primary_key_name_token_stream: #sqlx_types_uuid_token_stream = #row_name_token_stream.try_get(#primary_key_str_token_stream)?;
                 Ok(#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::from(#primary_key_name_token_stream))
             }
         }
@@ -1797,7 +1798,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     } {
                         match {
                             use sqlx::Row;
-                            row.try_get::<sqlx::types::Uuid, &str>("id")
+                            row.try_get::<#sqlx_types_uuid_token_stream, &str>(#id_field_ident_quotes_token_stream)
                         } {
                             Ok(value) => {
                                 vec_values.push(
@@ -2084,7 +2085,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     match #binded_query_name_token_stream.fetch_one(#pg_connection_token_stream.as_mut()).await {
                         Ok(value) => match {
                             use sqlx::Row;
-                            value.try_get::<sqlx::types::Uuid, &str>(#id_field_ident_quotes_token_stream)
+                            value.try_get::<#sqlx_types_uuid_token_stream, &str>(#id_field_ident_quotes_token_stream)
                         } {
                             Ok(value) => #try_create_one_response_variants_token_stream::#desirable_token_stream(crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(value)),
                             Err(e) => {
@@ -3098,7 +3099,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let binded_query_token_stream = {
                     let binded_query_id_modification_token_stream = quote::quote!{
                         if let Some(value) = #parameters_lower_case_token_stream.#payload_lower_case_token_stream.#id_field_ident {
-                            query = query.bind(value.into_iter().map(|element|element.into_inner().clone()).collect::<Vec<sqlx::types::Uuid>>());
+                            query = query.bind(value.into_iter().map(|element|element.into_inner().clone()).collect::<Vec<#sqlx_types_uuid_token_stream>>());
                         }
                     };
                     let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
@@ -3908,7 +3909,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     value
                                     .into_iter()
                                     .map(|element| element.into_inner().clone())
-                                    .collect::<Vec<sqlx::types::Uuid>>()
+                                    .collect::<Vec<#sqlx_types_uuid_token_stream>>()
                                 );
                             }
                         }
@@ -4650,7 +4651,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 impl std::convert::TryFrom<#update_many_payload_element_with_serialize_deserialize_camel_case_token_stream> for #update_many_payload_element_camel_case_token_stream {
                     type Error = #update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_error_named_camel_case_token_stream;
                     fn try_from(value: #update_many_payload_element_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
-                        let #id_field_ident = match sqlx::types::Uuid::parse_str(value.#id_field_ident.to_inner()) {
+                        let #id_field_ident = match #sqlx_types_uuid_token_stream::parse_str(value.#id_field_ident.to_inner()) {
                             Ok(value) => #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::from(value),
                             Err(e) => {
                                 return Err(#update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_error_named_camel_case_token_stream::NotUuid {
@@ -4847,7 +4848,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #field_ident_underscore_vec_token_stream
                                 .into_iter()
                                 .map(|element| element.into_inner())
-                                .collect::<Vec<sqlx::types::Uuid>>()
+                                .collect::<Vec<#sqlx_types_uuid_token_stream>>()
                             );
                         }
                     };
@@ -5667,7 +5668,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #id_field_ident
                             .into_iter()
                             .map(|element| element.clone().into_inner())
-                            .collect::<Vec<sqlx::types::Uuid>>()
+                            .collect::<Vec<#sqlx_types_uuid_token_stream>>()
                         );
                         query
                     };
@@ -6406,7 +6407,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #id_field_ident.clone()//todo remove .clone
                             .into_iter()
                             .map(|element| element.into_inner())
-                            .collect::<Vec<sqlx::types::Uuid>>()
+                            .collect::<Vec<#sqlx_types_uuid_token_stream>>()
                         );
                         query
                     };
