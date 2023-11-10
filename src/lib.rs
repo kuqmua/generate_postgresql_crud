@@ -1453,6 +1453,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let element_name_token_stream = quote::quote!{element};
     let acc_name_token_stream = quote::quote!{acc};
     let query_name_token_stream = quote::quote!{query};
+    let not_uuid_camel_case_stringified = "NotUuid";
+    let not_uuid_token_camel_case_stream = {
+        not_uuid_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {not_uuid_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let not_uuid_token_lower_case_stream = {
+        let not_uuid_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&not_uuid_camel_case_stringified.to_string());
+        not_uuid_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {not_uuid_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let underscore_vec_name_stringified = "_vec";
     let update_name_stringified = "update";
     let as_name_stringified = "as";
@@ -2227,9 +2237,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_token_stream {
-                    NotUuid {
+                    #not_uuid_token_camel_case_stream {
                         #eo_error_occurence_attribute_token_stream
-                        not_uuid: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+                        #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 } 
@@ -2244,8 +2254,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #id_field_ident = match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value.#id_field_ident) {
                             Ok(value) => value,
                             Err(e) => {
-                                return Err(Self::Error::NotUuid {
-                                    not_uuid: e,
+                                return Err(Self::Error::#not_uuid_token_camel_case_stream {
+                                    #not_uuid_token_lower_case_stream: e,
                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                 });
                             }
@@ -2594,9 +2604,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream {
-                    NotUuid {
+                    #not_uuid_token_camel_case_stream {
                         #eo_error_occurence_attribute_token_stream
-                        not_uuid: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+                        #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 }
@@ -2616,8 +2626,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(value) => Some(value),
                             Err(e) => {
-                                return Err(Self::Error::NotUuid {
-                                    not_uuid: e,
+                                return Err(Self::Error::#not_uuid_token_camel_case_stream {
+                                    #not_uuid_token_lower_case_stream: e,
                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                 });
                             }
@@ -3345,9 +3355,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         column_select_from_str: #ident_column_select_from_str_error_named_camel_case_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    NotUuid {
+                    #not_uuid_token_camel_case_stream {
                         #eo_error_occurence_attribute_token_stream
-                        not_uuid: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+                        #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     OrderByWrapperFromStr {
@@ -3381,8 +3391,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             >>() {
                                 Ok(value) => Some(value),
                                 Err(e) => {
-                                    return Err(Self::Error::NotUuid {
-                                        not_uuid: e,
+                                    return Err(Self::Error::#not_uuid_token_camel_case_stream {
+                                        #not_uuid_token_lower_case_stream: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     });
                                 }
@@ -4138,9 +4148,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_token_stream {
-                    NotUuid {
+                    #not_uuid_token_camel_case_stream {
                         #eo_error_occurence_attribute_token_stream
-                        not_uuid: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+                        #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 } 
@@ -4155,8 +4165,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #id_field_ident = match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value.#id_field_ident) {
                             Ok(value) => value,
                             Err(e) => {
-                                return Err(Self::Error::NotUuid {
-                                    not_uuid: e,
+                                return Err(Self::Error::#not_uuid_token_camel_case_stream {
+                                    #not_uuid_token_lower_case_stream: e,
                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                 });
                             }
@@ -4617,9 +4627,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_error_named_camel_case_token_stream {
-                    NotUuid {
+                    #not_uuid_token_camel_case_stream {
                         #eo_display_attribute_token_stream
-                        not_uuid: sqlx::types::uuid::Error,
+                        #not_uuid_token_lower_case_stream: sqlx::types::uuid::Error,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 }
@@ -4655,8 +4665,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #id_field_ident = match #sqlx_types_uuid_token_stream::parse_str(value.#id_field_ident.to_inner()) {
                             Ok(value) => #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::from(value),
                             Err(e) => {
-                                return Err(#update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_error_named_camel_case_token_stream::NotUuid {
-                                    not_uuid: e,
+                                return Err(#update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_error_named_camel_case_token_stream::#not_uuid_token_camel_case_stream {
+                                    #not_uuid_token_lower_case_stream: e,
                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                 });
                             },
@@ -5083,9 +5093,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream {
-                    NotUuid {
+                    #not_uuid_token_camel_case_stream {
                         #eo_error_occurence_attribute_token_stream
-                        not_uuid: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+                        #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 }
@@ -5099,8 +5109,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     fn try_from(value: #delete_one_path_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
                         match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value.#id_field_ident) {
                             Ok(value) => Ok(Self { #id_field_ident: value }),
-                            Err(e) => Err(#delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream::NotUuid {
-                                not_uuid: e,
+                            Err(e) => Err(#delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream::#not_uuid_token_camel_case_stream {
+                                #not_uuid_token_lower_case_stream: e,
                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                             }),
                         }
@@ -5406,9 +5416,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream {
-                    NotUuid {
+                    #not_uuid_token_camel_case_stream {
                         #eo_error_occurence_attribute_token_stream
-                        not_uuid: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+                        #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 }
@@ -5448,8 +5458,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             >>() {
                                 Ok(value) => Some(value),
                                 Err(e) => {
-                                    return Err(#delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream::NotUuid {
-                                        not_uuid: e,
+                                    return Err(#delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream::#not_uuid_token_camel_case_stream {
+                                        #not_uuid_token_lower_case_stream: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     });
                                 },
@@ -6140,9 +6150,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #error_named_derive_token_stream
                 pub enum #delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream {
-                    NotUuid {
+                    #not_uuid_token_camel_case_stream {
                         #eo_error_occurence_attribute_token_stream
-                        not_uuid: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+                        #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 }
@@ -6163,8 +6173,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     {
                         Ok(value) => Some(value),
                         Err(e) => {
-                            return Err(#delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream::NotUuid {
-                                not_uuid: e,
+                            return Err(#delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream::#not_uuid_token_camel_case_stream {
+                                #not_uuid_token_lower_case_stream: e,
                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
                         }
