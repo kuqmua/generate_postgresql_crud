@@ -402,6 +402,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let eo_display_with_serialize_deserialize_token_stream = quote::quote!{#[eo_display_with_serialize_deserialize]};
     let eo_vec_error_occurence_token_stream = quote::quote!{#[eo_vec_error_occurence]};
     let sqlx_types_uuid_token_stream = quote::quote!{sqlx::types::Uuid};
+    let sqlx_row_token_stream = quote::quote!{sqlx::Row};
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
@@ -713,7 +714,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote! {
                 impl #column_select_ident_token_stream {
-                    fn #options_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(
+                    fn #options_try_from_sqlx_row_name_token_stream<'a, R: #sqlx_row_token_stream>(
                         &self,
                         row: &'a R,
                     ) -> sqlx::Result<#struct_options_ident_token_stream>
@@ -757,7 +758,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let row_name_token_stream = quote::quote!{row};
         let primary_key_name_token_stream = quote::quote!{primary_key};
         quote::quote! {
-            fn #primary_key_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(#row_name_token_stream: &'a R) -> sqlx::Result<#id_field_type>
+            fn #primary_key_try_from_sqlx_row_name_token_stream<'a, R: #sqlx_row_token_stream>(#row_name_token_stream: &'a R) -> sqlx::Result<#id_field_type>
                 where
                     #std_primitive_str_sqlx_column_index_token_stream
                     #id_field_type: #sqlx_decode_decode_database_token_stream,
@@ -782,7 +783,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let row_name_token_stream = quote::quote!{row};
         let primary_key_name_token_stream = quote::quote!{primary_key};
         quote::quote! {
-            fn #primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream<'a, R: sqlx::Row>(#row_name_token_stream: &'a R) -> sqlx::Result<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>
+            fn #primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream<'a, R: #sqlx_row_token_stream>(#row_name_token_stream: &'a R) -> sqlx::Result<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>
             where
                 #std_primitive_str_sqlx_column_index_token_stream
                 #sqlx_types_uuid_token_stream: #sqlx_decode_decode_database_token_stream,
@@ -1797,7 +1798,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     } {
                         match {
-                            use sqlx::Row;
+                            use #sqlx_row_token_stream;
                             row.try_get::<#sqlx_types_uuid_token_stream, &str>(#id_field_ident_quotes_token_stream)
                         } {
                             Ok(value) => {
@@ -2084,7 +2085,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #acquire_pool_and_connection_token_stream
                     match #binded_query_name_token_stream.fetch_one(#pg_connection_token_stream.as_mut()).await {
                         Ok(value) => match {
-                            use sqlx::Row;
+                            use #sqlx_row_token_stream;
                             value.try_get::<#sqlx_types_uuid_token_stream, &str>(#id_field_ident_quotes_token_stream)
                         } {
                             Ok(value) => #try_create_one_response_variants_token_stream::#desirable_token_stream(crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(value)),
