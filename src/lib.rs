@@ -2117,13 +2117,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             path_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_token_stream(
+        let read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_stringified(
             read_one_name_camel_case_stringified,
-            &path_camel_case_stringified,
-            &proc_macro_name_ident_stringified
+            path_camel_case_stringified,
         );
         let read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_token_stream = {//todo reuse TryFrom
-            let read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_stringified = format!("{read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_stringified}{error_named_camel_case_stringified}");
+            let read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_error_named_stringified(
+                &read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_stringified,
+                error_named_camel_case_stringified
+            );
             read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -4039,13 +4041,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &path_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_token_stream(
+        let update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_stringified(
             update_one_name_camel_case_stringified,
             path_camel_case_stringified,
-            &proc_macro_name_ident_stringified
         );
         let update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_token_stream = {//todo reuse TryFrom
-            let update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_stringified = format!("{update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_stringified}{error_named_camel_case_stringified}");
+            let update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_error_named_stringified(
+                &update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_stringified,
+                error_named_camel_case_stringified
+            );
             update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -4994,14 +4998,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             path_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_token_stream(
+        let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_stringified(
             delete_one_name_camel_case_stringified,
             path_camel_case_stringified,
-            &proc_macro_name_ident_stringified
         );
         let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream = {
-            let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_stringified = format!(
-                "{delete_one_path_try_from_delete_one_path_with_serialize_deserialize_camel_case_stringified}{error_named_camel_case_stringified}"
+            let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_stringified = generate_path_try_from_path_with_serialize_deserialize_error_named_stringified(
+                &delete_one_path_try_from_delete_one_path_with_serialize_deserialize_camel_case_stringified,
+                error_named_camel_case_stringified
             );
             delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -7000,10 +7004,16 @@ fn generate_try_error_named_token_stream(
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_error_named_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
-fn generate_path_try_from_path_with_serialize_deserialize_token_stream(
+fn generate_path_try_from_path_with_serialize_deserialize_stringified(
     original_name_camel_case_stringified: &str,
-    path_camel_case_stringified: &str,
-    proc_macro_name_ident_stringified: &str
+    path_camel_case_stringified: &str
 ) -> std::string::String {
     format!("{original_name_camel_case_stringified}{path_camel_case_stringified}TryFrom{original_name_camel_case_stringified}{path_camel_case_stringified}WithSerializeDeserialize")
+}
+
+fn generate_path_try_from_path_with_serialize_deserialize_error_named_stringified(
+    path_try_from_path_with_serialize_deserialize_camel_case_stringified: &str,
+    error_named_camel_case_stringified: &str
+) -> std::string::String {
+    format!("{path_try_from_path_with_serialize_deserialize_camel_case_stringified}{error_named_camel_case_stringified}")
 }
