@@ -1,3 +1,4 @@
+#[allow(clippy::too_many_arguments)]
 pub fn generate_postgres_transaction(
     expected_updated_primary_keys_token_stream: &proc_macro2::TokenStream,
     query_string_name_token_stream: &proc_macro2::TokenStream,
