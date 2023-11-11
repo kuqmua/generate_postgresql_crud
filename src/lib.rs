@@ -75,41 +75,43 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let ident = &ast.ident;
     let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
     let proc_macro_name_ident_stringified = format!("{proc_macro_name} {ident}");
-    let stringified_tokens = {
-        let attribute = get_macro_attribute(
-            &ast.attrs,
-            &proc_macro_name_ident_stringified
-        );
-        let mut stringified_tokens = quote::ToTokens::to_token_stream(&attribute.tokens).to_string();
-        stringified_tokens.retain(|c| !c.is_whitespace());
-        stringified_tokens
-    };
-    let table_name_stringified = {
-        match stringified_tokens.len() > 3 {
-            true => {
-                let chars = &mut stringified_tokens.chars();
-                match (&chars.next(), &chars.last()) {
-                        (None, None) => panic!("{proc_macro_name_ident_stringified} no first and last token attribute"),
-                        (None, Some(_)) => panic!("{proc_macro_name_ident_stringified} no first token attribute"),
-                        (Some(_), None) => panic!("{proc_macro_name_ident_stringified} no last token attribute"),
-                        (Some(first), Some(last)) => match (first == &'(', last == &')') {
-                            (true, true) => {
-                                match stringified_tokens.get(1..(stringified_tokens.len()-1)) {
-                                    Some(inner_tokens_str) => {
-                                        inner_tokens_str
-                                    },
-                                    None => panic!("{proc_macro_name_ident_stringified} cannot get inner_token"),
-                                }
-                            },
-                            (true, false) => panic!("{proc_macro_name_ident_stringified} last token attribute is not )"),
-                            (false, true) => panic!("{proc_macro_name_ident_stringified} first token attribute is not ("),
-                            (false, false) => panic!("{proc_macro_name_ident_stringified} first token attribute is not ( and last token attribute is not )"),
-                        },
-                    }
-            }
-            false => panic!("{proc_macro_name_ident_stringified} {stringified_tokens}.len() > 3 == false"),
-        }
-    };
+    // let stringified_tokens = {
+    //     let attribute = get_macro_attribute(
+    //         &ast.attrs,
+    //         &proc_macro_name_ident_stringified
+    //     );
+    //     // println!("{attribute:#?}");
+    //     let mut stringified_tokens = quote::ToTokens::to_token_stream(&attribute.tokens).to_string();
+    //     stringified_tokens.retain(|c| !c.is_whitespace());
+    //     stringified_tokens
+    // };
+    // let table_name_stringified = {
+    //     match stringified_tokens.len() > 3 {
+    //         true => {
+    //             let chars = &mut stringified_tokens.chars();
+    //             match (&chars.next(), &chars.last()) {
+    //                     (None, None) => panic!("{proc_macro_name_ident_stringified} no first and last token attribute"),
+    //                     (None, Some(_)) => panic!("{proc_macro_name_ident_stringified} no first token attribute"),
+    //                     (Some(_), None) => panic!("{proc_macro_name_ident_stringified} no last token attribute"),
+    //                     (Some(first), Some(last)) => match (first == &'(', last == &')') {
+    //                         (true, true) => {
+    //                             match stringified_tokens.get(1..(stringified_tokens.len()-1)) {
+    //                                 Some(inner_tokens_str) => {
+    //                                     inner_tokens_str
+    //                                 },
+    //                                 None => panic!("{proc_macro_name_ident_stringified} cannot get inner_token"),
+    //                             }
+    //                         },
+    //                         (true, false) => panic!("{proc_macro_name_ident_stringified} last token attribute is not )"),
+    //                         (false, true) => panic!("{proc_macro_name_ident_stringified} first token attribute is not ("),
+    //                         (false, false) => panic!("{proc_macro_name_ident_stringified} first token attribute is not ( and last token attribute is not )"),
+    //                     },
+    //                 }
+    //         }
+    //         false => panic!("{proc_macro_name_ident_stringified} {stringified_tokens}.len() > 3 == false"),
+    //     }
+    // };
+    let table_name_stringified = "dogs";//todo why rust analyzer crushes with get_macro_attribute ?
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
         data_struct
     } else {
@@ -7051,3 +7053,60 @@ fn generate_try_error_named_token_stream(
     try_error_named_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_error_named_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
+
+
+
+// #[derive(MyProcMacro)]
+// #[something::somthing_handle(some_value_what_need_to_use_in_)]
+// pub struct Dog {
+//     pub name: String,
+//     pub color: String,
+// }
+
+// fn get_macro_attribute<'a>(
+//     attrs: &'a [syn::Attribute],
+//     proc_macro_name_ident_stringified: &std::string::String
+// ) -> &'a syn::Attribute {
+//     let attribute_path: &str = "generate_postgresql_crud::generate_postgresql_crud_route_name";
+//     let option_attribute = attrs.iter().find(|attr| {
+//         attribute_path == {
+//             let mut stringified_path = quote::ToTokens::to_token_stream(&attr.path).to_string();
+//             stringified_path.retain(|c| !c.is_whitespace());
+//             stringified_path
+//         }
+//     });
+//     if let Some(attribute) = option_attribute {
+//         attribute
+//     }
+//     else {
+//         panic!("{proc_macro_name_ident_stringified} no {attribute_path}");
+//     }
+// }
+
+
+
+
+// #[proc_macro_derive(GeneratePostgresqlCrud)]
+// pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
+//     proc_macro_helpers::panic_location::panic_location();
+//     let proc_macro_name = "GeneratePostgresqlCrud";
+//     let ast: syn::DeriveInput = syn::parse(input).unwrap_or_else(|_| {
+//         panic!(
+//             "{proc_macro_name} {}",
+//             proc_macro_helpers::global_variables::hardcode::AST_PARSE_FAILED
+//         )
+//     });
+//     let attribute_path: &str = "generate_postgresql_crud::generate_postgresql_crud_route_name";
+//     let option_attribute = &ast.attrs.iter().find(|attr| {
+//         attribute_path == {
+//             let mut stringified_path = quote::ToTokens::to_token_stream(&attr.path).to_string();
+//             stringified_path.retain(|c| !c.is_whitespace());
+//             stringified_path
+//         }
+//     });
+//     if let Some(attribute) = option_attribute {
+//         attribute
+//     }
+//     else {
+//         panic!("{proc_macro_name_ident_stringified} no {attribute_path}");
+//     }
