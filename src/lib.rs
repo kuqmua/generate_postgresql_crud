@@ -1206,7 +1206,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let serde_json_to_string_token_stream = quote::quote!{serde_json::to_string};
     let into_url_encoding_version_name_token_stream = quote::quote!{into_url_encoding_version}; 
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
-    let payload_element_with_serialize_deserialize_camel_case_stringified = format!("{payload_element_camel_case_stringified}WithSerializeDeserialize");
+    let with_serialize_deserialize_camel_case_stringified = "WithSerializeDeserialize";
+    let payload_element_with_serialize_deserialize_camel_case_stringified = format!("{payload_element_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}");
     // let from_camel_case_stringified = "From";
     let try_camel_case_stringified = "Try";
     let try_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&try_camel_case_stringified.to_string());
@@ -2115,12 +2116,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let read_one_path_with_serialize_deserialize_camel_case_token_stream = generate_path_with_serialize_deserialize_camel_case_token_stream(
             read_one_name_camel_case_stringified,
             path_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_stringified(
             read_one_name_camel_case_stringified,
             path_camel_case_stringified,
             try_from_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
         );
         let read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_token_stream = {
             let read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_error_named_stringified(
@@ -2147,6 +2150,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let read_one_query_with_serialize_deserialize_camel_case_token_stream = generate_query_with_serialize_deserialize_camel_case_token_stream(
             read_one_name_camel_case_stringified,
             query_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let try_read_one_error_named_camel_case_token_stream = generate_try_error_named_token_stream(
@@ -2480,12 +2484,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream = generate_payload_with_serialize_deserialize_camel_case_token_stream(
             read_many_with_body_name_camel_case_stringified,
             payload_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified = generate_payload_try_from_payload_with_serialize_deserialize_stringified(
             read_many_with_body_name_camel_case_stringified,
             payload_camel_case_stringified,
             try_from_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
         );
         let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream = {
             let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_stringified = format!("{read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified}ErrorNamed");
@@ -3221,12 +3227,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let read_many_query_with_serialize_deserialize_camel_case_token_stream = generate_query_with_serialize_deserialize_camel_case_token_stream(
             read_many_name_camel_case_stringified,
             query_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified,
         );
         let read_many_query_try_from_read_many_query_with_serialize_deserialize_camel_case_token_stream = generate_query_try_from_query_with_serialize_deserialize_camel_case_token_stream(
             read_many_name_camel_case_stringified,
             query_camel_case_stringified,
             try_from_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let try_read_many_error_named_camel_case_token_stream = generate_try_error_named_token_stream(
@@ -3303,7 +3311,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{query_with_serialize_deserialize_token_stream}");
         let read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_token_stream ={
-            let read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_stringified = format!("{read_many_query_camel_case_token_stream}{try_from_camel_case_stringified}{read_many_query_camel_case_token_stream}WithSerializeDeserializeErrorNamed");
+            let read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_stringified = format!("{read_many_query_camel_case_token_stream}{try_from_camel_case_stringified}{read_many_query_camel_case_token_stream}{with_serialize_deserialize_camel_case_stringified}ErrorNamed");
             read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
@@ -4044,12 +4052,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let update_one_path_with_serialize_deserialize_camel_case_token_stream = generate_path_with_serialize_deserialize_camel_case_token_stream(
             update_one_name_camel_case_stringified,
             path_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_stringified(
             update_one_name_camel_case_stringified,
             path_camel_case_stringified,
             try_from_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
         );
         let update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_token_stream = {
             let update_one_path_try_from_update_one_path_with_serialize_deserialize_error_named_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_error_named_stringified(
@@ -5002,12 +5012,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let delete_one_path_with_serialize_deserialize_camel_case_token_stream = generate_path_with_serialize_deserialize_camel_case_token_stream(
             delete_one_name_camel_case_stringified,
             path_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_stringified(
             delete_one_name_camel_case_stringified,
             path_camel_case_stringified,
             try_from_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
         );
         let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream = {
             let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_stringified = generate_path_try_from_path_with_serialize_deserialize_error_named_stringified(
@@ -5301,12 +5313,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream = generate_payload_with_serialize_deserialize_camel_case_token_stream(
             delete_many_with_body_name_camel_case_stringified,
             payload_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_camel_case_stringified = generate_payload_try_from_payload_with_serialize_deserialize_stringified(
             delete_many_with_body_name_camel_case_stringified,
             payload_camel_case_stringified,
             try_from_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
         );
         let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream = {
             let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_stringified = format!(
@@ -5535,7 +5549,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #parameters_lower_case_token_stream: #delete_many_with_body_parameters_camel_case_token_stream,
                 ) -> Result<(), #try_delete_many_with_body_error_named_camel_case_token_stream> {
                     let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(
-                        &DeleteManyWithBodyPayloadWithSerializeDeserialize::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)
+                        &#delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)
                     ) {
                         Ok(value) => value,
                         Err(e) => {
@@ -6038,9 +6052,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let delete_many_query_with_serialize_deserialize_camel_case_token_stream = generate_query_with_serialize_deserialize_camel_case_token_stream(
             delete_many_name_camel_case_stringified,
             query_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_stringified = format!("{delete_many_name_camel_case_stringified}{query_camel_case_stringified}{try_from_camel_case_stringified}{delete_many_name_camel_case_stringified}{query_camel_case_stringified}WithSerializeDeserialize");
+        let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_stringified = format!("{delete_many_name_camel_case_stringified}{query_camel_case_stringified}{try_from_camel_case_stringified}{delete_many_name_camel_case_stringified}{query_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}");
         let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream = {
             let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_stringified = format!("{delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_stringified}ErrorNamed");
             delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -6050,6 +6065,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             delete_many_name_camel_case_stringified,
             query_camel_case_stringified,
             try_from_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_lower_case_token_stream = {
@@ -6916,9 +6932,10 @@ fn generate_path_camel_case_token_stream(
 fn generate_path_with_serialize_deserialize_camel_case_token_stream(
     original_name_camel_case_stringified: &str,
     path_camel_case_stringified: &str,
-    proc_macro_name_ident_stringified: &str
+    with_serialize_deserialize_camel_case_stringified: &str,
+    proc_macro_name_ident_stringified: &str,
 ) -> proc_macro2::TokenStream {
-    let path_with_serialize_deserialize_camel_case_stringified = format!("{original_name_camel_case_stringified}{path_camel_case_stringified}WithSerializeDeserialize");
+    let path_with_serialize_deserialize_camel_case_stringified = format!("{original_name_camel_case_stringified}{path_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}");
     path_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {path_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
@@ -6936,9 +6953,10 @@ fn generate_query_camel_case_token_stream(
 fn generate_query_with_serialize_deserialize_camel_case_token_stream(
     original_name_camel_case_stringified: &str,
     query_camel_case_stringified: &str,
+    with_serialize_deserialize_camel_case_stringified: &str,
     proc_macro_name_ident_stringified: &str
 ) -> proc_macro2::TokenStream {
-    let query_with_serialize_deserialize_camel_case_stringified = format!("{original_name_camel_case_stringified}{query_camel_case_stringified}WithSerializeDeserialize");
+    let query_with_serialize_deserialize_camel_case_stringified = format!("{original_name_camel_case_stringified}{query_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}");
     query_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)) 
 }
@@ -6947,9 +6965,10 @@ fn generate_query_try_from_query_with_serialize_deserialize_camel_case_token_str
     original_name_camel_case_stringified: &str,
     query_camel_case_stringified: &str,
     try_from_camel_case_stringified: &str,
+    with_serialize_deserialize_camel_case_stringified: &str,
     proc_macro_name_ident_stringified: &str
 ) -> proc_macro2::TokenStream {
-    let query_try_from_query_with_serialize_deserialize_camel_case_stringified = format!("{original_name_camel_case_stringified}{query_camel_case_stringified}{try_from_camel_case_stringified}{original_name_camel_case_stringified}{query_camel_case_stringified}WithSerializeDeserialize");
+    let query_try_from_query_with_serialize_deserialize_camel_case_stringified = format!("{original_name_camel_case_stringified}{query_camel_case_stringified}{try_from_camel_case_stringified}{original_name_camel_case_stringified}{query_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}");
     query_try_from_query_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_try_from_query_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE)) 
 }
@@ -6977,9 +6996,10 @@ fn generate_payload_camel_case_token_stream(
 fn generate_payload_with_serialize_deserialize_camel_case_token_stream(
     original_name_camel_case_stringified: &str,
     payload_camel_case_stringified: &str,
+    with_serialize_deserialize_camel_case_stringified: &str,
     proc_macro_name_ident_stringified: &str
 ) -> proc_macro2::TokenStream {
-    let payload_with_serialize_deserialize_camel_case_stringified = format!("{original_name_camel_case_stringified}{payload_camel_case_stringified}WithSerializeDeserialize");
+    let payload_with_serialize_deserialize_camel_case_stringified = format!("{original_name_camel_case_stringified}{payload_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}");
     payload_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {payload_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
@@ -7020,8 +7040,9 @@ fn generate_path_try_from_path_with_serialize_deserialize_stringified(
     original_name_camel_case_stringified: &str,
     path_camel_case_stringified: &str,
     try_from_camel_case_stringified: &str,
+    with_serialize_deserialize_camel_case_stringified: &str,
 ) -> std::string::String {
-    format!("{original_name_camel_case_stringified}{path_camel_case_stringified}{try_from_camel_case_stringified}{original_name_camel_case_stringified}{path_camel_case_stringified}WithSerializeDeserialize")
+    format!("{original_name_camel_case_stringified}{path_camel_case_stringified}{try_from_camel_case_stringified}{original_name_camel_case_stringified}{path_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}")
 }
 
 fn generate_path_try_from_path_with_serialize_deserialize_error_named_stringified(
@@ -7035,6 +7056,7 @@ fn generate_payload_try_from_payload_with_serialize_deserialize_stringified(
     original_name_camel_case_stringified: &str,
     payload_camel_case_stringified: &str,
     try_from_camel_case_stringified: &str,
+    with_serialize_deserialize_camel_case_stringified: &str,
 ) -> std::string::String {
-    format!("{original_name_camel_case_stringified}{payload_camel_case_stringified}{try_from_camel_case_stringified}{original_name_camel_case_stringified}{payload_camel_case_stringified}WithSerializeDeserialize")
+    format!("{original_name_camel_case_stringified}{payload_camel_case_stringified}{try_from_camel_case_stringified}{original_name_camel_case_stringified}{payload_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}")
 }
