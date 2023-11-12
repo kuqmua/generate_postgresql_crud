@@ -120,6 +120,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let derive_debug_token_stream = quote::quote!{#[derive(Debug)]};
     // let derive_debug_deserialize_token_stream = quote::quote!{#[derive(Debug, serde::Deserialize)]};
     let derive_debug_serialize_deserialize_token_stream = quote::quote!{#[derive(Debug, serde::Serialize, serde::Deserialize)]};
+    let try_camel_case_stringified = "Try";
+    let from_camel_case_stringified = "From";
+    let try_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&try_camel_case_stringified.to_string());
+    let try_from_camel_case_stringified = format!("{try_camel_case_stringified}{from_camel_case_stringified}");
+    let from_str_camel_case_stringified = format!("{from_camel_case_stringified}Str");
+    let from_str_camel_case_token_stream = {
+        from_str_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {from_str_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let from_str_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&from_str_camel_case_stringified.to_string());
+    let from_str_lower_case_token_stream = {
+        from_str_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {from_str_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let std_str_from_str_token_stream = quote::quote!{std::str::#from_str_camel_case_token_stream};
     let struct_options_token_stream = quote::quote! {
         #derive_debug_serialize_deserialize_token_stream
         pub struct #struct_options_ident_token_stream {
@@ -291,7 +306,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 strum_macros::EnumIter,
                 PartialEq,
                 Eq,
-                from_str::FromStr,
+                #from_str_lower_case_token_stream::#from_str_camel_case_token_stream,
             )]
             pub enum #column_ident_token_stream {
                 #(#column_variants),*
@@ -332,7 +347,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let error_named_camel_case_stringified = "ErrorNamed";
     let ident_column_select_from_str_error_named_camel_case_token_stream = {
-        let ident_column_select_from_str_error_named_camel_case_stringified = format!("{ident}{column_select_camel_case_stringified}FromStr{error_named_camel_case_stringified}");
+        let ident_column_select_from_str_error_named_camel_case_stringified = format!("{ident}{column_select_camel_case_stringified}{from_str_camel_case_stringified}{error_named_camel_case_stringified}");
         ident_column_select_from_str_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_column_select_from_str_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
@@ -525,7 +540,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {supported_values_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote! {
-                impl std::str::FromStr for #column_select_ident_token_stream {
+                impl #std_str_from_str_token_stream for #column_select_ident_token_stream {
                     type Err = #ident_column_select_from_str_error_named_camel_case_token_stream;
                     fn from_str(value: &str) -> Result<Self, Self::Err> {
                         match value {
@@ -714,10 +729,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{primary_key_try_from_sqlx_row_token_stream}");
-    let try_camel_case_stringified = "Try";
-    let from_camel_case_stringified = "From";
-    let try_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&try_camel_case_stringified.to_string());
-    let try_from_camel_case_stringified = format!("{try_camel_case_stringified}{from_camel_case_stringified}");
     let primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_uuid_wrapper_try_from_sqlx_row};
     let crate_server_postgres_uuid_wrapper_token_stream = quote::quote!{crate::server::postgres::uuid_wrapper};
     let uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_token_stream = {
@@ -731,7 +742,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let crate_server_postgres_regex_filter_regex_filter_token_stream = quote::quote!{crate::server::postgres::regex_filter::RegexFilter};
     let crate_server_postgres_postgres_bigint_postgres_bigint_token_stream = quote::quote!{crate::server::postgres::postgres_bigint::PostgresBigint};
     let crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_token_stream = {
-        let crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_stringified = format!("crate::server::postgres::postgres_bigint::PostgresBigintFromStr{error_named_camel_case_stringified}");
+        let crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_stringified = format!("crate::server::postgres::postgres_bigint::PostgresBigint{from_str_camel_case_stringified}{error_named_camel_case_stringified}");
         crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
@@ -763,7 +774,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_order_by_wrapper_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let ident_order_by_wrapper_from_str_error_named_name_token_stream = {
-        let ident_order_by_wrapper_from_str_error_named_name_stringified = format!("{ident_order_by_wrapper_stringified}FromStr{error_named_camel_case_stringified}");
+        let ident_order_by_wrapper_from_str_error_named_name_stringified = format!("{ident_order_by_wrapper_stringified}{from_str_camel_case_stringified}{error_named_camel_case_stringified}");
         ident_order_by_wrapper_from_str_error_named_name_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_order_by_wrapper_from_str_error_named_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
@@ -858,7 +869,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {default_message_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                impl std::str::FromStr for #ident_order_by_wrapper_name_token_stream {
+                impl #std_str_from_str_token_stream for #ident_order_by_wrapper_name_token_stream {
                     type Err = #ident_order_by_wrapper_from_str_error_named_name_token_stream;
                     fn from_str(value: &str) -> Result<Self, Self::Err> {
                         let string_deserialized = value.to_string();
@@ -1032,7 +1043,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 Some(offset_slice_next_comma_index) => {
                                     match offset_slice.get(0..offset_slice_next_comma_index) {
                                         Some(possible_column) => match {
-                                            use std::str::FromStr;
+                                            use #std_str_from_str_token_stream;
                                             #column_ident_token_stream::from_str(possible_column)
                                         } {
                                             Ok(column) => column,
@@ -1051,7 +1062,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 }
                                 None => match offset_slice.get(0..) {
                                     Some(possible_column) => match {
-                                        use std::str::FromStr;
+                                        use #std_str_from_str_token_stream;
                                         #column_ident_token_stream::from_str(possible_column)
                                     } {
                                         Ok(column) => column,
@@ -1093,7 +1104,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 Some(offset_slice_next_comma_index) => {
                                     match offset_slice.get(0..offset_slice_next_comma_index) {
                                         Some(possible_order) => match {
-                                            use std::str::FromStr;
+                                            use #std_str_from_str_token_stream;
                                             crate::server::postgres::order::Order::from_str(possible_order)
                                         } {
                                             Ok(order) => Some(order),
@@ -1112,7 +1123,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 }
                                 None => match offset_slice.get(0..) {
                                     Some(possible_order) => match {
-                                        use std::str::FromStr;
+                                        use #std_str_from_str_token_stream;
                                         crate::server::postgres::order::Order::from_str(possible_order)
                                     } {
                                         Ok(order) => Some(order),
@@ -3405,7 +3416,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     fn try_from(value: #read_many_query_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
                         let select = match value.select {
                             Some(value) => match {
-                                use std::str::FromStr;
+                                use #std_str_from_str_token_stream;
                                 #column_select_ident_token_stream::from_str(&value)
                             } {
                                 Ok(value) => Some(value),
@@ -3422,7 +3433,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #(#fields_with_excluded_id_token_stream)*
                         let order_by = match value.order_by {
                             Some(value) => match {
-                                use std::str::FromStr;
+                                use #std_str_from_str_token_stream;
                                 #ident_order_by_wrapper_name_token_stream::from_str(&value)
                             } {
                                 Ok(value) => Some(value),
@@ -3436,7 +3447,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             None => None
                         };
                         let limit = match {
-                            use std::str::FromStr;
+                            use #std_str_from_str_token_stream;
                             #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream::from_str(&value.limit)
                         } {
                             Ok(value) => value,
@@ -3449,7 +3460,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         let offset = match value.offset {
                             Some(value) => match {
-                                use std::str::FromStr;
+                                use #std_str_from_str_token_stream;
                                 #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream::from_str(&value)
                             } {
                                 Ok(value) => Some(value),
