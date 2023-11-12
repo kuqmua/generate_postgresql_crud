@@ -2915,7 +2915,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         increment = value;
                                     },
                                     None => {
-                                        //todo - think what to do with TryGenerateBindIncrementsErrorNamed and how handle it 
+                                        //todo - think what to do with #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream and how handle it 
                                         let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::CheckedAdd { 
                                             checked_add: std::string::String::from("checked_add is None"), 
                                             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
@@ -3747,7 +3747,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         increment = value;
                                     },
                                     None => {
-                                        //todo - think what to do with TryGenerateBindIncrementsErrorNamed and how handle it 
+                                        //todo - #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream and how handle it 
                                         let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::CheckedAdd { 
                                             checked_add: std::string::String::from("checked_add is None"), 
                                             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
