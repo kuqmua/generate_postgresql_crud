@@ -5,6 +5,23 @@ mod from_log_and_return_error;
 mod generate_postgres_transaction;
 mod generate_postgres_execute_query;
 
+// Rust type	Postgres type(s)
+// bool	BOOL
+// i8	“CHAR”
+// i16	SMALLINT, SMALLSERIAL, INT2
+// i32	INT, SERIAL, INT4
+// i64	BIGINT, BIGSERIAL, INT8
+// f32	REAL, FLOAT4
+// f64	DOUBLE PRECISION, FLOAT8
+// &str, String	VARCHAR, CHAR(N), TEXT, NAME
+// &[u8], Vec<u8>	BYTEA
+// ()	VOID
+// PgInterval	INTERVAL
+// PgRange<T>	INT8RANGE, INT4RANGE, TSRANGE, TSTZRANGE, DATERANGE, NUMRANGE
+// PgMoney	MONEY
+// PgLTree	LTREE
+// PgLQuery	LQUERY
+
 //todo decide where to do error log (maybe add in some places)
 //todo rename ForUrlEncoding prefix
 //todo clear unnesesary generated returns.
@@ -158,7 +175,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote! {
             impl std::convert::From<#ident> for #struct_options_ident_token_stream {
                 fn from(value: #ident) -> Self {
-                    #struct_options_ident_token_stream {                        
+                    Self {                        
                         #(#ident_option_variants_token_stream),*
                     }
                 }
@@ -259,7 +276,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote! {
                     impl std::convert::From<#struct_name_token_stream> for #struct_options_ident_token_stream {
                         fn from(#value_token_stream: #struct_name_token_stream) -> Self {
-                            #struct_options_ident_token_stream {
+                            Self {
                                 #(#fields_options_token_stream),*
                             }
                         }
@@ -4689,7 +4706,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let #id_field_ident = match #sqlx_types_uuid_token_stream::parse_str(value.#id_field_ident.to_inner()) {
                             Ok(value) => #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::from(value),
                             Err(e) => {
-                                return Err(#update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_error_named_camel_case_token_stream::#not_uuid_token_camel_case_stream {
+                                return Err(Self::Error::#not_uuid_token_camel_case_stream {
                                     #not_uuid_token_lower_case_stream: e,
                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                 });
@@ -5137,7 +5154,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     fn try_from(value: #delete_one_path_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
                         match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value.#id_field_ident) {
                             Ok(value) => Ok(Self { #id_field_ident: value }),
-                            Err(e) => Err(#delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream::#not_uuid_token_camel_case_stream {
+                            Err(e) => Err(Self::Error::#not_uuid_token_camel_case_stream {
                                 #not_uuid_token_lower_case_stream: e,
                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                             }),
@@ -5489,7 +5506,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             >>() {
                                 Ok(value) => Some(value),
                                 Err(e) => {
-                                    return Err(#delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream::#not_uuid_token_camel_case_stream {
+                                    return Err(Self::Error::#not_uuid_token_camel_case_stream {
                                         #not_uuid_token_lower_case_stream: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     });
@@ -6213,7 +6230,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     {
                         Ok(value) => Some(value),
                         Err(e) => {
-                            return Err(#delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream::#not_uuid_token_camel_case_stream {
+                            return Err(Self::Error::#not_uuid_token_camel_case_stream {
                                 #not_uuid_token_lower_case_stream: e,
                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                             });
