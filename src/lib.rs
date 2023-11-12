@@ -5,6 +5,22 @@ mod from_log_and_return_error;
 mod generate_postgres_transaction;
 mod generate_postgres_execute_query;
 
+
+
+// trait Something {
+//     fn something();
+// }
+
+// impl Something for i8 {
+//     fn something() {
+//         println!("");
+//     }
+// }
+
+// impl Something for sqlx::types::Uuid {
+//     fn something() {}
+// }
+
 // Rust type	Postgres type(s)
 // bool	BOOL
 // i8	“CHAR”
@@ -102,6 +118,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let id_field_type = &id_field.ty;
     // println!("{id_field:#?}");
+    let sqlx_types_uuid_stringified = "sqlx::types::Uuid";
+    let sqlx_types_uuid_token_stream = {
+        sqlx_types_uuid_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {sqlx_types_uuid_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    {
+        let id_field_ident_handle = quote::quote!{#id_field_type}.to_string().replace(" ", "");
+        if let false = id_field_ident_handle == sqlx_types_uuid_stringified {
+            panic!("{proc_macro_name_ident_stringified} primary_key is not type {sqlx_types_uuid_stringified}");
+        }
+    }
     let id_field_ident = id_field.ident.clone()
         .unwrap_or_else(|| {
             panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
@@ -111,20 +138,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         id_field_ident_quotes_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {id_field_ident_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    let struct_options_ident_token_stream = {
-        let struct_options_ident_stringified = format!("{ident}Options");
-        struct_options_ident_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_options_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
-    let fields_options = fields_named.iter().map(|field| {
-        let field_vis = &field.vis;
-        let field_ident = &field.ident;
-        let field_type_path = &field.ty;
-        quote::quote! {
-            #[serde(skip_serializing_if = "Option::is_none")]
-            #field_vis #field_ident: Option<#field_type_path>
-        }
-    });
     let table_name_declaration_token_stream = {
         let table_name_quotes_token_stream = {
             let table_name_quotes_stringified = format!("\"{table_name_stringified}\"");
@@ -152,36 +165,76 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {from_str_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let std_str_from_str_token_stream = quote::quote!{std::str::#from_str_camel_case_token_stream};
-    let struct_options_token_stream = quote::quote! {
-        #derive_debug_serialize_deserialize_token_stream
-        pub struct #struct_options_ident_token_stream {
-            #(#fields_options),*
+    let struct_options_ident_token_stream = {
+        let struct_options_ident_stringified = format!("{ident}Options");
+        struct_options_ident_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_options_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let struct_options_token_stream = {
+        // let fields_options = fields_named.iter().map(|field| {
+        //     let field_vis = &field.vis;
+        //     let field_ident = &field.ident;
+        //     let field_type_path = &field.ty;
+        //     quote::quote! {
+        //         #[serde(skip_serializing_if = "Option::is_none")]
+        //         #field_vis #field_ident: Option<#field_type_path>
+        //     }
+        // });
+        //
+        let field_option_id_token_stream = quote::quote!{
+            pub #id_field_ident: crate::server::postgres::uuid_wrapper::PossibleUuidWrapper
+        };
+        let fields_options_excluding_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+            true => None,
+            false => {
+                let field_vis = &field.vis;
+                let field_ident = &field.ident;
+                let field_type_path = &field.ty;
+                Some(quote::quote!{
+                    #[serde(skip_serializing_if = "Option::is_none")]
+                    #field_vis #field_ident: Option<#field_type_path>
+                })
+            },
+        });
+        //
+        quote::quote! {
+            #derive_debug_serialize_deserialize_token_stream
+            pub struct #struct_options_ident_token_stream {
+                // #(#fields_options),*
+                #field_option_id_token_stream,
+                #(#fields_options_excluding_id_token_stream),*
+            }
         }
     };
     let from_ident_for_ident_options_token_stream = {
-        let ident_option_variants_token_stream = {
-            fields_named.iter()
-                .map(|field| {
-                    let field_ident = field.ident
-                        .clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    quote::quote! {
-                        #field_ident: Some(value.#field_ident)
-                    }
-                })
+        let ident_option_variant_id_token_stream = quote::quote!{
+            #id_field_ident: Option<value.#id_field_ident>
         };
+        let ident_option_variants_excluding_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
+            true => None,
+            false => {
+                let field_ident = field.ident
+                    .clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                Some(quote::quote!{
+                    #field_ident: Some(value.#field_ident.into())
+                })
+            },
+        });
         quote::quote! {
             impl std::convert::From<#ident> for #struct_options_ident_token_stream {
                 fn from(value: #ident) -> Self {
                     Self {                        
-                        #(#ident_option_variants_token_stream),*
+                        #ident_option_variant_id_token_stream
+                        #(#ident_option_variants_excluding_id_token_stream),*
                     }
                 }
             }
         }
     };
+    // println!("{from_ident_for_ident_options_token_stream}");
     let column_variants = {
         let fields_named_enumerated = fields_named
             .iter()
@@ -377,7 +430,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let eo_display_attribute_token_stream = quote::quote!{#[eo_display]};
     let eo_display_with_serialize_deserialize_token_stream = quote::quote!{#[eo_display_with_serialize_deserialize]};
     let eo_vec_error_occurence_token_stream = quote::quote!{#[eo_vec_error_occurence]};
-    let sqlx_types_uuid_token_stream = quote::quote!{sqlx::types::Uuid};
     let sqlx_row_token_stream = quote::quote!{sqlx::Row};
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
@@ -6862,18 +6914,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{common_token_stream}");
     let gen = quote::quote! {
-        #common_token_stream
+        // #common_token_stream
 
-        #create_many_token_stream
-        #create_one_token_stream
-        #read_one_token_stream
-        #read_many_with_body_token_stream
-        #read_many_token_stream
-        #update_one_token_stream
-        #update_many_token_stream
-        #delete_one_token_stream
-        #delete_many_with_body_token_stream
-        #delete_many_token_stream
+        // #create_many_token_stream
+        // #create_one_token_stream
+        // #read_one_token_stream
+        // #read_many_with_body_token_stream
+        // #read_many_token_stream
+        // #update_one_token_stream
+        // #update_many_token_stream
+        // #delete_one_token_stream
+        // #delete_many_with_body_token_stream
+        // #delete_many_token_stream
     };
     // if ident == "" {
     //    println!("{gen}");
