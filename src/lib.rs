@@ -1465,6 +1465,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let one_camel_case_stringified = "One";
     let with_body_camel_case_stringified = "WithBody";
     let many_camel_case_stringified = "Many";
+    let create_camel_case_stringified = "Create";
+    let read_camel_case_stringified = "Read";
+    let update_camel_case_stringified = "Update";
+    let delete_camel_case_stringified = "Delete";
     let underscore_vec_name_stringified = "_vec";
     let update_name_stringified = "update";
     let as_name_stringified = "as";
@@ -1490,7 +1494,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";//
     let create_many_token_stream = {
-        let create_many_name_camel_case_stringified = format!("Create{many_camel_case_stringified}");
+        let create_many_name_camel_case_stringified = format!("{create_camel_case_stringified}{many_camel_case_stringified}");
         let create_many_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_many_name_camel_case_stringified.to_string());
         let create_many_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &create_many_name_camel_case_stringified,
@@ -1873,7 +1877,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{create_many_token_stream}");
     let create_one_token_stream = {
-        let create_one_name_camel_case_stringified = format!("Create{one_camel_case_stringified}");
+        let create_one_name_camel_case_stringified = format!("{create_camel_case_stringified}{one_camel_case_stringified}");
         let create_one_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_one_name_camel_case_stringified.to_string());
         let create_one_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &create_one_name_camel_case_stringified,
@@ -2159,7 +2163,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{create_one_token_stream}"); 
     let read_one_token_stream = {
-        let read_one_name_camel_case_stringified = format!("Read{one_camel_case_stringified}");
+        let read_one_name_camel_case_stringified = format!("{read_camel_case_stringified}{one_camel_case_stringified}");
         let read_one_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_one_name_camel_case_stringified.to_string());
         let read_one_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &read_one_name_camel_case_stringified,
@@ -2523,7 +2527,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{read_one_token_stream}");
     let read_many_with_body_token_stream = {
-        let read_many_with_body_name_camel_case_stringified = format!("Read{many_camel_case_stringified}{with_body_camel_case_stringified}");
+        let read_many_with_body_name_camel_case_stringified = format!("{read_camel_case_stringified}{many_camel_case_stringified}{with_body_camel_case_stringified}");
         let read_many_with_body_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_many_with_body_name_camel_case_stringified.to_string());
         let read_many_with_body_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &read_many_with_body_name_camel_case_stringified,
@@ -3277,7 +3281,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{read_many_with_body_token_stream}");
     let read_many_token_stream = {
-        let read_many_name_camel_case_stringified = format!("Read{many_camel_case_stringified}");
+        let read_many_name_camel_case_stringified = format!("{read_camel_case_stringified}{many_camel_case_stringified}");
         let read_many_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_many_name_camel_case_stringified.to_string());
         let read_many_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &read_many_name_camel_case_stringified,
@@ -4102,7 +4106,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     // println!("{read_many_token_stream}");
     //todo WHY ITS RETURN SUCCESS EVEN IF ROW DOES NOT EXISTS?
     let update_one_token_stream = {
-        let update_one_name_camel_case_stringified = format!("Update{one_camel_case_stringified}");
+        let update_one_name_camel_case_stringified = format!("{update_camel_case_stringified}{one_camel_case_stringified}");
         let update_one_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_one_name_camel_case_stringified.to_string());
         let update_one_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &update_one_name_camel_case_stringified,
@@ -4523,7 +4527,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{update_one_token_stream}");
     let update_many_token_stream = {
-        let update_many_name_camel_case_stringified = format!("Update{many_camel_case_stringified}");
+        let update_many_name_camel_case_stringified = format!("{update_camel_case_stringified}{many_camel_case_stringified}");
         let update_many_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&update_many_name_camel_case_stringified.to_string());
         let update_many_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &update_many_name_camel_case_stringified,
@@ -5058,7 +5062,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{update_many_token_stream}");
     let delete_one_token_stream = {
-        let delete_one_name_camel_case_stringified = format!("Delete{one_camel_case_stringified}");
+        let delete_one_name_camel_case_stringified = format!("{delete_camel_case_stringified}{one_camel_case_stringified}");
         let delete_one_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_one_name_camel_case_stringified.to_string());
         let delete_one_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &delete_one_name_camel_case_stringified,
@@ -5355,7 +5359,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{delete_one_token_stream}");
     let delete_many_with_body_token_stream = {
-        let delete_many_with_body_name_camel_case_stringified = format!("Delete{many_camel_case_stringified}{with_body_camel_case_stringified}");
+        let delete_many_with_body_name_camel_case_stringified = format!("{delete_camel_case_stringified}{many_camel_case_stringified}{with_body_camel_case_stringified}");
         let delete_many_with_body_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_many_with_body_name_camel_case_stringified.to_string());
         let delete_many_with_body_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &delete_many_with_body_name_camel_case_stringified,
@@ -6090,7 +6094,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{delete_many_with_body_token_stream}");
     let delete_many_token_stream = {
-        let delete_many_name_camel_case_stringified = format!("Delete{many_camel_case_stringified}");
+        let delete_many_name_camel_case_stringified = format!("{delete_camel_case_stringified}{many_camel_case_stringified}");
         let delete_many_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&delete_many_name_camel_case_stringified.to_string());
         let delete_many_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &delete_many_name_camel_case_stringified,
