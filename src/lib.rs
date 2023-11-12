@@ -6117,11 +6117,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_from_camel_case_stringified,
             with_serialize_deserialize_camel_case_stringified,
         );
-        let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream = {
-            let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_stringified = format!("{delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_stringified}{error_named_camel_case_stringified}");
-            delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
+        let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_error_named_camel_case_token_stream = generate_query_try_from_query_with_serialize_deserialize_error_named_camel_case_token_stream(
+            &delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_stringified,
+            error_named_camel_case_stringified,
+            &proc_macro_name_ident_stringified
+        );
         let delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_token_stream = generate_query_try_from_query_with_serialize_deserialize_camel_case_token_stream(
             delete_many_name_camel_case_stringified,
             query_camel_case_stringified,
@@ -7141,4 +7141,14 @@ fn generate_query_try_from_query_with_serialize_deserialize_camel_case_stringifi
     format!(
         "{original_name_camel_case_stringified}{query_camel_case_stringified}{try_from_camel_case_stringified}{original_name_camel_case_stringified}{query_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}"
     )
+}
+
+fn generate_query_try_from_query_with_serialize_deserialize_error_named_camel_case_token_stream(
+    query_try_from_query_with_serialize_deserialize_camel_case_stringified: &str,
+    error_named_camel_case_stringified: &str,
+    proc_macro_name_ident_stringified: &str
+) -> proc_macro2::TokenStream {
+    let query_try_from_query_with_serialize_deserialize_error_named_camel_case_stringified = format!("{query_try_from_query_with_serialize_deserialize_camel_case_stringified}{error_named_camel_case_stringified}");
+    query_try_from_query_with_serialize_deserialize_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {query_try_from_query_with_serialize_deserialize_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
