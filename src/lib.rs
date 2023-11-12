@@ -336,6 +336,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         ident_column_select_from_str_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_column_select_from_str_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+    let crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream = {
+        let crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_stringified = format!("crate::server::postgres::bind_query::TryGenerateBindIncrements{error_named_camel_case_stringified}");
+        crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let eo_error_occurence_attribute_token_stream = quote::quote!{#[eo_error_occurence]};
     let eo_display_attribute_token_stream = quote::quote!{#[eo_display]};
     let eo_display_with_serialize_deserialize_token_stream = quote::quote!{#[eo_display_with_serialize_deserialize]};
@@ -715,12 +720,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let try_from_camel_case_stringified = format!("{try_camel_case_stringified}{from_camel_case_stringified}");
     let primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_uuid_wrapper_try_from_sqlx_row};
     let crate_server_postgres_uuid_wrapper_token_stream = quote::quote!{crate::server::postgres::uuid_wrapper};
-    let crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::UuidWrapperTryFromPossibleUuidWrapperErrorNamed};
+    let uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_token_stream = {
+        let uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_stringified = format!("UuidWrapper{try_from_camel_case_stringified}PossibleUuidWrapper{error_named_camel_case_stringified}");
+        uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::#uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_token_stream};
     let crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::UuidWrapper};
     let crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::PossibleUuidWrapper};
     let crate_server_postgres_regex_filter_regex_filter_token_stream = quote::quote!{crate::server::postgres::regex_filter::RegexFilter};
     let crate_server_postgres_postgres_bigint_postgres_bigint_token_stream = quote::quote!{crate::server::postgres::postgres_bigint::PostgresBigint};
-    let crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_token_stream = quote::quote!{crate::server::postgres::postgres_bigint::PostgresBigintFromStrErrorNamed};
+    let crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_token_stream = {
+        let crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_stringified = format!("crate::server::postgres::postgres_bigint::PostgresBigintFromStr{error_named_camel_case_stringified}");
+        crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let primary_key_uuid_wrapper_try_from_sqlx_row_token_stream = {
         let primary_key_str_token_stream = {
             let primary_key_str_stringified = format!("\"{id_field_ident}\"");
@@ -2902,7 +2916,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     },
                                     None => {
                                         //todo - think what to do with TryGenerateBindIncrementsErrorNamed and how handle it 
-                                        let e = crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed::CheckedAdd { 
+                                        let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::CheckedAdd { 
                                             checked_add: std::string::String::from("checked_add is None"), 
                                             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
                                         };
@@ -3734,7 +3748,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     },
                                     None => {
                                         //todo - think what to do with TryGenerateBindIncrementsErrorNamed and how handle it 
-                                        let e = crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed::CheckedAdd { 
+                                        let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::CheckedAdd { 
                                             checked_add: std::string::String::from("checked_add is None"), 
                                             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
                                         };
@@ -6600,7 +6614,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 },
                                                 None => {
                                                     return #try_delete_many_response_variants_token_stream::BindQuery {
-                                                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed::CheckedAdd { //todo remove it? refactor it?
+                                                        checked_add: #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::CheckedAdd { //todo remove it? refactor it?
                                                             checked_add: std::string::String::from("checked_add is None"), 
                                                             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
                                                         }.into_serialize_deserialize_version(),
