@@ -7541,22 +7541,108 @@ impl std::fmt::Display for SupportedAttributeType {
     }
 }
 
-// fn try_match(
-//     supported_field_type: &SupportedFieldType,
-//     SupportedAttributeType: &SupportedAttributeType
-// ) -> Option<()> {
-//     match supported_field_type {
+fn try_match_supported_field_type_with_supported_attribute_type(
+    supported_attribute_type: &SupportedAttributeType,
+    supported_field_type: &SupportedFieldType,
+) -> bool {
+    match (supported_attribute_type, supported_field_type) {
+        (SupportedAttributeType::Bool, SupportedFieldType::StdPrimitiveBool) => true,
+        (SupportedAttributeType::Char, SupportedFieldType::StdPrimitiveI8) => true,
+        (SupportedAttributeType::Smallint, SupportedFieldType::StdPrimitiveI16) => true,
+        (SupportedAttributeType::Smallserial, SupportedFieldType::StdPrimitiveI16) => true,
+        (SupportedAttributeType::Int2, SupportedFieldType::StdPrimitiveI16) => true,
+        (SupportedAttributeType::Int, SupportedFieldType::StdPrimitiveI32) => true,
+        (SupportedAttributeType::Serial, SupportedFieldType::StdPrimitiveI16) => true,
+        (SupportedAttributeType::Int4, SupportedFieldType::StdPrimitiveI16) => true,
+        (SupportedAttributeType::Bigint, SupportedFieldType::StdPrimitiveI64) => true,
+        (SupportedAttributeType::Bigserial, SupportedFieldType::StdPrimitiveI64) => true,
+        (SupportedAttributeType::Int8, SupportedFieldType::StdPrimitiveI64) => true,
+        (SupportedAttributeType::Real, SupportedFieldType::StdPrimitiveF32) => true,
+        (SupportedAttributeType::Float4, SupportedFieldType::StdPrimitiveF32) => true,
+        (SupportedAttributeType::DoublePrecision, SupportedFieldType::StdPrimitiveF64) => true,
+        (SupportedAttributeType::Float8, SupportedFieldType::StdPrimitiveF64) => true,
+        (SupportedAttributeType::Varchar, SupportedFieldType::StdPrimitiveStr) => true,
+        (SupportedAttributeType::Varchar, SupportedFieldType::StdStringString) => true,
+        (SupportedAttributeType::Charn, SupportedFieldType::StdPrimitiveStr) => true, //CHAR(N) wtf????
+        (SupportedAttributeType::Charn, SupportedFieldType::StdStringString) => true, //CHAR(N) wtf????
+        (SupportedAttributeType::Text, SupportedFieldType::StdPrimitiveStr) => true,
+        (SupportedAttributeType::Text, SupportedFieldType::StdStringString) => true,
+        (SupportedAttributeType::Name, SupportedFieldType::StdPrimitiveStr) => true,
+        (SupportedAttributeType::Name, SupportedFieldType::StdStringString) => true,
+        (SupportedAttributeType::Bytea, SupportedFieldType::StdPrimitiveArrayStdPrimitiveU8) => {
+            true
+        }
+        (SupportedAttributeType::Bytea, SupportedFieldType::StdVecVecStdPrimitiveU8) => true,
+        (SupportedAttributeType::Void, SupportedFieldType::StdPrimitiveUnit) => true,
+        (SupportedAttributeType::Interval, SupportedFieldType::SqlxPostgresTypesPgInterval) => true,
+        //
+        // (SupportedAttributeType::Int8range, SupportedFieldType::) => true,
+        // (SupportedAttributeType::Int4range, SupportedFieldType::) => true,
+        // (SupportedAttributeType::Tsrange, SupportedFieldType::) => true,
+        // (SupportedAttributeType::Tstzrange, SupportedFieldType::) => true,
+        // (SupportedAttributeType::Daterange, SupportedFieldType::) => true,
+        // (SupportedAttributeType::Numrange, SupportedFieldType::) => true,
+        //
+        // SqlxPostgresTypesPgRangeStdPrimitiveI32,
+        // SqlxPostgresTypesPgRangeStdPrimitiveI64,
+        // SqlxPostgresTypesPgRangeSqlxTypesDecimal,
+        // SqlxPostgresTypesPgRangeSqlxTypesBigDecimal,
+        // SqlxPostgresTypesPgRangeSqlxTypesTimeDate,
+        // SqlxPostgresTypesPgRangeSqlxTypesChronoNaiveDate,
+        // SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoFixedOffset,
+        // SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoLocal,
+        // SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoUtc,
+        // SqlxPostgresTypesPgRangeSqlxTypesChronoNaiveDateTime,
+        // SqlxPostgresTypesPgRangeSqlxTypesTimePrimitiveDateTime,
+        // SqlxPostgresTypesPgRangeSqlxTypesTimeOffsetDateTime,
+        //
+        (SupportedAttributeType::Money, SupportedFieldType::SqlxPostgresTypesPgMoney) => true,
+        (SupportedAttributeType::Ltree, SupportedFieldType::SqlxPostgresTypesPgLTree) => true,
+        (SupportedAttributeType::Lquery, SupportedFieldType::SqlxPostgresTypesPgLQuery) => true,
 
-//     }
-// }
-// impl std::convert::TryFrom<SupportedFieldType> for SupportedAttributeType {
-//     type Error = std::string::String;
-//     fn try_from(value: SupportedFieldType) -> Result<Self, Self::Error> {
-//         match value {
+        (SupportedAttributeType::Numeric, SupportedFieldType::SqlxTypesBigDecimal) => true,
+        (SupportedAttributeType::Numeric, SupportedFieldType::SqlxTypesDecimal) => true,
 
-//         }
-//     }
-// }
+        (
+            SupportedAttributeType::Timestamptz,
+            SupportedFieldType::SqlxTypesChronoDateTimeSqlxTypesChronoUtc,
+        ) => true,
+        (
+            SupportedAttributeType::Timestamptz,
+            SupportedFieldType::SqlxTypesChronoDateTimeSqlxTypesChronoLocal,
+        ) => true,
+        (SupportedAttributeType::Timestamptz, SupportedFieldType::SqlxTypesTimeOffsetDateTime) => {
+            true
+        }
+        (SupportedAttributeType::Timestamp, SupportedFieldType::SqlxTypesChronoNaiveDateTime) => {
+            true
+        }
+        (SupportedAttributeType::Timestamp, SupportedFieldType::SqlxTypesTimePrimitiveDateTime) => {
+            true
+        }
+        (SupportedAttributeType::Date, SupportedFieldType::SqlxTypesChronoNaiveDate) => true,
+        (SupportedAttributeType::Date, SupportedFieldType::SqlxTypesTimeDate) => true,
+        (SupportedAttributeType::Time, SupportedFieldType::SqlxTypesChronoNaiveTime) => true,
+        (SupportedAttributeType::Time, SupportedFieldType::SqlxTypesTimeTime) => true,
+        // (SupportedAttributeType::Timetz, SupportedFieldType::) => true,//todo
+        (SupportedAttributeType::Uuid, SupportedFieldType::SqlxTypesUuid) => true,
+
+        (SupportedAttributeType::Inet, SupportedFieldType::SqlxTypesIpnetworkIpNetwork) => true,
+        // (SupportedAttributeType::Inet, SupportedFieldType::IpAddr) => true,//todo
+        (SupportedAttributeType::Cidr, SupportedFieldType::SqlxTypesIpnetworkIpNetwork) => true,
+        // (SupportedAttributeType::Cidr, SupportedFieldType::IpAddr) => true,//todo
+        (SupportedAttributeType::Macaddr, SupportedFieldType::SqlxTypesMacAddressMacAddress) => {
+            true
+        }
+        (SupportedAttributeType::Bit, SupportedFieldType::SqlxTypesBitVecStdPrimitiveU32) => true, //maybe not correct
+        (SupportedAttributeType::Varbit, SupportedFieldType::SqlxTypesBitVecStdPrimitiveU32) => {
+            true
+        } //maybe not correct
+        // (SupportedAttributeType::Json, SupportedFieldType::) => true,//todo
+        // (SupportedAttributeType::Jsonb, SupportedFieldType::) => true,//todo
+        _ => false,
+    }
+}
 
 impl std::str::FromStr for SupportedAttributeType {
     type Err = std::string::String;
