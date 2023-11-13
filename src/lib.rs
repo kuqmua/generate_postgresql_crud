@@ -71,7 +71,59 @@ mod generate_postgres_execute_query;
     GeneratePostgresqlCrud,
     attributes(
         generate_postgresql_crud_primary_key,
-        //todo add attributes for postgresql types
+
+        generate_postgresql_crud_bool,
+        generate_postgresql_crud_char,
+        generate_postgresql_crud_smallint,
+        generate_postgresql_crud_smallserial,
+        generate_postgresql_crud_int2,
+        generate_postgresql_crud_int,
+        generate_postgresql_crud_serial, 
+        generate_postgresql_crud_int4,
+        generate_postgresql_crud_bigint,
+        generate_postgresql_crud_bigserial, 
+        generate_postgresql_crud_int8,
+        generate_postgresql_crud_real, 
+        generate_postgresql_crud_float4,
+        generate_postgresql_crud_double,
+        generate_postgresql_crud_precision,
+        generate_postgresql_crud_float8,
+        generate_postgresql_crud_varchar,
+        generate_postgresql_crud_charn, //wtf????
+        generate_postgresql_crud_text,
+        generate_postgresql_crud_name,
+        generate_postgresql_crud_bytea,
+        generate_postgresql_crud_void,
+        generate_postgresql_crud_interval,
+        generate_postgresql_crud_int8range,
+        generate_postgresql_crud_int4range,
+        generate_postgresql_crud_tsrange,
+        generate_postgresql_crud_tstzrange,
+        generate_postgresql_crud_daterange,
+        generate_postgresql_crud_numrange,
+        generate_postgresql_crud_money,
+        generate_postgresql_crud_ltree,
+        generate_postgresql_crud_lquery,
+
+        generate_postgresql_crud_numeric,
+
+        generate_postgresql_crud_timestamptz,
+        generate_postgresql_crud_timestamp,
+        generate_postgresql_crud_date,
+        generate_postgresql_crud_time,
+        generate_postgresql_crud_timetz,
+        generate_postgresql_crud_uuid,
+
+        generate_postgresql_crud_inet,
+        generate_postgresql_crud_cidr,
+
+        generate_postgresql_crud_macaddr,
+
+        generate_postgresql_crud_bit,
+        generate_postgresql_crud_varbit,
+
+        generate_postgresql_crud_json,
+        generate_postgresql_crud_jsonb
     )
 )]//todo check on postgresql max length value of type
 pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {//todo in few cases rows affected is usefull. (update delete for example). if 0 afftected -maybe its error? or maybe use select then update\delete?(rewrite query)
@@ -97,64 +149,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     } else {
         panic!("{proc_macro_name_ident_stringified} supports only syn::Fields::Named");
     };
-    fields_named.iter().for_each(|element|{
-        println!("{:#?}", element.attrs);
-    });
-    let suported_types = [
-        "bool",
-        "char",
-        "smallint",
-        "smallserial",
-        "int2",
-        "int",
-        "serial", 
-        "int4",
-        "bigint",
-        "bigserial", 
-        "int8",
-        "real", 
-        "float4",
-        "double",
-        "precision",
-        "float8",
-        "varcher",
-        "CHAR(N)", //wtf????
-        "text",
-        "name",
-        "bytea",
-        "void",
-        "interval",
-        "int8range",
-        "int4range",
-        "tsrange",
-        "tstzrange",
-        "daterange",
-        "numrange",
-        "money",
-        "ltree",
-        "lquery",
-
-        "numeric",
-
-        "timestamptz",
-        "timestamp",
-        "date",
-        "time",
-        "timetz",
-        "uuid",
-
-        "inet",
-        "cidr",
-
-        "macaddr",
-
-        "bit",
-        "varbit",
-
-        "json",
-        "jsonb"
-    ];
-    //
     let id_field = {
         let id_attr_name = "generate_postgresql_crud_primary_key";
         let mut id_field_option = None;
@@ -193,10 +187,46 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             panic!("{proc_macro_name_ident_stringified} primary_key is not type {sqlx_types_uuid_stringified}");
         }
     }
+    //
     let id_field_ident = id_field.ident.clone()
         .unwrap_or_else(|| {
             panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
         });
+    fields_named.iter().filter(|field|*field != &id_field).for_each(|element|{
+        let field_ident = element.ident
+            .clone()
+            .unwrap_or_else(|| {
+                panic!("{proc_macro_name_ident_stringified} field.ident is None")
+            });
+        let f: syn::Field =  element.clone();
+        let attrs = &element.attrs;
+        match attrs.iter().fold(None, |mut acc, element| {
+            let generated_path = proc_macro_helpers::error_occurence::generate_path_from_segments::generate_path_from_segments(&element.path.segments);
+            match {
+                use std::str::FromStr;
+                SupportedAttributeType::from_str(&generated_path)
+            } {
+                Ok(value) => match acc {
+                    Some(acc_value) => panic!("{proc_macro_name_ident_stringified} supported only one attribute per field, detected both: {acc_value} and {value}"),
+                    None => {
+                        acc = Some(value);
+                    }
+                },
+                Err(e) => panic!("{proc_macro_name_ident_stringified} SupportedAttributeType::from_str {generated_path} error: {e}")
+            }
+            acc
+        }) {
+            Some(value) => {
+                println!("{value}");
+                let ty = &element.ty;
+                let ty_stringified = quote::quote!{#ty}.to_string().replace(" ", "");
+                // println!("{}", );
+                
+            }
+            None => panic!("{proc_macro_name_ident_stringified} no field attribute found for {field_ident}, supported: {:?}", SupportedAttributeType::into_array().into_iter().map(|element|element.to_string()).collect::<Vec<std::string::String>>())
+        }
+    });
+    //
     let id_field_ident_quotes_token_stream = {
         let id_field_ident_quotes_stringified = format!("\"{id_field_ident}\"");
         id_field_ident_quotes_stringified.parse::<proc_macro2::TokenStream>()
@@ -1790,9 +1820,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let query_string_token_stream = {
                     let column_names = {
                         let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<std::vec::Vec<&syn::Field>>();
-                            let fields_named_len = fields_named_filtered.len();
-                            fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
-                                let field_ident = field.ident.clone().unwrap_or_else(|| {
+                        let fields_named_len = fields_named_filtered.len();
+                        fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
+                            let field_ident = field.ident.clone().unwrap_or_else(|| {
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                             let incremented_index = index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE));
@@ -7276,6 +7306,13 @@ fn generate_payload_element_try_from_payload_element_with_serialize_deserialize_
     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {value} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
+#[derive(
+    Debug, 
+    enum_extension::EnumExtension,
+    strum_macros::EnumIter,
+    PartialEq,
+    Eq,
+)]
 enum SupportedAttributeType {
     Bool,
     Char,
@@ -7293,7 +7330,7 @@ enum SupportedAttributeType {
     Double,
     Precision,
     Float8,
-    Varcher,
+    Varchar,
     Charn, //CHAR(N) wtf????
     Text,
     Name,
@@ -7334,58 +7371,187 @@ enum SupportedAttributeType {
 impl std::fmt::Display for SupportedAttributeType {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Self::Bool => write!(f, ""),
-            Self::Char => write!(f, ""),
-            Self::Smallint => write!(f, ""),
-            Self::Smallserial => write!(f, ""),
-            Self::Int2 => write!(f, ""),
-            Self::Int => write!(f, ""),
-            Self::Serial => write!(f, ""), 
-            Self::Int4 => write!(f, ""),
-            Self::Bigint => write!(f, ""),
-            Self::Bigserial => write!(f, ""), 
-            Self::Int8 => write!(f, ""),
-            Self::Real => write!(f, ""), 
-            Self::Float4 => write!(f, ""),
-            Self::Double => write!(f, ""),
-            Self::Precision => write!(f, ""),
-            Self::Float8 => write!(f, ""),
-            Self::Varcher => write!(f, ""),
-            Self::Charn => write!(f, ""), //CHAR(N) wtf????
-            Self::Text => write!(f, ""),
-            Self::Name => write!(f, ""),
-            Self::Bytea => write!(f, ""),
-            Self::Void => write!(f, ""),
-            Self::Interval => write!(f, ""),
-            Self::Int8range => write!(f, ""),
-            Self::Int4range => write!(f, ""),
-            Self::Tsrange => write!(f, ""),
-            Self::Tstzrange => write!(f, ""),
-            Self::Daterange => write!(f, ""),
-            Self::Numrange => write!(f, ""),
-            Self::Money => write!(f, ""),
-            Self::Ltree => write!(f, ""),
-            Self::Lquery => write!(f, ""),
+            Self::Bool => write!(f, "generate_postgresql_crud_bool"),
+            Self::Char => write!(f, "generate_postgresql_crud_char"),
+            Self::Smallint => write!(f, "generate_postgresql_crud_smallint"),
+            Self::Smallserial => write!(f, "generate_postgresql_crud_smallserial"),
+            Self::Int2 => write!(f, "generate_postgresql_crud_int2"),
+            Self::Int => write!(f, "generate_postgresql_crud_int"),
+            Self::Serial => write!(f, "generate_postgresql_crud_serial"), 
+            Self::Int4 => write!(f, "generate_postgresql_crud_int4"),
+            Self::Bigint => write!(f, "generate_postgresql_crud_bigint"),
+            Self::Bigserial => write!(f, "generate_postgresql_crud_bigserial"), 
+            Self::Int8 => write!(f, "generate_postgresql_crud_int8"),
+            Self::Real => write!(f, "generate_postgresql_crud_real"), 
+            Self::Float4 => write!(f, "generate_postgresql_crud_float4"),
+            Self::Double => write!(f, "generate_postgresql_crud_double"),
+            Self::Precision => write!(f, "generate_postgresql_crud_precision"),
+            Self::Float8 => write!(f, "generate_postgresql_crud_float8"),
+            Self::Varchar => write!(f, "generate_postgresql_crud_varchar"),
+            Self::Charn => write!(f, "generate_postgresql_crud_charn"), //CHAR(N) wtf????
+            Self::Text => write!(f, "generate_postgresql_crud_text"),
+            Self::Name => write!(f, "generate_postgresql_crud_name"),
+            Self::Bytea => write!(f, "generate_postgresql_crud_bytea"),
+            Self::Void => write!(f, "generate_postgresql_crud_void"),
+            Self::Interval => write!(f, "generate_postgresql_crud_interval"),
+            Self::Int8range => write!(f, "generate_postgresql_crud_int8range"),
+            Self::Int4range => write!(f, "generate_postgresql_crud_int4range"),
+            Self::Tsrange => write!(f, "generate_postgresql_crud_tsrange"),
+            Self::Tstzrange => write!(f, "generate_postgresql_crud_tstzrange"),
+            Self::Daterange => write!(f, "generate_postgresql_crud_daterange"),
+            Self::Numrange => write!(f, "generate_postgresql_crud_numrange"),
+            Self::Money => write!(f, "generate_postgresql_crud_money"),
+            Self::Ltree => write!(f, "generate_postgresql_crud_ltree"),
+            Self::Lquery => write!(f, "generate_postgresql_crud_lquery"),
 
-            Self::Numeric => write!(f, ""),
+            Self::Numeric => write!(f, "generate_postgresql_crud_numeric"),
 
-            Self::Timestamptz => write!(f, ""),
-            Self::Timestamp => write!(f, ""),
-            Self::Date => write!(f, ""),
-            Self::Time => write!(f, ""),
-            Self::Timetz => write!(f, ""),
-            Self::Uuid => write!(f, ""),
+            Self::Timestamptz => write!(f, "generate_postgresql_crud_timestamptz"),
+            Self::Timestamp => write!(f, "generate_postgresql_crud_timestamp"),
+            Self::Date => write!(f, "generate_postgresql_crud_date"),
+            Self::Time => write!(f, "generate_postgresql_crud_time"),
+            Self::Timetz => write!(f, "generate_postgresql_crud_timetz"),
+            Self::Uuid => write!(f, "generate_postgresql_crud_uuid"),
 
-            Self::Inet => write!(f, ""),
-            Self::Cidr => write!(f, ""),
+            Self::Inet => write!(f, "generate_postgresql_crud_inet"),
+            Self::Cidr => write!(f, "generate_postgresql_crud_cidr"),
 
-            Self::Macaddr => write!(f, ""),
+            Self::Macaddr => write!(f, "generate_postgresql_crud_macaddr"),
 
-            Self::Bit => write!(f, ""),
-            Self::Varbit => write!(f, ""),
+            Self::Bit => write!(f, "generate_postgresql_crud_bit"),
+            Self::Varbit => write!(f, "generate_postgresql_crud_varbit"),
 
-            Self::Json => write!(f, ""),
-            Self::Jsonb => write!(f, ""),
+            Self::Json => write!(f, "generate_postgresql_crud_json"),
+            Self::Jsonb => write!(f, "generate_postgresql_crud_jsonb"),
         }
     }
 }
+
+
+impl std::str::FromStr for SupportedAttributeType {
+    type Err = std::string::String;
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
+            "generate_postgresql_crud_bool" => Ok(Self::Bool),
+            "generate_postgresql_crud_char" => Ok(Self::Char),
+            "generate_postgresql_crud_smallint" => Ok(Self::Smallint),
+            "generate_postgresql_crud_smallserial" => Ok(Self::Smallserial),
+            "generate_postgresql_crud_int2" => Ok(Self::Int2),
+            "generate_postgresql_crud_int" => Ok(Self::Int),
+            "generate_postgresql_crud_serial" => Ok(Self::Serial), 
+            "generate_postgresql_crud_int4" => Ok(Self::Int4),
+            "generate_postgresql_crud_bigint" => Ok(Self::Bigint),
+            "generate_postgresql_crud_bigserial" => Ok(Self::Bigserial), 
+            "generate_postgresql_crud_int8" => Ok(Self::Int8),
+            "generate_postgresql_crud_real" => Ok(Self::Real), 
+            "generate_postgresql_crud_float4" => Ok(Self::Float4),
+            "generate_postgresql_crud_double" => Ok(Self::Double),
+            "generate_postgresql_crud_precision" => Ok(Self::Precision),
+            "generate_postgresql_crud_float8" => Ok(Self::Float8),
+            "generate_postgresql_crud_varchar" => Ok(Self::Varchar),
+            "generate_postgresql_crud_charn" => Ok(Self::Charn), //CHAR(N) wtf????
+            "generate_postgresql_crud_text" => Ok(Self::Text),
+            "generate_postgresql_crud_name" => Ok(Self::Name),
+            "generate_postgresql_crud_bytea" => Ok(Self::Bytea),
+            "generate_postgresql_crud_void" => Ok(Self::Void),
+            "generate_postgresql_crud_interval" => Ok(Self::Interval),
+            "generate_postgresql_crud_int8range" => Ok(Self::Int8range),
+            "generate_postgresql_crud_int4range" => Ok(Self::Int4range),
+            "generate_postgresql_crud_tsrange" => Ok(Self::Tsrange),
+            "generate_postgresql_crud_tstzrange" => Ok(Self::Tstzrange),
+            "generate_postgresql_crud_daterange" => Ok(Self::Daterange),
+            "generate_postgresql_crud_numrange" => Ok(Self::Numrange),
+            "generate_postgresql_crud_money" => Ok(Self::Money),
+            "generate_postgresql_crud_ltree" => Ok(Self::Ltree),
+            "generate_postgresql_crud_lquery" => Ok(Self::Lquery),
+
+            "generate_postgresql_crud_numeric" => Ok(Self::Numeric),
+
+            "generate_postgresql_crud_timestamptz" => Ok(Self::Timestamptz),
+            "generate_postgresql_crud_timestamp" => Ok(Self::Timestamp),
+            "generate_postgresql_crud_date" => Ok(Self::Date),
+            "generate_postgresql_crud_time" => Ok(Self::Time),
+            "generate_postgresql_crud_timetz" => Ok(Self::Timetz),
+            "generate_postgresql_crud_uuid" => Ok(Self::Uuid),
+
+            "generate_postgresql_crud_inet" => Ok(Self::Inet),
+            "generate_postgresql_crud_cidr" => Ok(Self::Cidr),
+
+            "generate_postgresql_crud_macaddr" => Ok(Self::Macaddr),
+
+            "generate_postgresql_crud_bit" => Ok(Self::Bit),
+            "generate_postgresql_crud_varbit" => Ok(Self::Varbit),
+
+            "generate_postgresql_crud_json" => Ok(Self::Json),
+            "generate_postgresql_crud_jsonb" => Ok(Self::Jsonb),
+            _ => Err(format!(
+                "unsupported field attribute name: {value}, {:?}",
+                Self::into_array().into_iter().map(|element|element.to_string()).collect::<Vec<std::string::String>>()
+            ))
+        }
+    }
+}
+
+// struct Field
+
+// enum SupportedFieldType {
+
+
+
+
+
+
+
+
+
+// bool
+// i8
+// i16
+// i32
+// i64
+// f32
+// f64
+// &str, String
+// &[u8], Vec<u8>
+// ()
+// PgInterval
+// PgRange<T>
+// PgMoney
+// PgLTree
+// PgLQuery
+
+
+// bigdecimal::BigDecimal
+
+
+// rust_decimal::Decimal
+
+
+// chrono::DateTime<Utc>
+// chrono::DateTime<Local>
+// chrono::NaiveDateTime
+// chrono::NaiveDate
+// chrono::NaiveTime
+// [PgTimeTz]
+
+
+// time::PrimitiveDateTime
+// time::OffsetDateTime
+// time::Date
+// time::Time
+// [PgTimeTz]
+
+
+// uuid::Uuid
+
+
+// ipnetwork::IpNetwork
+// std::net::IpAddr
+
+// mac_address::MacAddress
+
+// bit_vec::BitVec
+
+// Json<T>
+// serde_json::Value
+// &serde_json::value::RawValue
