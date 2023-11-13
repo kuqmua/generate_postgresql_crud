@@ -7493,115 +7493,395 @@ impl std::str::FromStr for SupportedAttributeType {
 }
 
 // struct Field
-
+//for now its better to check types manually to remove potential problems with token generation https://docs.rs/sqlx/0.7.2/sqlx/trait.Type.html
 enum SupportedFieldType {
-    Bool,
-    StdPrimitiveI8,
     StdPrimitiveI16,
-    StdPrimitiveI32,
+    StdPrimitiveStr,
     StdPrimitiveI64,
-    StdPrimitiveF32,
+    StdPrimitiveI32,
     StdPrimitiveF64,
-    BorrowStdPrimitiveStr, 
+    StdPrimitiveF32,
     StdStringString,
-    BorrowU8Array, 
-    StdVecVecU8,
-    Unit,
+    StdPrimitiveI8,
+    StdPrimitiveBool,
+    StdVecVecStdPrimitiveU8,
+    StdPrimitiveArrayStdPrimitiveU8,
+    StdPrimitiveUnit,
+    //
+    SqlxTypesDecimal,
+    SqlxTypesBigDecimal,
+    SqlxTypesTimeTime,
+    SqlxTypesTimeDate,
+    SqlxTypesChronoNaiveDate,
+    SqlxTypesChronoNaiveDateTime,
+    SqlxTypesChronoNaiveTime,
+    SqlxTypesTimeOffsetDateTime,
+    SqlxTypesTimePrimitiveDateTime,
+    CoreTimeDuration,//todo maybe its std::time::Duration or core::time::Duration or both?
+    SqlxTypesChronoDateTimeSqlxTypesChronoFixedOffset,
+    SqlxTypesChronoDateTimeSqlxTypesChronoLocal,
+    SqlxTypesChronoDateTimeSqlxTypesChronoUtc,
+    SqlxTypesUuid,
+    SqlxTypesIpnetworkIpNetwork,
+    SqlxTypesMacAddressMacAddress,
     SqlxPostgresTypesPgInterval,
-    SqlxPostgresTypesPgRangeGeneric,
     SqlxPostgresTypesPgMoney,
-    SqlxPostgresTypesPgLTree,
     SqlxPostgresTypesPgLQuery,
-    BigdecimalBigDecimal,
-    RustDecimalDecimal,
+    SqlxPostgresTypesPgLTree,
+    SqlxPostgresTypesOid,
+    SqlxTypesBitVecStdPrimitiveU32,
+    SqlxPostgresTypesTimeTzPgTimetzSqlxTypesTimeTimeSqlxTypesTimeUtcOffset,
+    SqlxPostgresTypesTimeTzPgTimetzSqlxTypesChronoNaiveTimeSqlxTypesChronoFixedOffset,
+    StdBoxedBoxBorrowStdPrimitiveStr,//std::boxed::Box<&std::primitive::str>
+    StdBorrowCowAnonymousLifetimeStdPrimitiveStr,//std::borrow::Cow<'_, std::primitive::str>
+    //
+    SqlxPostgresTypesPgRangeStdPrimitiveI32,
+    SqlxPostgresTypesPgRangeStdPrimitiveI64,
+    SqlxPostgresTypesPgRangeSqlxTypesDecimal,
+    SqlxPostgresTypesPgRangeSqlxTypesBigDecimal,
+    SqlxPostgresTypesPgRangeSqlxTypesTimeDate,
+    SqlxPostgresTypesPgRangeSqlxTypesChronoNaiveDate,
+    SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoFixedOffset,
+    SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoLocal,
+    SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoUtc,
+    SqlxPostgresTypesPgRangeSqlxTypesChronoNaiveDateTime,
+    SqlxPostgresTypesPgRangeSqlxTypesTimePrimitiveDateTime,
+    SqlxPostgresTypesPgRangeSqlxTypesTimeOffsetDateTime,
 
-    ChronoDateTimeUtcGeneric,
-    ChronoDateTimeLocalGeneric,
-    ChronoNaiveDateTime,
-    ChronoNaiveDate,
-    ChronoNaiveTime,
-    ChronoPgTimeTzArray,//todo find out from what crate this type
+    //todo this implementations
+
+// impl Type<Postgres> for IpAddr // std::net::IpAddr
+// where
+//     IpNetwork: Type<Postgres>,
+// impl<T, DB> Type<DB> for Option<T>
+// where
+//     T: Type<DB>,
+//     DB: Database,
+
+// impl<T, DB> Type<DB> for &T
+// where
+//     T: Type<DB> + ?Sized,
+//     DB: Database,
+
+// impl<DB> Type<DB> for Value
+// where
+//     Json<Value>: Type<DB>,
+//     DB: Database,
+
+// impl<DB> Type<DB> for RawValue
+// where
+//     Json<&'a RawValue>: for<'a> Type<DB>,
+//     DB: Database,
+
+// impl<T> Type<Postgres> for Vec<T, Global>
+// where
+//     T: PgHasArrayType,
+
+// impl<T, const N: usize> Type<Postgres> for [T; N]
+// where
+//     T: PgHasArrayType,
+
+// impl<T> Type<Postgres> for Json<T>
+
+// impl<T> Type<Postgres> for [T]
+// where
+//     T: PgHasArrayType,
+
+// impl<T1> Type<Postgres> for (T1,)
+
+// impl<T1, T2> Type<Postgres> for (T1, T2)
+
+// impl<T1, T2, T3> Type<Postgres> for (T1, T2, T3)
+
+// impl<T1, T2, T3, T4> Type<Postgres> for (T1, T2, T3, T4)
+
+// impl<T1, T2, T3, T4, T5> Type<Postgres> for (T1, T2, T3, T4, T5)
+
+// impl<T1, T2, T3, T4, T5, T6> Type<Postgres> for (T1, T2, T3, T4, T5, T6)
+
+// impl<T1, T2, T3, T4, T5, T6, T7> Type<Postgres> for (T1, T2, T3, T4, T5, T6, T7)
+
+// impl<T1, T2, T3, T4, T5, T6, T7, T8> Type<Postgres> for (T1, T2, T3, T4, T5, T6, T7, T8)
+
+// impl<T1, T2, T3, T4, T5, T6, T7, T8, T9> Type<Postgres> for (T1, T2, T3, T4, T5, T6, T7, T8, T9)
+
+    // Bool,
+    // StdPrimitiveI8,
+    // StdPrimitiveI16,
+    // StdPrimitiveI32,
+    // StdPrimitiveI64,
+    // StdPrimitiveF32,
+    // StdPrimitiveF64,
+    // BorrowStdPrimitiveStr, 
+    // StdStringString,
+    // BorrowU8Array, 
+    // StdVecVecU8,
+    // Unit,
+    // SqlxPostgresTypesPgInterval,
+    // SqlxPostgresTypesPgRangeGeneric,
+    // SqlxPostgresTypesPgMoney,
+    // SqlxPostgresTypesPgLTree,
+    // SqlxPostgresTypesPgLQuery,
+    // BigdecimalBigDecimal,
+    // RustDecimalDecimal,
+
+    // ChronoDateTimeUtcGeneric,
+    // ChronoDateTimeLocalGeneric,
+    // ChronoNaiveDateTime,
+    // ChronoNaiveDate,
+    // ChronoNaiveTime,
+    // ChronoPgTimeTzArray,//todo find out from what crate this type
 
 
-    TimePrimitiveDateTime,
-    TimeOffsetDateTime,
-    TimeDate,
-    TimeTime,
-    TimePgTimeTzArray,//todo find out from what crate this type
+    // TimePrimitiveDateTime,
+    // TimeOffsetDateTime,
+    // TimeDate,
+    // TimeTime,
+    // TimePgTimeTzArray,//todo find out from what crate this type
 
 
-    UuidUuid,
+    // UuidUuid,
 
 
-    IpnetworkIpNetwork,
-    StdNetIpAddr,
+    // IpnetworkIpNetwork,
+    // StdNetIpAddr,
 
-    MacAddressMacAddress,
+    // MacAddressMacAddress,
 
-    BitVecBitVec,
+    // BitVecBitVec,
 
-    Json,//tood full path
-    SerdeJsonValue,
-    BorrowSerdeJsonValueRawValue
+    // Json,//tood full path
+    // SerdeJsonValue,
+    // BorrowSerdeJsonValueRawValue
 }
 
 impl std::fmt::Display for SupportedFieldType {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            //todo some of types equal few ruest token streams not only one  https://docs.rs/sqlx-postgres/0.7.2/sqlx_postgres/types/index.html https://docs.rs/sqlx/0.7.2/sqlx/trait.Type.html
-            Self::Bool => write!(f, "std::primitive::bool"),
-            Self::StdPrimitiveI8 => write!(f, "std::primitive::i8"),
-            Self::StdPrimitiveI16 => write!(f, "std::primitive::i16"),
-            Self::StdPrimitiveI32 => write!(f, "std::primitive::i32"),
-            Self::StdPrimitiveI64 => write!(f, "std::primitive::i64"),
-            Self::StdPrimitiveF32 => write!(f, "std::primitive::f32"),
-            Self::StdPrimitiveF64 => write!(f, "std::primitive::f64"),
-            Self::BorrowStdPrimitiveStr => write!(f, "&std::primitive::str"), 
-            Self::StdStringString => write!(f, "std::string::String"),
-            Self::BorrowU8Array => write!(f, "&[std::primitive::i8]"), 
-            Self::StdVecVecU8 => write!(f, "std::vec::Vec<std::primitive::i8>"),
-            Self::Unit => write!(f, "()"),
+            Self::StdPrimitiveI16 => write!(f, ""),
+            Self::StdPrimitiveStr => write!(f, ""),
+            Self::StdPrimitiveI64 => write!(f, ""),
+            Self::StdPrimitiveI32 => write!(f, ""),
+            Self::StdPrimitiveF64 => write!(f, ""),
+            Self::StdPrimitiveF32 => write!(f, ""),
+            Self::StdStringString => write!(f, ""),
+            Self::StdPrimitiveI8 => write!(f, ""),
+            Self::StdPrimitiveBool => write!(f, ""),
+            Self::StdVecVecStdPrimitiveU8 => write!(f, ""),
+            Self::StdPrimitiveArrayStdPrimitiveU8 => write!(f, ""),
+            Self::StdPrimitiveUnit => write!(f, ""),
+
+            Self::SqlxTypesDecimal => write!(f, ""),
+            Self::SqlxTypesBigDecimal => write!(f, ""),
+            Self::SqlxTypesTimeTime => write!(f, ""),
+            Self::SqlxTypesTimeDate => write!(f, ""),
+            Self::SqlxTypesChronoNaiveDate => write!(f, ""),
+            Self::SqlxTypesChronoNaiveDateTime => write!(f, ""),
+            Self::SqlxTypesChronoNaiveTime => write!(f, ""),
+            Self::SqlxTypesTimeOffsetDateTime => write!(f, ""),
+            Self::SqlxTypesTimePrimitiveDateTime => write!(f, ""),
+            Self::CoreTimeDuration => write!(f, ""),//todo maybe its std::time::Duration or core::time::Duration or both?
+            Self::SqlxTypesChronoDateTimeSqlxTypesChronoFixedOffset => write!(f, ""),
+            Self::SqlxTypesChronoDateTimeSqlxTypesChronoLocal => write!(f, ""),
+            Self::SqlxTypesChronoDateTimeSqlxTypesChronoUtc => write!(f, ""),
+            Self::SqlxTypesUuid => write!(f, ""),
+            Self::SqlxTypesIpnetworkIpNetwork => write!(f, ""),
+            Self::SqlxTypesMacAddressMacAddress => write!(f, ""),
             Self::SqlxPostgresTypesPgInterval => write!(f, ""),
-            Self::SqlxPostgresTypesPgRangeGeneric => write!(f, ""),
             Self::SqlxPostgresTypesPgMoney => write!(f, ""),
-            Self::SqlxPostgresTypesPgLTree => write!(f, ""),
             Self::SqlxPostgresTypesPgLQuery => write!(f, ""),
-            Self::BigdecimalBigDecimal => write!(f, ""),
-            Self::RustDecimalDecimal => write!(f, ""),
+            Self::SqlxPostgresTypesPgLTree => write!(f, ""),
+            Self::SqlxPostgresTypesOid => write!(f, ""),
+            Self::SqlxTypesBitVecStdPrimitiveU32 => write!(f, ""),
+            Self::SqlxPostgresTypesTimeTzPgTimetzSqlxTypesTimeTimeSqlxTypesTimeUtcOffset => write!(f, ""),
+            Self::SqlxPostgresTypesTimeTzPgTimetzSqlxTypesChronoNaiveTimeSqlxTypesChronoFixedOffset => write!(f, ""),
+            Self::StdBoxedBoxBorrowStdPrimitiveStr => write!(f, ""),//std::boxed::Box<&std::primitive::str>
+            Self::StdBorrowCowAnonymousLifetimeStdPrimitiveStr => write!(f, ""),//std::borrow::Cow<'_ => write!(f, ""), std::primitive::str>
 
-            Self::ChronoDateTimeUtcGeneric => write!(f, ""),
-            Self::ChronoDateTimeLocalGeneric => write!(f, ""),
-            Self::ChronoNaiveDateTime => write!(f, ""),
-            Self::ChronoNaiveDate => write!(f, ""),
-            Self::ChronoNaiveTime => write!(f, ""),
-            Self::ChronoPgTimeTzArray => write!(f, ""),//todo find out from what crate this type
+            Self::SqlxPostgresTypesPgRangeStdPrimitiveI32 => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeStdPrimitiveI64 => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeSqlxTypesDecimal => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeSqlxTypesBigDecimal => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeSqlxTypesTimeDate => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeSqlxTypesChronoNaiveDate => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoFixedOffset => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoLocal => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoUtc => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeSqlxTypesChronoNaiveDateTime => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeSqlxTypesTimePrimitiveDateTime => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeSqlxTypesTimeOffsetDateTime => write!(f, ""),
+
+            // //todo some of types equal few ruest token streams not only one  https://docs.rs/sqlx-postgres/0.7.2/sqlx_postgres/types/index.html https://docs.rs/sqlx/0.7.2/sqlx/trait.Type.html
+            // Self::Bool => write!(f, "std::primitive::bool"),
+            // Self::StdPrimitiveI8 => write!(f, "std::primitive::i8"),
+            // Self::StdPrimitiveI16 => write!(f, "std::primitive::i16"),
+            // Self::StdPrimitiveI32 => write!(f, "std::primitive::i32"),
+            // Self::StdPrimitiveI64 => write!(f, "std::primitive::i64"),
+            // Self::StdPrimitiveF32 => write!(f, "std::primitive::f32"),
+            // Self::StdPrimitiveF64 => write!(f, "std::primitive::f64"),
+            // Self::BorrowStdPrimitiveStr => write!(f, "&std::primitive::str"), 
+            // Self::StdStringString => write!(f, "std::string::String"),
+            // Self::BorrowU8Array => write!(f, "&[std::primitive::i8]"), 
+            // Self::StdVecVecU8 => write!(f, "std::vec::Vec<std::primitive::i8>"),
+            // Self::Unit => write!(f, "()"),
+            // Self::SqlxPostgresTypesPgInterval => write!(f, ""),
+            // Self::SqlxPostgresTypesPgRangeGeneric => write!(f, ""),
+            // Self::SqlxPostgresTypesPgMoney => write!(f, ""),
+            // Self::SqlxPostgresTypesPgLTree => write!(f, ""),
+            // Self::SqlxPostgresTypesPgLQuery => write!(f, ""),
+            // Self::BigdecimalBigDecimal => write!(f, ""),
+            // Self::RustDecimalDecimal => write!(f, ""),
+
+            // Self::ChronoDateTimeUtcGeneric => write!(f, ""),
+            // Self::ChronoDateTimeLocalGeneric => write!(f, ""),
+            // Self::ChronoNaiveDateTime => write!(f, ""),
+            // Self::ChronoNaiveDate => write!(f, ""),
+            // Self::ChronoNaiveTime => write!(f, ""),
+            // Self::ChronoPgTimeTzArray => write!(f, ""),//todo find out from what crate this type
 
 
-            Self::TimePrimitiveDateTime => write!(f, ""),
-            Self::TimeOffsetDateTime => write!(f, ""),
-            Self::TimeDate => write!(f, ""),
-            Self::TimeTime => write!(f, ""),
-            Self::TimePgTimeTzArray => write!(f, ""),//todo find out from what crate this type
+            // Self::TimePrimitiveDateTime => write!(f, ""),
+            // Self::TimeOffsetDateTime => write!(f, ""),
+            // Self::TimeDate => write!(f, ""),
+            // Self::TimeTime => write!(f, ""),
+            // Self::TimePgTimeTzArray => write!(f, ""),//todo find out from what crate this type
 
 
-            Self::UuidUuid => write!(f, ""),
+            // Self::UuidUuid => write!(f, ""),
 
 
-            Self::IpnetworkIpNetwork => write!(f, ""),
-            Self::StdNetIpAddr => write!(f, ""),
+            // Self::IpnetworkIpNetwork => write!(f, ""),
+            // Self::StdNetIpAddr => write!(f, ""),
 
-            Self::MacAddressMacAddress => write!(f, ""),
+            // Self::MacAddressMacAddress => write!(f, ""),
 
-            Self::BitVecBitVec => write!(f, ""),
+            // Self::BitVecBitVec => write!(f, ""),
 
-            Self::Json => write!(f, ""),//tood full path
-            Self::SerdeJsonValue => write!(f, ""),
-            Self::BorrowSerdeJsonValueRawValue => write!(f, "")
+            // Self::Json => write!(f, ""),//tood full path
+            // Self::SerdeJsonValue => write!(f, ""),
+            // Self::BorrowSerdeJsonValueRawValue => write!(f, "")
         }
     }
 }
 
+impl std::str::FromStr for SupportedFieldType {
+    type Err = std::string::String;
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
+            "" => Ok(Self::StdPrimitiveI16),
+            "" => Ok(Self::StdPrimitiveStr),
+            "" => Ok(Self::StdPrimitiveI64),
+            "" => Ok(Self::StdPrimitiveI32),
+            "" => Ok(Self::StdPrimitiveF64),
+            "" => Ok(Self::StdPrimitiveF32),
+            "" => Ok(Self::StdStringString),
+            "" => Ok(Self::StdPrimitiveI8),
+            "" => Ok(Self::StdPrimitiveBool),
+            "" => Ok(Self::StdVecVecStdPrimitiveU8),
+            "" => Ok(Self::StdPrimitiveArrayStdPrimitiveU8),
+            "" => Ok(Self::StdPrimitiveUnit),
 
+            "" => Ok(Self::SqlxTypesDecimal),
+            "" => Ok(Self::SqlxTypesBigDecimal),
+            "" => Ok(Self::SqlxTypesTimeTime),
+            "" => Ok(Self::SqlxTypesTimeDate),
+            "" => Ok(Self::SqlxTypesChronoNaiveDate),
+            "" => Ok(Self::SqlxTypesChronoNaiveDateTime),
+            "" => Ok(Self::SqlxTypesChronoNaiveTime),
+            "" => Ok(Self::SqlxTypesTimeOffsetDateTime),
+            "" => Ok(Self::SqlxTypesTimePrimitiveDateTime),
+            "" => Ok(Self::CoreTimeDuration),//todo maybe its std::time::Duration or core::time::Duration or both?
+            "" => Ok(Self::SqlxTypesChronoDateTimeSqlxTypesChronoFixedOffset),
+            "" => Ok(Self::SqlxTypesChronoDateTimeSqlxTypesChronoLocal),
+            "" => Ok(Self::SqlxTypesChronoDateTimeSqlxTypesChronoUtc),
+            "" => Ok(Self::SqlxTypesUuid),
+            "" => Ok(Self::SqlxTypesIpnetworkIpNetwork),
+            "" => Ok(Self::SqlxTypesMacAddressMacAddress),
+            "" => Ok(Self::SqlxPostgresTypesPgInterval),
+            "" => Ok(Self::SqlxPostgresTypesPgMoney),
+            "" => Ok(Self::SqlxPostgresTypesPgLQuery),
+            "" => Ok(Self::SqlxPostgresTypesPgLTree),
+            "" => Ok(Self::SqlxPostgresTypesOid),
+            "" => Ok(Self::SqlxTypesBitVecStdPrimitiveU32),
+            "" => Ok(Self::SqlxPostgresTypesTimeTzPgTimetzSqlxTypesTimeTimeSqlxTypesTimeUtcOffset),
+            "" => Ok(Self::SqlxPostgresTypesTimeTzPgTimetzSqlxTypesChronoNaiveTimeSqlxTypesChronoFixedOffset),
+            "" => Ok(Self::StdBoxedBoxBorrowStdPrimitiveStr),//std::boxed::Box<&std::primitive::str>
+            "" => Ok(Self::StdBorrowCowAnonymousLifetimeStdPrimitiveStr),//std::borrow::Cow<'_), std::primitive::str>
+
+            "" => Ok(Self::SqlxPostgresTypesPgRangeStdPrimitiveI32),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeStdPrimitiveI64),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeSqlxTypesDecimal),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeSqlxTypesBigDecimal),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeSqlxTypesTimeDate),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeSqlxTypesChronoNaiveDate),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoFixedOffset),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoLocal),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeSqlxTypesChronoDateTimeSqlxTypesChronoUtc),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeSqlxTypesChronoNaiveDateTime),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeSqlxTypesTimePrimitiveDateTime),
+            "" => Ok(Self::SqlxPostgresTypesPgRangeSqlxTypesTimeOffsetDateTime),
+
+            // "std::primitive::bool" => Self::Bool,
+            // "std::primitive::i8" => Self::StdPrimitiveI8,
+            // "std::primitive::i16" => Self::StdPrimitiveI16,
+            // "std::primitive::i32" => Self::StdPrimitiveI32,
+            // "std::primitive::i64" => Self::StdPrimitiveI64,
+            // "std::primitive::f32" => Self::StdPrimitiveF32,
+            // "std::primitive::f64" => Self::StdPrimitiveF64,
+            // "&std::primitive::str" => Self::BorrowStdPrimitiveStr, 
+            // "std::string::String" => Self::StdStringString,
+            // "&[std::primitive::i8]" => Self::BorrowU8Array, 
+            // "std::vec::Vec<std::primitive::i8>" => Self::StdVecVecU8,
+            // "()" => Self::Unit,
+            // "sqlx_postgres::types::PgInterval" => Self::SqlxPostgresTypesPgInterval,
+            // "sqlx_postgres::types::PgRange<sqlx::types::BigDecimal>" => Self::SqlxPostgresTypesPgRangeGeneric,
+            // "sqlx_postgres::types::PgRange<sqlx::types::time::Date>" => Self::SqlxPostgresTypesPgRangeGeneric,
+            // "sqlx_postgres::types::PgRange<sqlx::types::chrono::DateTime<Tz>>" => Self::SqlxPostgresTypesPgRangeGeneric,//todo generic parameter
+            // "sqlx_postgres::types::PgRange<sqlx::types::Decimal>" => Self::SqlxPostgresTypesPgRangeGeneric,
+            // "sqlx_postgres::types::PgRange<sqlx::types::chrono::NaiveDate>" => Self::SqlxPostgresTypesPgRangeGeneric,
+            // "sqlx_postgres::types::PgRange<sqlx::types::chrono::NaiveDateTime>" => Self::SqlxPostgresTypesPgRangeGeneric,
+            // "sqlx_postgres::types::PgRange<sqlx::types::time::OffsetDateTime>" => Self::SqlxPostgresTypesPgRangeGeneric,
+            // "sqlx_postgres::types::PgRange<sqlx::types::time::PrimitiveDateTime>" => Self::SqlxPostgresTypesPgRangeGeneric,
+            // "sqlx_postgres::types::PgRange<std::primitive::i32>" => Self::SqlxPostgresTypesPgRangeGeneric,
+            // "sqlx_postgres::types::PgRange<std::primitive::i64>" => Self::SqlxPostgresTypesPgRangeGeneric,
+            // "sqlx_postgres::types::PgMoney" => Self::SqlxPostgresTypesPgMoney,
+            // "sqlx_postgres::types::PgLTree" => Self::SqlxPostgresTypesPgLTree,
+            // "sqlx_postgres::types::PgLQuery" => Self::SqlxPostgresTypesPgLQuery,
+            // "" => Self::BigdecimalBigDecimal,
+            // "" => Self::RustDecimalDecimal,
+
+            // "" => Self::ChronoDateTimeUtcGeneric,
+            // "" => Self::ChronoDateTimeLocalGeneric,
+            // "" => Self::ChronoNaiveDateTime,
+            // "" => Self::ChronoNaiveDate,
+            // "" => Self::ChronoNaiveTime,
+            // "" => Self::ChronoPgTimeTzArray,//todo find out from what crate this type
+
+
+            // "" => Self::TimePrimitiveDateTime,
+            // "" => Self::TimeOffsetDateTime,
+            // "" => Self::TimeDate,
+            // "" => Self::TimeTime,
+            // "" => Self::TimePgTimeTzArray,//todo find out from what crate this type
+
+
+            // "" => Self::UuidUuid,
+
+
+            // "" => Self::IpnetworkIpNetwork,
+            // "" => Self::StdNetIpAddr,
+
+            // "" => Self::MacAddressMacAddress,
+
+            // "" => Self::BitVecBitVec,
+
+            // "" => Self::Json,//tood full path
+            // "" => Self::SerdeJsonValue,
+            // "" => Self::BorrowSerdeJsonValueRawValue,
+            _ => Err(format!("")),
+        }
+    }
+}
 
 
 
@@ -7657,3 +7937,273 @@ impl std::fmt::Display for SupportedFieldType {
 // Json<T>
 // serde_json::Value
 // &serde_json::value::RawValue
+
+
+
+//////////////////////////////////////
+
+// impl<T, DB> Type<DB> for Option<T>
+// where
+//     T: Type<DB>,
+//     DB: Database,
+
+// impl<T, DB> Type<DB> for &T
+// where
+//     T: Type<DB> + ?Sized,
+//     DB: Database,
+
+// impl<DB> Type<DB> for Value
+// where
+//     Json<Value>: Type<DB>,
+//     DB: Database,
+
+// impl<DB> Type<DB> for RawValue
+// where
+//     Json<&'a RawValue>: for<'a> Type<DB>,
+//     DB: Database,
+
+// impl Type<Any> for Vec<u8, Global>
+
+// impl Type<Any> for [u8]
+
+// impl<T> Type<Postgres> for [T]
+// where
+//     T: PgHasArrayType,
+
+// impl Type<Postgres> for PgRange<OffsetDateTime>
+
+// impl Type<Postgres> for i16
+
+// impl Type<Postgres> for str
+
+// impl Type<Postgres> for i64
+
+// impl Type<Postgres> for Oid
+
+// impl Type<Postgres> for IpAddr
+// where
+//     IpNetwork: Type<Postgres>,
+
+// impl Type<Postgres> for Duration
+
+// impl Type<Postgres> for i32
+
+// impl Type<Postgres> for ()
+
+// impl Type<Postgres> for PgLQuery
+
+// impl Type<Postgres> for Duration
+
+// impl<T1, T2, T3, T4, T5> Type<Postgres> for (T1, T2, T3, T4, T5)
+
+// impl<T1, T2, T3, T4, T5, T6, T7, T8> Type<Postgres> for (T1, T2, T3, T4, T5, T6, T7, T8)
+
+// impl Type<Postgres> for Box<str, Global>
+
+// impl Type<Postgres> for PgRange<Date>
+
+// impl Type<Postgres> for Cow<'_, str>
+
+// impl Type<Postgres> for PgRange<Decimal>
+
+// impl Type<Postgres> for PgTimeTz<Time, UtcOffset>
+
+// impl Type<Postgres> for PgRange<PrimitiveDateTime>
+
+// impl Type<Postgres> for PgRange<NaiveDateTime>
+
+// impl Type<Postgres> for PgRange<i64>
+
+// impl<T1, T2, T3> Type<Postgres> for (T1, T2, T3)
+
+// impl Type<Postgres> for f64
+
+// impl Type<Postgres> for PgLTree
+
+// impl Type<Postgres> for f32
+
+// impl<T1, T2, T3, T4> Type<Postgres> for (T1, T2, T3, T4)
+
+// impl Type<Postgres> for PgRange<BigDecimal>
+
+// impl Type<Postgres> for String
+
+// impl<T1, T2, T3, T4, T5, T6> Type<Postgres> for (T1, T2, T3, T4, T5, T6)
+
+// impl<T1> Type<Postgres> for (T1,)
+
+// impl Type<Postgres> for PgRange<NaiveDate>
+
+// impl<T1, T2, T3, T4, T5, T6, T7, T8, T9> Type<Postgres> for (T1, T2, T3, T4, T5, T6, T7, T8, T9)
+
+// impl Type<Postgres> for PgMoney
+
+// impl<T1, T2, T3, T4, T5, T6, T7> Type<Postgres> for (T1, T2, T3, T4, T5, T6, T7)
+
+// impl Type<Postgres> for Duration
+
+// impl Type<Postgres> for i8
+
+// impl<T> Type<Postgres> for Vec<T, Global>
+// where
+//     T: PgHasArrayType,
+
+// impl Type<Postgres> for PgInterval
+
+// impl<T, const N: usize> Type<Postgres> for [T; N]
+// where
+//     T: PgHasArrayType,
+
+// impl<Tz> Type<Postgres> for PgRange<DateTime<Tz>>
+// where
+//     Tz: TimeZone,
+
+// impl Type<Postgres> for bool
+
+// impl Type<Postgres> for PgRange<i32>
+
+// impl<T1, T2> Type<Postgres> for (T1, T2)
+
+// impl Type<Postgres> for PgTimeTz<NaiveTime, FixedOffset>
+
+// impl Type<Postgres> for IpNetwork
+
+// impl Type<Postgres> for NaiveDate
+
+// impl Type<Postgres> for NaiveDateTime
+
+// impl Type<Postgres> for NaiveTime
+
+// impl Type<Postgres> for MacAddress
+
+// impl Type<Postgres> for BigDecimal
+
+// impl Type<Postgres> for BitVec<u32>
+
+// impl Type<Postgres> for Decimal
+
+// impl Type<Postgres> for Uuid
+
+// impl Type<Postgres> for Date
+
+// impl Type<Postgres> for OffsetDateTime
+
+// impl Type<Postgres> for PrimitiveDateTime
+
+// impl Type<Postgres> for Time
+
+// impl<T> Type<Postgres> for Json<T>
+
+// impl<Tz> Type<Postgres> for DateTime<Tz>
+// where
+//     Tz: TimeZone,
+
+
+
+// pub enum PgType {
+//     Bool,
+//     Bytea,
+//     Char,
+//     Name,
+//     Int8,
+//     Int2,
+//     Int4,
+//     Text,
+//     Oid,
+//     Json,
+//     JsonArray,
+//     Point,
+//     Lseg,
+//     Path,
+//     Box,
+//     Polygon,
+//     Line,
+//     LineArray,
+//     Cidr,
+//     CidrArray,
+//     Float4,
+//     Float8,
+//     Unknown,
+//     Circle,
+//     CircleArray,
+//     Macaddr8,
+//     Macaddr8Array,
+//     Macaddr,
+//     Inet,
+//     BoolArray,
+//     ByteaArray,
+//     CharArray,
+//     NameArray,
+//     Int2Array,
+//     Int4Array,
+//     TextArray,
+//     BpcharArray,
+//     VarcharArray,
+//     Int8Array,
+//     PointArray,
+//     LsegArray,
+//     PathArray,
+//     BoxArray,
+//     Float4Array,
+//     Float8Array,
+//     PolygonArray,
+//     OidArray,
+//     MacaddrArray,
+//     InetArray,
+//     Bpchar,
+//     Varchar,
+//     Date,
+//     Time,
+//     Timestamp,
+//     TimestampArray,
+//     DateArray,
+//     TimeArray,
+//     Timestamptz,
+//     TimestamptzArray,
+//     Interval,
+//     IntervalArray,
+//     NumericArray,
+//     Timetz,
+//     TimetzArray,
+//     Bit,
+//     BitArray,
+//     Varbit,
+//     VarbitArray,
+//     Numeric,
+//     Record,
+//     RecordArray,
+//     Uuid,
+//     UuidArray,
+//     Jsonb,
+//     JsonbArray,
+//     Int4Range,
+//     Int4RangeArray,
+//     NumRange,
+//     NumRangeArray,
+//     TsRange,
+//     TsRangeArray,
+//     TstzRange,
+//     TstzRangeArray,
+//     DateRange,
+//     DateRangeArray,
+//     Int8Range,
+//     Int8RangeArray,
+//     Jsonpath,
+//     JsonpathArray,
+//     Money,
+//     MoneyArray,
+
+//     // https://www.postgresql.org/docs/9.3/datatype-pseudo.html
+//     Void,
+
+//     // A realized user-defined type. When a connection sees a DeclareXX variant it resolves
+//     // into this one before passing it along to `accepts` or inside of `Value` objects.
+//     Custom(Arc<PgCustomType>),
+
+//     // From [`PgTypeInfo::with_name`]
+//     DeclareWithName(UStr),
+
+//     // NOTE: Do we want to bring back type declaration by ID? It's notoriously fragile but
+//     //       someone may have a user for it
+//     DeclareWithOid(Oid),
+// }
