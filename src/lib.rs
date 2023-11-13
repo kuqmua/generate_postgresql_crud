@@ -191,15 +191,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|| {
             panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
         });
-    fields_named.iter().filter(|field|*field != &id_field).for_each(|element|{
+    let fields_named_wrappers_excluding_primary_key = fields_named.clone().into_iter().filter(|field|*field != id_field).map(|element|{
         let field_ident = element.ident
             .clone()
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
             });
-        let f: syn::Field =  element.clone();
         let attrs = &element.attrs;
-        match attrs.iter().fold(None, |mut acc, element| {
+        let (
+            supported_attribute_type,
+            supported_field_type
+        ) = match attrs.iter().fold(None, |mut acc, element| {
             let generated_path = proc_macro_helpers::error_occurence::generate_path_from_segments::generate_path_from_segments(&element.path.segments);
             match {
                 use std::str::FromStr;
@@ -216,10 +218,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             acc
         }) {
             Some(supported_attribute_type) => {
-                println!("{supported_attribute_type}");
                 let ty = &element.ty;
                 let ty_stringified = quote::quote!{#ty}.to_string().replace(" ", "");
-                println!("{ty_stringified}");
                 let supported_field_type = {
                     use std::str::FromStr;
                     SupportedFieldType::from_str(ty_stringified.as_str()).unwrap_or_else(|_| panic!(
@@ -227,11 +227,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         SupportedFieldType::into_array().into_iter().map(|element|element.to_string()).collect::<Vec<std::string::String>>()
                     ))
                 };
-                println!("{supported_field_type:#?}");
                 match try_match_supported_attribute_type_with_supported_field_type(&supported_attribute_type, &supported_field_type) {
-                    true => {
-
-                    },
+                    true => (
+                        supported_attribute_type,
+                        supported_field_type
+                    ),
                     false => panic!(
                         "{proc_macro_name_ident_stringified} supported_attribute_type {supported_attribute_type} is not matching to supported_field_type {supported_field_type}, see https://docs.rs/sqlx-postgres/0.7.2/sqlx_postgres/types/index.html", 
                     )
@@ -241,8 +241,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 "{proc_macro_name_ident_stringified} no field attribute found for {field_ident}, supported: {:?}", 
                 SupportedAttributeType::into_array().into_iter().map(|element|element.to_string()).collect::<Vec<std::string::String>>()
             )
+        };
+        FieldNamedWrapperExcludingPrimaryKey {
+            field: element,
+            supported_attribute_type,
+            supported_field_type
         }
-    });
+    }).collect::<Vec<FieldNamedWrapperExcludingPrimaryKey>>();
     //
     let id_field_ident_quotes_token_stream = {
         let id_field_ident_quotes_stringified = format!("\"{id_field_ident}\"");
@@ -8113,7 +8118,8 @@ impl std::str::FromStr for SupportedFieldType {
     }
 }
 
-struct FieldNamedWrapper {
+#[derive(Debug)]
+struct FieldNamedWrapperExcludingPrimaryKey {
     field: syn::Field,
     supported_attribute_type: SupportedAttributeType,
     supported_field_type: SupportedFieldType
