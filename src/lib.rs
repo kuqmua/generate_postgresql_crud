@@ -7494,7 +7494,56 @@ impl std::str::FromStr for SupportedAttributeType {
 
 // struct Field
 
-// enum SupportedFieldType {
+enum SupportedFieldType {
+    Bool,
+    StdPrimitiveI8,
+    StdPrimitiveI16,
+    StdPrimitiveI32,
+    StdPrimitiveI64,
+    StdPrimitiveF32,
+    StdPrimitiveF64,
+    BorrowStdPrimitiveStr, 
+    StdStringString,
+    BorrowU8Array, 
+    StdVecVecU8,
+    Unit,
+    SqlxPostgresTypesPgInterval,
+    SqlxPostgresTypesPgRangeGeneric,
+    SqlxPostgresTypesPgMoney,
+    SqlxPostgresTypesPgLTree,
+    SqlxPostgresTypesPgLQuery,
+    BigdecimalBigDecimal,
+    RustDecimalDecimal,
+
+    ChronoDateTimeUtcGeneric,
+    ChronoDateTimeLocalGeneric,
+    ChronoNaiveDateTime,
+    ChronoNaiveDate,
+    ChronoNaiveTime,
+    // [PgTimeTz],//todo find out from what crate this type
+
+
+    TimePrimitiveDateTime,
+    TimeOffsetDateTime,
+    TimeDate,
+    TimeTime,
+    // [PgTimeTz],//todo find out from what crate this type
+
+
+    UuidUuid,
+
+
+    IpnetworkIpNetwork,
+    StdNetIpAddr,
+
+    MacAddressMacAddress,
+
+    BitVecBitVec,
+
+    Json,//tood full path
+    SerdeJsonValue,
+    BorrowSerdeJsonValueRawValue
+}
 
 
 
