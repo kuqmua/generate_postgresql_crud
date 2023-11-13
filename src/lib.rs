@@ -7520,14 +7520,14 @@ enum SupportedFieldType {
     ChronoNaiveDateTime,
     ChronoNaiveDate,
     ChronoNaiveTime,
-    // [PgTimeTz],//todo find out from what crate this type
+    ChronoPgTimeTzArray,//todo find out from what crate this type
 
 
     TimePrimitiveDateTime,
     TimeOffsetDateTime,
     TimeDate,
     TimeTime,
-    // [PgTimeTz],//todo find out from what crate this type
+    TimePgTimeTzArray,//todo find out from what crate this type
 
 
     UuidUuid,
@@ -7545,8 +7545,61 @@ enum SupportedFieldType {
     BorrowSerdeJsonValueRawValue
 }
 
+impl std::fmt::Display for SupportedFieldType {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            //todo some of types equal few ruest token streams not only one  https://docs.rs/sqlx-postgres/0.7.2/sqlx_postgres/types/index.html https://docs.rs/sqlx/0.7.2/sqlx/trait.Type.html
+            Self::Bool => write!(f, "std::primitive::bool"),
+            Self::StdPrimitiveI8 => write!(f, "std::primitive::i8"),
+            Self::StdPrimitiveI16 => write!(f, "std::primitive::i16"),
+            Self::StdPrimitiveI32 => write!(f, "std::primitive::i32"),
+            Self::StdPrimitiveI64 => write!(f, "std::primitive::i64"),
+            Self::StdPrimitiveF32 => write!(f, "std::primitive::f32"),
+            Self::StdPrimitiveF64 => write!(f, "std::primitive::f64"),
+            Self::BorrowStdPrimitiveStr => write!(f, "&std::primitive::str"), 
+            Self::StdStringString => write!(f, "std::string::String"),
+            Self::BorrowU8Array => write!(f, "&[std::primitive::i8]"), 
+            Self::StdVecVecU8 => write!(f, "std::vec::Vec<std::primitive::i8>"),
+            Self::Unit => write!(f, "()"),
+            Self::SqlxPostgresTypesPgInterval => write!(f, ""),
+            Self::SqlxPostgresTypesPgRangeGeneric => write!(f, ""),
+            Self::SqlxPostgresTypesPgMoney => write!(f, ""),
+            Self::SqlxPostgresTypesPgLTree => write!(f, ""),
+            Self::SqlxPostgresTypesPgLQuery => write!(f, ""),
+            Self::BigdecimalBigDecimal => write!(f, ""),
+            Self::RustDecimalDecimal => write!(f, ""),
+
+            Self::ChronoDateTimeUtcGeneric => write!(f, ""),
+            Self::ChronoDateTimeLocalGeneric => write!(f, ""),
+            Self::ChronoNaiveDateTime => write!(f, ""),
+            Self::ChronoNaiveDate => write!(f, ""),
+            Self::ChronoNaiveTime => write!(f, ""),
+            Self::ChronoPgTimeTzArray => write!(f, ""),//todo find out from what crate this type
 
 
+            Self::TimePrimitiveDateTime => write!(f, ""),
+            Self::TimeOffsetDateTime => write!(f, ""),
+            Self::TimeDate => write!(f, ""),
+            Self::TimeTime => write!(f, ""),
+            Self::TimePgTimeTzArray => write!(f, ""),//todo find out from what crate this type
+
+
+            Self::UuidUuid => write!(f, ""),
+
+
+            Self::IpnetworkIpNetwork => write!(f, ""),
+            Self::StdNetIpAddr => write!(f, ""),
+
+            Self::MacAddressMacAddress => write!(f, ""),
+
+            Self::BitVecBitVec => write!(f, ""),
+
+            Self::Json => write!(f, ""),//tood full path
+            Self::SerdeJsonValue => write!(f, ""),
+            Self::BorrowSerdeJsonValueRawValue => write!(f, "")
+        }
+    }
+}
 
 
 
