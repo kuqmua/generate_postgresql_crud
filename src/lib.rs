@@ -8113,4 +8113,8 @@ impl std::str::FromStr for SupportedFieldType {
     }
 }
 
-
+struct FieldNamedWrapper {
+    field: syn::Field,
+    supported_attribute_type: SupportedAttributeType,
+    supported_field_type: SupportedFieldType
+}
