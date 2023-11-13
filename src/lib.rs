@@ -85,8 +85,7 @@ mod generate_postgres_execute_query;
         generate_postgresql_crud_int8,
         generate_postgresql_crud_real, 
         generate_postgresql_crud_float4,
-        generate_postgresql_crud_double,
-        generate_postgresql_crud_precision,
+        generate_postgresql_crud_double_precision,
         generate_postgresql_crud_float8,
         generate_postgresql_crud_varchar,
         generate_postgresql_crud_charn, //wtf????
@@ -7444,8 +7443,7 @@ enum SupportedAttributeType {
     Int8,
     Real, 
     Float4,
-    Double,
-    Precision,
+    DoublePrecision,
     Float8,
     Varchar,
     Charn, //CHAR(N) wtf????
@@ -7501,8 +7499,7 @@ impl std::fmt::Display for SupportedAttributeType {
             Self::Int8 => write!(f, "generate_postgresql_crud_int8"),
             Self::Real => write!(f, "generate_postgresql_crud_real"), 
             Self::Float4 => write!(f, "generate_postgresql_crud_float4"),
-            Self::Double => write!(f, "generate_postgresql_crud_double"),
-            Self::Precision => write!(f, "generate_postgresql_crud_precision"),
+            Self::DoublePrecision => write!(f, "generate_postgresql_crud_double_precision"),
             Self::Float8 => write!(f, "generate_postgresql_crud_float8"),
             Self::Varchar => write!(f, "generate_postgresql_crud_varchar"),
             Self::Charn => write!(f, "generate_postgresql_crud_charn"), //CHAR(N) wtf????
@@ -7544,15 +7541,19 @@ impl std::fmt::Display for SupportedAttributeType {
     }
 }
 
-// impl std::convert::TryFrom<i64> for SupportedAttributeType {
+// fn try_match(
+//     supported_field_type: &SupportedFieldType,
+//     SupportedAttributeType: &SupportedAttributeType
+// ) -> Option<()> {
+//     match supported_field_type {
+
+//     }
+// }
+// impl std::convert::TryFrom<SupportedFieldType> for SupportedAttributeType {
 //     type Error = std::string::String;
-//     fn try_from(value: i64) -> Result<Self, Self::Error> {
-//         match value.is_positive() {
-//             true => Ok(Self(value)),
-//             false => Err(Self::Error::NotPositive {
-//                 not_positive: value,
-//                 code_occurence: crate::code_occurence_tufa_common!(),
-//             }),
+//     fn try_from(value: SupportedFieldType) -> Result<Self, Self::Error> {
+//         match value {
+
 //         }
 //     }
 // }
@@ -7574,8 +7575,7 @@ impl std::str::FromStr for SupportedAttributeType {
             "generate_postgresql_crud_int8" => Ok(Self::Int8),
             "generate_postgresql_crud_real" => Ok(Self::Real), 
             "generate_postgresql_crud_float4" => Ok(Self::Float4),
-            "generate_postgresql_crud_double" => Ok(Self::Double),
-            "generate_postgresql_crud_precision" => Ok(Self::Precision),
+            "generate_postgresql_crud_double_precision" => Ok(Self::DoublePrecision),
             "generate_postgresql_crud_float8" => Ok(Self::Float8),
             "generate_postgresql_crud_varchar" => Ok(Self::Varchar),
             "generate_postgresql_crud_charn" => Ok(Self::Charn), //CHAR(N) wtf????
