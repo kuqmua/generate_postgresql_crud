@@ -38,6 +38,12 @@ mod generate_postgres_execute_query;
 // PgLTree	LTREE
 // PgLQuery	LQUERY
 
+
+
+
+
+
+
 //todo decide where to do error log (maybe add in some places)
 //todo rename ForUrlEncoding prefix
 //todo clear unnesesary generated returns.
@@ -91,6 +97,64 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     } else {
         panic!("{proc_macro_name_ident_stringified} supports only syn::Fields::Named");
     };
+    fields_named.iter().for_each(|element|{
+        println!("{:#?}", element.attrs);
+    });
+    let suported_types = [
+        "bool",
+        "char",
+        "smallint",
+        "smallserial",
+        "int2",
+        "int",
+        "serial", 
+        "int4",
+        "bigint",
+        "bigserial", 
+        "int8",
+        "real", 
+        "float4",
+        "double",
+        "precision",
+        "float8",
+        "varcher",
+        "CHAR(N)", //wtf????
+        "text",
+        "name",
+        "bytea",
+        "void",
+        "interval",
+        "int8range",
+        "int4range",
+        "tsrange",
+        "tstzrange",
+        "daterange",
+        "numrange",
+        "money",
+        "ltree",
+        "lquery",
+
+        "numeric",
+
+        "timestamptz",
+        "timestamp",
+        "date",
+        "time",
+        "timetz",
+        "uuid",
+
+        "inet",
+        "cidr",
+
+        "macaddr",
+
+        "bit",
+        "varbit",
+
+        "json",
+        "jsonb"
+    ];
+    //
     let id_field = {
         let id_attr_name = "generate_postgresql_crud_primary_key";
         let mut id_field_option = None;
@@ -7210,4 +7274,118 @@ fn generate_payload_element_try_from_payload_element_with_serialize_deserialize_
     );
     value.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {value} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+}
+
+enum SupportedAttributeType {
+    Bool,
+    Char,
+    Smallint,
+    Smallserial,
+    Int2,
+    Int,
+    Serial, 
+    Int4,
+    Bigint,
+    Bigserial, 
+    Int8,
+    Real, 
+    Float4,
+    Double,
+    Precision,
+    Float8,
+    Varcher,
+    Charn, //CHAR(N) wtf????
+    Text,
+    Name,
+    Bytea,
+    Void,
+    Interval,
+    Int8range,
+    Int4range,
+    Tsrange,
+    Tstzrange,
+    Daterange,
+    Numrange,
+    Money,
+    Ltree,
+    Lquery,
+
+    Numeric,
+
+    Timestamptz,
+    Timestamp,
+    Date,
+    Time,
+    Timetz,
+    Uuid,
+
+    Inet,
+    Cidr,
+
+    Macaddr,
+
+    Bit,
+    Varbit,
+
+    Json,
+    Jsonb
+}
+
+impl std::fmt::Display for SupportedAttributeType {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::Bool => write!(f, ""),
+            Self::Char => write!(f, ""),
+            Self::Smallint => write!(f, ""),
+            Self::Smallserial => write!(f, ""),
+            Self::Int2 => write!(f, ""),
+            Self::Int => write!(f, ""),
+            Self::Serial => write!(f, ""), 
+            Self::Int4 => write!(f, ""),
+            Self::Bigint => write!(f, ""),
+            Self::Bigserial => write!(f, ""), 
+            Self::Int8 => write!(f, ""),
+            Self::Real => write!(f, ""), 
+            Self::Float4 => write!(f, ""),
+            Self::Double => write!(f, ""),
+            Self::Precision => write!(f, ""),
+            Self::Float8 => write!(f, ""),
+            Self::Varcher => write!(f, ""),
+            Self::Charn => write!(f, ""), //CHAR(N) wtf????
+            Self::Text => write!(f, ""),
+            Self::Name => write!(f, ""),
+            Self::Bytea => write!(f, ""),
+            Self::Void => write!(f, ""),
+            Self::Interval => write!(f, ""),
+            Self::Int8range => write!(f, ""),
+            Self::Int4range => write!(f, ""),
+            Self::Tsrange => write!(f, ""),
+            Self::Tstzrange => write!(f, ""),
+            Self::Daterange => write!(f, ""),
+            Self::Numrange => write!(f, ""),
+            Self::Money => write!(f, ""),
+            Self::Ltree => write!(f, ""),
+            Self::Lquery => write!(f, ""),
+
+            Self::Numeric => write!(f, ""),
+
+            Self::Timestamptz => write!(f, ""),
+            Self::Timestamp => write!(f, ""),
+            Self::Date => write!(f, ""),
+            Self::Time => write!(f, ""),
+            Self::Timetz => write!(f, ""),
+            Self::Uuid => write!(f, ""),
+
+            Self::Inet => write!(f, ""),
+            Self::Cidr => write!(f, ""),
+
+            Self::Macaddr => write!(f, ""),
+
+            Self::Bit => write!(f, ""),
+            Self::Varbit => write!(f, ""),
+
+            Self::Json => write!(f, ""),
+            Self::Jsonb => write!(f, ""),
+        }
+    }
 }
