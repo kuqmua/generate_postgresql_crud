@@ -220,10 +220,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 println!("{value}");
                 let ty = &element.ty;
                 let ty_stringified = quote::quote!{#ty}.to_string().replace(" ", "");
-                // println!("{}", );
-                
+                println!("{ty_stringified}");
+                let supported_field_type = {
+                    use std::str::FromStr;
+                    SupportedFieldType::from_str(ty_stringified.as_str()).unwrap_or_else(|_| panic!(
+                        "{proc_macro_name_ident_stringified} {ty_stringified} SupportedFieldType::try_from failed. supported: {:?}", 
+                        SupportedFieldType::into_array().into_iter().map(|element|element.to_string()).collect::<Vec<std::string::String>>()
+                    ))
+                };
+                println!("{supported_field_type:#?}");
             }
-            None => panic!("{proc_macro_name_ident_stringified} no field attribute found for {field_ident}, supported: {:?}", SupportedAttributeType::into_array().into_iter().map(|element|element.to_string()).collect::<Vec<std::string::String>>())
+            None => panic!(
+                "{proc_macro_name_ident_stringified} no field attribute found for {field_ident}, supported: {:?}", 
+                SupportedAttributeType::into_array().into_iter().map(|element|element.to_string()).collect::<Vec<std::string::String>>()
+            )
         }
     });
     //
@@ -7314,6 +7324,113 @@ fn generate_payload_element_try_from_payload_element_with_serialize_deserialize_
     Eq,
 )]
 enum SupportedAttributeType {
+    // Bool,
+    // Bytea,
+    // Char,
+    // Name,
+    // Int8,
+    // Int2,
+    // Int4,
+    // Text,
+    // Oid,
+    // Json,
+    // JsonArray,
+    // Point,
+    // Lseg,
+    // Path,
+    // Box,
+    // Polygon,
+    // Line,
+    // LineArray,
+    // Cidr,
+    // CidrArray,
+    // Float4,
+    // Float8,
+    // Unknown,
+    // Circle,
+    // CircleArray,
+    // Macaddr8,
+    // Macaddr8Array,
+    // Macaddr,
+    // Inet,
+    // BoolArray,
+    // ByteaArray,
+    // CharArray,
+    // NameArray,
+    // Int2Array,
+    // Int4Array,
+    // TextArray,
+    // BpcharArray,
+    // VarcharArray,
+    // Int8Array,
+    // PointArray,
+    // LsegArray,
+    // PathArray,
+    // BoxArray,
+    // Float4Array,
+    // Float8Array,
+    // PolygonArray,
+    // OidArray,
+    // MacaddrArray,
+    // InetArray,
+    // Bpchar,
+    // Varchar,
+    // Date,
+    // Time,
+    // Timestamp,
+    // TimestampArray,
+    // DateArray,
+    // TimeArray,
+    // Timestamptz,
+    // TimestamptzArray,
+    // Interval,
+    // IntervalArray,
+    // NumericArray,
+    // Timetz,
+    // TimetzArray,
+    // Bit,
+    // BitArray,
+    // Varbit,
+    // VarbitArray,
+    // Numeric,
+    // Record,
+    // RecordArray,
+    // Uuid,
+    // UuidArray,
+    // Jsonb,
+    // JsonbArray,
+    // Int4Range,
+    // Int4RangeArray,
+    // NumRange,
+    // NumRangeArray,
+    // TsRange,
+    // TsRangeArray,
+    // TstzRange,
+    // TstzRangeArray,
+    // DateRange,
+    // DateRangeArray,
+    // Int8Range,
+    // Int8RangeArray,
+    // Jsonpath,
+    // JsonpathArray,
+    // Money,
+    // MoneyArray,
+
+    // // https://www.postgresql.org/docs/9.3/datatype-pseudo.html
+    // Void,
+
+    // // A realized user-defined type. When a connection sees a DeclareXX variant it resolves
+    // // into this one before passing it along to `accepts` or inside of `Value` objects.
+    // Custom(Arc<PgCustomType>),
+
+    // // From [`PgTypeInfo::with_name`]
+    // DeclareWithName(UStr),
+
+    // // NOTE: Do we want to bring back type declaration by ID? It's notoriously fragile but
+    // //       someone may have a user for it
+    // DeclareWithOid(Oid),
+
+    /////////////////////////////
     Bool,
     Char,
     Smallint,
@@ -7427,6 +7544,18 @@ impl std::fmt::Display for SupportedAttributeType {
     }
 }
 
+// impl std::convert::TryFrom<i64> for SupportedAttributeType {
+//     type Error = std::string::String;
+//     fn try_from(value: i64) -> Result<Self, Self::Error> {
+//         match value.is_positive() {
+//             true => Ok(Self(value)),
+//             false => Err(Self::Error::NotPositive {
+//                 not_positive: value,
+//                 code_occurence: crate::code_occurence_tufa_common!(),
+//             }),
+//         }
+//     }
+// }
 
 impl std::str::FromStr for SupportedAttributeType {
     type Err = std::string::String;
@@ -7494,6 +7623,13 @@ impl std::str::FromStr for SupportedAttributeType {
 
 // struct Field
 //for now its better to check types manually to remove potential problems with token generation https://docs.rs/sqlx/0.7.2/sqlx/trait.Type.html
+#[derive(
+    Debug, 
+    enum_extension::EnumExtension,
+    strum_macros::EnumIter,
+    PartialEq,
+    Eq,
+)]
 enum SupportedFieldType {
     StdPrimitiveI16,
     StdPrimitiveStr,
@@ -7884,326 +8020,3 @@ impl std::str::FromStr for SupportedFieldType {
 }
 
 
-
-
-// bool
-// i8
-// i16
-// i32
-// i64
-// f32
-// f64
-// &str, String
-// &[u8], Vec<u8>
-// ()
-// PgInterval
-// PgRange<T>
-// PgMoney
-// PgLTree
-// PgLQuery
-
-
-// bigdecimal::BigDecimal
-
-
-// rust_decimal::Decimal
-
-
-// chrono::DateTime<Utc>
-// chrono::DateTime<Local>
-// chrono::NaiveDateTime
-// chrono::NaiveDate
-// chrono::NaiveTime
-// [PgTimeTz]
-
-
-// time::PrimitiveDateTime
-// time::OffsetDateTime
-// time::Date
-// time::Time
-// [PgTimeTz]
-
-
-// uuid::Uuid
-
-
-// ipnetwork::IpNetwork
-// std::net::IpAddr
-
-// mac_address::MacAddress
-
-// bit_vec::BitVec
-
-// Json<T>
-// serde_json::Value
-// &serde_json::value::RawValue
-
-
-
-//////////////////////////////////////
-
-// impl<T, DB> Type<DB> for Option<T>
-// where
-//     T: Type<DB>,
-//     DB: Database,
-
-// impl<T, DB> Type<DB> for &T
-// where
-//     T: Type<DB> + ?Sized,
-//     DB: Database,
-
-// impl<DB> Type<DB> for Value
-// where
-//     Json<Value>: Type<DB>,
-//     DB: Database,
-
-// impl<DB> Type<DB> for RawValue
-// where
-//     Json<&'a RawValue>: for<'a> Type<DB>,
-//     DB: Database,
-
-// impl Type<Any> for Vec<u8, Global>
-
-// impl Type<Any> for [u8]
-
-// impl<T> Type<Postgres> for [T]
-// where
-//     T: PgHasArrayType,
-
-// impl Type<Postgres> for PgRange<OffsetDateTime>
-
-// impl Type<Postgres> for i16
-
-// impl Type<Postgres> for str
-
-// impl Type<Postgres> for i64
-
-// impl Type<Postgres> for Oid
-
-// impl Type<Postgres> for IpAddr
-// where
-//     IpNetwork: Type<Postgres>,
-
-// impl Type<Postgres> for Duration
-
-// impl Type<Postgres> for i32
-
-// impl Type<Postgres> for ()
-
-// impl Type<Postgres> for PgLQuery
-
-// impl Type<Postgres> for Duration
-
-// impl<T1, T2, T3, T4, T5> Type<Postgres> for (T1, T2, T3, T4, T5)
-
-// impl<T1, T2, T3, T4, T5, T6, T7, T8> Type<Postgres> for (T1, T2, T3, T4, T5, T6, T7, T8)
-
-// impl Type<Postgres> for Box<str, Global>
-
-// impl Type<Postgres> for PgRange<Date>
-
-// impl Type<Postgres> for Cow<'_, str>
-
-// impl Type<Postgres> for PgRange<Decimal>
-
-// impl Type<Postgres> for PgTimeTz<Time, UtcOffset>
-
-// impl Type<Postgres> for PgRange<PrimitiveDateTime>
-
-// impl Type<Postgres> for PgRange<NaiveDateTime>
-
-// impl Type<Postgres> for PgRange<i64>
-
-// impl<T1, T2, T3> Type<Postgres> for (T1, T2, T3)
-
-// impl Type<Postgres> for f64
-
-// impl Type<Postgres> for PgLTree
-
-// impl Type<Postgres> for f32
-
-// impl<T1, T2, T3, T4> Type<Postgres> for (T1, T2, T3, T4)
-
-// impl Type<Postgres> for PgRange<BigDecimal>
-
-// impl Type<Postgres> for String
-
-// impl<T1, T2, T3, T4, T5, T6> Type<Postgres> for (T1, T2, T3, T4, T5, T6)
-
-// impl<T1> Type<Postgres> for (T1,)
-
-// impl Type<Postgres> for PgRange<NaiveDate>
-
-// impl<T1, T2, T3, T4, T5, T6, T7, T8, T9> Type<Postgres> for (T1, T2, T3, T4, T5, T6, T7, T8, T9)
-
-// impl Type<Postgres> for PgMoney
-
-// impl<T1, T2, T3, T4, T5, T6, T7> Type<Postgres> for (T1, T2, T3, T4, T5, T6, T7)
-
-// impl Type<Postgres> for Duration
-
-// impl Type<Postgres> for i8
-
-// impl<T> Type<Postgres> for Vec<T, Global>
-// where
-//     T: PgHasArrayType,
-
-// impl Type<Postgres> for PgInterval
-
-// impl<T, const N: usize> Type<Postgres> for [T; N]
-// where
-//     T: PgHasArrayType,
-
-// impl<Tz> Type<Postgres> for PgRange<DateTime<Tz>>
-// where
-//     Tz: TimeZone,
-
-// impl Type<Postgres> for bool
-
-// impl Type<Postgres> for PgRange<i32>
-
-// impl<T1, T2> Type<Postgres> for (T1, T2)
-
-// impl Type<Postgres> for PgTimeTz<NaiveTime, FixedOffset>
-
-// impl Type<Postgres> for IpNetwork
-
-// impl Type<Postgres> for NaiveDate
-
-// impl Type<Postgres> for NaiveDateTime
-
-// impl Type<Postgres> for NaiveTime
-
-// impl Type<Postgres> for MacAddress
-
-// impl Type<Postgres> for BigDecimal
-
-// impl Type<Postgres> for BitVec<u32>
-
-// impl Type<Postgres> for Decimal
-
-// impl Type<Postgres> for Uuid
-
-// impl Type<Postgres> for Date
-
-// impl Type<Postgres> for OffsetDateTime
-
-// impl Type<Postgres> for PrimitiveDateTime
-
-// impl Type<Postgres> for Time
-
-// impl<T> Type<Postgres> for Json<T>
-
-// impl<Tz> Type<Postgres> for DateTime<Tz>
-// where
-//     Tz: TimeZone,
-
-
-
-// pub enum PgType {
-//     Bool,
-//     Bytea,
-//     Char,
-//     Name,
-//     Int8,
-//     Int2,
-//     Int4,
-//     Text,
-//     Oid,
-//     Json,
-//     JsonArray,
-//     Point,
-//     Lseg,
-//     Path,
-//     Box,
-//     Polygon,
-//     Line,
-//     LineArray,
-//     Cidr,
-//     CidrArray,
-//     Float4,
-//     Float8,
-//     Unknown,
-//     Circle,
-//     CircleArray,
-//     Macaddr8,
-//     Macaddr8Array,
-//     Macaddr,
-//     Inet,
-//     BoolArray,
-//     ByteaArray,
-//     CharArray,
-//     NameArray,
-//     Int2Array,
-//     Int4Array,
-//     TextArray,
-//     BpcharArray,
-//     VarcharArray,
-//     Int8Array,
-//     PointArray,
-//     LsegArray,
-//     PathArray,
-//     BoxArray,
-//     Float4Array,
-//     Float8Array,
-//     PolygonArray,
-//     OidArray,
-//     MacaddrArray,
-//     InetArray,
-//     Bpchar,
-//     Varchar,
-//     Date,
-//     Time,
-//     Timestamp,
-//     TimestampArray,
-//     DateArray,
-//     TimeArray,
-//     Timestamptz,
-//     TimestamptzArray,
-//     Interval,
-//     IntervalArray,
-//     NumericArray,
-//     Timetz,
-//     TimetzArray,
-//     Bit,
-//     BitArray,
-//     Varbit,
-//     VarbitArray,
-//     Numeric,
-//     Record,
-//     RecordArray,
-//     Uuid,
-//     UuidArray,
-//     Jsonb,
-//     JsonbArray,
-//     Int4Range,
-//     Int4RangeArray,
-//     NumRange,
-//     NumRangeArray,
-//     TsRange,
-//     TsRangeArray,
-//     TstzRange,
-//     TstzRangeArray,
-//     DateRange,
-//     DateRangeArray,
-//     Int8Range,
-//     Int8RangeArray,
-//     Jsonpath,
-//     JsonpathArray,
-//     Money,
-//     MoneyArray,
-
-//     // https://www.postgresql.org/docs/9.3/datatype-pseudo.html
-//     Void,
-
-//     // A realized user-defined type. When a connection sees a DeclareXX variant it resolves
-//     // into this one before passing it along to `accepts` or inside of `Value` objects.
-//     Custom(Arc<PgCustomType>),
-
-//     // From [`PgTypeInfo::with_name`]
-//     DeclareWithName(UStr),
-
-//     // NOTE: Do we want to bring back type declaration by ID? It's notoriously fragile but
-//     //       someone may have a user for it
-//     DeclareWithOid(Oid),
-// }
