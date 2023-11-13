@@ -215,8 +215,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
             acc
         }) {
-            Some(value) => {
-                println!("{value}");
+            Some(supported_attribute_type) => {
+                println!("{supported_attribute_type}");
                 let ty = &element.ty;
                 let ty_stringified = quote::quote!{#ty}.to_string().replace(" ", "");
                 println!("{ty_stringified}");
@@ -228,6 +228,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ))
                 };
                 println!("{supported_field_type:#?}");
+                match try_match_supported_attribute_type_with_supported_field_type(&supported_attribute_type, &supported_field_type) {
+                    true => {
+
+                    },
+                    false => panic!(
+                        "{proc_macro_name_ident_stringified} supported_attribute_type {supported_attribute_type} is not matching to supported_field_type {supported_field_type}, see https://docs.rs/sqlx-postgres/0.7.2/sqlx_postgres/types/index.html", 
+                    )
+                }
             }
             None => panic!(
                 "{proc_macro_name_ident_stringified} no field attribute found for {field_ident}, supported: {:?}", 
@@ -7541,7 +7549,7 @@ impl std::fmt::Display for SupportedAttributeType {
     }
 }
 
-fn try_match_supported_field_type_with_supported_attribute_type(
+fn try_match_supported_attribute_type_with_supported_field_type(
     supported_attribute_type: &SupportedAttributeType,
     supported_field_type: &SupportedFieldType,
 ) -> bool {
@@ -7991,7 +7999,7 @@ impl std::str::FromStr for SupportedFieldType {
     fn from_str(value: &str) -> Result<Self, Self::Err> {
         match value {
             "std::primitive::i16" => Ok(Self::StdPrimitiveI16),
-            "std::primitive::str" => Ok(Self::StdPrimitiveStr),
+            "std::primitive::str" => Ok(Self::StdPrimitiveStr),//todo - maybe not allow str?
             "std::primitive::i64" => Ok(Self::StdPrimitiveI64),
             "std::primitive::i32" => Ok(Self::StdPrimitiveI32),
             "std::primitive::f64" => Ok(Self::StdPrimitiveF64),
