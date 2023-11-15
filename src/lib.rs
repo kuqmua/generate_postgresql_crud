@@ -246,6 +246,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             supported_field_type
         }
     }).collect::<Vec<FieldNamedWrapperExcludingPrimaryKey>>();
+    let fields_named_len = fields_named.len();
+    let fields_named_wrappers_excluding_primary_key_len = fields_named_wrappers_excluding_primary_key.len();
     let id_field_ident_quotes_token_stream = {
         let id_field_ident_quotes_stringified = format!("\"{id_field_ident}\"");
         id_field_ident_quotes_stringified.parse::<proc_macro2::TokenStream>()
@@ -1571,7 +1573,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let crate_server_postgres_bind_query_bind_query_try_generate_bind_increments_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::try_generate_bind_increments};
     let crate_server_postgres_bind_query_bind_query_try_increment_token_stream = quote::quote!{crate::server::postgres::bind_query::BindQuery::try_increment};
     let crate_common_serde_urlencoded_serde_urlencoded_parameter_serde_urlencoded_parameter_token_stream = quote::quote!{#crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream::serde_urlencoded_parameter};
-    let fields_named_len = fields_named.len();
     let dot_space = ", ";
     // let pg_temp_stringified = "pg_temp";
     let pg_connection_token_stream = quote::quote!{pg_connection};
@@ -1817,13 +1818,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let fields_named_filtered = fields_named_wrappers_excluding_primary_key.iter()
                         .map(|element|&element.field)
                         .collect::<std::vec::Vec<&syn::Field>>();
-                        let fields_named_len = fields_named_filtered.len();
                         fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
                             let field_ident = field.ident.clone().unwrap_or_else(|| {
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                             let incremented_index = index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE));
-                            match incremented_index == fields_named_len {
+                            match incremented_index == fields_named_wrappers_excluding_primary_key_len {
                                 true => {
                                     acc.push_str(&format!("{field_ident}"));
                                 },
@@ -2168,7 +2168,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         column_increments
                     ) = {
                         let fields_named_filtered = fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect::<std::vec::Vec<&syn::Field>>();
-                        let fields_named_len = fields_named_filtered.len();
                         fields_named_filtered.iter().enumerate().fold((
                             std::string::String::default(),
                             std::string::String::default()
@@ -2177,7 +2176,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                             let incremented_index = index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE));
-                            match incremented_index == fields_named_len {
+                            match incremented_index == fields_named_wrappers_excluding_primary_key_len {
                                 true => {
                                     acc.0.push_str(&format!("{field_ident}"));
                                     acc.1.push_str(&format!("${incremented_index}"));
@@ -4432,7 +4431,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let query_string_token_stream = {
                     let additional_parameters_modification_token_stream = {
                         let fields_named_filtered = fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect::<std::vec::Vec<&syn::Field>>();
-                        let fields_named_len = fields_named_filtered.len();
                         fields_named_filtered.iter().enumerate().map(|(index, field)| {
                             let field_ident = field.ident.clone()
                                 .unwrap_or_else(|| {
@@ -4441,7 +4439,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let handle_token_stream = {
                                 let possible_dot_space = match (
                                     index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE))
-                                ) == fields_named_len {
+                                ) == fields_named_wrappers_excluding_primary_key_len {
                                     true => "",
                                     false => dot_space,
                                 };
@@ -4926,14 +4924,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     });
                     let declarations = {
                         let fields_named_filtered = fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect::<std::vec::Vec<&syn::Field>>();
-                        let fields_named_len = fields_named_filtered.len();
                         fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
                             let field_ident = field.ident.clone().unwrap_or_else(|| {
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
                             });
                             let possible_dot_space = match (
                                 index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE))
-                            ) == fields_named_len {
+                            ) == fields_named_wrappers_excluding_primary_key_len {
                                 true => "",
                                 false => dot_space,
                             };
