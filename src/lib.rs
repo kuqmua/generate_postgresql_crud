@@ -5,8 +5,6 @@ mod from_log_and_return_error;
 mod generate_postgres_transaction;
 mod generate_postgres_execute_query;
 
-
-
 // trait Something {
 //     fn something();
 // }
@@ -248,7 +246,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             supported_field_type
         }
     }).collect::<Vec<FieldNamedWrapperExcludingPrimaryKey>>();
-    //
     let id_field_ident_quotes_token_stream = {
         let id_field_ident_quotes_stringified = format!("\"{id_field_ident}\"");
         id_field_ident_quotes_stringified.parse::<proc_macro2::TokenStream>()
@@ -287,36 +284,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_options_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let struct_options_token_stream = {
-        // let fields_options = fields_named.iter().map(|field| {
-        //     let field_vis = &field.vis;
-        //     let field_ident = &field.ident;
-        //     let field_type_path = &field.ty;
-        //     quote::quote! {
-        //         #[serde(skip_serializing_if = "Option::is_none")]
-        //         #field_vis #field_ident: Option<#field_type_path>
-        //     }
-        // });
-        //
         let field_option_id_token_stream = quote::quote!{
             pub #id_field_ident: crate::server::postgres::uuid_wrapper::PossibleUuidWrapper
         };
-        let fields_options_excluding_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-            true => None,
-            false => {
-                let field_vis = &field.vis;
-                let field_ident = &field.ident;
-                let field_type_path = &field.ty;
-                Some(quote::quote!{
-                    #[serde(skip_serializing_if = "Option::is_none")]
-                    #field_vis #field_ident: Option<#field_type_path>
-                })
-            },
+        let fields_options_excluding_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
+            let field_vis = &element.field.vis;
+            let field_ident = &element.field.ident;
+            let field_type_path = &element.field.ty;
+            quote::quote!{
+                #[serde(skip_serializing_if = "Option::is_none")]
+                #field_vis #field_ident: Option<#field_type_path>
+            }
         });
-        //
         quote::quote! {
             #derive_debug_serialize_deserialize_token_stream
             pub struct #struct_options_ident_token_stream {
-                // #(#fields_options),*
                 #field_option_id_token_stream,
                 #(#fields_options_excluding_id_token_stream),*
             }
@@ -326,18 +308,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let ident_option_variant_id_token_stream = quote::quote!{
             #id_field_ident: Option<value.#id_field_ident>
         };
-        let ident_option_variants_excluding_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-            true => None,
-            false => {
-                let field_ident = field.ident
-                    .clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                    });
-                Some(quote::quote!{
-                    #field_ident: Some(value.#field_ident.into())
-                })
-            },
+        let ident_option_variants_excluding_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
+            let field_ident = element.field.ident
+                .clone()
+                .unwrap_or_else(|| {
+                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                });
+            quote::quote!{
+                #field_ident: Some(value.#field_ident.into())
+            }
         });
         quote::quote! {
             impl std::convert::From<#ident> for #struct_options_ident_token_stream {
@@ -846,15 +825,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 Option<#sqlx_types_uuid_token_stream>: #sqlx_decode_decode_database_token_stream,
                 Option<#sqlx_types_uuid_token_stream>: #sqlx_types_type_database_token_stream,
             };
-            let sqlx_decode_decode_and_sqlx_types_type_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_type = &field.ty;
-                    Some(quote::quote!{
-                        Option<#field_type>: #sqlx_decode_decode_database_token_stream,
-                        Option<#field_type>: #sqlx_types_type_database_token_stream,
-                    })
-                },
+            let sqlx_decode_decode_and_sqlx_types_type_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
+                let field_type = &element.field.ty;
+                quote::quote!{
+                    Option<#field_type>: #sqlx_decode_decode_database_token_stream,
+                    Option<#field_type>: #sqlx_types_type_database_token_stream,
+                }
             });
             quote::quote! {
                 impl #column_select_ident_token_stream {
@@ -1697,18 +1673,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{parameters_token_stream}");
         let payload_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        }); 
-                    let field_type = &field.ty;
-                    Some(quote::quote!{
-                        pub #field_ident: #field_type
-                    })
-                },
+            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
+                let field_ident = element.field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    }); 
+                let field_type = &element.field.ty;
+                quote::quote!{
+                    pub #field_ident: #field_type
+                }
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
@@ -1841,7 +1814,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 );
                 let query_string_token_stream = {
                     let column_names = {
-                        let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<std::vec::Vec<&syn::Field>>();
+                        let fields_named_filtered = fields_named_wrappers_excluding_primary_key.iter()
+                        .map(|element|&element.field)
+                        .collect::<std::vec::Vec<&syn::Field>>();
                         let fields_named_len = fields_named_filtered.len();
                         fields_named_filtered.iter().enumerate().fold(std::string::String::default(), |mut acc, (index, field)| {
                             let field_ident = field.ident.clone().unwrap_or_else(|| {
@@ -1860,7 +1835,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         })
                     };
                     let column_increments = {
-                        let mut column_increments = fields_named.iter().filter(|field|*field != &id_field).enumerate().fold(std::string::String::default(), |mut acc, (index, _)| {
+                        let mut column_increments = fields_named_wrappers_excluding_primary_key.iter()
+                        .map(|element|&element.field)
+                        .collect::<Vec<&syn::Field>>()
+                        .iter()
+                        .enumerate().fold(std::string::String::default(), |mut acc, (index, _)| {
                             acc.push_str(&format!("${}, ", index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE))));
                             acc
                         });
@@ -1876,28 +1855,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 // println!("{query_string_token_stream}");
                 let binded_query_token_stream = {
-                    let column_vecs_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                        true => None,
-                        false => {
-                            let field_ident_underscore_vec_token_stream = {
-                                let field_ident_underscore_vec_stringified = {
-                                    let field_ident = field.ident.clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                                        });
-                                    format!("{field_ident}{underscore_vec_name_stringified}")
-                                };
-                                field_ident_underscore_vec_stringified.parse::<proc_macro2::TokenStream>()
-                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_underscore_vec_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                            };
-                            Some(field_ident_underscore_vec_token_stream)
-                        },
+                    let column_vecs_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
+                        let field_ident_underscore_vec_stringified = {
+                            let field_ident = element.field.ident.clone()
+                                .unwrap_or_else(|| {
+                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                                });
+                            format!("{field_ident}{underscore_vec_name_stringified}")
+                        };
+                        field_ident_underscore_vec_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_underscore_vec_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     });
-                    let column_vecs_with_capacity_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                        true => None,
-                        false => Some(quote::quote!{std::vec::Vec::with_capacity(#current_vec_len_name_token_stream)}),
-                    });
-                    let columns_acc_push_elements_token_stream = fields_named.iter().filter(|field|*field != &id_field).enumerate().map(|(index, field)|{
+                    let handle_fields_named_wrappers_excluding_primary_key = fields_named_wrappers_excluding_primary_key.iter()
+                    .map(|element|&element.field)
+                    .collect::<Vec<&syn::Field>>();
+                    let column_vecs_with_capacity_token_stream = handle_fields_named_wrappers_excluding_primary_key.iter().map(|_|quote::quote!{std::vec::Vec::with_capacity(#current_vec_len_name_token_stream)});
+                    let columns_acc_push_elements_token_stream = handle_fields_named_wrappers_excluding_primary_key.iter()
+                    .enumerate().map(|(index, field)|{
                         let field_ident = field.ident.clone()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_ident_stringified} field.ident is None")
@@ -1909,22 +1883,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         quote::quote!{#acc_name_token_stream.#index_token_stream.push(#element_name_token_stream.#field_ident);}
                     });
-                    let column_query_bind_vecs_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                        true => None,
-                        false => {
-                            let field_ident_underscore_vec_token_stream = {
-                                let field_ident_underscore_vec_stringified = {
-                                    let field_ident = field.ident.clone()
-                                        .unwrap_or_else(|| {
-                                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                                        });
-                                    format!("{field_ident}{underscore_vec_name_stringified}")
-                                };
-                                field_ident_underscore_vec_stringified.parse::<proc_macro2::TokenStream>()
-                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_underscore_vec_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    let column_query_bind_vecs_token_stream = handle_fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+                        let field_ident_underscore_vec_token_stream = {
+                            let field_ident_underscore_vec_stringified = {
+                                let field_ident = element.ident.clone()
+                                    .unwrap_or_else(|| {
+                                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                                    });
+                                format!("{field_ident}{underscore_vec_name_stringified}")
                             };
-                            Some(quote::quote!{#query_name_token_stream = #query_name_token_stream.bind(#field_ident_underscore_vec_token_stream);})
-                        },
+                            field_ident_underscore_vec_stringified.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_underscore_vec_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        };
+                        quote::quote!{#query_name_token_stream = #query_name_token_stream.bind(#field_ident_underscore_vec_token_stream);}
                     });
                     quote::quote!{
                         let mut #query_name_token_stream = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
@@ -2079,18 +2050,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{parameters_token_stream}");
         let payload_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    let field_type = &field.ty;
-                    Some(quote::quote!{
-                        pub #field_ident: #field_type
-                    })
-                },
+            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
+                let field_ident = element.field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                let field_type = &element.field.ty;
+                quote::quote!{
+                    pub #field_ident: #field_type
+                }
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
@@ -2199,7 +2167,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         column_names,
                         column_increments
                     ) = {
-                        let fields_named_filtered = fields_named.iter().filter(|field|*field != &id_field).collect::<std::vec::Vec<&syn::Field>>();
+                        let fields_named_filtered = fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect::<std::vec::Vec<&syn::Field>>();
                         let fields_named_len = fields_named_filtered.len();
                         fields_named_filtered.iter().enumerate().fold((
                             std::string::String::default(),
@@ -2228,17 +2196,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 // println!("{query_string_token_stream}");
                 let binded_query_token_stream = {
-                    let binded_query_modifications_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                        true => None,
-                        false => {
-                            let field_ident = field.ident.clone()
-                                .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                                });
-                            Some(quote::quote!{
-                                query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(#parameters_lower_case_token_stream.#payload_lower_case_token_stream.#field_ident, query);
-                            })
-                        },
+                    let binded_query_modifications_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+                        let field_ident = element.field.ident.clone()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                            });
+                        quote::quote!{
+                            query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(#parameters_lower_case_token_stream.#payload_lower_case_token_stream.#field_ident, query);
+                        }
                     });
                     quote::quote!{
                         let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
@@ -2750,17 +2715,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{parameters_token_stream}");
         let payload_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    Some(quote::quote!{
-                        pub #field_ident: Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
-                    })
-                },
+            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+                let field_ident = element.field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    pub #field_ident: Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
+                }
             });
             quote::quote!{
                 #derive_debug_token_stream
@@ -2776,17 +2738,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{payload_token_stream}");
         let payload_with_serialize_deserialize_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    Some(quote::quote!{
-                        pub #field_ident: Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
-                    })
-                },
+            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+                let field_ident = element.field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    pub #field_ident: Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
+                }
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
@@ -2837,17 +2796,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 }
             };
-            let fields_assignment_excluding_primary_key_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    Some(quote::quote!{
-                        let #field_ident = value.#field_ident;
-                    })
-                },
+            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+                let field_ident = element.field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    let #field_ident = value.#field_ident;
+                }
             });
             quote::quote!{
                 impl std::convert::TryFrom<#read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream> for #read_many_with_body_payload_camel_case_token_stream {
@@ -2882,17 +2838,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 }
             };
-            let fields_assignment_excluding_primary_key_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                true => None,
-                false => {
-                    let field_ident = field.ident.clone()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                        });
-                    Some(quote::quote!{
-                        let #field_ident = value.#field_ident;
-                    })
-                },
+            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+                let field_ident = element.field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    let #field_ident = value.#field_ident;
+                }
             });
             quote::quote!{
                 impl std::convert::From<#read_many_with_body_payload_camel_case_token_stream> for #read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
@@ -3031,84 +2984,81 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         }
                     };
-                    let filter_unique_parameters_other_columns_token_stream = fields_named.iter().filter_map(|field|match field == &id_field {
-                        true => None,
-                        false => {
-                            let field_ident = field.ident.clone()
-                                .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                                });
-                            let field_handle_token_stream = {
-                                let field_handle_stringified = format!("{field_ident}_handle");
-                                field_handle_stringified.parse::<proc_macro2::TokenStream>()
-                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                            };
-                            let not_unique_field_vec_lower_case_token_stream = {
-                                let not_unique_field_vec_lower_case_stringified = format!("not_unique_{field_ident}_vec");
-                                not_unique_field_vec_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {not_unique_field_vec_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                            };
-                            let not_unique_field_vec_vec_pascal_token_stream = {
-                                let not_unique_field_vec_pascal_stringified = format!(
-                                    "NotUnique{}Vec",
-                                    {
-                                        use convert_case::Casing;
-                                        field_ident.to_string().to_case(convert_case::Case::Pascal)
-                                    }
-                                );
-                                not_unique_field_vec_pascal_stringified.parse::<proc_macro2::TokenStream>()
-                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {not_unique_field_vec_pascal_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                            };
-                            Some(quote::quote!{
-                                let #field_handle_token_stream = match #parameters_lower_case_token_stream.#payload_lower_case_token_stream.#field_ident {
-                                    Some(value) => {
-                                        let is_unique = {
-                                            let mut vec = std::vec::Vec::with_capacity(value.len());
-                                            let mut is_unique = true;
-                                            for element in &value {
-                                                match vec.contains(&element) {
-                                                    true => {
-                                                        is_unique = false;
-                                                        break;
-                                                    }
-                                                    false => {
-                                                        vec.push(element);
-                                                    }
+                    let filter_unique_parameters_other_columns_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
+                        let field_ident = element.field.ident.clone()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_ident_stringified} field.ident is None")
+                            });
+                        let field_handle_token_stream = {
+                            let field_handle_stringified = format!("{field_ident}_handle");
+                            field_handle_stringified.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        };
+                        let not_unique_field_vec_lower_case_token_stream = {
+                            let not_unique_field_vec_lower_case_stringified = format!("not_unique_{field_ident}_vec");
+                            not_unique_field_vec_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {not_unique_field_vec_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        };
+                        let not_unique_field_vec_vec_pascal_token_stream = {
+                            let not_unique_field_vec_pascal_stringified = format!(
+                                "NotUnique{}Vec",
+                                {
+                                    use convert_case::Casing;
+                                    field_ident.to_string().to_case(convert_case::Case::Pascal)
+                                }
+                            );
+                            not_unique_field_vec_pascal_stringified.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {not_unique_field_vec_pascal_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        };
+                        quote::quote!{
+                            let #field_handle_token_stream = match #parameters_lower_case_token_stream.#payload_lower_case_token_stream.#field_ident {
+                                Some(value) => {
+                                    let is_unique = {
+                                        let mut vec = std::vec::Vec::with_capacity(value.len());
+                                        let mut is_unique = true;
+                                        for element in &value {
+                                            match vec.contains(&element) {
+                                                true => {
+                                                    is_unique = false;
+                                                    break;
+                                                }
+                                                false => {
+                                                    vec.push(element);
                                                 }
                                             }
-                                            is_unique
-                                        };
-                                        match is_unique {
-                                            true => Some(value),
-                                            false => {
-                                                let #not_unique_field_vec_lower_case_token_stream = {
-                                                    let mut vec = std::vec::Vec::with_capacity(value.len());
-                                                    let mut #not_unique_field_vec_lower_case_token_stream = std::vec::Vec::with_capacity(value.len());
-                                                    for element in value {
-                                                        match vec.contains(&element) {
-                                                            true => {
-                                                                #not_unique_field_vec_lower_case_token_stream.push(element);
-                                                            }
-                                                            false => {
-                                                                vec.push(element);
-                                                            }
+                                        }
+                                        is_unique
+                                    };
+                                    match is_unique {
+                                        true => Some(value),
+                                        false => {
+                                            let #not_unique_field_vec_lower_case_token_stream = {
+                                                let mut vec = std::vec::Vec::with_capacity(value.len());
+                                                let mut #not_unique_field_vec_lower_case_token_stream = std::vec::Vec::with_capacity(value.len());
+                                                for element in value {
+                                                    match vec.contains(&element) {
+                                                        true => {
+                                                            #not_unique_field_vec_lower_case_token_stream.push(element);
+                                                        }
+                                                        false => {
+                                                            vec.push(element);
                                                         }
                                                     }
-                                                    #not_unique_field_vec_lower_case_token_stream
-                                                };
-                                                let error = #prepare_and_execute_query_error_token_stream::#not_unique_field_vec_vec_pascal_token_stream {
-                                                    #not_unique_field_vec_lower_case_token_stream,
-                                                    #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
-                                                };
-                                                #error_log_call_token_stream
-                                                return #try_read_many_with_body_response_variants_token_stream::from(error);
-                                            }
+                                                }
+                                                #not_unique_field_vec_lower_case_token_stream
+                                            };
+                                            let error = #prepare_and_execute_query_error_token_stream::#not_unique_field_vec_vec_pascal_token_stream {
+                                                #not_unique_field_vec_lower_case_token_stream,
+                                                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+                                            };
+                                            #error_log_call_token_stream
+                                            return #try_read_many_with_body_response_variants_token_stream::from(error);
                                         }
                                     }
-                                    None => None,
-                                };
-                            })
-                        },
+                                }
+                                None => None,
+                            };
+                        }
                     });
                     quote::quote!{
                         #filter_unique_parameters_primary_key_token_stream
