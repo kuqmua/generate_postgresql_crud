@@ -36,7 +36,7 @@ impl QueryPart {
 //     id_field: &syn::Field,
 //     proc_macro_name_ident_stringified: &std::string::String,
 //     dot_space: &str,
-//     prepare_and_execute_query_response_variants_token_stream: &proc_macro2::TokenStream,
+//     try_ident_response_variants_camel_case_token_stream: &proc_macro2::TokenStream,
 //     query_part: QueryPart
 // ) -> proc_macro2::TokenStream {
 //     let (none_elements, match_elements) = {
@@ -67,7 +67,7 @@ impl QueryPart {
 //     let response_variant_token_stream = query_part.get_response_variant();
 //     quote::quote!{
 //         if let (#none_elements_token_stream) = (#match_elements_token_stream) {
-//             return #prepare_and_execute_query_response_variants_token_stream::#response_variant_token_stream;
+//             return #try_ident_response_variants_camel_case_token_stream::#response_variant_token_stream;
 //         }
 //     }
 // }
@@ -77,7 +77,7 @@ pub fn check_for_none(
     id_field: &syn::Field,
     proc_macro_name_ident_stringified: &std::string::String,
     dot_space: &str,
-    prepare_and_execute_query_response_variants_token_stream: &proc_macro2::TokenStream,
+    try_ident_response_variants_camel_case_token_stream: &proc_macro2::TokenStream,
     query_part: QueryPart,
     should_exclude_primary_key: bool
 ) -> proc_macro2::TokenStream {
@@ -112,7 +112,7 @@ pub fn check_for_none(
     let response_variant_token_stream = query_part.get_response_variant();
     quote::quote!{
         if let (#none_elements_token_stream) = (#match_elements_token_stream) {
-            return #prepare_and_execute_query_response_variants_token_stream::#response_variant_token_stream;
+            return #try_ident_response_variants_camel_case_token_stream::#response_variant_token_stream;
         }
     }
 }

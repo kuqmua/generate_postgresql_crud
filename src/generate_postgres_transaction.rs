@@ -25,7 +25,7 @@ pub fn generate_postgres_transaction(
     commit_token_stream: &proc_macro2::TokenStream,
     response_variants_token_stream: &proc_macro2::TokenStream,
     desirable_token_stream: &proc_macro2::TokenStream,
-    prepare_and_execute_query_error_token_stream: &proc_macro2::TokenStream,
+    try_ident_camel_case_token_stream: &proc_macro2::TokenStream,
     commit_failed_token_stream: &proc_macro2::TokenStream,
     error_log_call_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
@@ -82,7 +82,7 @@ pub fn generate_postgres_transaction(
                     }
                     Err(#rollback_error_name_token_stream) => {
                         //todo  BIG QUESTION - WHAT TO DO IF ROLLBACK FAILED? INFINITE LOOP TRYING TO ROLLBACK?
-                        let error = #prepare_and_execute_query_error_token_stream::#query_and_rollback_failed_token_stream;
+                        let error = #try_ident_camel_case_token_stream::#query_and_rollback_failed_token_stream;
                         #error_log_call_token_stream
                         return #response_variants_token_stream::from(error);
                     }
@@ -102,7 +102,7 @@ pub fn generate_postgres_transaction(
                             #from_log_and_return_error_token_stream;
                         }
                         Err(#rollback_error_name_token_stream) => {
-                            let error = #prepare_and_execute_query_error_token_stream::#primary_key_from_row_and_failed_rollback_token_stream;
+                            let error = #try_ident_camel_case_token_stream::#primary_key_from_row_and_failed_rollback_token_stream;
                             #error_log_call_token_stream
                             return #response_variants_token_stream::from(error);
                         }
@@ -124,12 +124,12 @@ pub fn generate_postgres_transaction(
             if let false = #non_existing_primary_keys_name_token_stream.is_empty() {
                 match #postgres_transaction_token_stream.#rollback_token_stream().await {
                     Ok(_) => {
-                        let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_token_stream;
+                        let error = #try_ident_camel_case_token_stream::#non_existing_primary_keys_token_stream;
                         #error_log_call_token_stream
                         return #response_variants_token_stream::from(error);
                     }
                     Err(e) => {
-                        let error = #prepare_and_execute_query_error_token_stream::#non_existing_primary_keys_and_failed_rollback_token_stream;
+                        let error = #try_ident_camel_case_token_stream::#non_existing_primary_keys_and_failed_rollback_token_stream;
                         #error_log_call_token_stream
                         return #response_variants_token_stream::from(error);
                     }
@@ -139,7 +139,7 @@ pub fn generate_postgres_transaction(
         match #postgres_transaction_token_stream.#commit_token_stream().await {
             Ok(_) => #response_variants_token_stream::#desirable_token_stream(()),
             Err(e) => {
-                let error = #prepare_and_execute_query_error_token_stream::#commit_failed_token_stream;
+                let error = #try_ident_camel_case_token_stream::#commit_failed_token_stream;
                 #error_log_call_token_stream
                 #response_variants_token_stream::from(error)
             }

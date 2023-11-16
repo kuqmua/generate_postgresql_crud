@@ -436,6 +436,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let eo_display_attribute_token_stream = quote::quote!{#[eo_display]};
     let eo_display_with_serialize_deserialize_token_stream = quote::quote!{#[eo_display_with_serialize_deserialize]};
     let eo_vec_error_occurence_token_stream = quote::quote!{#[eo_vec_error_occurence]};
+    // let value_token_stream = quote::quote! {value};
     let impl_std_convert_try_from_ident_options_for_struct_variants_token_stream = {
         column_variants
             .iter()
@@ -458,7 +459,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     struct_name_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {struct_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
-                let value_token_stream = quote::quote! {value};
                 let self_fields_token_stream = variant_columns.iter().map(|field|{
                     let field_ident = field.ident.clone().unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
@@ -1795,7 +1795,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let prepare_and_execute_query_error_token_stream = generate_prepare_and_execute_query_error_token_stream(
+        let try_create_many_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             try_camel_case_stringified,
             &create_many_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -1863,6 +1863,184 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream}");
+        let try_create_many_error_with_middleware_error_variants_token_stream = {
+            quote::quote!{
+                #[derive(
+                    Debug,
+                    thiserror::Error,
+                    error_occurence::ErrorOccurence,
+                    from_sqlx_postgres_error::FromSqlxPostgresError,
+                    type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
+                )]
+                #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
+                    std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>,
+                    tvfrr_201_created
+                )]
+                pub enum TryCreateMany {
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorNotEqual {
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_not_equal: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_to_use: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorToStrConversion {
+                        #[eo_display]
+                        project_commit_to_str_conversion: http::header::ToStrError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoProjectCommitExtractorHeader {
+                        #[eo_display_with_serialize_deserialize]
+                        no_project_commit_header: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    Configuration {
+                        #[eo_display_with_serialize_deserialize]
+                        configuration_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Database {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_database_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Io {
+                        #[eo_display]
+                        io_error: std::io::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Tls {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Protocol {
+                        #[eo_display_with_serialize_deserialize]
+                        protocol: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_404_not_found]
+                    RowNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        row_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    TypeNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        type_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnIndexOutOfBounds {
+                        #[eo_display_with_serialize_deserialize]
+                        column_index_out_of_bounds: usize,
+                        #[eo_display_with_serialize_deserialize]
+                        len: usize,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ColumnNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        column_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnDecode {
+                        #[eo_display_with_serialize_deserialize]
+                        column_decode_index: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        source_handle: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Decode {
+                        #[eo_display_with_serialize_deserialize]
+                        decode_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_408_request_timeout]
+                    PoolTimedOut {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_timed_out: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PoolClosed {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_closed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    WorkerCrashed {
+                        #[eo_display_with_serialize_deserialize]
+                        worker_crashed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Migrate {
+                        #[eo_display]
+                        migrate: sqlx::migrate::MigrateError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    JsonDataError {
+                        #[eo_display]
+                        json_data_error: axum::extract::rejection::JsonDataError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    JsonSyntaxError {
+                        #[eo_display]
+                        json_syntax_error: axum::extract::rejection::JsonSyntaxError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    MissingJsonContentType {
+                        #[eo_display_with_serialize_deserialize]
+                        json_syntax_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BytesRejection {
+                        #[eo_display_with_serialize_deserialize]
+                        bytes_rejection: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    BindQuery {
+                        #[eo_error_occurence]
+                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error] //todo what status should be there?
+                    CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
+                        #[eo_display]
+                        uuid_wrapper_try_from_possible_uuid_wrapper_in_server: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //#[non_exhaustive] case
+                    #[tvfrr_500_internal_server_error]
+                    UnexpectedCase {
+                        #[eo_display_with_serialize_deserialize]
+                        unexpected_case: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        //
         let http_request_token_stream = {
             let try_create_many_lower_case_token_stream = {
                 let try_create_many_lower_case_stringified = format!("{try_lower_case_stringified}_{create_many_name_lower_case_stringified}");
@@ -1938,9 +2116,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let create_many_lower_case_token_stream = create_many_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_many_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let prepare_and_execute_query_token_stream = {
+            let try_create_many_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &prepare_and_execute_query_error_token_stream,
+                    &try_create_many_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_create_many_response_variants_token_stream,
                 );
@@ -2079,7 +2257,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(value) => value,
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::from(e);
+                                let error = #try_create_many_camel_case_token_stream::from(e);
                                 #error_log_call_token_stream
                                 return #try_create_many_response_variants_token_stream::from(error);
                             }
@@ -2095,7 +2273,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 );
                             }
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream {
+                                let error = #try_create_many_camel_case_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream {
                                     uuid_wrapper_try_from_possible_uuid_wrapper_in_server: e,
                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                 };
@@ -2107,7 +2285,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #try_create_many_response_variants_token_stream::#desirable_token_stream(vec_values)
                 }
             };
-            // println!("{prepare_and_execute_query_token_stream}");
+            // println!("{try_create_many_token_stream}");
             quote::quote!{
                 pub async fn #create_many_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
@@ -2130,7 +2308,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #prepare_and_execute_query_token_stream
+                        #try_create_many_token_stream
                     }
                 }
             }
@@ -2171,7 +2349,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let prepare_and_execute_query_error_token_stream = generate_prepare_and_execute_query_error_token_stream(
+        let try_create_one_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             try_camel_case_stringified,
             &create_one_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -2228,6 +2406,177 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{try_create_error_named_token_stream}");
+        let try_create_one_error_with_middleware_error_variants_token_stream = {
+            quote::quote!{
+                #[derive(
+                    Debug,
+                    thiserror::Error,
+                    error_occurence::ErrorOccurence,
+                    from_sqlx_postgres_error::FromSqlxPostgresError,
+                    type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
+                )]
+                #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
+                    crate::server::postgres::uuid_wrapper::PossibleUuidWrapper,
+                    tvfrr_201_created
+                )]
+                pub enum TryCreateOne {
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorNotEqual {
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_not_equal: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_to_use: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorToStrConversion {
+                        #[eo_display]
+                        project_commit_to_str_conversion: http::header::ToStrError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoProjectCommitExtractorHeader {
+                        #[eo_display_with_serialize_deserialize]
+                        no_project_commit_header: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    Configuration {
+                        #[eo_display_with_serialize_deserialize]
+                        configuration_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Database {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_database_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Io {
+                        #[eo_display]
+                        io_error: std::io::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Tls {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Protocol {
+                        #[eo_display_with_serialize_deserialize]
+                        protocol: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_404_not_found]
+                    RowNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        row_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    TypeNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        type_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnIndexOutOfBounds {
+                        #[eo_display_with_serialize_deserialize]
+                        column_index_out_of_bounds: usize,
+                        #[eo_display_with_serialize_deserialize]
+                        len: usize,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ColumnNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        column_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnDecode {
+                        #[eo_display_with_serialize_deserialize]
+                        column_decode_index: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        source_handle: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Decode {
+                        #[eo_display_with_serialize_deserialize]
+                        decode_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_408_request_timeout]
+                    PoolTimedOut {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_timed_out: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PoolClosed {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_closed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    WorkerCrashed {
+                        #[eo_display_with_serialize_deserialize]
+                        worker_crashed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Migrate {
+                        #[eo_display]
+                        migrate: sqlx::migrate::MigrateError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    JsonDataError {
+                        #[eo_display]
+                        json_data_error: axum::extract::rejection::JsonDataError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    JsonSyntaxError {
+                        #[eo_display]
+                        json_syntax_error: axum::extract::rejection::JsonSyntaxError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    MissingJsonContentType {
+                        #[eo_display_with_serialize_deserialize]
+                        json_syntax_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BytesRejection {
+                        #[eo_display_with_serialize_deserialize]
+                        bytes_rejection: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error] //todo what status should be there?
+                    CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
+                        #[eo_display]
+                        uuid_wrapper_try_from_possible_uuid_wrapper_in_server: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //#[non_exhaustive] case
+                    #[tvfrr_500_internal_server_error]
+                    UnexpectedCase {
+                        #[eo_display_with_serialize_deserialize]
+                        unexpected_case: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        //
         let http_request_token_stream = {
             let try_create_one_lower_case_token_stream = {
                 let try_create_one_lower_case_stringified = format!("{try_lower_case_stringified}_{create_one_name_lower_case_stringified}");
@@ -2287,9 +2636,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let create_one_lower_case_token_stream = create_one_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {create_one_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let prepare_and_execute_query_token_stream = {
+            let try_create_one_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &prepare_and_execute_query_error_token_stream,
+                    &try_create_one_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_create_one_response_variants_token_stream,
                 );
@@ -2373,7 +2722,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         } {
                             Ok(value) => #try_create_one_response_variants_token_stream::#desirable_token_stream(#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from(value)),
                             Err(e) => {
-                                let error = #prepare_and_execute_query_error_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream {
+                                let error = #try_create_one_camel_case_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream {
                                     uuid_wrapper_try_from_possible_uuid_wrapper_in_server: e,
                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                 };
@@ -2387,7 +2736,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             };
-            // println!("{prepare_and_execute_query_token_stream}");
+            // println!("{try_create_one_token_stream}");
             quote::quote!{
                 pub async fn #create_one_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
@@ -2410,7 +2759,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #prepare_and_execute_query_token_stream
+                        #try_create_one_token_stream
                     }
                 }
             }
@@ -2486,7 +2835,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let prepare_and_execute_query_error_token_stream = generate_prepare_and_execute_query_error_token_stream(
+        let try_read_one_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             try_camel_case_stringified,
             &read_one_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -2608,6 +2957,173 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{try_read_one_error_named_token_stream}");
+        let try_read_one_error_with_middleware_error_variants_token_stream = {
+            quote::quote!{
+                #[derive(
+                    Debug,
+                    thiserror::Error,
+                    error_occurence::ErrorOccurence,
+                    from_sqlx_postgres_error::FromSqlxPostgresError,
+                    type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
+                )]
+                #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
+                    crate::repositories_types::tufa_server::routes::api::cats::DogOptions,
+                    tvfrr_200_ok
+                )]
+                pub enum TryReadOne {
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorNotEqual {
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_not_equal: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_to_use: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorToStrConversion {
+                        #[eo_display]
+                        project_commit_to_str_conversion: http::header::ToStrError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoProjectCommitExtractorHeader {
+                        #[eo_display_with_serialize_deserialize]
+                        no_project_commit_header: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    Configuration {
+                        #[eo_display_with_serialize_deserialize]
+                        configuration_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Database {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_database_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Io {
+                        #[eo_display]
+                        io_error: std::io::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Tls {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Protocol {
+                        #[eo_display_with_serialize_deserialize]
+                        protocol: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_404_not_found]
+                    RowNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        row_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    TypeNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        type_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnIndexOutOfBounds {
+                        #[eo_display_with_serialize_deserialize]
+                        column_index_out_of_bounds: usize,
+                        #[eo_display_with_serialize_deserialize]
+                        len: usize,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ColumnNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        column_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnDecode {
+                        #[eo_display_with_serialize_deserialize]
+                        column_decode_index: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        source_handle: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Decode {
+                        #[eo_display_with_serialize_deserialize]
+                        decode_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_408_request_timeout]
+                    PoolTimedOut {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_timed_out: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PoolClosed {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_closed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    WorkerCrashed {
+                        #[eo_display_with_serialize_deserialize]
+                        worker_crashed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Migrate {
+                        #[eo_display]
+                        migrate: sqlx::migrate::MigrateError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    FailedToDeserializePathParams {
+                        #[eo_display_with_serialize_deserialize]
+                        failed_to_deserialize_path_params: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    MissingPathParams {
+                        #[eo_display_with_serialize_deserialize]
+                        missing_path_params: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    FailedToDeserializeQueryString {
+                        #[eo_display_with_serialize_deserialize]
+                        failed_to_deserialize_query_string: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ReadOnePathTryFromReadOnePathWithSerializeDeserialize {
+                        #[eo_error_occurence]
+                        read_one_path_try_from_read_one_path_with_serialize_deserialize:
+                            ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //#[non_exhaustive] case
+                    #[tvfrr_500_internal_server_error]
+                    UnexpectedCase {
+                        #[eo_display_with_serialize_deserialize]
+                        unexpected_case: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        //
         let http_request_token_stream = {
             let try_read_one_lower_case_token_stream = {
                 let try_read_one_lower_case_stringified = format!("{try_lower_case_stringified}_{read_one_name_lower_case_stringified}");
@@ -2664,9 +3180,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let read_one_lower_case_token_stream = read_one_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_one_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let prepare_and_execute_query_token_stream = {
+            let try_read_one_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &prepare_and_execute_query_error_token_stream,
+                    &try_read_one_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_read_one_response_variants_token_stream,
                 );
@@ -2720,7 +3236,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             };
-            // println!("{prepare_and_execute_query_token_stream}");
+            // println!("{try_read_one_token_stream}");
             quote::quote!{
                 pub async fn #read_one_lower_case_token_stream(
                     #path_extraction_result_lower_case_token_stream: Result<
@@ -2742,7 +3258,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(value) => match #read_one_path_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::#read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_token_stream {
+                                    let error = #try_read_one_camel_case_token_stream::#read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_token_stream {
                                         #read_one_path_try_from_read_one_path_with_serialize_deserialize_lower_case_token_stream: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
@@ -2768,7 +3284,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #prepare_and_execute_query_token_stream
+                        #try_read_one_token_stream
                     }
                 }
             }
@@ -2835,7 +3351,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let prepare_and_execute_query_error_token_stream = generate_prepare_and_execute_query_error_token_stream(
+        let try_read_many_with_body_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             try_camel_case_stringified,
             &read_many_with_body_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -3024,6 +3540,209 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{try_read_many_with_body_error_named_token_stream}");
+        let try_read_many_with_body_error_with_middleware_error_variants_token_stream = {
+            quote::quote!{
+                #[derive(
+                    Debug,
+                    thiserror::Error,
+                    error_occurence::ErrorOccurence,
+                    from_sqlx_postgres_error::FromSqlxPostgresError,
+                    type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
+                )]
+                #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
+                    Vec::<crate::repositories_types::tufa_server::routes::api::cats::DogOptions>,
+                    tvfrr_200_ok
+                )]
+                pub enum TryReadManyWithBody {
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorNotEqual {
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_not_equal: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_to_use: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorToStrConversion {
+                        #[eo_display]
+                        project_commit_to_str_conversion: http::header::ToStrError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoProjectCommitExtractorHeader {
+                        #[eo_display_with_serialize_deserialize]
+                        no_project_commit_header: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    Configuration {
+                        #[eo_display_with_serialize_deserialize]
+                        configuration_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Database {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_database_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Io {
+                        #[eo_display]
+                        io_error: std::io::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Tls {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Protocol {
+                        #[eo_display_with_serialize_deserialize]
+                        protocol: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_404_not_found]
+                    RowNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        row_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    TypeNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        type_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnIndexOutOfBounds {
+                        #[eo_display_with_serialize_deserialize]
+                        column_index_out_of_bounds: usize,
+                        #[eo_display_with_serialize_deserialize]
+                        len: usize,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ColumnNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        column_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnDecode {
+                        #[eo_display_with_serialize_deserialize]
+                        column_decode_index: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        source_handle: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Decode {
+                        #[eo_display_with_serialize_deserialize]
+                        decode_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_408_request_timeout]
+                    PoolTimedOut {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_timed_out: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PoolClosed {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_closed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    WorkerCrashed {
+                        #[eo_display_with_serialize_deserialize]
+                        worker_crashed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Migrate {
+                        #[eo_display]
+                        migrate: sqlx::migrate::MigrateError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    JsonDataError {
+                        #[eo_display]
+                        json_data_error: axum::extract::rejection::JsonDataError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    JsonSyntaxError {
+                        #[eo_display]
+                        json_syntax_error: axum::extract::rejection::JsonSyntaxError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    MissingJsonContentType {
+                        #[eo_display_with_serialize_deserialize]
+                        json_syntax_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BytesRejection {
+                        #[eo_display_with_serialize_deserialize]
+                        bytes_rejection: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    NotUniquePrimaryKey {
+                        #[eo_vec_display]
+                        not_unique_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NotUniqueNameVec {
+                        #[eo_vec_display_with_serialize_deserialize]
+                        not_unique_name_vec: Vec<crate::server::postgres::regex_filter::RegexFilter>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NotUniqueColorVec {
+                        #[eo_vec_display_with_serialize_deserialize]
+                        not_unique_color_vec: Vec<crate::server::postgres::regex_filter::RegexFilter>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BindQuery {
+                        #[eo_error_occurence]
+                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NotUuid {
+                        #[eo_display]
+                        not_uuid: sqlx::types::uuid::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize {
+                        #[eo_error_occurence]
+                        read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize:
+                            ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserializeErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //#[non_exhaustive] case
+                    #[tvfrr_500_internal_server_error]
+                    UnexpectedCase {
+                        #[eo_display_with_serialize_deserialize]
+                        unexpected_case: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        //
         let http_request_token_stream = {
             let try_read_many_with_body_lower_case_token_stream = {
                 let try_read_many_with_body_lower_case_stringified = format!("{try_lower_case_stringified}_{read_many_with_body_name_lower_case_stringified}");
@@ -3082,9 +3801,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let read_many_with_body_lower_case_token_stream = read_many_with_body_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_many_with_body_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let prepare_and_execute_query_token_stream = {
+            let try_read_many_with_body_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &prepare_and_execute_query_error_token_stream,
+                    &try_read_many_with_body_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_read_many_with_body_response_variants_token_stream,
                 );
@@ -3108,7 +3827,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #not_unique_primary_keys_name_token_stream
                             };
                             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
+                                let error = #try_read_many_with_body_camel_case_token_stream::#not_unique_primery_key_token_stream;
                                 #error_log_call_token_stream
                                 return #try_read_many_with_body_response_variants_token_stream::from(error);
                             }
@@ -3177,7 +3896,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 }
                                                 #not_unique_field_vec_lower_case_token_stream
                                             };
-                                            let error = #prepare_and_execute_query_error_token_stream::#not_unique_field_vec_vec_pascal_token_stream {
+                                            let error = #try_read_many_with_body_camel_case_token_stream::#not_unique_field_vec_vec_pascal_token_stream {
                                                 #not_unique_field_vec_lower_case_token_stream,
                                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                             };
@@ -3470,7 +4189,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #try_read_many_with_body_response_variants_token_stream::#desirable_token_stream(vec_values)
                 }
             };
-            // println!("{prepare_and_execute_query_token_stream}");
+            // println!("{try_read_many_with_body_token_stream}");
             quote::quote!{
                 pub async fn #read_many_with_body_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
@@ -3488,7 +4207,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(value) => match #read_many_with_body_payload_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::#read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
+                                    let error = #try_read_many_with_body_camel_case_token_stream::#read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
                                         read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
@@ -3503,7 +4222,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #prepare_and_execute_query_token_stream
+                        #try_read_many_with_body_token_stream
                     }
                 }
             }
@@ -3560,7 +4279,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let prepare_and_execute_query_error_token_stream = generate_prepare_and_execute_query_error_token_stream(
+        let try_read_many_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             &try_camel_case_stringified,
             &read_many_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -3845,6 +4564,186 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{try_read_many_error_named_token_stream}");
+        let try_read_many_error_with_middleware_error_variants_token_stream = {
+            quote::quote!{
+                #[derive(
+                    Debug,
+                    thiserror::Error,
+                    error_occurence::ErrorOccurence,
+                    from_sqlx_postgres_error::FromSqlxPostgresError,
+                    type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
+                )]
+                #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
+                    Vec::<crate::repositories_types::tufa_server::routes::api::cats::DogOptions>,
+                    tvfrr_200_ok
+                )]
+                pub enum TryReadMany {
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorNotEqual {
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_not_equal: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_to_use: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorToStrConversion {
+                        #[eo_display]
+                        project_commit_to_str_conversion: http::header::ToStrError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoProjectCommitExtractorHeader {
+                        #[eo_display_with_serialize_deserialize]
+                        no_project_commit_header: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    Configuration {
+                        #[eo_display_with_serialize_deserialize]
+                        configuration_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Database {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_database_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Io {
+                        #[eo_display]
+                        io_error: std::io::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Tls {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Protocol {
+                        #[eo_display_with_serialize_deserialize]
+                        protocol: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_404_not_found]
+                    RowNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        row_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    TypeNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        type_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnIndexOutOfBounds {
+                        #[eo_display_with_serialize_deserialize]
+                        column_index_out_of_bounds: usize,
+                        #[eo_display_with_serialize_deserialize]
+                        len: usize,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ColumnNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        column_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnDecode {
+                        #[eo_display_with_serialize_deserialize]
+                        column_decode_index: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        source_handle: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Decode {
+                        #[eo_display_with_serialize_deserialize]
+                        decode_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_408_request_timeout]
+                    PoolTimedOut {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_timed_out: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PoolClosed {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_closed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    WorkerCrashed {
+                        #[eo_display_with_serialize_deserialize]
+                        worker_crashed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Migrate {
+                        #[eo_display]
+                        migrate: sqlx::migrate::MigrateError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    NotUniquePrimaryKey {
+                        #[eo_vec_display]
+                        not_unique_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NotUniqueNameVec {
+                        #[eo_vec_display_with_serialize_deserialize]
+                        not_unique_name_vec: Vec<std::string::String>, //todo crate::server::postgres::regex_filter::RegexFilter
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NotUniqueColorVec {
+                        #[eo_vec_display_with_serialize_deserialize]
+                        not_unique_color_vec: Vec<std::string::String>, //todo crate::server::postgres::regex_filter::RegexFilter
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    FailedToDeserializeQueryString {
+                        #[eo_display_with_serialize_deserialize]
+                        failed_to_deserialize_query_string: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BindQuery {
+                        #[eo_error_occurence]
+                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ReadManyQueryTryFromReadManyQueryWithSerializeDeserialize {
+                        #[eo_error_occurence]
+                        read_many_query_try_from_read_many_query_with_serialize_deserialize:
+                            ReadManyQueryTryFromReadManyQueryWithSerializeDeserializeErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    //#[non_exhaustive] case
+                    #[tvfrr_500_internal_server_error]
+                    UnexpectedCase {
+                        #[eo_display_with_serialize_deserialize]
+                        unexpected_case: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //todo - no parameters case?
+                }
+            }
+        };
+        //
         let http_request_token_stream = {
             let try_read_many_lower_case_token_stream = {
                 let try_read_many_lower_case_stringified = format!("{try_lower_case_stringified}_{read_many_name_lower_case_stringified}");
@@ -3900,7 +4799,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let read_many_lower_case_token_stream = read_many_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_many_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let prepare_and_execute_query_token_stream = {
+            let try_read_many_token_stream = {
                 //todo match if filter only have ids - if only ids than return error if not found
                 let filter_unique_parameters_token_stream = {
                     let filter_unique_parameters_primary_key_token_stream = quote::quote!{
@@ -3922,7 +4821,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #not_unique_primary_keys_name_token_stream
                             };
                             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
+                                let error = #try_read_many_camel_case_token_stream::#not_unique_primery_key_token_stream;
                                 #error_log_call_token_stream
                                 return #try_read_many_response_variants_token_stream::from(error);
                             }
@@ -3991,7 +4890,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 }
                                                 #not_unique_field_vec_lower_case_token_stream
                                             };
-                                            let error = #prepare_and_execute_query_error_token_stream::#not_unique_field_vec_vec_pascal_token_stream {
+                                            let error = #try_read_many_camel_case_token_stream::#not_unique_field_vec_vec_pascal_token_stream {
                                                 #not_unique_field_vec_lower_case_token_stream,
                                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                             };
@@ -4225,7 +5124,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &prepare_and_execute_query_error_token_stream,
+                    &try_read_many_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_read_many_response_variants_token_stream,
                 );
@@ -4275,7 +5174,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #try_read_many_response_variants_token_stream::#desirable_token_stream(vec_values)
                 }
             };
-            // println!("{prepare_and_execute_query_token_stream}");
+            // println!("{try_read_many_token_stream}");
             quote::quote!{
                 pub async fn #read_many_lower_case_token_stream(
                     #query_extraction_result_lower_case_token_stream: Result<
@@ -4294,7 +5193,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(value) => match #read_many_query_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::#read_many_query_try_from_read_many_query_with_serialize_deserialize_camel_case_token_stream {
+                                    let error = #try_read_many_camel_case_token_stream::#read_many_query_try_from_read_many_query_with_serialize_deserialize_camel_case_token_stream {
                                         read_many_query_try_from_read_many_query_with_serialize_deserialize: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
@@ -4309,7 +5208,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #prepare_and_execute_query_token_stream
+                        #try_read_many_token_stream
                     }
                 }
             }
@@ -4384,7 +5283,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let prepare_and_execute_query_error_token_stream = generate_prepare_and_execute_query_error_token_stream(
+        let try_update_one_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             &try_camel_case_stringified,
             &update_one_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -4490,6 +5389,204 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{try_update_one_error_named_token_stream}");
+        let try_update_one_error_with_middleware_error_variants_token_stream = {
+            quote::quote!{
+                #[derive(
+                    Debug,
+                    thiserror::Error,
+                    error_occurence::ErrorOccurence,
+                    from_sqlx_postgres_error::FromSqlxPostgresError,
+                    type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
+                )]
+                #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
+                    (),
+                    tvfrr_200_ok
+                )]
+                pub enum TryUpdateOne {
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorNotEqual {
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_not_equal: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_to_use: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorToStrConversion {
+                        #[eo_display]
+                        project_commit_to_str_conversion: http::header::ToStrError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoProjectCommitExtractorHeader {
+                        #[eo_display_with_serialize_deserialize]
+                        no_project_commit_header: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    Configuration {
+                        #[eo_display_with_serialize_deserialize]
+                        configuration_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Database {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_database_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Io {
+                        #[eo_display]
+                        io_error: std::io::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Tls {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Protocol {
+                        #[eo_display_with_serialize_deserialize]
+                        protocol: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_404_not_found]
+                    RowNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        row_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    TypeNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        type_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnIndexOutOfBounds {
+                        #[eo_display_with_serialize_deserialize]
+                        column_index_out_of_bounds: usize,
+                        #[eo_display_with_serialize_deserialize]
+                        len: usize,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ColumnNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        column_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnDecode {
+                        #[eo_display_with_serialize_deserialize]
+                        column_decode_index: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        source_handle: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Decode {
+                        #[eo_display_with_serialize_deserialize]
+                        decode_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_408_request_timeout]
+                    PoolTimedOut {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_timed_out: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PoolClosed {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_closed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    WorkerCrashed {
+                        #[eo_display_with_serialize_deserialize]
+                        worker_crashed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Migrate {
+                        #[eo_display]
+                        migrate: sqlx::migrate::MigrateError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    JsonDataError {
+                        #[eo_display_with_serialize_deserialize]
+                        json_data_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    JsonSyntaxError {
+                        #[eo_display_with_serialize_deserialize]
+                        json_syntax_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    MissingJsonContentType {
+                        #[eo_display_with_serialize_deserialize]
+                        json_syntax_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BytesRejection {
+                        #[eo_display_with_serialize_deserialize]
+                        bytes_rejection: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    FailedToDeserializePathParams {
+                        #[eo_display_with_serialize_deserialize]
+                        failed_to_deserialize_path_params: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    MissingPathParams {
+                        #[eo_display_with_serialize_deserialize]
+                        missing_path_params: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    BindQuery {
+                        #[eo_error_occurence]
+                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoPayloadFields {
+                        #[eo_display_with_serialize_deserialize]
+                        no_payload_fields: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    UpdateOnePathTryFromUpdateOnePathWithSerializeDeserialize {
+                        #[eo_error_occurence]
+                        update_one_path_try_from_update_one_path_with_serialize_deserialize:
+                            UpdateOnePathTryFromUpdateOnePathWithSerializeDeserializeErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //#[non_exhaustive] case
+                    #[tvfrr_500_internal_server_error]
+                    UnexpectedCase {
+                        #[eo_display_with_serialize_deserialize]
+                        unexpected_case: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        //
         let http_request_token_stream = {
             let try_update_one_lower_case_token_stream = {
                 let try_update_one_lower_case_stringified = format!("{try_lower_case_stringified}_{update_one_name_lower_case_stringified}");
@@ -4544,7 +5641,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let update_one_lower_case_token_stream = update_one_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_one_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let prepare_and_execute_query_token_stream = {
+            let try_update_one_token_stream = {
                 let check_for_none_token_stream_excluding_primary_key = crate::check_for_none::check_for_none(
                     &fields_named,
                     &id_field,
@@ -4555,7 +5652,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     true
                 );
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &prepare_and_execute_query_error_token_stream,
+                    &try_update_one_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_update_one_response_variants_token_stream,
                 );
@@ -4677,7 +5774,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             };
-            // println!("{prepare_and_execute_query_token_stream}");
+            // println!("{try_update_one_token_stream}");
             quote::quote!{
                 pub async fn #update_one_lower_case_token_stream<'a>(
                     #path_extraction_result_lower_case_token_stream: Result<
@@ -4699,7 +5796,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(value) => match #update_one_path_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::#update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_token_stream {
+                                    let error = #try_update_one_camel_case_token_stream::#update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_token_stream {
                                         #update_one_path_try_from_update_one_path_with_serialize_deserialize_lower_case_token_stream: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
@@ -4724,7 +5821,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #prepare_and_execute_query_token_stream
+                        #try_update_one_token_stream
                     }
                 }
             }
@@ -4794,7 +5891,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let prepare_and_execute_query_error_token_stream = generate_prepare_and_execute_query_error_token_stream(
+        let update_many_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             &try_camel_case_stringified,
             &update_many_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -4955,6 +6052,239 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{try_update_many_error_named_token_stream}");
+        let try_update_many_error_with_middleware_error_variants_token_stream = {
+            quote::quote!{
+                #[derive(
+                    Debug,
+                    thiserror::Error,
+                    error_occurence::ErrorOccurence,
+                    from_sqlx_postgres_error::FromSqlxPostgresError,
+                    type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
+                )]
+                #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
+                    (),
+                    tvfrr_200_ok
+                )]
+                pub enum TryUpdateMany {
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorNotEqual {
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_not_equal: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_to_use: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorToStrConversion {
+                        #[eo_display]
+                        project_commit_to_str_conversion: http::header::ToStrError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoProjectCommitExtractorHeader {
+                        #[eo_display_with_serialize_deserialize]
+                        no_project_commit_header: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    Configuration {
+                        #[eo_display_with_serialize_deserialize]
+                        configuration_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Database {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_database_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Io {
+                        #[eo_display]
+                        io_error: std::io::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Tls {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Protocol {
+                        #[eo_display_with_serialize_deserialize]
+                        protocol: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_404_not_found]
+                    RowNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        row_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    TypeNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        type_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnIndexOutOfBounds {
+                        #[eo_display_with_serialize_deserialize]
+                        column_index_out_of_bounds: usize,
+                        #[eo_display_with_serialize_deserialize]
+                        len: usize,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ColumnNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        column_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnDecode {
+                        #[eo_display_with_serialize_deserialize]
+                        column_decode_index: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        source_handle: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Decode {
+                        #[eo_display_with_serialize_deserialize]
+                        decode_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_408_request_timeout]
+                    PoolTimedOut {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_timed_out: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PoolClosed {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_closed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    WorkerCrashed {
+                        #[eo_display_with_serialize_deserialize]
+                        worker_crashed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Migrate {
+                        #[eo_display]
+                        migrate: sqlx::migrate::MigrateError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    JsonDataError {
+                        #[eo_display_with_serialize_deserialize]
+                        json_data_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    JsonSyntaxError {
+                        #[eo_display_with_serialize_deserialize]
+                        json_syntax_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    MissingJsonContentType {
+                        #[eo_display_with_serialize_deserialize]
+                        json_syntax_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BytesRejection {
+                        #[eo_display_with_serialize_deserialize]
+                        bytes_rejection: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    NotUniquePrimaryKey {
+                        #[eo_vec_display]
+                        not_unique_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BindQuery {
+                        #[eo_error_occurence]
+                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    CheckedAdd {
+                        #[eo_display_with_serialize_deserialize]
+                        checked_add: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoPayloadFields {
+                        #[eo_display_with_serialize_deserialize]
+                        no_payload_fields: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    CommitFailed {
+                        #[eo_display]
+                        commit_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NonExistingPrimaryKeys {
+                        #[eo_vec_display]
+                        non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PrimaryKeyFromRowAndFailedRollback {
+                        #[eo_display]
+                        primary_key_from_row: sqlx::Error,
+                        #[eo_display]
+                        rollback_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    //todo what status code should return if non_existing_primary_keys = 400, but transaction rollback failed = 500
+                    NonExistingPrimaryKeysAndFailedRollback {
+                        #[eo_vec_display]
+                        non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        #[eo_display]
+                        rollback_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    QueryAndRollbackFailed {
+                        #[eo_display]
+                        query_error: sqlx::Error,
+                        #[eo_display]
+                        rollback_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserialize {
+                        #[eo_error_occurence]
+                        update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize: UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserializeErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //#[non_exhaustive] case
+                    #[tvfrr_500_internal_server_error]
+                    UnexpectedCase {
+                        #[eo_display_with_serialize_deserialize]
+                        unexpected_case: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        //
         let http_request_token_stream = {
             let try_update_many_lower_case_token_stream = {
                 let try_update_many_lower_case_stringified = format!("{try_lower_case_stringified}_{update_many_name_lower_case_stringified}");
@@ -5016,9 +6346,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let update_many_lower_case_token_stream = update_many_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {update_many_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let prepare_and_execute_query_token_stream = {
+            let try_update_many_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &prepare_and_execute_query_error_token_stream,
+                    &update_many_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_update_many_response_variants_token_stream,
                 );
@@ -5173,7 +6503,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &commit_token_stream,
                     &try_update_many_response_variants_token_stream,
                     &desirable_token_stream,
-                    &prepare_and_execute_query_error_token_stream,
+                    &update_many_camel_case_token_stream,
                     &commit_failed_token_stream,
                     &error_log_call_token_stream,
                 );
@@ -5196,7 +6526,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #not_unique_primary_keys_name_token_stream
                         };
                         if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                            let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
+                            let error = #update_many_camel_case_token_stream::#not_unique_primery_key_token_stream;
                             #error_log_call_token_stream
                             return #try_update_many_response_variants_token_stream::from(error);
                         }
@@ -5204,7 +6534,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #generate_postgres_transaction_token_stream
                 }  
             };
-            // println!("{prepare_and_execute_query_token_stream}");
+            // println!("{try_update_many_token_stream}");
             quote::quote!{
                 pub async fn #update_many_lower_case_token_stream<'a>(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
@@ -5228,7 +6558,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 {
                                     Ok(value) => value,
                                     Err(e) => {
-                                        let error = #prepare_and_execute_query_error_token_stream::#update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_camel_case_token_stream {
+                                        let error = #update_many_camel_case_token_stream::#update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_camel_case_token_stream {
                                             #update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_lower_case_token_stream: e,
                                             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                         };
@@ -5243,7 +6573,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #prepare_and_execute_query_token_stream
+                        #try_update_many_token_stream
                     }
                 }
             }
@@ -5312,7 +6642,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let prepare_and_execute_query_error_token_stream = generate_prepare_and_execute_query_error_token_stream(
+        let try_delete_one_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             &try_camel_case_stringified,
             &delete_one_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -5392,6 +6722,167 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{try_delete_one_error_named_token_stream}");
+        let try_delete_one_error_with_middleware_error_variants_token_stream = {
+            quote::quote!{
+                #[derive(
+                    Debug,
+                    thiserror::Error,
+                    error_occurence::ErrorOccurence,
+                    from_sqlx_postgres_error::FromSqlxPostgresError,
+                    type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
+                )]
+                #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
+                    (),
+                    tvfrr_200_ok
+                )]
+                pub enum TryDeleteOne {
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorNotEqual {
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_not_equal: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_to_use: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorToStrConversion {
+                        #[eo_display]
+                        project_commit_to_str_conversion: http::header::ToStrError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoProjectCommitExtractorHeader {
+                        #[eo_display_with_serialize_deserialize]
+                        no_project_commit_header: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    Configuration {
+                        #[eo_display_with_serialize_deserialize]
+                        configuration_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Database {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_database_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Io {
+                        #[eo_display]
+                        io_error: std::io::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Tls {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Protocol {
+                        #[eo_display_with_serialize_deserialize]
+                        protocol: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_404_not_found]
+                    RowNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        row_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    TypeNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        type_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnIndexOutOfBounds {
+                        #[eo_display_with_serialize_deserialize]
+                        column_index_out_of_bounds: usize,
+                        #[eo_display_with_serialize_deserialize]
+                        len: usize,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ColumnNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        column_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnDecode {
+                        #[eo_display_with_serialize_deserialize]
+                        column_decode_index: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        source_handle: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Decode {
+                        #[eo_display_with_serialize_deserialize]
+                        decode_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_408_request_timeout]
+                    PoolTimedOut {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_timed_out: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PoolClosed {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_closed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    WorkerCrashed {
+                        #[eo_display_with_serialize_deserialize]
+                        worker_crashed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Migrate {
+                        #[eo_display]
+                        migrate: sqlx::migrate::MigrateError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    FailedToDeserializePathParams {
+                        #[eo_display_with_serialize_deserialize]
+                        failed_to_deserialize_path_params: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    MissingPathParams {
+                        #[eo_display_with_serialize_deserialize]
+                        missing_path_params: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    DeleteOnePathTryFromDeleteOnePathWithSerializeDeserialize {
+                        #[eo_error_occurence]
+                        delete_one_path_try_from_delete_one_path_with_serialize_deserialize:
+                            DeleteOnePathTryFromDeleteOnePathWithSerializeDeserializeErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    //#[non_exhaustive] case
+                    #[tvfrr_500_internal_server_error]
+                    UnexpectedCase {
+                        #[eo_display_with_serialize_deserialize]
+                        unexpected_case: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        //
         let http_request_token_stream = {
             let try_delete_one_lower_case_token_stream = {
                 let try_delete_one_lower_case_stringified = format!("{try_lower_case_stringified}_{delete_one_name_lower_case_stringified}");
@@ -5438,9 +6929,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let delete_one_lower_case_token_stream = delete_one_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_one_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let prepare_and_execute_query_token_stream = {
+            let try_delete_one_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &prepare_and_execute_query_error_token_stream,
+                    &try_delete_one_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_delete_one_response_variants_token_stream,
                 );
@@ -5501,13 +6992,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             };
-            // println!("{prepare_and_execute_query_token_stream}");
+            // println!("{try_delete_one_token_stream}");
             quote::quote!{
                 #[utoipa::path(
                     delete,
                     path = "/api/cats",//todo
                     responses(
-                        (status = 200, description = "delete by primary key", body = [#prepare_and_execute_query_error_token_stream])
+                        (status = 200, description = "delete by primary key", body = [#try_delete_one_camel_case_token_stream])
                     )
                 )]
                 pub async fn #delete_one_lower_case_token_stream<'a>(
@@ -5526,7 +7017,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(value) => match #delete_one_path_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::#delete_one_path_try_from_delete_one_path_with_serialize_deserialize_camel_case_token_stream {
+                                    let error = #try_delete_one_camel_case_token_stream::#delete_one_path_try_from_delete_one_path_with_serialize_deserialize_camel_case_token_stream {
                                         #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_lower_case_token_stream: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
@@ -5541,7 +7032,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #prepare_and_execute_query_token_stream
+                        #try_delete_one_token_stream
                     }
                 }
             }
@@ -5609,7 +7100,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let prepare_and_execute_query_error_token_stream = generate_prepare_and_execute_query_error_token_stream(
+        let try_delete_many_with_body_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             try_camel_case_stringified,
             &delete_many_with_body_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -5777,6 +7268,251 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{try_delete_many_with_body_error_named_token_stream}");
+        let try_delete_many_with_body_error_with_middleware_error_variants_token_stream = {
+            quote::quote!{
+                #[derive(
+                    Debug,
+                    thiserror::Error,
+                    error_occurence::ErrorOccurence,
+                    from_sqlx_postgres_error::FromSqlxPostgresError,
+                    type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
+                )]
+                #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
+                    (),
+                    tvfrr_200_ok
+                )]
+                pub enum TryDeleteManyWithBody {
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorNotEqual {
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_not_equal: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_to_use: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorToStrConversion {
+                        #[eo_display]
+                        project_commit_to_str_conversion: http::header::ToStrError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoProjectCommitExtractorHeader {
+                        #[eo_display_with_serialize_deserialize]
+                        no_project_commit_header: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    Configuration {
+                        #[eo_display_with_serialize_deserialize]
+                        configuration_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Database {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_database_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Io {
+                        #[eo_display]
+                        io_error: std::io::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Tls {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Protocol {
+                        #[eo_display_with_serialize_deserialize]
+                        protocol: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_404_not_found]
+                    RowNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        row_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    TypeNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        type_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnIndexOutOfBounds {
+                        #[eo_display_with_serialize_deserialize]
+                        column_index_out_of_bounds: usize,
+                        #[eo_display_with_serialize_deserialize]
+                        len: usize,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ColumnNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        column_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnDecode {
+                        #[eo_display_with_serialize_deserialize]
+                        column_decode_index: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        source_handle: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Decode {
+                        #[eo_display_with_serialize_deserialize]
+                        decode_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_408_request_timeout]
+                    PoolTimedOut {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_timed_out: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PoolClosed {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_closed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    WorkerCrashed {
+                        #[eo_display_with_serialize_deserialize]
+                        worker_crashed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Migrate {
+                        #[eo_display]
+                        migrate: sqlx::migrate::MigrateError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    JsonDataError {
+                        #[eo_display]
+                        json_data_error: axum::extract::rejection::JsonDataError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    JsonSyntaxError {
+                        #[eo_display]
+                        json_syntax_error: axum::extract::rejection::JsonSyntaxError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    MissingJsonContentType {
+                        #[eo_display_with_serialize_deserialize]
+                        json_syntax_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BytesRejection {
+                        #[eo_display_with_serialize_deserialize]
+                        bytes_rejection: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    NotUniquePrimaryKey {
+                        #[eo_vec_display]
+                        not_unique_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NotUniqueNameVec {
+                        #[eo_vec_display_with_serialize_deserialize]
+                        not_unique_name_vec: Vec<crate::server::postgres::regex_filter::RegexFilter>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NotUniqueColorVec {
+                        #[eo_vec_display_with_serialize_deserialize]
+                        not_unique_color_vec: Vec<crate::server::postgres::regex_filter::RegexFilter>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BindQuery {
+                        #[eo_error_occurence]
+                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoPayloadFields {
+                        #[eo_display_with_serialize_deserialize]
+                        no_payload_fields: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoPayloadParameters {
+                        #[eo_display_with_serialize_deserialize]
+                        no_payload_parameters: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NonExistingPrimaryKeys {
+                        #[eo_vec_display]
+                        non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    //todo what status code should return if non_existing_primary_keys = 400, but transaction rollback failed = 500
+                    NonExistingPrimaryKeysAndFailedRollback {
+                        #[eo_vec_display]
+                        non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        #[eo_display]
+                        rollback_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PrimaryKeyFromRowAndFailedRollback {
+                        #[eo_display]
+                        primary_key_from_row: sqlx::Error,
+                        #[eo_display]
+                        rollback_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    CommitFailed {
+                        #[eo_display]
+                        commit_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    QueryAndRollbackFailed {
+                        #[eo_display]
+                        query_error: sqlx::Error,
+                        #[eo_display]
+                        rollback_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserialize {
+                        #[eo_error_occurence]
+                        delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize: DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserializeErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //#[non_exhaustive] case
+                    #[tvfrr_500_internal_server_error]
+                    UnexpectedCase {
+                        #[eo_display_with_serialize_deserialize]
+                        unexpected_case: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
+        //
         let http_request_token_stream = {
             let try_delete_many_with_body_lower_case_token_stream = {
                 let try_delete_many_with_body_lower_case_stringified = format!("{try_lower_case_stringified}_{delete_many_with_body_name_lower_case_stringified}");
@@ -5832,9 +7568,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let delete_many_with_body_lower_case_token_stream = delete_many_with_body_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_with_body_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let prepare_and_execute_query_token_stream = {
+            let try_delete_many_with_body_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &prepare_and_execute_query_error_token_stream,
+                    &try_delete_many_with_body_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_delete_many_with_body_response_variants_token_stream,
                 );
@@ -5891,7 +7627,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #not_unique_primary_keys_name_token_stream
                             };
                             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
+                                let error = #try_delete_many_with_body_camel_case_token_stream::#not_unique_primery_key_token_stream;
                                 #error_log_call_token_stream
                                 return #try_delete_many_with_body_response_variants_token_stream::from(error);
                             }
@@ -5947,7 +7683,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &commit_token_stream,
                         &try_delete_many_with_body_response_variants_token_stream,
                         &desirable_token_stream,
-                        &prepare_and_execute_query_error_token_stream,
+                        &try_delete_many_with_body_camel_case_token_stream,
                         &commit_failed_token_stream,
                         &error_log_call_token_stream,
                     );
@@ -5977,7 +7713,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     #not_unique_primary_keys_name_token_stream
                                 };
                                 if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                    let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
+                                    let error = #try_delete_many_with_body_camel_case_token_stream::#not_unique_primery_key_token_stream;
                                     #error_log_call_token_stream
                                     return #try_delete_many_with_body_response_variants_token_stream::from(error);
                                 }
@@ -6046,7 +7782,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                     }
                                                     #not_unique_field_vec_lower_case_token_stream
                                                 };
-                                                let error = #prepare_and_execute_query_error_token_stream::#not_unique_field_vec_vec_pascal_token_stream {
+                                                let error = #try_delete_many_with_body_camel_case_token_stream::#not_unique_field_vec_vec_pascal_token_stream {
                                                     #not_unique_field_vec_lower_case_token_stream,
                                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
@@ -6221,7 +7957,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             };
-            // println!("{prepare_and_execute_query_token_stream}");
+            // println!("{try_delete_many_with_body_token_stream}");
             quote::quote!{
                 pub async fn #delete_many_with_body_lower_case_token_stream<'a>(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
@@ -6239,7 +7975,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(value) => match #delete_many_with_body_payload_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::#delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
+                                    let error = #try_delete_many_with_body_camel_case_token_stream::#delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
                                         #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_lower_case_token_stream: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
@@ -6254,7 +7990,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #prepare_and_execute_query_token_stream
+                        #try_delete_many_with_body_token_stream
                     }
                 }
             }
@@ -6326,7 +8062,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let prepare_and_execute_query_error_token_stream = generate_prepare_and_execute_query_error_token_stream(
+        let try_delete_many_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             try_camel_case_stringified,
             &delete_many_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -6505,6 +8241,227 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{try_delete_many_error_named_token_stream}");
+        let try_delete_many_error_with_middleware_error_variants_token_stream = {
+            quote::quote!{
+                #[derive(
+                    Debug,
+                    thiserror::Error,
+                    error_occurence::ErrorOccurence,
+                    from_sqlx_postgres_error::FromSqlxPostgresError,
+                    type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
+                )]
+                #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
+                    (),
+                    tvfrr_200_ok
+                )]
+                pub enum TryDeleteMany {
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorNotEqual {
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_not_equal: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        project_commit_to_use: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ProjectCommitExtractorToStrConversion {
+                        #[eo_display]
+                        project_commit_to_str_conversion: http::header::ToStrError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoProjectCommitExtractorHeader {
+                        #[eo_display_with_serialize_deserialize]
+                        no_project_commit_header: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_500_internal_server_error]
+                    Configuration {
+                        #[eo_display_with_serialize_deserialize]
+                        configuration_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Database {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_database_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Io {
+                        #[eo_display]
+                        io_error: std::io::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Tls {
+                        #[eo_display_with_serialize_deserialize]
+                        box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Protocol {
+                        #[eo_display_with_serialize_deserialize]
+                        protocol: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_404_not_found]
+                    RowNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        row_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    TypeNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        type_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnIndexOutOfBounds {
+                        #[eo_display_with_serialize_deserialize]
+                        column_index_out_of_bounds: usize,
+                        #[eo_display_with_serialize_deserialize]
+                        len: usize,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    ColumnNotFound {
+                        #[eo_display_with_serialize_deserialize]
+                        column_not_found: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    ColumnDecode {
+                        #[eo_display_with_serialize_deserialize]
+                        column_decode_index: std::string::String,
+                        #[eo_display_with_serialize_deserialize]
+                        source_handle: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Decode {
+                        #[eo_display_with_serialize_deserialize]
+                        decode_box_dyn_error: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_408_request_timeout]
+                    PoolTimedOut {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_timed_out: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PoolClosed {
+                        #[eo_display_with_serialize_deserialize]
+                        pool_closed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    WorkerCrashed {
+                        #[eo_display_with_serialize_deserialize]
+                        worker_crashed: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    Migrate {
+                        #[eo_display]
+                        migrate: sqlx::migrate::MigrateError,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    FailedToDeserializeQueryString {
+                        #[eo_display_with_serialize_deserialize]
+                        failed_to_deserialize_query_string: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //
+                    #[tvfrr_400_bad_request]
+                    NotUniquePrimaryKey {
+                        #[eo_vec_display]
+                        not_unique_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NotUniqueNameVec {
+                        #[eo_vec_display_with_serialize_deserialize]
+                        not_unique_name_vec: Vec<std::string::String>, //todo make it crate::server::postgres::regex_filter::RegexFilter
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NotUniqueColorVec {
+                        #[eo_vec_display_with_serialize_deserialize]
+                        not_unique_color_vec: Vec<std::string::String>, //todo make it crate::server::postgres::regex_filter::RegexFilter
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    BindQuery {
+                        #[eo_error_occurence]
+                        checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NoQueryParameters {
+                        #[eo_display_with_serialize_deserialize]
+                        no_query_parameters: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    CommitFailed {
+                        #[eo_display]
+                        commit_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    NonExistingPrimaryKeys {
+                        #[eo_vec_display]
+                        non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    PrimaryKeyFromRowAndFailedRollback {
+                        #[eo_display]
+                        primary_key_from_row: sqlx::Error,
+                        #[eo_display]
+                        rollback_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    //todo what status code should return if non_existing_primary_keys = 400, but transaction rollback failed = 500
+                    NonExistingPrimaryKeysAndFailedRollback {
+                        #[eo_vec_display]
+                        non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                        #[eo_display]
+                        rollback_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_500_internal_server_error]
+                    QueryAndRollbackFailed {
+                        #[eo_display]
+                        query_error: sqlx::Error,
+                        #[eo_display]
+                        rollback_error: sqlx::Error,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    #[tvfrr_400_bad_request]
+                    DeleteManyQueryTryFromDeleteManyQueryWithSerializeDeserialize {
+                        #[eo_error_occurence]
+                        delete_many_query_try_from_delete_many_query_with_serialize_deserialize:
+                            DeleteManyQueryTryFromDeleteManyQueryWithSerializeDeserializeErrorNamed,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                    //#[non_exhaustive] case
+                    #[tvfrr_500_internal_server_error]
+                    UnexpectedCase {
+                        #[eo_display_with_serialize_deserialize]
+                        unexpected_case: std::string::String,
+                        code_occurence: crate::common::code_occurence::CodeOccurence,
+                    },
+                }
+            }
+        };
         let http_request_token_stream = {
             let try_delete_many_lower_case_token_stream = {
                 let try_delete_many_lower_case_stringified = format!("{try_lower_case_stringified}_{delete_many_name_lower_case_stringified}");
@@ -6557,13 +8514,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let delete_many_lower_case_token_stream = delete_many_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {delete_many_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let prepare_and_execute_query_token_stream = {
+            let try_delete_many_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &prepare_and_execute_query_error_token_stream,
+                    &try_delete_many_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_delete_many_response_variants_token_stream,
                 );
-                // let prepare_and_execute_query_response_variants_token_stream = &try_delete_many_response_variants_token_stream;
                 let query_part = crate::check_for_none::QueryPart::QueryParameters;
                 let check_for_none_token_stream = crate::check_for_none::check_for_none(
                     &fields_named,
@@ -6618,7 +8574,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #not_unique_primary_keys_name_token_stream
                             };
                             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
+                                let error = #try_delete_many_camel_case_token_stream::#not_unique_primery_key_token_stream;
                                 #error_log_call_token_stream
                                 return #try_delete_many_response_variants_token_stream::from(error);
                             }
@@ -6676,7 +8632,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &commit_token_stream,
                         &try_delete_many_response_variants_token_stream,
                         &desirable_token_stream,
-                        &prepare_and_execute_query_error_token_stream,
+                        &try_delete_many_camel_case_token_stream,
                         &commit_failed_token_stream,
                         &error_log_call_token_stream,
                     );
@@ -6706,7 +8662,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     #not_unique_primary_keys_name_token_stream
                                 };
                                 if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                    let error = #prepare_and_execute_query_error_token_stream::#not_unique_primery_key_token_stream;
+                                    let error = #try_delete_many_camel_case_token_stream::#not_unique_primery_key_token_stream;
                                     #error_log_call_token_stream
                                     return #try_delete_many_response_variants_token_stream::from(error);
                                 }
@@ -6776,7 +8732,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                     }
                                                     #not_unique_field_vec_lower_case_token_stream
                                                 };
-                                                let error = #prepare_and_execute_query_error_token_stream::#not_unique_field_vec_vec_pascal_token_stream {
+                                                let error = #try_delete_many_camel_case_token_stream::#not_unique_field_vec_vec_pascal_token_stream {
                                                     #not_unique_field_vec_lower_case_token_stream,
                                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 };
@@ -6971,7 +8927,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(value) => match #delete_many_query_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #prepare_and_execute_query_error_token_stream::#delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_token_stream {
+                                    let error = #try_delete_many_camel_case_token_stream::#delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_token_stream {
                                         #delete_many_query_try_from_delete_many_query_with_serialize_deserialize_lower_case_token_stream: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
@@ -6986,7 +8942,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #prepare_and_execute_query_token_stream
+                        #try_delete_many_token_stream
                     }
                 }
             }
@@ -7044,7 +9000,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-fn generate_prepare_and_execute_query_error_token_stream(
+fn generate_try_ident_camel_case_token_stream(
     try_camel_case_stringified: &str,
     original_name_camel_case_stringified: &str,
     proc_macro_name_ident_stringified: &str
@@ -8113,6 +10069,7 @@ impl std::str::FromStr for SupportedFieldType {
     }
 }
 
+#[allow(dead_code)]
 #[derive(Debug)]
 struct FieldNamedWrapperExcludingPrimaryKey {
     field: syn::Field,
