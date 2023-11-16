@@ -2319,6 +2319,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #payload_token_stream
             #try_create_many_error_named_token_stream
             #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream
+            #try_create_many_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
@@ -2769,6 +2770,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #try_create_one_error_named_token_stream
+            #try_create_one_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
@@ -3300,6 +3302,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #query_with_serialize_deserialize_token_stream
             #into_url_encoding_version_token_stream
             #try_read_one_error_named_token_stream
+            #try_read_one_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
@@ -4236,6 +4239,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #impl_std_convert_try_from_read_many_with_body_payload_with_serialize_deserialize_for_read_many_with_body_payload_token_stream
             #impl_std_convert_from_read_many_with_body_payload_for_read_many_with_body_payload_with_serialize_deserialize_token_stream
             #try_read_many_with_body_error_named_token_stream
+            #try_read_many_with_body_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
@@ -5222,6 +5226,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #impl_std_convert_try_from_read_many_query_with_serialize_deserialize_for_read_many_query_token_stream
             #into_url_encoding_version_token_stream
             #try_read_many_error_named_token_stream
+            #try_read_many_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
@@ -5835,6 +5840,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #impl_std_convert_try_from_update_one_path_with_serialize_deserialize_for_update_one_path_token_stream
             #payload_token_stream
             #try_update_one_error_named_token_stream
+            #try_update_one_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
@@ -6587,6 +6593,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_error_named_token_stream
             #impl_std_convert_try_from_update_many_payload_element_with_serialize_deserialize_for_update_many_payload_element_token_stream
             #try_update_many_error_named_token_stream
+            #try_update_many_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
@@ -7045,6 +7052,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_token_stream
             #impl_std_convert_try_from_delete_one_path_with_serialize_deserialize_for_delete_one_path_token_stream
             #try_delete_one_error_named_token_stream
+            #try_delete_one_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
@@ -8004,6 +8012,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #impl_std_convert_try_from_delete_many_with_body_payload_with_serialize_deserialize_for_delete_many_with_body_payload_token_stream
             #impl_std_convert_from_delete_many_with_body_payload_for_delete_many_with_body_payload_with_serialize_deserialize_token_stream
             #try_delete_many_with_body_error_named_token_stream
+            #try_delete_many_with_body_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
@@ -8956,6 +8965,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #impl_std_convert_try_from_delete_many_query_with_serialize_deserialize_for_delete_many_query_token_stream
             #impl_std_convert_from_delete_many_query_for_delete_many_query_with_serialize_deserialize_token_stream
             #try_delete_many_error_named_token_stream
+            #try_delete_many_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
