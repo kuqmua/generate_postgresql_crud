@@ -279,33 +279,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         from_str_lower_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {from_str_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    //todo remove primary_key_try_from_sqlx_row_name_token_stream and primary_key_try_from_sqlx_row_token_stream later - primary_key_uuid_wrapper_try_from_sqlx_row_token_stream is new version
     let sqlx_row_token_stream = quote::quote!{sqlx::Row};
     let primary_key_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_try_from_sqlx_row};
     let std_primitive_str_sqlx_column_index_token_stream = quote::quote!{&'a std::primitive::str: sqlx::ColumnIndex<R>,};
     let sqlx_decode_decode_database_token_stream = quote::quote!{sqlx::decode::Decode<'a, R::Database>};
     let sqlx_types_type_database_token_stream = quote::quote!{sqlx::types::Type<R::Database>};
-    let primary_key_try_from_sqlx_row_token_stream = {
-        let primary_key_str_token_stream = {
-            let primary_key_str_stringified = format!("\"{id_field_ident}\"");
-            primary_key_str_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {primary_key_str_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let row_name_token_stream = quote::quote!{row};
-        let primary_key_name_token_stream = quote::quote!{primary_key};
-        quote::quote! {
-            fn #primary_key_try_from_sqlx_row_name_token_stream<'a, R: #sqlx_row_token_stream>(#row_name_token_stream: &'a R) -> sqlx::Result<#id_field_type>
-                where
-                    #std_primitive_str_sqlx_column_index_token_stream
-                    #id_field_type: #sqlx_decode_decode_database_token_stream,
-                    #id_field_type: #sqlx_types_type_database_token_stream,
-            {
-                let #primary_key_name_token_stream: #id_field_type = #row_name_token_stream.try_get(#primary_key_str_token_stream)?;
-                Ok(#primary_key_name_token_stream)
-            }
-        }
-    };
-    // println!("{primary_key_try_from_sqlx_row_token_stream}");
     let primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_uuid_wrapper_try_from_sqlx_row};
     let crate_server_postgres_uuid_wrapper_token_stream = quote::quote!{crate::server::postgres::uuid_wrapper};
     let error_named_camel_case_stringified = "ErrorNamed";
@@ -945,6 +923,155 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         ident_order_by_wrapper_from_str_error_named_name_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_order_by_wrapper_from_str_error_named_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+    let deserialize_ident_order_by_token_stream = {
+        //todo
+        let ivalid_ident_order_by_handle_token_stream = {
+            let ivalid_ident_order_by_handle = format!("\"Invalid {ident}OrderBy:\"");
+            ivalid_ident_order_by_handle.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ivalid_ident_order_by_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let deserialize_ident_order_by_lower_case_name_token_stream = {
+            let deserialize_ident_order_by_lower_case_name = format!("deserialize_{ident_lower_case_stringified}_order_by");
+            deserialize_ident_order_by_lower_case_name.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {deserialize_ident_order_by_lower_case_name} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        quote::quote!{
+            fn #deserialize_ident_order_by_lower_case_name_token_stream<'de, D>(
+                deserializer: D,
+            ) -> Result<#crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>, D::Error>
+            where
+                D: serde::de::Deserializer<'de>,
+            {
+                let string_deserialized = {
+                    use serde::Deserialize;
+                    String::deserialize(deserializer)?
+                };
+                let split_inner_url_parameters_symbol = ',';
+                let default_message = format!(#ivalid_ident_order_by_handle_token_stream);
+                let column_equal_str = "column=";
+                let order_equal_str = "order=";
+                let column = match string_deserialized.find(column_equal_str) {
+                    Some(index) => match index.checked_add(column_equal_str.len()) {
+                        Some(offset) => match string_deserialized.get(offset..) {
+                            Some(offset_slice) => match offset_slice.find(split_inner_url_parameters_symbol) {
+                                Some(offset_slice_next_comma_index) => {
+                                    match offset_slice.get(0..offset_slice_next_comma_index) {
+                                        Some(possible_column) => match {
+                                            use #std_str_from_str_token_stream;
+                                            #column_ident_token_stream::from_str(possible_column)
+                                        } {
+                                            Ok(column) => column,
+                                            Err(e) => {
+                                                return Err(serde::de::Error::custom(&format!(
+                                                    "{default_message} {column_equal_str} {e}"
+                                                )));
+                                            }
+                                        },
+                                        None => {
+                                            return Err(serde::de::Error::custom(&format!(
+                                                "{default_message} {column_equal_str} failed to offset_slice.get(0..offset_slice_next_comma_index)"
+                                            )));
+                                        }
+                                    }
+                                }
+                                None => match offset_slice.get(0..) {
+                                    Some(possible_column) => match {
+                                        use #std_str_from_str_token_stream;
+                                        #column_ident_token_stream::from_str(possible_column)
+                                    } {
+                                        Ok(column) => column,
+                                        Err(e) => {
+                                            return Err(serde::de::Error::custom(&format!(
+                                                "{default_message} {column_equal_str} {e}"
+                                            )));
+                                        }
+                                    },
+                                    None => {
+                                        return Err(serde::de::Error::custom(&format!(
+                                            "{default_message} {column_equal_str} failed to offset_slice.get(0..)"
+                                        )));
+                                    }
+                                },
+                            },
+                            None => {
+                                return Err(serde::de::Error::custom(&format!(
+                                    "{default_message} {column_equal_str} failed to string_deserialized.get(offset..)"
+                                )));
+                            }
+                        },
+                        None => {
+                            return Err(serde::de::Error::custom(&format!(
+                                "{default_message} {column_equal_str} index overflow"
+                            )));
+                        }
+                    },
+                    None => {
+                        return Err(serde::de::Error::custom(&format!(
+                            "{default_message} {column_equal_str} not found"
+                        )));
+                    }
+                };
+                let order = match string_deserialized.find(order_equal_str) {
+                    Some(index) => match index.checked_add(order_equal_str.len()) {
+                        Some(offset) => match string_deserialized.get(offset..) {
+                            Some(offset_slice) => match offset_slice.find(split_inner_url_parameters_symbol) {
+                                Some(offset_slice_next_comma_index) => {
+                                    match offset_slice.get(0..offset_slice_next_comma_index) {
+                                        Some(possible_order) => match {
+                                            use #std_str_from_str_token_stream;
+                                            #crate_server_postgres_order_order_token_stream::from_str(possible_order)
+                                        } {
+                                            Ok(order) => Some(order),
+                                            Err(e) => {
+                                                return Err(serde::de::Error::custom(&format!(
+                                                    "{default_message} {order_equal_str} {e}"
+                                                )));
+                                            }
+                                        },
+                                        None => {
+                                            return Err(serde::de::Error::custom(&format!(
+                                                "{default_message} {order_equal_str} failed to offset_slice.get(0..offset_slice_next_comma_index)"
+                                            )));
+                                        }
+                                    }
+                                }
+                                None => match offset_slice.get(0..) {
+                                    Some(possible_order) => match {
+                                        use #std_str_from_str_token_stream;
+                                        #crate_server_postgres_order_order_token_stream::from_str(possible_order)
+                                    } {
+                                        Ok(order) => Some(order),
+                                        Err(e) => {
+                                            return Err(serde::de::Error::custom(&format!(
+                                                "{default_message} {order_equal_str} {e}"
+                                            )));
+                                        }
+                                    },
+                                    None => {
+                                        return Err(serde::de::Error::custom(&format!(
+                                            "{default_message} {order_equal_str} failed to offset_slice.get(0..)"
+                                        )));
+                                    }
+                                },
+                            },
+                            None => {
+                                return Err(serde::de::Error::custom(&format!(
+                                    "{default_message} {order_equal_str} failed to string_deserialized.get(offset..)"
+                                )));
+                            }
+                        },
+                        None => {
+                            return Err(serde::de::Error::custom(&format!(
+                                "{default_message} {order_equal_str} index overflow"
+                            )));
+                        }
+                    },
+                    None => None,
+                };
+                Ok(#crate_server_postgres_order_by_order_by_token_stream { column, order })
+            }
+        }
+    };
     let order_by_wrapper_token_stream = {
         let struct_token_stream = {
             let deserialize_with_name_quotes_token_stream = {
@@ -1176,155 +1303,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{order_by_wrapper_token_stream}");
-    let deserialize_ident_order_by_token_stream = {
-        //todo
-        let ivalid_ident_order_by_handle_token_stream = {
-            let ivalid_ident_order_by_handle = format!("\"Invalid {ident}OrderBy:\"");
-            ivalid_ident_order_by_handle.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ivalid_ident_order_by_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let deserialize_ident_order_by_lower_case_name_token_stream = {
-            let deserialize_ident_order_by_lower_case_name = format!("deserialize_{ident_lower_case_stringified}_order_by");
-            deserialize_ident_order_by_lower_case_name.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {deserialize_ident_order_by_lower_case_name} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        quote::quote!{
-            fn #deserialize_ident_order_by_lower_case_name_token_stream<'de, D>(
-                deserializer: D,
-            ) -> Result<#crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>, D::Error>
-            where
-                D: serde::de::Deserializer<'de>,
-            {
-                let string_deserialized = {
-                    use serde::Deserialize;
-                    String::deserialize(deserializer)?
-                };
-                let split_inner_url_parameters_symbol = ',';
-                let default_message = format!(#ivalid_ident_order_by_handle_token_stream);
-                let column_equal_str = "column=";
-                let order_equal_str = "order=";
-                let column = match string_deserialized.find(column_equal_str) {
-                    Some(index) => match index.checked_add(column_equal_str.len()) {
-                        Some(offset) => match string_deserialized.get(offset..) {
-                            Some(offset_slice) => match offset_slice.find(split_inner_url_parameters_symbol) {
-                                Some(offset_slice_next_comma_index) => {
-                                    match offset_slice.get(0..offset_slice_next_comma_index) {
-                                        Some(possible_column) => match {
-                                            use #std_str_from_str_token_stream;
-                                            #column_ident_token_stream::from_str(possible_column)
-                                        } {
-                                            Ok(column) => column,
-                                            Err(e) => {
-                                                return Err(serde::de::Error::custom(&format!(
-                                                    "{default_message} {column_equal_str} {e}"
-                                                )));
-                                            }
-                                        },
-                                        None => {
-                                            return Err(serde::de::Error::custom(&format!(
-                                                "{default_message} {column_equal_str} failed to offset_slice.get(0..offset_slice_next_comma_index)"
-                                            )));
-                                        }
-                                    }
-                                }
-                                None => match offset_slice.get(0..) {
-                                    Some(possible_column) => match {
-                                        use #std_str_from_str_token_stream;
-                                        #column_ident_token_stream::from_str(possible_column)
-                                    } {
-                                        Ok(column) => column,
-                                        Err(e) => {
-                                            return Err(serde::de::Error::custom(&format!(
-                                                "{default_message} {column_equal_str} {e}"
-                                            )));
-                                        }
-                                    },
-                                    None => {
-                                        return Err(serde::de::Error::custom(&format!(
-                                            "{default_message} {column_equal_str} failed to offset_slice.get(0..)"
-                                        )));
-                                    }
-                                },
-                            },
-                            None => {
-                                return Err(serde::de::Error::custom(&format!(
-                                    "{default_message} {column_equal_str} failed to string_deserialized.get(offset..)"
-                                )));
-                            }
-                        },
-                        None => {
-                            return Err(serde::de::Error::custom(&format!(
-                                "{default_message} {column_equal_str} index overflow"
-                            )));
-                        }
-                    },
-                    None => {
-                        return Err(serde::de::Error::custom(&format!(
-                            "{default_message} {column_equal_str} not found"
-                        )));
-                    }
-                };
-                let order = match string_deserialized.find(order_equal_str) {
-                    Some(index) => match index.checked_add(order_equal_str.len()) {
-                        Some(offset) => match string_deserialized.get(offset..) {
-                            Some(offset_slice) => match offset_slice.find(split_inner_url_parameters_symbol) {
-                                Some(offset_slice_next_comma_index) => {
-                                    match offset_slice.get(0..offset_slice_next_comma_index) {
-                                        Some(possible_order) => match {
-                                            use #std_str_from_str_token_stream;
-                                            #crate_server_postgres_order_order_token_stream::from_str(possible_order)
-                                        } {
-                                            Ok(order) => Some(order),
-                                            Err(e) => {
-                                                return Err(serde::de::Error::custom(&format!(
-                                                    "{default_message} {order_equal_str} {e}"
-                                                )));
-                                            }
-                                        },
-                                        None => {
-                                            return Err(serde::de::Error::custom(&format!(
-                                                "{default_message} {order_equal_str} failed to offset_slice.get(0..offset_slice_next_comma_index)"
-                                            )));
-                                        }
-                                    }
-                                }
-                                None => match offset_slice.get(0..) {
-                                    Some(possible_order) => match {
-                                        use #std_str_from_str_token_stream;
-                                        #crate_server_postgres_order_order_token_stream::from_str(possible_order)
-                                    } {
-                                        Ok(order) => Some(order),
-                                        Err(e) => {
-                                            return Err(serde::de::Error::custom(&format!(
-                                                "{default_message} {order_equal_str} {e}"
-                                            )));
-                                        }
-                                    },
-                                    None => {
-                                        return Err(serde::de::Error::custom(&format!(
-                                            "{default_message} {order_equal_str} failed to offset_slice.get(0..)"
-                                        )));
-                                    }
-                                },
-                            },
-                            None => {
-                                return Err(serde::de::Error::custom(&format!(
-                                    "{default_message} {order_equal_str} failed to string_deserialized.get(offset..)"
-                                )));
-                            }
-                        },
-                        None => {
-                            return Err(serde::de::Error::custom(&format!(
-                                "{default_message} {order_equal_str} index overflow"
-                            )));
-                        }
-                    },
-                    None => None,
-                };
-                Ok(#crate_server_postgres_order_by_order_by_token_stream { column, order })
-            }
-        }
-    };
     let allow_methods_token_stream = {
         quote::quote!{
             pub const ALLOW_METHODS: [http::Method;4] = [http::Method::GET, http::Method::POST, http::Method::PATCH, http::Method::DELETE];
@@ -6874,33 +6852,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #struct_options_token_stream//done
         #from_ident_for_ident_options_token_stream//done
         #(#structs_variants_token_stream)*//done
-        // #(#structs_variants_impl_from_token_stream)*
+        // #(#structs_variants_impl_from_token_stream)*//todo try from
         #column_token_stream//done
-        #column_select_token_stream
-        #primary_key_try_from_sqlx_row_token_stream
-        //
-        #primary_key_uuid_wrapper_try_from_sqlx_row_token_stream
-        //
-        #order_by_wrapper_token_stream
-        #deserialize_ident_order_by_token_stream
-        #allow_methods_token_stream
+        #column_select_token_stream//done
+        #primary_key_uuid_wrapper_try_from_sqlx_row_token_stream//done
+        #deserialize_ident_order_by_token_stream//done
+        #order_by_wrapper_token_stream//done
+        #allow_methods_token_stream//done
         #ident_column_read_permission_token_stream
     };
     // println!("{common_token_stream}");
-    // println!("{column_select_token_stream}");
+    // println!("{create_one_token_stream}");
     let gen = quote::quote! {
-        // #common_token_stream
+        #common_token_stream
 
-        // #create_many_token_stream
-        // #create_one_token_stream
-        // #read_one_token_stream
-        // #read_many_with_body_token_stream
-        // #read_many_token_stream
-        // #update_one_token_stream
-        // #update_many_token_stream
-        // #delete_one_token_stream
-        // #delete_many_with_body_token_stream
-        // #delete_many_token_stream
+        #create_many_token_stream
+        #create_one_token_stream
+        #read_one_token_stream
+        #read_many_with_body_token_stream
+        #read_many_token_stream
+        #update_one_token_stream
+        #update_many_token_stream
+        #delete_one_token_stream
+        #delete_many_with_body_token_stream
+        #delete_many_token_stream
     };
     // if ident == "" {
     //    println!("{gen}");
