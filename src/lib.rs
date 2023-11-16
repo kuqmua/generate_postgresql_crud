@@ -279,6 +279,44 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         from_str_lower_case_stringified.parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {from_str_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+    //todo remove primary_key_try_from_sqlx_row_name_token_stream and primary_key_try_from_sqlx_row_token_stream later - primary_key_uuid_wrapper_try_from_sqlx_row_token_stream is new version
+    let sqlx_row_token_stream = quote::quote!{sqlx::Row};
+    let primary_key_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_try_from_sqlx_row};
+    let std_primitive_str_sqlx_column_index_token_stream = quote::quote!{&'a std::primitive::str: sqlx::ColumnIndex<R>,};
+    let sqlx_decode_decode_database_token_stream = quote::quote!{sqlx::decode::Decode<'a, R::Database>};
+    let sqlx_types_type_database_token_stream = quote::quote!{sqlx::types::Type<R::Database>};
+    let primary_key_try_from_sqlx_row_token_stream = {
+        let primary_key_str_token_stream = {
+            let primary_key_str_stringified = format!("\"{id_field_ident}\"");
+            primary_key_str_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {primary_key_str_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let row_name_token_stream = quote::quote!{row};
+        let primary_key_name_token_stream = quote::quote!{primary_key};
+        quote::quote! {
+            fn #primary_key_try_from_sqlx_row_name_token_stream<'a, R: #sqlx_row_token_stream>(#row_name_token_stream: &'a R) -> sqlx::Result<#id_field_type>
+                where
+                    #std_primitive_str_sqlx_column_index_token_stream
+                    #id_field_type: #sqlx_decode_decode_database_token_stream,
+                    #id_field_type: #sqlx_types_type_database_token_stream,
+            {
+                let #primary_key_name_token_stream: #id_field_type = #row_name_token_stream.try_get(#primary_key_str_token_stream)?;
+                Ok(#primary_key_name_token_stream)
+            }
+        }
+    };
+    // println!("{primary_key_try_from_sqlx_row_token_stream}");
+    let primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_uuid_wrapper_try_from_sqlx_row};
+    let crate_server_postgres_uuid_wrapper_token_stream = quote::quote!{crate::server::postgres::uuid_wrapper};
+    let error_named_camel_case_stringified = "ErrorNamed";
+    let uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_token_stream = {
+        let uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_stringified = format!("UuidWrapper{try_from_camel_case_stringified}PossibleUuidWrapper{error_named_camel_case_stringified}");
+        uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::#uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_token_stream};
+    let crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::UuidWrapper};
+    let crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::PossibleUuidWrapper};
     let std_str_from_str_token_stream = quote::quote!{std::str::#from_str_camel_case_token_stream};
     let struct_options_ident_token_stream = {
         let struct_options_ident_stringified = format!("{ident}Options");
@@ -288,7 +326,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let struct_options_token_stream = {
         let field_option_id_token_stream = quote::quote!{
             #[serde(skip_serializing_if = "Option::is_none")]
-            pub #id_field_ident: std::option::Option<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
+            pub #id_field_ident: std::option::Option<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>
         };
         let fields_options_excluding_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
             let field_vis = &element.field.vis;
@@ -309,7 +347,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let from_ident_for_ident_options_token_stream = {
         let ident_option_variant_id_token_stream = quote::quote!{
-            #id_field_ident: Some(value.#id_field_ident),
+            #id_field_ident: Some(value.#id_field_ident.into()),
         };
         let ident_option_variants_excluding_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
             let field_ident = element.field.ident
@@ -318,7 +356,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     panic!("{proc_macro_name_ident_stringified} field.ident is None")
                 });
             quote::quote!{
-                #field_ident: Some(value.#field_ident.into())
+                #field_ident: Some(value.#field_ident.into())//todo what if type does not implement serialize deserialize
             }
         });
         quote::quote! {
@@ -493,9 +531,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {column_select_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let options_try_from_sqlx_row_name_token_stream = quote::quote!{options_try_from_sqlx_row};
-    let std_primitive_str_sqlx_column_index_token_stream = quote::quote!{&'a std::primitive::str: sqlx::ColumnIndex<R>,};
-    let sqlx_decode_decode_database_token_stream = quote::quote!{sqlx::decode::Decode<'a, R::Database>};
-    let sqlx_types_type_database_token_stream = quote::quote!{sqlx::types::Type<R::Database>};
     let crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream = quote::quote!{crate::common::serde_urlencoded::SerdeUrlencodedParameter};
     let code_occurence_camel_case_stringified = "CodeOccurence";
     let code_occurence_camel_case_token_stream = code_occurence_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -513,7 +548,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream = quote::quote!{
         #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream
     };
-    let error_named_camel_case_stringified = "ErrorNamed";
     let ident_column_select_from_str_error_named_camel_case_token_stream = {
         let ident_column_select_from_str_error_named_camel_case_stringified = format!("{ident}{column_select_camel_case_stringified}{from_str_camel_case_stringified}{error_named_camel_case_stringified}");
         ident_column_select_from_str_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -528,7 +562,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let eo_display_attribute_token_stream = quote::quote!{#[eo_display]};
     let eo_display_with_serialize_deserialize_token_stream = quote::quote!{#[eo_display_with_serialize_deserialize]};
     let eo_vec_error_occurence_token_stream = quote::quote!{#[eo_vec_error_occurence]};
-    let sqlx_row_token_stream = quote::quote!{sqlx::Row};
     let column_select_token_stream = {
         let column_select_struct_token_stream = {
             let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
@@ -734,33 +767,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{serde_urlencoded_parameter_token_stream}");
         let options_try_from_sqlx_row_token_stream = {
-            let declaration_token_stream = fields_named.iter().map(|field|{
-                let field_ident = field.ident
+            let declaration_primary_key_token_stream = {
+                quote::quote! {
+                    let mut #id_field_ident: std::option::Option<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream> = None;
+                }
+            };
+            let declaration_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+                let field_ident = element.field.ident
                     .clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
-                let field_type = &field.ty;
+                let field_type = &element.field.ty;
                 quote::quote! {
                     let mut #field_ident: std::option::Option<#field_type> = None;
                 }
             });
             let assignment_token_stream = column_variants.iter().map(|column_variant|{
-                // let write_ident_token_stream = column_variant.iter().map(|field|{
-                //     let field_ident = field.ident.clone()
-                //     .unwrap_or_else(|| {
-                //         panic!("{proc_macro_name_ident_stringified} field.ident is None")
-                //     });
-                //     let field_ident_string_quotes_token_stream = {
-                //         let field_ident_string_quotes = format!("\"{field_ident}\"");
-                //         field_ident_string_quotes.parse::<proc_macro2::TokenStream>()
-                //         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_string_quotes} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                //     };
-                //     quote::quote! {
-                //         #field_ident = row.try_get(#field_ident_string_quotes_token_stream)?;
-                //     }  
-                // });
-                /////////
                 let write_ident_primary_key_token_stream = {
                     let field_ident_string_quotes_token_stream = {
                         let field_ident_string_quotes = format!("\"{id_field_ident}\"");
@@ -770,7 +793,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     quote::quote!{
                         let primary_key_try_get_result: Result<std::option::Option<#sqlx_types_uuid_token_stream>, sqlx::Error> = row.try_get(#field_ident_string_quotes_token_stream);
                         #id_field_ident = match primary_key_try_get_result {
-                            Ok(option_primary_key) => option_primary_key.map(|value| value.to_string()),
+                            Ok(option_primary_key) => option_primary_key.map(|value| #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from(value)),
                             Err(e) => {
                                 return Err(e); //todo custom type
                             }
@@ -794,7 +817,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         })
                     },
                 });
-                //
                 let variant_ident_token_stream = {
                     let variant_ident_stringified_handle = column_variant.iter()
                         .fold(std::string::String::default(), |mut acc, field| {
@@ -846,7 +868,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #sqlx_decode_decode_and_sqlx_types_type_primary_key_token_stream
                         #(#sqlx_decode_decode_and_sqlx_types_type_with_excluded_id_token_stream)*
                     {
-                        #(#declaration_token_stream)*
+                        #declaration_primary_key_token_stream
+                        #(#declaration_excluding_primary_key_token_stream)*
                         match self {
                             #(#assignment_token_stream)*
                         }
@@ -870,39 +893,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{column_select_token_stream}");
-    //todo remove primary_key_try_from_sqlx_row_name_token_stream and primary_key_try_from_sqlx_row_token_stream later - primary_key_uuid_wrapper_try_from_sqlx_row_token_stream is new version
-    let primary_key_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_try_from_sqlx_row};
-    let primary_key_try_from_sqlx_row_token_stream = {
-        let primary_key_str_token_stream = {
-            let primary_key_str_stringified = format!("\"{id_field_ident}\"");
-            primary_key_str_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {primary_key_str_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        let row_name_token_stream = quote::quote!{row};
-        let primary_key_name_token_stream = quote::quote!{primary_key};
-        quote::quote! {
-            fn #primary_key_try_from_sqlx_row_name_token_stream<'a, R: #sqlx_row_token_stream>(#row_name_token_stream: &'a R) -> sqlx::Result<#id_field_type>
-                where
-                    #std_primitive_str_sqlx_column_index_token_stream
-                    #id_field_type: #sqlx_decode_decode_database_token_stream,
-                    #id_field_type: #sqlx_types_type_database_token_stream,
-            {
-                let #primary_key_name_token_stream: #id_field_type = #row_name_token_stream.try_get(#primary_key_str_token_stream)?;
-                Ok(#primary_key_name_token_stream)
-            }
-        }
-    };
-    // println!("{primary_key_try_from_sqlx_row_token_stream}");
-    let primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream = quote::quote!{primary_key_uuid_wrapper_try_from_sqlx_row};
-    let crate_server_postgres_uuid_wrapper_token_stream = quote::quote!{crate::server::postgres::uuid_wrapper};
-    let uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_token_stream = {
-        let uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_stringified = format!("UuidWrapper{try_from_camel_case_stringified}PossibleUuidWrapper{error_named_camel_case_stringified}");
-        uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
-    let crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::#uuid_wrapper_try_from_possible_uuid_wrapper_error_named_camel_case_token_stream};
-    let crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::UuidWrapper};
-    let crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream = quote::quote!{#crate_server_postgres_uuid_wrapper_token_stream::PossibleUuidWrapper};
     let crate_server_postgres_regex_filter_regex_filter_token_stream = quote::quote!{crate::server::postgres::regex_filter::RegexFilter};
     let crate_server_postgres_postgres_bigint_postgres_bigint_token_stream = quote::quote!{crate::server::postgres::postgres_bigint::PostgresBigint};
     let crate_server_postgres_postgres_bigint_postgres_bigint_from_str_error_named_token_stream = {
@@ -6875,13 +6865,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // println!("{delete_many_token_stream}");
+    // let d = quote::quote! {
+        
+    // };
+    // println!(" {d}");
     let common_token_stream = quote::quote! {
         #table_name_declaration_token_stream//done
-        #struct_options_token_stream
-        #from_ident_for_ident_options_token_stream
-        #(#structs_variants_token_stream)*
-        #(#structs_variants_impl_from_token_stream)*
-        #column_token_stream
+        #struct_options_token_stream//done
+        #from_ident_for_ident_options_token_stream//done
+        #(#structs_variants_token_stream)*//done
+        // #(#structs_variants_impl_from_token_stream)*
+        #column_token_stream//done
         #column_select_token_stream
         #primary_key_try_from_sqlx_row_token_stream
         //
@@ -6893,7 +6887,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #ident_column_read_permission_token_stream
     };
     // println!("{common_token_stream}");
-    println!("{struct_options_token_stream}");
+    // println!("{column_select_token_stream}");
     let gen = quote::quote! {
         // #common_token_stream
 
