@@ -308,7 +308,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let from_ident_for_ident_options_token_stream = {
         let ident_option_variant_id_token_stream = quote::quote!{
-            #id_field_ident: Option<value.#id_field_ident>
+            #id_field_ident: Some(value.#id_field_ident),
         };
         let ident_option_variants_excluding_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
             let field_ident = element.field.ident
@@ -330,7 +330,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         }
-    };
+    }; 
     // println!("{from_ident_for_ident_options_token_stream}");
     let column_variants = {
         let fields_named_enumerated = fields_named
@@ -6891,7 +6891,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
     };
-    // println!("{common_token_stream}");
+    println!("{common_token_stream}");
     let gen = quote::quote! {
         // #common_token_stream
 
