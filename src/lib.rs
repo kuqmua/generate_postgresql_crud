@@ -287,7 +287,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let struct_options_token_stream = {
         let field_option_id_token_stream = quote::quote!{
-            pub #id_field_ident: crate::server::postgres::uuid_wrapper::PossibleUuidWrapper
+            #[serde(skip_serializing_if = "Option::is_none")]
+            pub #id_field_ident: std::option::Option<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
         };
         let fields_options_excluding_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
             let field_vis = &element.field.vis;
@@ -295,7 +296,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let field_type_path = &element.field.ty;
             quote::quote!{
                 #[serde(skip_serializing_if = "Option::is_none")]
-                #field_vis #field_ident: Option<#field_type_path>
+                #field_vis #field_ident: std::option::Option<#field_type_path>
             }
         });
         quote::quote! {
@@ -632,8 +633,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{impl_default_token_stream}");
         let from_option_self_token_stream = {
             quote::quote! {
-                impl std::convert::From<Option<Self>> for #column_select_ident_token_stream {
-                    fn from(option_value: Option<Self>) -> Self {
+                impl std::convert::From<std::option::Option<Self>> for #column_select_ident_token_stream {
+                    fn from(option_value: std::option::Option<Self>) -> Self {
                         match option_value {
                             Some(value) => value,
                             None => Self::default(),
@@ -741,7 +742,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     });
                 let field_type = &field.ty;
                 quote::quote! {
-                    let mut #field_ident: Option<#field_type> = None;
+                    let mut #field_ident: std::option::Option<#field_type> = None;
                 }
             });
             let assignment_token_stream = column_variants.iter().map(|column_variant|{
@@ -767,7 +768,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {field_ident_string_quotes} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
                     quote::quote!{
-                        let primary_key_try_get_result: Result<Option<#sqlx_types_uuid_token_stream>, sqlx::Error> = row.try_get(#field_ident_string_quotes_token_stream);
+                        let primary_key_try_get_result: Result<std::option::Option<#sqlx_types_uuid_token_stream>, sqlx::Error> = row.try_get(#field_ident_string_quotes_token_stream);
                         #id_field_ident = match primary_key_try_get_result {
                             Ok(option_primary_key) => option_primary_key.map(|value| value.to_string()),
                             Err(e) => {
@@ -824,14 +825,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     })
             });
             let sqlx_decode_decode_and_sqlx_types_type_primary_key_token_stream = quote::quote!{
-                Option<#sqlx_types_uuid_token_stream>: #sqlx_decode_decode_database_token_stream,
-                Option<#sqlx_types_uuid_token_stream>: #sqlx_types_type_database_token_stream,
+                std::option::Option<#sqlx_types_uuid_token_stream>: #sqlx_decode_decode_database_token_stream,
+                std::option::Option<#sqlx_types_uuid_token_stream>: #sqlx_types_type_database_token_stream,
             };
             let sqlx_decode_decode_and_sqlx_types_type_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
                 let field_type = &element.field.ty;
                 quote::quote!{
-                    Option<#field_type>: #sqlx_decode_decode_database_token_stream,
-                    Option<#field_type>: #sqlx_types_type_database_token_stream,
+                    std::option::Option<#field_type>: #sqlx_decode_decode_database_token_stream,
+                    std::option::Option<#field_type>: #sqlx_types_type_database_token_stream,
                 }
             });
             quote::quote! {
@@ -2422,7 +2423,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #read_one_query_camel_case_token_stream {
-                    pub #select_token_stream: Option<#column_select_ident_token_stream>,
+                    pub #select_token_stream: std::option::Option<#column_select_ident_token_stream>,
                 }
             }
         };
@@ -2431,7 +2432,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 struct #read_one_query_with_serialize_deserialize_camel_case_token_stream {
-                    #select_token_stream: Option<std::string::String>,
+                    #select_token_stream: std::option::Option<std::string::String>,
                 } 
             }
         };
@@ -2720,14 +2721,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
+                    pub #field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
                 }
             });
             quote::quote!{
                 #derive_debug_token_stream
                 pub struct #read_many_with_body_payload_camel_case_token_stream {
                     pub #select_token_stream: #column_select_ident_token_stream,
-                    pub #id_field_ident: Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
+                    pub #id_field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_id_token_stream)*
                     pub #order_by_token_stream: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
                     pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
@@ -2743,14 +2744,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
+                    pub #field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
                 }
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
                     pub select: #column_select_ident_token_stream,
-                    pub #id_field_ident: Option<std::vec::Vec<std::string::String>>,
+                    pub #id_field_ident: std::option::Option<std::vec::Vec<std::string::String>>,
                     #(#fields_with_excluded_id_token_stream)*
                     pub order_by: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
                     pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
@@ -3445,18 +3446,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: Option<crate::server::routes::helpers::strings_deserialized_from_string_splitted_by_comma::StringsDeserializedFromStringSplittedByComma>,
+                    pub #field_ident: std::option::Option<crate::server::routes::helpers::strings_deserialized_from_string_splitted_by_comma::StringsDeserializedFromStringSplittedByComma>,
                 }
             });
             quote::quote!{
                 #derive_debug_token_stream
                 pub struct #read_many_query_camel_case_token_stream {
-                    pub #select_token_stream: Option<#column_select_ident_token_stream>,
-                    pub #id_field_ident: Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
+                    pub #select_token_stream: std::option::Option<#column_select_ident_token_stream>,
+                    pub #id_field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_id_token_stream)*
-                    pub #order_by_token_stream: Option<#ident_order_by_wrapper_name_token_stream>,//todo
+                    pub #order_by_token_stream: std::option::Option<#ident_order_by_wrapper_name_token_stream>,//todo
                     pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
-                    pub offset: Option<#crate_server_postgres_postgres_bigint_postgres_bigint_token_stream>,
+                    pub offset: std::option::Option<#crate_server_postgres_postgres_bigint_postgres_bigint_token_stream>,
                 }
             }
         };
@@ -3468,18 +3469,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: Option<std::string::String>,
+                    pub #field_ident: std::option::Option<std::string::String>,
                 }
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #read_many_query_with_serialize_deserialize_camel_case_token_stream {
-                    #select_token_stream: Option<std::string::String>,
-                    pub #id_field_ident: Option<std::string::String>,
+                    #select_token_stream: std::option::Option<std::string::String>,
+                    pub #id_field_ident: std::option::Option<std::string::String>,
                     #(#fields_with_serialize_deserialize_with_excluded_id_token_stream)*
-                    #order_by_token_stream: Option<std::string::String>,
+                    #order_by_token_stream: std::option::Option<std::string::String>,
                     limit: std::string::String,
-                    offset: Option<std::string::String>,
+                    offset: std::option::Option<std::string::String>,
                 }
             }
         };
@@ -4324,7 +4325,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     });
                 let field_type = &element.field.ty;
                 quote::quote!{
-                    pub #field_ident: Option<#field_type>
+                    pub #field_ident: std::option::Option<#field_type>
                 }
             });
             quote::quote!{
@@ -5494,13 +5495,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>//todo
+                    pub #field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>//todo
                 }
             });
             quote::quote!{
                 #derive_debug_token_stream
                 pub struct #delete_many_with_body_payload_camel_case_token_stream {
-                    pub #id_field_ident: Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
+                    pub #id_field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
@@ -5513,13 +5514,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>
+                    pub #field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>
                 }
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
-                    pub #id_field_ident: Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>>,
+                    pub #id_field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
@@ -6211,7 +6212,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let query_token_stream = {
             let query_id_field_token_stream = quote::quote!{
-                pub #id_field_ident: Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
+                pub #id_field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
             };
             let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident.clone()
@@ -6219,7 +6220,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: Option<crate::server::routes::helpers::strings_deserialized_from_string_splitted_by_comma::StringsDeserializedFromStringSplittedByComma>
+                    pub #field_ident: std::option::Option<crate::server::routes::helpers::strings_deserialized_from_string_splitted_by_comma::StringsDeserializedFromStringSplittedByComma>
                 }
             });
             quote::quote!{
@@ -6238,7 +6239,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: Option<std::string::String>
+                    pub #field_ident: std::option::Option<std::string::String>
                 }
             });
             quote::quote!{
@@ -6875,7 +6876,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{delete_many_token_stream}");
     let common_token_stream = quote::quote! {
-        #table_name_declaration_token_stream
+        #table_name_declaration_token_stream//done
         #struct_options_token_stream
         #from_ident_for_ident_options_token_stream
         #(#structs_variants_token_stream)*
@@ -6891,7 +6892,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
     };
-    println!("{common_token_stream}");
+    // println!("{common_token_stream}");
+    println!("{struct_options_token_stream}");
     let gen = quote::quote! {
         // #common_token_stream
 
