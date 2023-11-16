@@ -1695,43 +1695,43 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         Configuration {
             #[eo_display_with_serialize_deserialize]
             configuration_box_dyn_error: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         Database {
             #[eo_display_with_serialize_deserialize]
             box_dyn_database_error: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         Io {
             #[eo_display]
             io_error: std::io::Error,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         Tls {
             #[eo_display_with_serialize_deserialize]
             box_dyn_error: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         Protocol {
             #[eo_display_with_serialize_deserialize]
             protocol: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_404_not_found]
         RowNotFound {
             #[eo_display_with_serialize_deserialize]
             row_not_found: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_400_bad_request]
         TypeNotFound {
             #[eo_display_with_serialize_deserialize]
             type_not_found: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         ColumnIndexOutOfBounds {
@@ -1739,13 +1739,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             column_index_out_of_bounds: usize,
             #[eo_display_with_serialize_deserialize]
             len: usize,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_400_bad_request]
         ColumnNotFound {
             #[eo_display_with_serialize_deserialize]
             column_not_found: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         ColumnDecode {
@@ -1753,37 +1753,37 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             column_decode_index: std::string::String,
             #[eo_display_with_serialize_deserialize]
             source_handle: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         Decode {
             #[eo_display_with_serialize_deserialize]
             decode_box_dyn_error: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_408_request_timeout]
         PoolTimedOut {
             #[eo_display_with_serialize_deserialize]
             pool_timed_out: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         PoolClosed {
             #[eo_display_with_serialize_deserialize]
             pool_closed: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         WorkerCrashed {
             #[eo_display_with_serialize_deserialize]
             worker_crashed: std::string::String,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         Migrate {
             #[eo_display]
             migrate: sqlx::migrate::MigrateError,
-            code_occurence: crate::common::code_occurence::CodeOccurence,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
     };
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
