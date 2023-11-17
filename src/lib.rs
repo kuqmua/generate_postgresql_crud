@@ -1657,6 +1657,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let primary_key_from_row_and_failed_rollback_variant_declaration_token_stream = quote::quote!{
+        #[tvfrr_500_internal_server_error]
+        PrimaryKeyFromRowAndFailedRollback {
+            #eo_display_attribute_token_stream
+            primary_key_from_row: sqlx::Error,
+            #eo_display_attribute_token_stream
+            rollback_error: sqlx::Error,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
     let non_existing_primary_keys_variant_initialization_token_stream = quote::quote!{
         NonExistingPrimaryKeys {
             #non_existing_primary_keys_name_token_stream,
@@ -5451,14 +5461,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #no_payload_fields_variant_declaration_token_stream,
                 #commit_failed_variant_declaration_token_stream,
                 #non_existing_primary_keys_variant_declaration_token_stream,
-                #[tvfrr_500_internal_server_error]
-                PrimaryKeyFromRowAndFailedRollback {
-                    #eo_display_attribute_token_stream
-                    primary_key_from_row: sqlx::Error,
-                    #eo_display_attribute_token_stream
-                    rollback_error: sqlx::Error,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
                 #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
                 #[tvfrr_500_internal_server_error]
                 QueryAndRollbackFailed {
@@ -6370,14 +6373,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
                 #non_existing_primary_keys_variant_declaration_token_stream,
                 #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
-                #[tvfrr_500_internal_server_error]
-                PrimaryKeyFromRowAndFailedRollback {
-                    #eo_display_attribute_token_stream
-                    primary_key_from_row: sqlx::Error,
-                    #eo_display_attribute_token_stream
-                    rollback_error: sqlx::Error,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
                 #commit_failed_variant_declaration_token_stream,
                 #[tvfrr_500_internal_server_error]
                 QueryAndRollbackFailed {
@@ -7159,14 +7155,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
                 #commit_failed_variant_declaration_token_stream,
                 #non_existing_primary_keys_variant_declaration_token_stream,
-                #[tvfrr_500_internal_server_error]
-                PrimaryKeyFromRowAndFailedRollback {
-                    #eo_display_attribute_token_stream
-                    primary_key_from_row: sqlx::Error,
-                    #eo_display_attribute_token_stream
-                    rollback_error: sqlx::Error,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
                 #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
                 #[tvfrr_500_internal_server_error]
                 QueryAndRollbackFailed {
