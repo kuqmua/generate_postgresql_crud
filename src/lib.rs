@@ -1632,7 +1632,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let bind_query_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error]
         BindQuery {
-            #[eo_error_occurence]
+            #eo_error_occurence_attribute_token_stream
             checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
@@ -2878,8 +2878,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #failed_to_deserialize_query_string_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 #read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_token_stream {
-                    #[eo_error_occurence]
-                    read_one_path_try_from_read_one_path_with_serialize_deserialize:
+                    #eo_error_occurence_attribute_token_stream
+                    #read_one_path_try_from_read_one_path_with_serialize_deserialize_lower_case_token_stream:
                         ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamed,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
@@ -3347,7 +3347,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
                 #[tvfrr_400_bad_request]
                 ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize {
-                    #[eo_error_occurence]
+                    #eo_error_occurence_attribute_token_stream
                     read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize:
                         ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserializeErrorNamed,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
@@ -4213,7 +4213,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 ReadManyQueryTryFromReadManyQueryWithSerializeDeserialize {
-                    #[eo_error_occurence]
+                    #eo_error_occurence_attribute_token_stream
                     read_many_query_try_from_read_many_query_with_serialize_deserialize:
                         ReadManyQueryTryFromReadManyQueryWithSerializeDeserializeErrorNamed,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
@@ -4895,7 +4895,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
                 #[tvfrr_400_bad_request]
                 UpdateOnePathTryFromUpdateOnePathWithSerializeDeserialize {
-                    #[eo_error_occurence]
+                    #eo_error_occurence_attribute_token_stream
                     update_one_path_try_from_update_one_path_with_serialize_deserialize:
                         UpdateOnePathTryFromUpdateOnePathWithSerializeDeserializeErrorNamed,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
@@ -5445,7 +5445,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
                 #[tvfrr_400_bad_request]
                 UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserialize {
-                    #[eo_error_occurence]
+                    #eo_error_occurence_attribute_token_stream
                     update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize: UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserializeErrorNamed,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
@@ -5932,7 +5932,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #path_logic_error_variants_token_stream
                     #[tvfrr_400_bad_request]
                     DeleteOnePathTryFromDeleteOnePathWithSerializeDeserialize {
-                        #[eo_error_occurence]
+                        #eo_error_occurence_attribute_token_stream
                         delete_one_path_try_from_delete_one_path_with_serialize_deserialize:
                             DeleteOnePathTryFromDeleteOnePathWithSerializeDeserializeErrorNamed,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
@@ -6397,7 +6397,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
                 #[tvfrr_400_bad_request]
                 DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserialize {
-                    #[eo_error_occurence]
+                    #eo_error_occurence_attribute_token_stream
                     delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize: DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserializeErrorNamed,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
@@ -7214,7 +7214,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
                 #[tvfrr_400_bad_request]
                 DeleteManyQueryTryFromDeleteManyQueryWithSerializeDeserialize {
-                    #[eo_error_occurence]
+                    #eo_error_occurence_attribute_token_stream
                     delete_many_query_try_from_delete_many_query_with_serialize_deserialize:
                         DeleteManyQueryTryFromDeleteManyQueryWithSerializeDeserializeErrorNamed,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
