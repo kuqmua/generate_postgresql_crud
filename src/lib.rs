@@ -1650,6 +1650,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    let query_and_rollback_failed_variant_declaration_token_stream = quote::quote!{
+        #[tvfrr_500_internal_server_error]
+        QueryAndRollbackFailed {
+            #eo_display_attribute_token_stream
+            query_error: sqlx::Error,
+            #eo_display_attribute_token_stream
+            rollback_error: sqlx::Error,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
     let primary_key_from_row_and_failed_rollback_variant_initialization_token_stream = quote::quote!{
         PrimaryKeyFromRowAndFailedRollback {
             primary_key_from_row: e,
@@ -5463,14 +5473,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #non_existing_primary_keys_variant_declaration_token_stream,
                 #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
                 #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
-                #[tvfrr_500_internal_server_error]
-                QueryAndRollbackFailed {
-                    #eo_display_attribute_token_stream
-                    query_error: sqlx::Error,
-                    #eo_display_attribute_token_stream
-                    rollback_error: sqlx::Error,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #query_and_rollback_failed_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserialize {
                     #eo_error_occurence_attribute_token_stream
@@ -6375,14 +6378,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
                 #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
                 #commit_failed_variant_declaration_token_stream,
-                #[tvfrr_500_internal_server_error]
-                QueryAndRollbackFailed {
-                    #eo_display_attribute_token_stream
-                    query_error: sqlx::Error,
-                    #eo_display_attribute_token_stream
-                    rollback_error: sqlx::Error,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #query_and_rollback_failed_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserialize {
                     #eo_error_occurence_attribute_token_stream
@@ -7157,14 +7153,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #non_existing_primary_keys_variant_declaration_token_stream,
                 #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
                 #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
-                #[tvfrr_500_internal_server_error]
-                QueryAndRollbackFailed {
-                    #eo_display_attribute_token_stream
-                    query_error: sqlx::Error,
-                    #eo_display_attribute_token_stream
-                    rollback_error: sqlx::Error,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #query_and_rollback_failed_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 DeleteManyQueryTryFromDeleteManyQueryWithSerializeDeserialize {
                     #eo_error_occurence_attribute_token_stream
