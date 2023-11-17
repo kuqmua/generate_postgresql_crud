@@ -2052,7 +2052,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>,
                     tvfrr_201_created
                 )]
-                pub enum TryCreateMany {
+                pub enum #try_create_many_camel_case_token_stream {
                     #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
@@ -2451,7 +2451,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     crate::server::postgres::uuid_wrapper::PossibleUuidWrapper,
                     tvfrr_201_created
                 )]
-                pub enum TryCreateOne {
+                pub enum #try_create_one_camel_case_token_stream {
                     #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
@@ -2872,7 +2872,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     crate::repositories_types::tufa_server::routes::api::cats::DogOptions,
                     tvfrr_200_ok
                 )]
-                pub enum TryReadOne {
+                pub enum #try_read_one_camel_case_token_stream {
                     #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
@@ -3360,7 +3360,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     std::vec::Vec::<crate::repositories_types::tufa_server::routes::api::cats::DogOptions>,
                     tvfrr_200_ok
                 )]
-                pub enum TryReadManyWithBody {
+                pub enum #try_read_many_with_body_camel_case_token_stream {
                     #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
@@ -4239,7 +4239,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     std::vec::Vec::<crate::repositories_types::tufa_server::routes::api::cats::DogOptions>,
                     tvfrr_200_ok
                 )]
-                pub enum TryReadMany {
+                pub enum #try_read_many_camel_case_token_stream {
                     #project_commit_extractor_middleware_token_stream
                     #postgres_error_variants_token_stream
                     #specific_error_variants_token_stream
@@ -4921,7 +4921,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (),
                     tvfrr_200_ok
                 )]
-                pub enum TryUpdateOne {
+                pub enum #try_update_one_camel_case_token_stream {
                     #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
@@ -5512,7 +5512,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (),
                     tvfrr_200_ok
                 )]
-                pub enum TryUpdateMany {
+                pub enum #update_many_camel_case_token_stream {
                     #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
@@ -6002,7 +6002,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (),
                     tvfrr_200_ok
                 )]
-                pub enum TryDeleteOne {
+                pub enum #try_delete_one_camel_case_token_stream {
                     #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
@@ -6508,7 +6508,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (),
                     tvfrr_200_ok
                 )]
-                pub enum TryDeleteManyWithBody {
+                pub enum #try_delete_many_with_body_camel_case_token_stream {
                     #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
@@ -7333,7 +7333,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (),
                     tvfrr_200_ok
                 )]
-                pub enum TryDeleteMany {
+                pub enum #try_delete_many_camel_case_token_stream {
                     #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
