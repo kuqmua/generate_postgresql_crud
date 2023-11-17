@@ -1643,6 +1643,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
         }
     };
+    let checked_add_variant_declaration_token_stream = quote::quote!{
+        #[tvfrr_500_internal_server_error]
+        CheckedAdd {
+            #eo_display_with_serialize_deserialize_token_stream
+            checked_add: #std_string_string_token_stream,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
     let query_and_rollback_failed_variant_initialization_token_stream = quote::quote!{
         QueryAndRollbackFailed {
             query_error: e,
@@ -5471,12 +5479,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let specific_error_variants_token_stream = quote::quote!{
                 #not_unique_primary_key_variant_declaration_token_stream,
                 #bind_query_variant_declaration_token_stream,
-                #[tvfrr_500_internal_server_error]
-                CheckedAdd {
-                    #eo_display_with_serialize_deserialize_token_stream
-                    checked_add: #std_string_string_token_stream,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #checked_add_variant_declaration_token_stream,
                 #no_payload_fields_variant_declaration_token_stream,
                 #commit_failed_variant_declaration_token_stream,
                 #non_existing_primary_keys_variant_declaration_token_stream,
