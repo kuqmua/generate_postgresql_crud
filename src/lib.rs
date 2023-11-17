@@ -2092,9 +2092,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #try_create_many_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    //
                     #postgres_error_variants_token_stream
-                    //
                     #json_body_logic_error_variants_token_stream
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
@@ -2879,7 +2877,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let specific_error_variants_token_stream = quote::quote!{
                 #failed_to_deserialize_query_string_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
-                ReadOnePathTryFromReadOnePathWithSerializeDeserialize {
+                #read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_token_stream {
                     #[eo_error_occurence]
                     read_one_path_try_from_read_one_path_with_serialize_deserialize:
                         ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamed,
