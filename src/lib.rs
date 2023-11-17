@@ -4952,18 +4952,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     //
-                    #[tvfrr_400_bad_request]
-                    FailedToDeserializePathParams {
-                        #[eo_display_with_serialize_deserialize]
-                        failed_to_deserialize_path_params: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    #[tvfrr_400_bad_request]
-                    MissingPathParams {
-                        #[eo_display_with_serialize_deserialize]
-                        missing_path_params: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #path_logic_error_variants_token_stream
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
