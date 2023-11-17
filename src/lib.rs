@@ -1828,6 +1828,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
     };
+    let path_logic_error_variants_token_stream = quote::quote!{
+        #[tvfrr_400_bad_request]
+        FailedToDeserializePathParams {
+            #[eo_display_with_serialize_deserialize]
+            failed_to_deserialize_path_params: #std_string_string_token_stream,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        },
+        #[tvfrr_400_bad_request]
+        MissingPathParams {
+            #[eo_display_with_serialize_deserialize]
+            missing_path_params: #std_string_string_token_stream,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        },
+    };
     let json_body_logic_error_variants_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         JsonDataError {
@@ -2874,27 +2888,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
                 )]
                 #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
-                    crate::repositories_types::tufa_server::routes::api::cats::DogOptions,
+                    #struct_options_ident_token_stream,
                     tvfrr_200_ok
                 )]
                 pub enum #try_read_one_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    //
                     #postgres_error_variants_token_stream
-                    //
-                    #[tvfrr_400_bad_request]
-                    FailedToDeserializePathParams {
-                        #[eo_display_with_serialize_deserialize]
-                        failed_to_deserialize_path_params: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    #[tvfrr_400_bad_request]
-                    MissingPathParams {
-                        #[eo_display_with_serialize_deserialize]
-                        missing_path_params: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    //
+                    #path_logic_error_variants_token_stream
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
@@ -3362,22 +3362,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
                 )]
                 #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
-                    std::vec::Vec::<crate::repositories_types::tufa_server::routes::api::cats::DogOptions>,
+                    std::vec::Vec::<#struct_options_ident_token_stream>,
                     tvfrr_200_ok
                 )]
                 pub enum #try_read_many_with_body_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    //
                     #postgres_error_variants_token_stream
-                    //
                     #json_body_logic_error_variants_token_stream
-                    //
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
             }
         };
-        //
         let http_request_token_stream = {
             let try_read_many_with_body_lower_case_token_stream = {
                 let try_read_many_with_body_lower_case_stringified = format!("{try_lower_case_stringified}_{read_many_with_body_name_lower_case_stringified}");
@@ -4241,7 +4237,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
                 )]
                 #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
-                    std::vec::Vec::<crate::repositories_types::tufa_server::routes::api::cats::DogOptions>,
+                    std::vec::Vec::<#struct_options_ident_token_stream>,
                     tvfrr_200_ok
                 )]
                 pub enum #try_read_many_camel_case_token_stream {
