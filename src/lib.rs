@@ -1643,7 +1643,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
         }
     };
-    let query_and_rollback_failed_token_stream = quote::quote!{
+    let query_and_rollback_failed_variant_initialization_token_stream = quote::quote!{
         QueryAndRollbackFailed {
             query_error: e,
             #rollback_error_name_token_stream,
@@ -5703,7 +5703,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &begin_token_stream,
                     &binded_query_name_token_stream,
                     &use_futures_try_stream_ext_token_stream,
-                    &query_and_rollback_failed_token_stream,
+                    &query_and_rollback_failed_variant_initialization_token_stream,
                     &primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream,
                     &from_log_and_return_error_token_stream,
                     &rollback_error_name_token_stream,
@@ -6567,7 +6567,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &begin_token_stream,
                         &binded_query_name_token_stream,
                         &use_futures_try_stream_ext_token_stream,
-                        &query_and_rollback_failed_token_stream,
+                        &query_and_rollback_failed_variant_initialization_token_stream,
                         &primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream,
                         &from_log_and_return_error_token_stream,
                         &rollback_error_name_token_stream,
@@ -7350,7 +7350,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &begin_token_stream,
                         &binded_query_name_token_stream,
                         &use_futures_try_stream_ext_token_stream,
-                        &query_and_rollback_failed_token_stream,
+                        &query_and_rollback_failed_variant_initialization_token_stream,
                         &primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream,
                         &from_log_and_return_error_token_stream,
                         &rollback_error_name_token_stream,
