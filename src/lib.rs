@@ -1670,7 +1670,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let commit_failed_token_stream = quote::quote!{
+    let commit_failed_variant_initialization_token_stream = quote::quote!{
         CommitFailed {
             commit_error: e,
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
@@ -5709,7 +5709,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &try_update_many_response_variants_token_stream,
                     &desirable_token_stream,
                     &update_many_camel_case_token_stream,
-                    &commit_failed_token_stream,
+                    &commit_failed_variant_initialization_token_stream,
                     &error_log_call_token_stream,
                 );
                 quote::quote!{
@@ -6603,7 +6603,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &try_delete_many_with_body_response_variants_token_stream,
                         &desirable_token_stream,
                         &try_delete_many_with_body_camel_case_token_stream,
-                        &commit_failed_token_stream,
+                        &commit_failed_variant_initialization_token_stream,
                         &error_log_call_token_stream,
                     );
                     quote::quote!{
@@ -7411,7 +7411,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &try_delete_many_response_variants_token_stream,
                         &desirable_token_stream,
                         &try_delete_many_camel_case_token_stream,
-                        &commit_failed_token_stream,
+                        &commit_failed_variant_initialization_token_stream,
                         &error_log_call_token_stream,
                     );
                     quote::quote!{
