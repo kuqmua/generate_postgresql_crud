@@ -3567,10 +3567,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     },
                                     None => {
                                         //todo - think what to do with #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream and how handle it 
-                                        let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::CheckedAdd { 
-                                            checked_add: std::string::String::from("checked_add is None"), 
-                                            #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
-                                        };
+                                        let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::#checked_add_variant_initialization_token_stream;
                                         return #try_read_many_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                     },
                                 }
@@ -4439,10 +4436,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     },
                                     None => {
                                         //todo - #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream and how handle it 
-                                        let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::CheckedAdd { 
-                                            checked_add: std::string::String::from("checked_add is None"), 
-                                            #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
-                                        };
+                                        let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::#checked_add_variant_initialization_token_stream;
                                         return #try_read_many_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                     },
                                 }
@@ -7675,10 +7669,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 }
                                             },
                                             None => {
-                                                let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::CheckedAdd { //todo remove it? refactor it?
-                                                    checked_add: std::string::String::from("checked_add is None"), 
-                                                    #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
-                                                };
+                                                let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::#checked_add_variant_initialization_token_stream;
                                                 return #try_delete_many_response_variants_token_stream::BindQuery {
                                                     checked_add: e.into_serialize_deserialize_version(),
                                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
