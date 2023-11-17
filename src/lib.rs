@@ -1677,10 +1677,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     let not_unique_primary_keys_name_token_stream = quote::quote!{not_unique_primary_keys};
-    let not_unique_primery_key_token_stream = quote::quote!{
+    let not_unique_primary_key_variant_initialization_token_stream = quote::quote!{
         NotUniquePrimaryKey {
             not_unique_primary_keys,
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+        }
+    };
+    let not_unique_primary_key_variant_declaration_token_stream = quote::quote!{
+        #[tvfrr_400_bad_request]
+        NotUniquePrimaryKey {
+            #[eo_vec_display]
+            not_unique_primary_keys: std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
+    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream = quote::quote!{
+        #[tvfrr_500_internal_server_error] //todo what status should be there?
+        CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
+            #[eo_display]
+            uuid_wrapper_try_from_possible_uuid_wrapper_in_server: sqlx::Error,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
     let query_encode_variant_token_stream = quote::quote!{
@@ -2052,12 +2068,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let try_create_many_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
                 #bind_query_variant_declaration_token_stream,
-                #[tvfrr_500_internal_server_error] //todo what status should be there?
-                CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
-                    #[eo_display]
-                    uuid_wrapper_try_from_possible_uuid_wrapper_in_server: sqlx::Error,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream,
             };
             quote::quote!{
                 #[derive(
@@ -2451,12 +2462,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_create_error_named_token_stream}");
         let try_create_one_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #[tvfrr_500_internal_server_error] //todo what status should be there?
-                CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
-                    #[eo_display]
-                    uuid_wrapper_try_from_possible_uuid_wrapper_in_server: sqlx::Error,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream,
             };
             quote::quote!{
                 #[derive(
@@ -2472,9 +2478,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #try_create_one_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    //
                     #postgres_error_variants_token_stream
-                    //
                     #json_body_logic_error_variants_token_stream
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
@@ -3320,12 +3324,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_read_many_with_body_error_named_token_stream}");
         let try_read_many_with_body_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #[tvfrr_400_bad_request]
-                NotUniquePrimaryKey {
-                    #[eo_vec_display]
-                    not_unique_primary_keys: std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #not_unique_primary_key_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NotUniqueNameVec {
                     #[eo_vec_display_with_serialize_deserialize]
@@ -3459,7 +3458,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #not_unique_primary_keys_name_token_stream
                             };
                             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                let error = #try_read_many_with_body_camel_case_token_stream::#not_unique_primery_key_token_stream;
+                                let error = #try_read_many_with_body_camel_case_token_stream::#not_unique_primary_key_variant_initialization_token_stream;
                                 #error_log_call_token_stream
                                 return #try_read_many_with_body_response_variants_token_stream::from(error);
                             }
@@ -4196,12 +4195,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_read_many_error_named_token_stream}");
         let try_read_many_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #[tvfrr_400_bad_request]
-                NotUniquePrimaryKey {
-                    #[eo_vec_display]
-                    not_unique_primary_keys: std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #not_unique_primary_key_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NotUniqueNameVec {
                     #[eo_vec_display_with_serialize_deserialize]
@@ -4328,7 +4322,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #not_unique_primary_keys_name_token_stream
                             };
                             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                let error = #try_read_many_camel_case_token_stream::#not_unique_primery_key_token_stream;
+                                let error = #try_read_many_camel_case_token_stream::#not_unique_primary_key_variant_initialization_token_stream;
                                 #error_log_call_token_stream
                                 return #try_read_many_response_variants_token_stream::from(error);
                             }
@@ -5402,12 +5396,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_update_many_error_named_token_stream}");
         let try_update_many_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #[tvfrr_400_bad_request]
-                NotUniquePrimaryKey {
-                    #[eo_vec_display]
-                    not_unique_primary_keys: std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #not_unique_primary_key_variant_declaration_token_stream,
                 #bind_query_variant_declaration_token_stream,
                 #[tvfrr_500_internal_server_error]
                 CheckedAdd {
@@ -5728,7 +5717,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #not_unique_primary_keys_name_token_stream
                         };
                         if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                            let error = #update_many_camel_case_token_stream::#not_unique_primery_key_token_stream;
+                            let error = #update_many_camel_case_token_stream::#not_unique_primary_key_variant_initialization_token_stream;
                             #error_log_call_token_stream
                             return #try_update_many_response_variants_token_stream::from(error);
                         }
@@ -6347,12 +6336,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_delete_many_with_body_error_named_token_stream}");
         let try_delete_many_with_body_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #[tvfrr_400_bad_request]
-                NotUniquePrimaryKey {
-                    #[eo_vec_display]
-                    not_unique_primary_keys: std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #not_unique_primary_key_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NotUniqueNameVec {
                     #[eo_vec_display_with_serialize_deserialize]
@@ -6558,7 +6542,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #not_unique_primary_keys_name_token_stream
                             };
                             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                let error = #try_delete_many_with_body_camel_case_token_stream::#not_unique_primery_key_token_stream;
+                                let error = #try_delete_many_with_body_camel_case_token_stream::#not_unique_primary_key_variant_initialization_token_stream;
                                 #error_log_call_token_stream
                                 return #try_delete_many_with_body_response_variants_token_stream::from(error);
                             }
@@ -6644,7 +6628,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     #not_unique_primary_keys_name_token_stream
                                 };
                                 if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                    let error = #try_delete_many_with_body_camel_case_token_stream::#not_unique_primery_key_token_stream;
+                                    let error = #try_delete_many_with_body_camel_case_token_stream::#not_unique_primary_key_variant_initialization_token_stream;
                                     #error_log_call_token_stream
                                     return #try_delete_many_with_body_response_variants_token_stream::from(error);
                                 }
@@ -7175,12 +7159,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_delete_many_error_named_token_stream}");
         let try_delete_many_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #[tvfrr_400_bad_request]
-                NotUniquePrimaryKey {
-                    #[eo_vec_display]
-                    not_unique_primary_keys: std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #not_unique_primary_key_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NotUniqueNameVec {
                     #[eo_vec_display_with_serialize_deserialize]
@@ -7384,7 +7363,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #not_unique_primary_keys_name_token_stream
                             };
                             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                let error = #try_delete_many_camel_case_token_stream::#not_unique_primery_key_token_stream;
+                                let error = #try_delete_many_camel_case_token_stream::#not_unique_primary_key_variant_initialization_token_stream;
                                 #error_log_call_token_stream
                                 return #try_delete_many_response_variants_token_stream::from(error);
                             }
@@ -7472,7 +7451,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     #not_unique_primary_keys_name_token_stream
                                 };
                                 if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
-                                    let error = #try_delete_many_camel_case_token_stream::#not_unique_primery_key_token_stream;
+                                    let error = #try_delete_many_camel_case_token_stream::#not_unique_primary_key_variant_initialization_token_stream;
                                     #error_log_call_token_stream
                                     return #try_delete_many_response_variants_token_stream::from(error);
                                 }
