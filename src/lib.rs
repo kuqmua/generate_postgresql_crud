@@ -1657,12 +1657,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let non_existing_primary_keys_token_stream = quote::quote!{
+    let non_existing_primary_keys_variant_initialization_token_stream = quote::quote!{
         NonExistingPrimaryKeys {
             #non_existing_primary_keys_name_token_stream,
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    // let non_existing_primary_keys_variant_declaration_token_stream = quote::quote!{
+    //     #[tvfrr_400_bad_request]
+    //     NonExistingPrimaryKeys {
+    //         #[eo_vec_display]
+    //         non_existing_primary_keys: std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
+    //         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+    //     }
+    // };
     let non_existing_primary_keys_and_failed_rollback_token_stream = quote::quote!{
         NonExistingPrimaryKeysAndFailedRollback {
             #non_existing_primary_keys_name_token_stream,
@@ -5703,7 +5711,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &expected_updated_primary_keys_name_token_stream,
                     &primary_key_vec_name_token_stream,
                     &rollback_token_stream,
-                    &non_existing_primary_keys_token_stream,
+                    &non_existing_primary_keys_variant_initialization_token_stream,
                     &non_existing_primary_keys_and_failed_rollback_token_stream,
                     &postgres_transaction_token_stream,
                     &commit_token_stream,
@@ -6587,7 +6595,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &expected_updated_primary_keys_name_token_stream,
                         &primary_key_vec_name_token_stream,
                         &rollback_token_stream,
-                        &non_existing_primary_keys_token_stream,
+                        &non_existing_primary_keys_variant_initialization_token_stream,
                         &non_existing_primary_keys_and_failed_rollback_token_stream,
                         &postgres_transaction_token_stream,
                         &commit_token_stream,
@@ -7390,7 +7398,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &expected_updated_primary_keys_name_token_stream,
                         &primary_key_vec_name_token_stream,
                         &rollback_token_stream,
-                        &non_existing_primary_keys_token_stream,
+                        &non_existing_primary_keys_variant_initialization_token_stream,
                         &non_existing_primary_keys_and_failed_rollback_token_stream,
                         &postgres_transaction_token_stream,
                         &commit_token_stream,
