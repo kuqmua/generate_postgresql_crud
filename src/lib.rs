@@ -5994,21 +5994,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #try_delete_one_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    //
                     #postgres_error_variants_token_stream
-                    //
-                    #[tvfrr_400_bad_request]
-                    FailedToDeserializePathParams {
-                        #[eo_display_with_serialize_deserialize]
-                        failed_to_deserialize_path_params: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    #[tvfrr_400_bad_request]
-                    MissingPathParams {
-                        #[eo_display_with_serialize_deserialize]
-                        missing_path_params: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #path_logic_error_variants_token_stream
                     #[tvfrr_400_bad_request]
                     DeleteOnePathTryFromDeleteOnePathWithSerializeDeserialize {
                         #[eo_error_occurence]
