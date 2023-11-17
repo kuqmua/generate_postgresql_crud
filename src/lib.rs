@@ -2049,7 +2049,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
                 )]
                 #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
-                    std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>,
+                    std::vec::Vec::<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>,
                     tvfrr_201_created
                 )]
                 pub enum #try_create_many_camel_case_token_stream {
@@ -2448,7 +2448,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
                 )]
                 #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
-                    crate::server::postgres::uuid_wrapper::PossibleUuidWrapper,
+                    #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                     tvfrr_201_created
                 )]
                 pub enum #try_create_one_camel_case_token_stream {
