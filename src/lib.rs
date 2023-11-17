@@ -189,6 +189,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|| {
             panic!("{proc_macro_name_ident_stringified} id_field.ident is None")
         });
+    let std_string_string_token_stream = quote::quote!{std::string::String};
     let fields_named_wrappers_excluding_primary_key = fields_named.clone().into_iter().filter(|field|*field != id_field).map(|element|{
         let field_ident = element.ident
             .clone()
@@ -523,7 +524,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         quote::quote! {
                             #field_ident_is_none_title_case_token_stream {
                                 #eo_display_with_serialize_deserialize_token_stream
-                                #field_ident_is_none_lower_case_token_stream: std::string::String,
+                                #field_ident_is_none_lower_case_token_stream: #std_string_string_token_stream,
                                 #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                             }
                         }   
@@ -563,7 +564,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         },
                                         None => {
                                             return Err(Self::Error::IdIsNone {
-                                                id_is_none: std::string::String::from("id is None"),
+                                                id_is_none: #std_string_string_token_stream::from("id is None"),//todo primary key field naming fix
                                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                             });
                                         }
@@ -607,7 +608,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 Some(value) => value,
                                 None => {
                                     return Err(Self::Error::#field_ident_is_none_title_case_token_stream {
-                                        #field_ident_is_none_lower_case_token_stream: std::string::String::from(#field_ident_is_none_message_lower_case_token_stream),
+                                        #field_ident_is_none_lower_case_token_stream: #std_string_string_token_stream::from(#field_ident_is_none_message_lower_case_token_stream),
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     });
                                 }
@@ -765,12 +766,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote! {
-                    Self::#variant_ident_token_stream => std::string::String::from(#write_ident_token_stream)
+                    Self::#variant_ident_token_stream => #std_string_string_token_stream::from(#write_ident_token_stream)
                 }
             });
             quote::quote!{
                 impl crate::server::postgres::generate_query::GenerateQuery for #column_select_ident_token_stream {
-                    fn generate_query(&self) -> std::string::String {
+                    fn generate_query(&self) -> #std_string_string_token_stream {
                         match self {
                             #(#generate_query_variants_token_stream),*
                         }
@@ -823,9 +824,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub enum #ident_column_select_from_str_error_named_camel_case_token_stream {
                     NotCorrect {
                         #eo_display_with_serialize_deserialize_token_stream
-                        not_correct_value: std::string::String,
+                        not_correct_value: #std_string_string_token_stream,
                         #eo_display_with_serialize_deserialize_token_stream
-                        supported_values: std::string::String,
+                        supported_values: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 }
@@ -886,8 +887,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         match value {
                             #(#match_acceptable_variants_token_stream),*,
                             _ => Err(Self::Err::NotCorrect {
-                                not_correct_value: std::string::String::from(value),
-                                supported_values: std::string::String::from(#supported_values_handle_token_stream),
+                                not_correct_value: #std_string_string_token_stream::from(value),
+                                supported_values: #std_string_string_token_stream::from(#supported_values_handle_token_stream),
                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                             }),
                         }
@@ -899,7 +900,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let serde_urlencoded_parameter_token_stream = {
             quote::quote! {
                 impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #column_select_ident_token_stream {
-                    fn serde_urlencoded_parameter(self) -> std::string::String {
+                    fn serde_urlencoded_parameter(self) -> #std_string_string_token_stream {
                         self.to_string()
                     }
                 }
@@ -1252,7 +1253,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let impl_crate_common_serde_urlencoded_serde_urlencoded_parameter_for_ident_order_by_wrapper_token_stream = {
             quote::quote!{
                 impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #ident_order_by_wrapper_name_token_stream {
-                    fn serde_urlencoded_parameter(self) -> std::string::String {
+                    fn serde_urlencoded_parameter(self) -> #std_string_string_token_stream {
                         let column = &self.0.column;
                         let order = self.0.order.unwrap_or_default();
                         format!("column={column},order={order}")
@@ -1266,53 +1267,53 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub enum #ident_order_by_wrapper_from_str_error_named_name_token_stream {
                     ColumnFromStr {
                         #eo_display_with_serialize_deserialize_token_stream
-                        column_from_str: std::string::String,
+                        column_from_str: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     ColumnNoOffsetValue {
                         #eo_display_with_serialize_deserialize_token_stream
-                        column_no_offset_value: std::string::String,
+                        column_no_offset_value: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     ColumnOffsetSliceGet {
                         #eo_display_with_serialize_deserialize_token_stream
-                        column_offset_slice_get: std::string::String,
+                        column_offset_slice_get: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     ColumnStringDeserializedGet {
                         #eo_display_with_serialize_deserialize_token_stream
-                        column_string_deserialized_get: std::string::String,
+                        column_string_deserialized_get: #std_string_string_token_stream,
                         code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
                     },   
                     ColumnIndexCheckedAdd {
                         #eo_display_with_serialize_deserialize_token_stream
-                        column_index_checked_add: std::string::String,
+                        column_index_checked_add: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     ColumnStringDeserializedFind {
                         #eo_display_with_serialize_deserialize_token_stream
-                        column_string_deserialized_find: std::string::String,
+                        column_string_deserialized_find: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },    
                     //todo make client explicitly write order and column
                     OrderFromStr {
                         #eo_display_with_serialize_deserialize_token_stream
-                        order_from_str: std::string::String,
+                        order_from_str: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     OrderOffsetSliceGetNone {
                         #eo_display_with_serialize_deserialize_token_stream
-                        order_offset_slice_get_none: std::string::String,
+                        order_offset_slice_get_none: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     OrderStringDeserializedGetNone {
                         #eo_display_with_serialize_deserialize_token_stream
-                        order_string_deserialized_get_none: std::string::String,
+                        order_string_deserialized_get_none: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     OrderIndexCheckedAdd {
                         #eo_display_with_serialize_deserialize_token_stream
-                        order_index_checked_add: std::string::String,
+                        order_index_checked_add: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 }
@@ -1350,7 +1351,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 },
                                                 None => {
                                                     return Err(Self::Err::ColumnNoOffsetValue {
-                                                        column_no_offset_value: std::string::String::from("no offset value"),
+                                                        column_no_offset_value: #std_string_string_token_stream::from("no offset value"),
                                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                                     });
                                                 }
@@ -1368,7 +1369,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             },
                                             None => {
                                                 return Err(Self::Err::ColumnOffsetSliceGet {
-                                                    column_offset_slice_get: std::string::String::from("offset_slice_get"),
+                                                    column_offset_slice_get: #std_string_string_token_stream::from("offset_slice_get"),
                                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 });
                                             }
@@ -1376,21 +1377,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     },
                                     None => {
                                         return Err(Self::Err::ColumnStringDeserializedGet {
-                                            column_string_deserialized_get: std::string::String::from("string_deserialized_get"),
+                                            column_string_deserialized_get: #std_string_string_token_stream::from("string_deserialized_get"),
                                             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                         });
                                     }
                                 },
                                 None => {
                                     return Err(Self::Err::ColumnIndexCheckedAdd {
-                                        column_index_checked_add: std::string::String::from("index_checked_add"),
+                                        column_index_checked_add: #std_string_string_token_stream::from("index_checked_add"),
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     });
                                 }
                             },
                             None => {
                                 return Err(Self::Err::ColumnStringDeserializedFind {
-                                    column_string_deserialized_find: std::string::String::from("string_deserialized_find"),
+                                    column_string_deserialized_find: #std_string_string_token_stream::from("string_deserialized_find"),
                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                 });
                             }
@@ -1412,7 +1413,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 },
                                                 None => {
                                                     return Err(Self::Err::OrderOffsetSliceGetNone {
-                                                        order_offset_slice_get_none: std::string::String::from("order_offset_slice_get_none"),
+                                                        order_offset_slice_get_none: #std_string_string_token_stream::from("order_offset_slice_get_none"),
                                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                                     });
                                                 }
@@ -1430,7 +1431,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             },
                                             None => {
                                                 return Err(Self::Err::OrderOffsetSliceGetNone {
-                                                    order_offset_slice_get_none: std::string::String::from("order_offset_slice_get_none"),
+                                                    order_offset_slice_get_none: #std_string_string_token_stream::from("order_offset_slice_get_none"),
                                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                                 });
                                             }
@@ -1438,14 +1439,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     },
                                     None => {
                                         return Err(Self::Err::OrderStringDeserializedGetNone {
-                                            order_string_deserialized_get_none: std::string::String::from("string_deserialized_get_none"),
+                                            order_string_deserialized_get_none: #std_string_string_token_stream::from("string_deserialized_get_none"),
                                             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                         });
                                     }
                                 },
                                 None => {
                                     return Err(Self::Err::OrderIndexCheckedAdd {
-                                        order_index_checked_add: std::string::String::from("order_index_checked_add"),
+                                        order_index_checked_add: #std_string_string_token_stream::from("order_index_checked_add"),
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     });
                                 }
@@ -1638,7 +1639,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let checked_add_variant_initialization_token_stream = quote::quote!{
         CheckedAdd { //todo remove it? refactor it?
-            checked_add: std::string::String::from("checked_add is None"), 
+            checked_add: #std_string_string_token_stream::from("checked_add is None"), 
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
         }
     };
@@ -1708,9 +1709,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #[tvfrr_400_bad_request]
         ProjectCommitExtractorNotEqual {
             #[eo_display_with_serialize_deserialize]
-            project_commit_not_equal: std::string::String,
+            project_commit_not_equal: #std_string_string_token_stream,
             #[eo_display_with_serialize_deserialize]
-            project_commit_to_use: std::string::String,
+            project_commit_to_use: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_400_bad_request]
@@ -1722,7 +1723,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #[tvfrr_400_bad_request]
         NoProjectCommitExtractorHeader {
             #[eo_display_with_serialize_deserialize]
-            no_project_commit_header: std::string::String,
+            no_project_commit_header: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
     };
@@ -1730,13 +1731,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #[tvfrr_500_internal_server_error]
         Configuration {
             #[eo_display_with_serialize_deserialize]
-            configuration_box_dyn_error: std::string::String,
+            configuration_box_dyn_error: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         Database {
             #[eo_display_with_serialize_deserialize]
-            box_dyn_database_error: std::string::String,
+            box_dyn_database_error: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
@@ -1748,25 +1749,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #[tvfrr_500_internal_server_error]
         Tls {
             #[eo_display_with_serialize_deserialize]
-            box_dyn_error: std::string::String,
+            box_dyn_error: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         Protocol {
             #[eo_display_with_serialize_deserialize]
-            protocol: std::string::String,
+            protocol: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_404_not_found]
         RowNotFound {
             #[eo_display_with_serialize_deserialize]
-            row_not_found: std::string::String,
+            row_not_found: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_400_bad_request]
         TypeNotFound {
             #[eo_display_with_serialize_deserialize]
-            type_not_found: std::string::String,
+            type_not_found: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
@@ -1780,39 +1781,39 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #[tvfrr_400_bad_request]
         ColumnNotFound {
             #[eo_display_with_serialize_deserialize]
-            column_not_found: std::string::String,
+            column_not_found: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         ColumnDecode {
             #[eo_display_with_serialize_deserialize]
-            column_decode_index: std::string::String,
+            column_decode_index: #std_string_string_token_stream,
             #[eo_display_with_serialize_deserialize]
-            source_handle: std::string::String,
+            source_handle: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         Decode {
             #[eo_display_with_serialize_deserialize]
-            decode_box_dyn_error: std::string::String,
+            decode_box_dyn_error: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_408_request_timeout]
         PoolTimedOut {
             #[eo_display_with_serialize_deserialize]
-            pool_timed_out: std::string::String,
+            pool_timed_out: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         PoolClosed {
             #[eo_display_with_serialize_deserialize]
-            pool_closed: std::string::String,
+            pool_closed: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         WorkerCrashed {
             #[eo_display_with_serialize_deserialize]
-            worker_crashed: std::string::String,
+            worker_crashed: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
@@ -1838,13 +1839,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #[tvfrr_400_bad_request]
         MissingJsonContentType {
             #[eo_display_with_serialize_deserialize]
-            json_syntax_error: std::string::String,
+            json_syntax_error: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
         #[tvfrr_500_internal_server_error]
         BytesRejection {
             #[eo_display_with_serialize_deserialize]
-            bytes_rejection: std::string::String,
+            bytes_rejection: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
     };
@@ -1852,7 +1853,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #[tvfrr_500_internal_server_error]
         UnexpectedCase {
             #[eo_display_with_serialize_deserialize]
-            unexpected_case: std::string::String,
+            unexpected_case: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         },
     };
@@ -2802,7 +2803,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 struct #read_one_query_with_serialize_deserialize_camel_case_token_stream {
-                    #select_token_stream: std::option::Option<std::string::String>,
+                    #select_token_stream: std::option::Option<#std_string_string_token_stream>,
                 } 
             }
         };
@@ -2848,7 +2849,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 FailedToDeserializeQueryString {
                     #[eo_display_with_serialize_deserialize]
-                    failed_to_deserialize_query_string: std::string::String,
+                    failed_to_deserialize_query_string: #std_string_string_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_400_bad_request]
@@ -2879,13 +2880,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #[tvfrr_400_bad_request]
                     FailedToDeserializePathParams {
                         #[eo_display_with_serialize_deserialize]
-                        failed_to_deserialize_path_params: std::string::String,
+                        failed_to_deserialize_path_params: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #[tvfrr_400_bad_request]
                     MissingPathParams {
                         #[eo_display_with_serialize_deserialize]
-                        missing_path_params: std::string::String,
+                        missing_path_params: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     //
@@ -3174,7 +3175,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
                     pub select: #column_select_ident_token_stream,
-                    pub #id_field_ident: std::option::Option<std::vec::Vec<std::string::String>>,
+                    pub #id_field_ident: std::option::Option<std::vec::Vec<#std_string_string_token_stream>>,
                     #(#fields_with_excluded_id_token_stream)*
                     pub order_by: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
                     pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
@@ -3256,7 +3257,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let primary_key_field_assignment_token_stream = {
                 quote::quote!{
                     let #id_field_ident = match value.#id_field_ident {
-                        Some(value) => Some(value.into_iter().map(|element|element.to_string()).collect::<std::vec::Vec<std::string::String>>()),
+                        Some(value) => Some(value.into_iter().map(|element|element.to_string()).collect::<std::vec::Vec<#std_string_string_token_stream>>()),
                         None => None
                     };
                 }
@@ -3665,7 +3666,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             ),
                             {
                                 #increment_initialization_token_stream
-                                let mut additional_parameters = std::string::String::default();
+                                let mut additional_parameters = #std_string_string_token_stream::default();
                                 #additional_parameters_id_modification_token_stream
                                 #(#additional_parameters_modification_token_stream)*
                                 {
@@ -3950,18 +3951,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: std::option::Option<std::string::String>,
+                    pub #field_ident: std::option::Option<#std_string_string_token_stream>,
                 }
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #read_many_query_with_serialize_deserialize_camel_case_token_stream {
-                    #select_token_stream: std::option::Option<std::string::String>,
-                    pub #id_field_ident: std::option::Option<std::string::String>,
+                    #select_token_stream: std::option::Option<#std_string_string_token_stream>,
+                    pub #id_field_ident: std::option::Option<#std_string_string_token_stream>,
                     #(#fields_with_serialize_deserialize_with_excluded_id_token_stream)*
-                    #order_by_token_stream: std::option::Option<std::string::String>,
-                    limit: std::string::String,
-                    offset: std::option::Option<std::string::String>,
+                    #order_by_token_stream: std::option::Option<#std_string_string_token_stream>,
+                    limit: #std_string_string_token_stream,
+                    offset: std::option::Option<#std_string_string_token_stream>,
                 }
             }
         };
@@ -4202,19 +4203,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NotUniqueNameVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_name_vec: std::vec::Vec<std::string::String>, //todo crate::server::postgres::regex_filter::RegexFilter
+                    not_unique_name_vec: std::vec::Vec<#std_string_string_token_stream>, //todo crate::server::postgres::regex_filter::RegexFilter
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_400_bad_request]
                 NotUniqueColorVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_color_vec: std::vec::Vec<std::string::String>, //todo crate::server::postgres::regex_filter::RegexFilter
+                    not_unique_color_vec: std::vec::Vec<#std_string_string_token_stream>, //todo crate::server::postgres::regex_filter::RegexFilter
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_400_bad_request]
                 FailedToDeserializeQueryString {
                     #[eo_display_with_serialize_deserialize]
-                    failed_to_deserialize_query_string: std::string::String,
+                    failed_to_deserialize_query_string: #std_string_string_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #bind_query_variant_declaration_token_stream,
@@ -4513,7 +4514,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             crate::server::postgres::generate_query::GenerateQuery::generate_query(&#select_token_stream),
                             {
                                 #increment_initialization_token_stream
-                                let mut additional_parameters = std::string::String::default();
+                                let mut additional_parameters = #std_string_string_token_stream::default();
                                 #additional_parameters_id_modification_token_stream
                                 #(#additional_parameters_modification_token_stream)*
                                 if let Some(value) = &#parameters_lower_case_token_stream.#query_lower_case_token_stream.#order_by_token_stream {
@@ -4897,7 +4898,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NoPayloadFields {
                     #[eo_display_with_serialize_deserialize]
-                    no_payload_fields: std::string::String,
+                    no_payload_fields: #std_string_string_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_400_bad_request]
@@ -4928,38 +4929,38 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #[tvfrr_400_bad_request]
                     JsonDataError {
                         #[eo_display_with_serialize_deserialize]
-                        json_data_error: std::string::String,
+                        json_data_error: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #[tvfrr_400_bad_request]
                     JsonSyntaxError {
                         #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: std::string::String,
+                        json_syntax_error: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #[tvfrr_400_bad_request]
                     MissingJsonContentType {
                         #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: std::string::String,
+                        json_syntax_error: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #[tvfrr_500_internal_server_error]
                     BytesRejection {
                         #[eo_display_with_serialize_deserialize]
-                        bytes_rejection: std::string::String,
+                        bytes_rejection: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     //
                     #[tvfrr_400_bad_request]
                     FailedToDeserializePathParams {
                         #[eo_display_with_serialize_deserialize]
-                        failed_to_deserialize_path_params: std::string::String,
+                        failed_to_deserialize_path_params: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #[tvfrr_400_bad_request]
                     MissingPathParams {
                         #[eo_display_with_serialize_deserialize]
-                        missing_path_params: std::string::String,
+                        missing_path_params: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #specific_error_variants_token_stream
@@ -5094,7 +5095,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     quote::quote!{
                         #increment_initialization_token_stream
-                        let mut query = std::string::String::from(#handle_token_stream);
+                        let mut query = #std_string_string_token_stream::from(#handle_token_stream);
                         #(#additional_parameters_modification_token_stream)*
                         #additional_parameters_id_modification_token_stream
                         query.push_str(&format!(#returning_id_quotes_token_stream));
@@ -5446,13 +5447,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_500_internal_server_error]
                 CheckedAdd {
                     #[eo_display_with_serialize_deserialize]
-                    checked_add: std::string::String,
+                    checked_add: #std_string_string_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_400_bad_request]
                 NoPayloadFields {
                     #[eo_display_with_serialize_deserialize]
-                    no_payload_fields: std::string::String,
+                    no_payload_fields: #std_string_string_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_500_internal_server_error]
@@ -5519,25 +5520,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #[tvfrr_400_bad_request]
                     JsonDataError {
                         #[eo_display_with_serialize_deserialize]
-                        json_data_error: std::string::String,
+                        json_data_error: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #[tvfrr_400_bad_request]
                     JsonSyntaxError {
                         #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: std::string::String,
+                        json_syntax_error: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #[tvfrr_400_bad_request]
                     MissingJsonContentType {
                         #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: std::string::String,
+                        json_syntax_error: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #[tvfrr_500_internal_server_error]
                     BytesRejection {
                         #[eo_display_with_serialize_deserialize]
-                        bytes_rejection: std::string::String,
+                        bytes_rejection: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     //
@@ -6009,13 +6010,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #[tvfrr_400_bad_request]
                     FailedToDeserializePathParams {
                         #[eo_display_with_serialize_deserialize]
-                        failed_to_deserialize_path_params: std::string::String,
+                        failed_to_deserialize_path_params: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #[tvfrr_400_bad_request]
                     MissingPathParams {
                         #[eo_display_with_serialize_deserialize]
-                        missing_path_params: std::string::String,
+                        missing_path_params: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #[tvfrr_400_bad_request]
@@ -6442,13 +6443,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NoPayloadFields {
                     #[eo_display_with_serialize_deserialize]
-                    no_payload_fields: std::string::String,
+                    no_payload_fields: #std_string_string_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_400_bad_request]
                 NoPayloadParameters {
                     #[eo_display_with_serialize_deserialize]
-                    no_payload_parameters: std::string::String,
+                    no_payload_parameters: #std_string_string_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_400_bad_request]
@@ -6865,7 +6866,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     additional_parameters.push_str(&format!(
                                         #handle_token_stream,
                                         {
-                                            let mut additional_parameters = std::string::String::default();
+                                            let mut additional_parameters = #std_string_string_token_stream::default();
                                             for element in #id_field_ident {
                                                 match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(
                                                     element,
@@ -6896,7 +6897,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #handle_token_stream,
                                 {
                                     #increment_initialization_token_stream
-                                    let mut additional_parameters = std::string::String::default();
+                                    let mut additional_parameters = #std_string_string_token_stream::default();
                                     #(#additional_parameters_modification_token_stream)*
                                     #additional_parameters_id_modification_token_stream
                                     additional_parameters
@@ -7112,7 +7113,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: std::option::Option<std::string::String>
+                    pub #field_ident: std::option::Option<#std_string_string_token_stream>
                 }
             });
             quote::quote!{
@@ -7259,20 +7260,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NotUniqueNameVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_name_vec: std::vec::Vec<std::string::String>, //todo make it crate::server::postgres::regex_filter::RegexFilter
+                    not_unique_name_vec: std::vec::Vec<#std_string_string_token_stream>, //todo make it crate::server::postgres::regex_filter::RegexFilter
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_400_bad_request]
                 NotUniqueColorVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_color_vec: std::vec::Vec<std::string::String>, //todo make it crate::server::postgres::regex_filter::RegexFilter
+                    not_unique_color_vec: std::vec::Vec<#std_string_string_token_stream>, //todo make it crate::server::postgres::regex_filter::RegexFilter
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NoQueryParameters {
                     #[eo_display_with_serialize_deserialize]
-                    no_query_parameters: std::string::String,
+                    no_query_parameters: #std_string_string_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_500_internal_server_error]
@@ -7340,7 +7341,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #[tvfrr_400_bad_request]
                     FailedToDeserializeQueryString {
                         #[eo_display_with_serialize_deserialize]
-                        failed_to_deserialize_query_string: std::string::String,
+                        failed_to_deserialize_query_string: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #specific_error_variants_token_stream
@@ -7699,7 +7700,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     additional_parameters.push_str(&format!(
                                         #handle_token_stream,
                                         {
-                                            let mut additional_parameters = std::string::String::default(); 
+                                            let mut additional_parameters = #std_string_string_token_stream::default(); 
                                             for element in #id_field_ident {
                                                 match #crate_server_postgres_bind_query_bind_query_try_increment_token_stream(element, &mut increment) {
                                                     Ok(_) => {
@@ -7727,7 +7728,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #handle_token_stream,
                                 {
                                     #increment_initialization_token_stream
-                                    let mut additional_parameters = std::string::String::default();
+                                    let mut additional_parameters = #std_string_string_token_stream::default();
                                     #(#additional_parameters_modification_token_stream)*
                                     #additional_parameters_id_modification_token_stream
                                     additional_parameters
