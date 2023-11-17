@@ -1690,6 +1690,28 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let content_type_application_json_header_addition_token_stream = quote::quote!{
         .header(reqwest::header::CONTENT_TYPE, "application/json")
     };
+    let project_commit_extractor_middleware_token_stream = quote::quote!{
+        #[tvfrr_400_bad_request]
+        ProjectCommitExtractorNotEqual {
+            #[eo_display_with_serialize_deserialize]
+            project_commit_not_equal: std::string::String,
+            #[eo_display_with_serialize_deserialize]
+            project_commit_to_use: std::string::String,
+            code_occurence: crate::common::code_occurence::CodeOccurence,
+        },
+        #[tvfrr_400_bad_request]
+        ProjectCommitExtractorToStrConversion {
+            #[eo_display]
+            project_commit_to_str_conversion: http::header::ToStrError,
+            code_occurence: crate::common::code_occurence::CodeOccurence,
+        },
+        #[tvfrr_400_bad_request]
+        NoProjectCommitExtractorHeader {
+            #[eo_display_with_serialize_deserialize]
+            no_project_commit_header: std::string::String,
+            code_occurence: crate::common::code_occurence::CodeOccurence,
+        },
+    };
     let postgres_error_variants_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error]
         Configuration {
@@ -1784,6 +1806,32 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[eo_display]
             migrate: sqlx::migrate::MigrateError,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        },
+    };
+    let json_body_logic_error_variants_token_stream = quote::quote!{
+        #[tvfrr_400_bad_request]
+        JsonDataError {
+            #[eo_display]
+            json_data_error: axum::extract::rejection::JsonDataError,
+            code_occurence: crate::common::code_occurence::CodeOccurence,
+        },
+        #[tvfrr_400_bad_request]
+        JsonSyntaxError {
+            #[eo_display]
+            json_syntax_error: axum::extract::rejection::JsonSyntaxError,
+            code_occurence: crate::common::code_occurence::CodeOccurence,
+        },
+        #[tvfrr_400_bad_request]
+        MissingJsonContentType {
+            #[eo_display_with_serialize_deserialize]
+            json_syntax_error: std::string::String,
+            code_occurence: crate::common::code_occurence::CodeOccurence,
+        },
+        #[tvfrr_500_internal_server_error]
+        BytesRejection {
+            #[eo_display_with_serialize_deserialize]
+            bytes_rejection: std::string::String,
+            code_occurence: crate::common::code_occurence::CodeOccurence,
         },
     };
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
@@ -1973,53 +2021,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tvfrr_201_created
                 )]
                 pub enum TryCreateMany {
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorNotEqual {
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_not_equal: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_to_use: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorToStrConversion {
-                        #[eo_display]
-                        project_commit_to_str_conversion: http::header::ToStrError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    NoProjectCommitExtractorHeader {
-                        #[eo_display_with_serialize_deserialize]
-                        no_project_commit_header: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
                     //
-                    #[tvfrr_400_bad_request]
-                    JsonDataError {
-                        #[eo_display]
-                        json_data_error: axum::extract::rejection::JsonDataError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    JsonSyntaxError {
-                        #[eo_display]
-                        json_syntax_error: axum::extract::rejection::JsonSyntaxError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    MissingJsonContentType {
-                        #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_500_internal_server_error]
-                    BytesRejection {
-                        #[eo_display_with_serialize_deserialize]
-                        bytes_rejection: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #json_body_logic_error_variants_token_stream
                     //
                     #[tvfrr_500_internal_server_error]
                     BindQuery {
@@ -2424,53 +2430,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tvfrr_201_created
                 )]
                 pub enum TryCreateOne {
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorNotEqual {
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_not_equal: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_to_use: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorToStrConversion {
-                        #[eo_display]
-                        project_commit_to_str_conversion: http::header::ToStrError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    NoProjectCommitExtractorHeader {
-                        #[eo_display_with_serialize_deserialize]
-                        no_project_commit_header: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
                     //
-                    #[tvfrr_400_bad_request]
-                    JsonDataError {
-                        #[eo_display]
-                        json_data_error: axum::extract::rejection::JsonDataError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    JsonSyntaxError {
-                        #[eo_display]
-                        json_syntax_error: axum::extract::rejection::JsonSyntaxError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    MissingJsonContentType {
-                        #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_500_internal_server_error]
-                    BytesRejection {
-                        #[eo_display_with_serialize_deserialize]
-                        bytes_rejection: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #json_body_logic_error_variants_token_stream
                     #[tvfrr_500_internal_server_error] //todo what status should be there?
                     CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
                         #[eo_display]
@@ -2883,26 +2847,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tvfrr_200_ok
                 )]
                 pub enum TryReadOne {
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorNotEqual {
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_not_equal: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_to_use: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorToStrConversion {
-                        #[eo_display]
-                        project_commit_to_str_conversion: http::header::ToStrError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    NoProjectCommitExtractorHeader {
-                        #[eo_display_with_serialize_deserialize]
-                        no_project_commit_header: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
                     //
@@ -3374,53 +3319,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tvfrr_200_ok
                 )]
                 pub enum TryReadManyWithBody {
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorNotEqual {
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_not_equal: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_to_use: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorToStrConversion {
-                        #[eo_display]
-                        project_commit_to_str_conversion: http::header::ToStrError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    NoProjectCommitExtractorHeader {
-                        #[eo_display_with_serialize_deserialize]
-                        no_project_commit_header: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
                     //
-                    #[tvfrr_400_bad_request]
-                    JsonDataError {
-                        #[eo_display]
-                        json_data_error: axum::extract::rejection::JsonDataError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    JsonSyntaxError {
-                        #[eo_display]
-                        json_syntax_error: axum::extract::rejection::JsonSyntaxError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    MissingJsonContentType {
-                        #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_500_internal_server_error]
-                    BytesRejection {
-                        #[eo_display_with_serialize_deserialize]
-                        bytes_rejection: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #json_body_logic_error_variants_token_stream
                     //
                     #[tvfrr_400_bad_request]
                     NotUniquePrimaryKey {
@@ -4306,26 +4209,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tvfrr_200_ok
                 )]
                 pub enum TryReadMany {
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorNotEqual {
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_not_equal: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_to_use: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorToStrConversion {
-                        #[eo_display]
-                        project_commit_to_str_conversion: http::header::ToStrError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    NoProjectCommitExtractorHeader {
-                        #[eo_display_with_serialize_deserialize]
-                        no_project_commit_header: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
                     //
@@ -5039,26 +4923,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tvfrr_200_ok
                 )]
                 pub enum TryUpdateOne {
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorNotEqual {
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_not_equal: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_to_use: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorToStrConversion {
-                        #[eo_display]
-                        project_commit_to_str_conversion: http::header::ToStrError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    NoProjectCommitExtractorHeader {
-                        #[eo_display_with_serialize_deserialize]
-                        no_project_commit_header: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
                     //
@@ -5610,26 +5475,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tvfrr_200_ok
                 )]
                 pub enum TryUpdateMany {
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorNotEqual {
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_not_equal: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_to_use: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorToStrConversion {
-                        #[eo_display]
-                        project_commit_to_str_conversion: http::header::ToStrError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    NoProjectCommitExtractorHeader {
-                        #[eo_display_with_serialize_deserialize]
-                        no_project_commit_header: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
                     //
@@ -6188,26 +6034,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tvfrr_200_ok
                 )]
                 pub enum TryDeleteOne {
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorNotEqual {
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_not_equal: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_to_use: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorToStrConversion {
-                        #[eo_display]
-                        project_commit_to_str_conversion: http::header::ToStrError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    NoProjectCommitExtractorHeader {
-                        #[eo_display_with_serialize_deserialize]
-                        no_project_commit_header: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
                     //
@@ -6642,53 +6469,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tvfrr_200_ok
                 )]
                 pub enum TryDeleteManyWithBody {
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorNotEqual {
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_not_equal: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_to_use: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorToStrConversion {
-                        #[eo_display]
-                        project_commit_to_str_conversion: http::header::ToStrError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    NoProjectCommitExtractorHeader {
-                        #[eo_display_with_serialize_deserialize]
-                        no_project_commit_header: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
                     //
-                    #[tvfrr_400_bad_request]
-                    JsonDataError {
-                        #[eo_display]
-                        json_data_error: axum::extract::rejection::JsonDataError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    JsonSyntaxError {
-                        #[eo_display]
-                        json_syntax_error: axum::extract::rejection::JsonSyntaxError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    MissingJsonContentType {
-                        #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_500_internal_server_error]
-                    BytesRejection {
-                        #[eo_display_with_serialize_deserialize]
-                        bytes_rejection: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #json_body_logic_error_variants_token_stream
                     //
                     #[tvfrr_400_bad_request]
                     NotUniquePrimaryKey {
@@ -7523,26 +7308,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tvfrr_200_ok
                 )]
                 pub enum TryDeleteMany {
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorNotEqual {
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_not_equal: std::string::String,
-                        #[eo_display_with_serialize_deserialize]
-                        project_commit_to_use: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    ProjectCommitExtractorToStrConversion {
-                        #[eo_display]
-                        project_commit_to_str_conversion: http::header::ToStrError,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
-                    #[tvfrr_400_bad_request]
-                    NoProjectCommitExtractorHeader {
-                        #[eo_display_with_serialize_deserialize]
-                        no_project_commit_header: std::string::String,
-                        code_occurence: crate::common::code_occurence::CodeOccurence,
-                    },
+                    #project_commit_extractor_middleware_token_stream
                     //
                     #postgres_error_variants_token_stream
                     //
