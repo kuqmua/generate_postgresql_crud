@@ -1707,6 +1707,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let not_unique_name_vec_variant_declaration_token_stream = quote::quote!{
+        #[tvfrr_400_bad_request]
+        NotUniqueNameVec {
+            #[eo_vec_display_with_serialize_deserialize]
+            not_unique_name_vec: std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>,//todo there is a std::string::String instead of crate_server_postgres_regex_filter_regex_filter_token_stream cases - refactor that
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
+    let not_unique_name_vec_need_to_refactor_variant_declaration_token_stream = quote::quote!{
+        #[tvfrr_400_bad_request]
+        NotUniqueNameVec {
+            #[eo_vec_display_with_serialize_deserialize]
+            not_unique_name_vec: std::vec::Vec<#std_string_string_token_stream>, //todo crate::server::postgres::regex_filter::RegexFilter
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
     let query_encode_variant_token_stream = quote::quote!{
         #query_encode_token_stream {
             #eo_display_attribute_token_stream
@@ -3326,12 +3342,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let try_read_many_with_body_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
                 #not_unique_primary_key_variant_declaration_token_stream,
-                #[tvfrr_400_bad_request]
-                NotUniqueNameVec {
-                    #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_name_vec: std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #not_unique_name_vec_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NotUniqueColorVec {
                     #[eo_vec_display_with_serialize_deserialize]
@@ -4197,12 +4208,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let try_read_many_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
                 #not_unique_primary_key_variant_declaration_token_stream,
-                #[tvfrr_400_bad_request]
-                NotUniqueNameVec {
-                    #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_name_vec: std::vec::Vec<#std_string_string_token_stream>, //todo crate::server::postgres::regex_filter::RegexFilter
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #not_unique_name_vec_need_to_refactor_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NotUniqueColorVec {
                     #[eo_vec_display_with_serialize_deserialize]
@@ -6333,12 +6339,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let try_delete_many_with_body_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
                 #not_unique_primary_key_variant_declaration_token_stream,
-                #[tvfrr_400_bad_request]
-                NotUniqueNameVec {
-                    #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_name_vec: std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #not_unique_name_vec_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NotUniqueColorVec {
                     #[eo_vec_display_with_serialize_deserialize]
@@ -7156,12 +7157,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let try_delete_many_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
                 #not_unique_primary_key_variant_declaration_token_stream,
-                #[tvfrr_400_bad_request]
-                NotUniqueNameVec {
-                    #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_name_vec: std::vec::Vec<#std_string_string_token_stream>, //todo make it crate::server::postgres::regex_filter::RegexFilter
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #not_unique_name_vec_need_to_refactor_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NotUniqueColorVec {
                     #[eo_vec_display_with_serialize_deserialize]
