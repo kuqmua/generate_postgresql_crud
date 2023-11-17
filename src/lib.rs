@@ -1650,7 +1650,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let primary_key_from_row_and_failed_rollback_token_stream = quote::quote!{
+    let primary_key_from_row_and_failed_rollback_variant_initialization_token_stream = quote::quote!{
         PrimaryKeyFromRowAndFailedRollback {
             primary_key_from_row: e,
             #rollback_error_name_token_stream,
@@ -5704,7 +5704,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream,
                     &from_log_and_return_error_token_stream,
                     &rollback_error_name_token_stream,
-                    &primary_key_from_row_and_failed_rollback_token_stream,
+                    &primary_key_from_row_and_failed_rollback_variant_initialization_token_stream,
                     &non_existing_primary_keys_name_token_stream,
                     &expected_updated_primary_keys_name_token_stream,
                     &primary_key_vec_name_token_stream,
@@ -6575,7 +6575,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream,
                         &from_log_and_return_error_token_stream,
                         &rollback_error_name_token_stream,
-                        &primary_key_from_row_and_failed_rollback_token_stream,
+                        &primary_key_from_row_and_failed_rollback_variant_initialization_token_stream,
                         &non_existing_primary_keys_name_token_stream,
                         &expected_updated_primary_keys_name_token_stream,
                         &primary_key_vec_name_token_stream,
@@ -7365,7 +7365,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &primary_key_uuid_wrapper_try_from_sqlx_row_name_token_stream,
                         &from_log_and_return_error_token_stream,
                         &rollback_error_name_token_stream,
-                        &primary_key_from_row_and_failed_rollback_token_stream,
+                        &primary_key_from_row_and_failed_rollback_variant_initialization_token_stream,
                         &non_existing_primary_keys_name_token_stream,
                         &expected_updated_primary_keys_name_token_stream,
                         &primary_key_vec_name_token_stream,
