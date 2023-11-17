@@ -41,7 +41,7 @@ mod generate_postgres_execute_query;
 
 
 
-
+//todo how to write filter logic for sqlx rust postgresql types?
 //todo decide where to do error log (maybe add in some places)
 //todo rename ForUrlEncoding prefix
 //todo clear unnesesary generated returns.
@@ -1804,11 +1804,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
-    let no_payload_parameters_declaration_token_stream = quote::quote!{
+    let no_payload_parameters_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NoPayloadParameters {
             #eo_display_with_serialize_deserialize_token_stream
             no_payload_parameters: #std_string_string_token_stream,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
+    let no_query_parameters_variant_declaration_token_stream = quote::quote!{
+        #[tvfrr_400_bad_request]
+        NoQueryParameters {
+            #eo_display_with_serialize_deserialize_token_stream
+            no_query_parameters: #std_string_string_token_stream,
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
@@ -5963,7 +5971,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_delete_one_error_named_token_stream}");
         let try_delete_one_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-
+                    #[tvfrr_400_bad_request]
+                    #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_camel_case_token_stream {
+                        #eo_error_occurence_attribute_token_stream
+                        #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_lower_case_token_stream:
+                            #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream,
+                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                    },
             };
             quote::quote!{
                 #[derive(
@@ -5981,14 +5995,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #common_middlewares_error_variants_token_stream
                     #postgres_error_variants_token_stream
                     #path_logic_error_variants_token_stream
-                    #[tvfrr_400_bad_request]
-                    #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_camel_case_token_stream {
-                        #eo_error_occurence_attribute_token_stream
-                        #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_lower_case_token_stream:
-                            #delete_one_path_try_from_delete_one_path_with_serialize_deserialize_error_named_name_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    //
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
@@ -6388,7 +6394,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #not_unique_color_vec_variant_declaration_token_stream,
                 #bind_query_variant_declaration_token_stream,
                 #no_payload_fields_variant_declaration_token_stream,
-                #no_payload_parameters_declaration_token_stream,
+                #no_payload_parameters_variant_declaration_token_stream,
                 #non_existing_primary_keys_variant_declaration_token_stream,
                 #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
                 #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
@@ -7158,12 +7164,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #not_unique_name_vec_need_to_refactor_variant_declaration_token_stream,
                 #not_unique_color_vec_need_to_refactor_variant_declaration_token_stream,
                 #bind_query_variant_declaration_token_stream,
-                #[tvfrr_400_bad_request]
-                NoQueryParameters {
-                    #eo_display_with_serialize_deserialize_token_stream
-                    no_query_parameters: #std_string_string_token_stream,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #no_query_parameters_variant_declaration_token_stream,
                 #commit_failed_variant_declaration_token_stream,
                 #non_existing_primary_keys_variant_declaration_token_stream,
                 #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
