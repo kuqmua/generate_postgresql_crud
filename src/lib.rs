@@ -1628,6 +1628,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
         }
     };
+    let bind_query_variant_declaration_token_stream = quote::quote!{
+        #[tvfrr_500_internal_server_error]
+        BindQuery {
+            #[eo_error_occurence]
+            checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
+            code_occurence: crate::common::code_occurence::CodeOccurence,
+        }
+    };
     let query_and_rollback_failed_token_stream = quote::quote!{
         QueryAndRollbackFailed {
             query_error: e,
@@ -2017,12 +2025,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream}");
         let try_create_many_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #[tvfrr_500_internal_server_error]
-                BindQuery {
-                    #[eo_error_occurence]
-                    checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
-                },
+                #bind_query_variant_declaration_token_stream,
                 #[tvfrr_500_internal_server_error] //todo what status should be there?
                 CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
                     #[eo_display]
@@ -3323,12 +3326,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     not_unique_color_vec: std::vec::Vec<crate::server::postgres::regex_filter::RegexFilter>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
-                #[tvfrr_500_internal_server_error]
-                BindQuery {
-                    #[eo_error_occurence]
-                    checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
-                },
+                #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NotUuid {
                     #[eo_display]
@@ -4216,12 +4214,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     failed_to_deserialize_query_string: std::string::String,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
-                #[tvfrr_500_internal_server_error]
-                BindQuery {
-                    #[eo_error_occurence]
-                    checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
-                },
+                #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 ReadManyQueryTryFromReadManyQueryWithSerializeDeserialize {
                     #[eo_error_occurence]
@@ -4900,12 +4893,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_update_one_error_named_token_stream}");
         let try_update_one_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #[tvfrr_500_internal_server_error]
-                BindQuery {
-                    #[eo_error_occurence]
-                    checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
-                },
+                #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NoPayloadFields {
                     #[eo_display_with_serialize_deserialize]
@@ -5454,12 +5442,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     not_unique_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
-                #[tvfrr_500_internal_server_error]
-                BindQuery {
-                    #[eo_error_occurence]
-                    checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
-                },
+                #bind_query_variant_declaration_token_stream,
                 #[tvfrr_500_internal_server_error]
                 CheckedAdd {
                     #[eo_display_with_serialize_deserialize]
@@ -6455,12 +6438,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     not_unique_color_vec: std::vec::Vec<crate::server::postgres::regex_filter::RegexFilter>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
-                #[tvfrr_500_internal_server_error]
-                BindQuery {
-                    #[eo_error_occurence]
-                    checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
-                },
+                #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NoPayloadFields {
                     #[eo_display_with_serialize_deserialize]
@@ -7290,12 +7268,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     not_unique_color_vec: std::vec::Vec<std::string::String>, //todo make it crate::server::postgres::regex_filter::RegexFilter
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
-                #[tvfrr_500_internal_server_error]
-                BindQuery {
-                    #[eo_error_occurence]
-                    checked_add: crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
-                },
+                #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 NoQueryParameters {
                     #[eo_display_with_serialize_deserialize]
@@ -7860,7 +7833,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        // println!("{route_handler_token_stream}");
+        println!("{route_handler_token_stream}");
         quote::quote!{
             #parameters_token_stream
             #query_token_stream
