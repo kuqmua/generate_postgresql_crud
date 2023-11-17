@@ -1699,6 +1699,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let failed_to_deserialize_query_string_variant_declaration_token_stream = quote::quote!{
+        #[tvfrr_400_bad_request]
+        FailedToDeserializeQueryString {
+            #[eo_display_with_serialize_deserialize]
+            failed_to_deserialize_query_string: #std_string_string_token_stream,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
     let query_encode_variant_token_stream = quote::quote!{
         #query_encode_token_stream {
             #eo_display_attribute_token_stream
@@ -2869,12 +2877,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_read_one_error_named_token_stream}");
         let try_read_one_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #[tvfrr_400_bad_request]
-                FailedToDeserializeQueryString {
-                    #[eo_display_with_serialize_deserialize]
-                    failed_to_deserialize_query_string: #std_string_string_token_stream,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #failed_to_deserialize_query_string_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 ReadOnePathTryFromReadOnePathWithSerializeDeserialize {
                     #[eo_error_occurence]
@@ -4208,12 +4211,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     not_unique_color_vec: std::vec::Vec<#std_string_string_token_stream>, //todo crate::server::postgres::regex_filter::RegexFilter
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
-                #[tvfrr_400_bad_request]
-                FailedToDeserializeQueryString {
-                    #[eo_display_with_serialize_deserialize]
-                    failed_to_deserialize_query_string: #std_string_string_token_stream,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #failed_to_deserialize_query_string_variant_declaration_token_stream,
                 #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 ReadManyQueryTryFromReadManyQueryWithSerializeDeserialize {
@@ -7239,12 +7237,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub enum #try_delete_many_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
                     #postgres_error_variants_token_stream
-                    #[tvfrr_400_bad_request]
-                    FailedToDeserializeQueryString {
-                        #[eo_display_with_serialize_deserialize]
-                        failed_to_deserialize_query_string: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #failed_to_deserialize_query_string_variant_declaration_token_stream,
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
