@@ -222,7 +222,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     use std::str::FromStr;
                     SupportedFieldType::from_str(ty_stringified.as_str()).unwrap_or_else(|_| panic!(
                         "{proc_macro_name_ident_stringified} {ty_stringified} SupportedFieldType::try_from failed. supported: {:?}", 
-                        SupportedFieldType::into_array().into_iter().map(|element|element.to_string()).collect::<Vec<std::string::String>>()
+                        SupportedFieldType::into_array().into_iter().map(|element|element.to_string()).collect::<std::vec::Vec<std::string::String>>()
                     ))
                 };
                 match try_match_supported_attribute_type_with_supported_field_type(&supported_attribute_type, &supported_field_type) {
@@ -237,7 +237,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
             None => panic!(
                 "{proc_macro_name_ident_stringified} no field attribute found for {field_ident}, supported: {:?}", 
-                SupportedAttributeType::into_array().into_iter().map(|element|element.to_string()).collect::<Vec<std::string::String>>()
+                SupportedAttributeType::into_array().into_iter().map(|element|element.to_string()).collect::<std::vec::Vec<std::string::String>>()
             )
         };
         FieldNamedWrapperExcludingPrimaryKey {
@@ -245,7 +245,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             supported_attribute_type,
             supported_field_type
         }
-    }).collect::<Vec<FieldNamedWrapperExcludingPrimaryKey>>();
+    }).collect::<std::vec::Vec<FieldNamedWrapperExcludingPrimaryKey>>();
     let fields_named_len = fields_named.len();
     let fields_named_wrappers_excluding_primary_key_len = fields_named_wrappers_excluding_primary_key.len();
     let id_field_ident_quotes_token_stream = {
@@ -2159,7 +2159,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let column_increments = {
                         let mut column_increments = fields_named_wrappers_excluding_primary_key.iter()
                         .map(|element|&element.field)
-                        .collect::<Vec<&syn::Field>>()
+                        .collect::<std::vec::Vec<&syn::Field>>()
                         .iter()
                         .enumerate().fold(std::string::String::default(), |mut acc, (index, _)| {
                             acc.push_str(&format!("${}, ", index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE))));
@@ -2190,7 +2190,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     });
                     let handle_fields_named_wrappers_excluding_primary_key = fields_named_wrappers_excluding_primary_key.iter()
                     .map(|element|&element.field)
-                    .collect::<Vec<&syn::Field>>();
+                    .collect::<std::vec::Vec<&syn::Field>>();
                     let column_vecs_with_capacity_token_stream = handle_fields_named_wrappers_excluding_primary_key.iter().map(|_|quote::quote!{std::vec::Vec::with_capacity(#current_vec_len_name_token_stream)});
                     let columns_acc_push_elements_token_stream = handle_fields_named_wrappers_excluding_primary_key.iter()
                     .enumerate().map(|(index, field)|{
@@ -3308,19 +3308,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NotUniquePrimaryKey {
                     #[eo_vec_display]
-                    not_unique_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    not_unique_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_400_bad_request]
                 NotUniqueNameVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_name_vec: Vec<crate::server::postgres::regex_filter::RegexFilter>,
+                    not_unique_name_vec: std::vec::Vec<crate::server::postgres::regex_filter::RegexFilter>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_400_bad_request]
                 NotUniqueColorVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_color_vec: Vec<crate::server::postgres::regex_filter::RegexFilter>,
+                    not_unique_color_vec: std::vec::Vec<crate::server::postgres::regex_filter::RegexFilter>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_500_internal_server_error]
@@ -3352,7 +3352,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
                 )]
                 #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
-                    Vec::<crate::repositories_types::tufa_server::routes::api::cats::DogOptions>,
+                    std::vec::Vec::<crate::repositories_types::tufa_server::routes::api::cats::DogOptions>,
                     tvfrr_200_ok
                 )]
                 pub enum TryReadManyWithBody {
@@ -4195,19 +4195,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NotUniquePrimaryKey {
                     #[eo_vec_display]
-                    not_unique_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    not_unique_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_400_bad_request]
                 NotUniqueNameVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_name_vec: Vec<std::string::String>, //todo crate::server::postgres::regex_filter::RegexFilter
+                    not_unique_name_vec: std::vec::Vec<std::string::String>, //todo crate::server::postgres::regex_filter::RegexFilter
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_400_bad_request]
                 NotUniqueColorVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_color_vec: Vec<std::string::String>, //todo crate::server::postgres::regex_filter::RegexFilter
+                    not_unique_color_vec: std::vec::Vec<std::string::String>, //todo crate::server::postgres::regex_filter::RegexFilter
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_400_bad_request]
@@ -4239,7 +4239,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type_variants_from_reqwest_response::TypeVariantsFromReqwestResponse,
                 )]
                 #[type_variants_from_reqwest_response::type_variants_from_reqwest_response_attribute(
-                    Vec::<crate::repositories_types::tufa_server::routes::api::cats::DogOptions>,
+                    std::vec::Vec::<crate::repositories_types::tufa_server::routes::api::cats::DogOptions>,
                     tvfrr_200_ok
                 )]
                 pub enum TryReadMany {
@@ -5451,7 +5451,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NotUniquePrimaryKey {
                     #[eo_vec_display]
-                    not_unique_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    not_unique_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_500_internal_server_error]
@@ -5481,7 +5481,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NonExistingPrimaryKeys {
                     #[eo_vec_display]
-                    non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    non_existing_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_500_internal_server_error]
@@ -5496,7 +5496,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 //todo what status code should return if non_existing_primary_keys = 400, but transaction rollback failed = 500
                 NonExistingPrimaryKeysAndFailedRollback {
                     #[eo_vec_display]
-                    non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    non_existing_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     #[eo_display]
                     rollback_error: sqlx::Error,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
@@ -6440,19 +6440,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NotUniquePrimaryKey {
                     #[eo_vec_display]
-                    not_unique_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    not_unique_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_400_bad_request]
                 NotUniqueNameVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_name_vec: Vec<crate::server::postgres::regex_filter::RegexFilter>,
+                    not_unique_name_vec: std::vec::Vec<crate::server::postgres::regex_filter::RegexFilter>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_400_bad_request]
                 NotUniqueColorVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_color_vec: Vec<crate::server::postgres::regex_filter::RegexFilter>,
+                    not_unique_color_vec: std::vec::Vec<crate::server::postgres::regex_filter::RegexFilter>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_500_internal_server_error]
@@ -6476,14 +6476,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NonExistingPrimaryKeys {
                     #[eo_vec_display]
-                    non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    non_existing_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_400_bad_request]
                 //todo what status code should return if non_existing_primary_keys = 400, but transaction rollback failed = 500
                 NonExistingPrimaryKeysAndFailedRollback {
                     #[eo_vec_display]
-                    non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    non_existing_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     #[eo_display]
                     rollback_error: sqlx::Error,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
@@ -7275,19 +7275,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NotUniquePrimaryKey {
                     #[eo_vec_display]
-                    not_unique_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    not_unique_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_400_bad_request]
                 NotUniqueNameVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_name_vec: Vec<std::string::String>, //todo make it crate::server::postgres::regex_filter::RegexFilter
+                    not_unique_name_vec: std::vec::Vec<std::string::String>, //todo make it crate::server::postgres::regex_filter::RegexFilter
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_400_bad_request]
                 NotUniqueColorVec {
                     #[eo_vec_display_with_serialize_deserialize]
-                    not_unique_color_vec: Vec<std::string::String>, //todo make it crate::server::postgres::regex_filter::RegexFilter
+                    not_unique_color_vec: std::vec::Vec<std::string::String>, //todo make it crate::server::postgres::regex_filter::RegexFilter
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_500_internal_server_error]
@@ -7311,7 +7311,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 NonExistingPrimaryKeys {
                     #[eo_vec_display]
-                    non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    non_existing_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
                 },
                 #[tvfrr_500_internal_server_error]
@@ -7326,7 +7326,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 //todo what status code should return if non_existing_primary_keys = 400, but transaction rollback failed = 500
                 NonExistingPrimaryKeysAndFailedRollback {
                     #[eo_vec_display]
-                    non_existing_primary_keys: Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
+                    non_existing_primary_keys: std::vec::Vec<crate::server::postgres::uuid_wrapper::UuidWrapper>,
                     #[eo_display]
                     rollback_error: sqlx::Error,
                     code_occurence: crate::common::code_occurence::CodeOccurence,
@@ -8579,7 +8579,7 @@ impl std::str::FromStr for SupportedAttributeType {
             "generate_postgresql_crud_jsonb" => Ok(Self::Jsonb),
             _ => Err(format!(
                 "unsupported field attribute name: {value}, {:?}",
-                Self::into_array().into_iter().map(|element|element.to_string()).collect::<Vec<std::string::String>>()
+                Self::into_array().into_iter().map(|element|element.to_string()).collect::<std::vec::Vec<std::string::String>>()
             ))
         }
     }
