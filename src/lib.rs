@@ -4924,34 +4924,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #try_update_one_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    //
                     #postgres_error_variants_token_stream
-                    //
-                    #[tvfrr_400_bad_request]
-                    JsonDataError {
-                        #[eo_display_with_serialize_deserialize]
-                        json_data_error: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    #[tvfrr_400_bad_request]
-                    JsonSyntaxError {
-                        #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    #[tvfrr_400_bad_request]
-                    MissingJsonContentType {
-                        #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    #[tvfrr_500_internal_server_error]
-                    BytesRejection {
-                        #[eo_display_with_serialize_deserialize]
-                        bytes_rejection: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    //
+                    #json_body_logic_error_variants_token_stream
                     #path_logic_error_variants_token_stream
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
@@ -5504,34 +5478,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #update_many_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    //
                     #postgres_error_variants_token_stream
-                    //
-                    #[tvfrr_400_bad_request]
-                    JsonDataError {
-                        #[eo_display_with_serialize_deserialize]
-                        json_data_error: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    #[tvfrr_400_bad_request]
-                    JsonSyntaxError {
-                        #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    #[tvfrr_400_bad_request]
-                    MissingJsonContentType {
-                        #[eo_display_with_serialize_deserialize]
-                        json_syntax_error: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    #[tvfrr_500_internal_server_error]
-                    BytesRejection {
-                        #[eo_display_with_serialize_deserialize]
-                        bytes_rejection: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    //
+                    #json_body_logic_error_variants_token_stream
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
@@ -7312,9 +7260,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #try_delete_many_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    //
                     #postgres_error_variants_token_stream
-                    //
                     #[tvfrr_400_bad_request]
                     FailedToDeserializeQueryString {
                         #[eo_display_with_serialize_deserialize]
