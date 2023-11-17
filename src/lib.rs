@@ -3980,6 +3980,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
+        let read_many_query_try_from_read_many_query_with_serialize_deserialize_camel_case_stringified = generate_query_try_from_query_with_serialize_deserialize_camel_case_stringified(
+            &read_many_name_camel_case_stringified,
+            query_camel_case_stringified,
+            &try_from_camel_case_stringified,
+            with_serialize_deserialize_camel_case_stringified,
+        );
+        let read_many_query_try_from_read_many_query_with_serialize_deserialize_lower_case_token_stream = generate_query_try_from_query_with_serialize_deserialize_lower_case_token_stream(
+            &read_many_query_try_from_read_many_query_with_serialize_deserialize_camel_case_stringified,
+            &proc_macro_name_ident_stringified
+        );
         let try_read_many_error_named_camel_case_token_stream = generate_try_error_named_token_stream(
             try_camel_case_stringified,
             &read_many_name_camel_case_stringified,
@@ -4285,10 +4295,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #failed_to_deserialize_query_string_variant_declaration_token_stream,
                 #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
-                ReadManyQueryTryFromReadManyQueryWithSerializeDeserialize {
+                #read_many_query_try_from_read_many_query_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
-                    read_many_query_try_from_read_many_query_with_serialize_deserialize:
-                        ReadManyQueryTryFromReadManyQueryWithSerializeDeserializeErrorNamed,
+                    #read_many_query_try_from_read_many_query_with_serialize_deserialize_lower_case_token_stream:
+                        #read_many_query_try_from_read_many_query_with_serialize_deserialize_error_named_camel_case_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
             };
