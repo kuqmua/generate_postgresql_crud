@@ -2880,7 +2880,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
                     #read_one_path_try_from_read_one_path_with_serialize_deserialize_lower_case_token_stream:
-                        ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamed,
+                        #read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
             };
