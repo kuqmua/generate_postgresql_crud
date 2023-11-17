@@ -1715,6 +1715,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    //todo use not_unique_name_vec_need_to_refactor_variant_declaration_token_stream instead of not_unique_name_vec_variant_declaration_token_stream
     let not_unique_name_vec_need_to_refactor_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NotUniqueNameVec {
@@ -1731,6 +1732,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    //todo use not_unique_color_vec_variant_declaration_token_stream instead of not_unique_color_vec_need_to_refactor_variant_declaration_token_stream
     let not_unique_color_vec_need_to_refactor_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NotUniqueColorVec {
@@ -3154,6 +3156,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
+        let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_lower_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_lower_case_token_stream(
+            &read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified,
+            &proc_macro_name_ident_stringified
+        );
         let try_read_many_with_body_error_named_camel_case_token_stream = generate_try_error_named_token_stream(
             try_camel_case_stringified,
             &read_many_with_body_name_camel_case_stringified,
@@ -3362,16 +3368,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #not_unique_color_vec_variant_declaration_token_stream,
                 #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
-                NotUuid {
+                #not_uuid_token_camel_case_stream {
                     #[eo_display]
-                    not_uuid: sqlx::types::uuid::Error,
+                    #not_uuid_token_lower_case_stream: sqlx::types::uuid::Error,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_400_bad_request]
-                ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize {
+                #read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
-                    read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize:
-                        ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserializeErrorNamed,
+                    #read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_lower_case_token_stream:
+                        #read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
             };
