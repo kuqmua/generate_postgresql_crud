@@ -1804,6 +1804,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let no_payload_parameters_declaration_token_stream = quote::quote!{
+        #[tvfrr_400_bad_request]
+        NoPayloadParameters {
+            #eo_display_with_serialize_deserialize_token_stream
+            no_payload_parameters: #std_string_string_token_stream,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
     let query_encode_variant_token_stream = quote::quote!{
         #query_encode_token_stream {
             #eo_display_attribute_token_stream
@@ -6380,12 +6388,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #not_unique_color_vec_variant_declaration_token_stream,
                 #bind_query_variant_declaration_token_stream,
                 #no_payload_fields_variant_declaration_token_stream,
-                #[tvfrr_400_bad_request]
-                NoPayloadParameters {
-                    #eo_display_with_serialize_deserialize_token_stream
-                    no_payload_parameters: #std_string_string_token_stream,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                },
+                #no_payload_parameters_declaration_token_stream,
                 #non_existing_primary_keys_variant_declaration_token_stream,
                 #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
                 #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
