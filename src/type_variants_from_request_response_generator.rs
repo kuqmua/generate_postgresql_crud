@@ -19,8 +19,11 @@ fn type_variants_from_request_response_generator(
     // axum_response_into_response_logic_token_stream: proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
-    use crate::type_variants_from_request_response::TypeVariantsFromRequestResponse;
     let type_variants_from_request_response_len = type_variants_from_request_response.len();
+    let ident_request_error_token_stream = proc_macro_helpers::type_variants_from_request_response::ident_request_error_token_stream(
+        &ident,
+        &proc_macro_name_ident_stringified,
+    );
     let (
         attributes,
         enum_with_serialize_deserialize_logic_token_stream,
@@ -202,7 +205,7 @@ fn type_variants_from_request_response_generator(
     let ident_request_error_logic_token_stream_handle_token_stream = {
         quote::quote!{
             #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
-            pub enum KekwRequestError {
+            pub enum #ident_request_error_token_stream {
                 ExpectedType {
                     #[eo_display_with_serialize_deserialize]
                     expected_type: KekwWithSerializeDeserialize,
@@ -255,13 +258,13 @@ fn type_variants_from_request_response_generator(
                 future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
             ) -> Result<
                 #desirable_type_token_stream,
-                KekwRequestError,
+                #ident_request_error_token_stream,
             > {
                 match future.await {
                     Ok(response) => match try_from_response_kekw(response).await {
                         Ok(variants) => match std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>::try_from(variants){
                             Ok(value) => Ok(value), 
-                            Err(e) => Err(KekwRequestError::ExpectedType {
+                            Err(e) => Err(#ident_request_error_token_stream::ExpectedType {
                                 expected_type: e, 
                                 code_occurence: crate::code_occurence_tufa_common!(),
                             }),
@@ -271,7 +274,7 @@ fn type_variants_from_request_response_generator(
                                 status_code, 
                                 headers, 
                                 response_text_result, 
-                            } => Err(KekwRequestError :: UnexpectedStatusCode {
+                            } => Err(#ident_request_error_token_stream::UnexpectedStatusCode {
                                 status_code, 
                                 headers, 
                                 response_text_result, 
@@ -281,7 +284,7 @@ fn type_variants_from_request_response_generator(
                                 reqwest,
                                 status_code,
                                 headers 
-                            } => Err(KekwRequestError::FailedToGetResponseText {
+                            } => Err(#ident_request_error_token_stream::FailedToGetResponseText {
                                 reqwest,
                                 status_code,
                                 headers,
@@ -292,7 +295,7 @@ fn type_variants_from_request_response_generator(
                                 status_code,
                                 headers,
                                 response_text,
-                            } => Err(KekwRequestError::DeserializeResponse {
+                            } => Err(#ident_request_error_token_stream::DeserializeResponse {
                                 serde,
                                 status_code,
                                 headers,
@@ -301,7 +304,7 @@ fn type_variants_from_request_response_generator(
                             }),
                         },
                     }, 
-                    Err(e) => Err(KekwRequestError::Reqwest {
+                    Err(e) => Err(#ident_request_error_token_stream::Reqwest {
                         reqwest: e,
                         code_occurence: crate::code_occurence_tufa_common!(),
                     }),
