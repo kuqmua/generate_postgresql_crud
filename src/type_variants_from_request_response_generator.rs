@@ -13,8 +13,6 @@ fn type_variants_from_request_response_generator(
     // generated_status_code_enums_with_from_impls_logic_token_stream: proc_macro2::TokenStream,
     // try_from_response_logic_token_stream: proc_macro2::TokenStream,
     // impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream: proc_macro2::TokenStream,
-    // ident_request_error_logic_token_stream: proc_macro2::TokenStream,
-    // extraction_logic_token_stream: proc_macro2::TokenStream,
     // enum_status_codes_checker_name_logic_token_stream: proc_macro2::TokenStream,
     // axum_response_into_response_logic_token_stream: proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
@@ -29,14 +27,10 @@ fn type_variants_from_request_response_generator(
         generated_status_code_enums_with_from_impls_logic_token_stream,
         try_from_response_logic_token_stream,
         impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-        ident_request_error_logic_token_stream,
-        extraction_logic_token_stream,
         enum_status_codes_checker_name_logic_token_stream,
         axum_response_into_response_logic_token_stream,
     ) = type_variants_from_request_response.into_iter()
     .fold((
-        std::vec::Vec::with_capacity(type_variants_from_request_response_len),
-        std::vec::Vec::with_capacity(type_variants_from_request_response_len),
         std::vec::Vec::with_capacity(type_variants_from_request_response_len),
         std::vec::Vec::with_capacity(type_variants_from_request_response_len),
         std::vec::Vec::with_capacity(type_variants_from_request_response_len),
@@ -54,10 +48,8 @@ fn type_variants_from_request_response_generator(
         acc.4.push(element.generated_status_code_enums_with_from_impls_logic_token_stream());
         acc.5.push(element.try_from_response_logic_token_stream());
         acc.6.push(element.impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream());
-        acc.7.push(element.ident_request_error_logic_token_stream());
-        acc.8.push(element.extraction_logic_token_stream());
-        acc.9.push(element.enum_status_codes_checker_name_logic_token_stream());
-        acc.10.push(element.axum_response_into_response_logic_token_stream());
+        acc.7.push(element.enum_status_codes_checker_name_logic_token_stream());
+        acc.8.push(element.axum_response_into_response_logic_token_stream());
         acc
     });
     let enum_with_serialize_deserialize_logic_token_stream_handle_token_stream = {
@@ -193,13 +185,13 @@ fn type_variants_from_request_response_generator(
                 fn try_from(value: #ident_response_variants_token_stream) -> Result<Self, Self::Error> {
                     match value {
                         #ident_response_variants_token_stream::#desirable_token_stream(i) => Ok(i),
-                        #ident_response_variants_token_stream::Configuration {
-                            configuration_box_dyn_error,
-                            code_occurence,
-                        } => Err(KekwWithSerializeDeserialize::Configuration {
-                            configuration_box_dyn_error,
-                            code_occurence,
-                        }),
+                        // #ident_response_variants_token_stream::Configuration {
+                        //     configuration_box_dyn_error,
+                        //     code_occurence,
+                        // } => Err(KekwWithSerializeDeserialize::Configuration {
+                        //     configuration_box_dyn_error,
+                        //     code_occurence,
+                        // }),
                     }
                 }
             }
@@ -314,7 +306,7 @@ fn type_variants_from_request_response_generator(
     let enum_status_codes_checker_name_logic_token_stream_handle_token_stream = {
         quote::quote!{
             pub enum KekwStatusCodesChecker {
-                ConfigurationTvfrr500InternalServerError,
+                // ConfigurationTvfrr500InternalServerError,
             }
         }
     };
