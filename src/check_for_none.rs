@@ -1,13 +1,11 @@
-pub enum QueryPart {
+pub enum QueryPart {//todo before there are 2 variants. now only one. need to remove this enum and refactor
     Payload,
-    QueryParameters
 } 
 
 impl std::fmt::Display for QueryPart {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::Payload => write!(f, "payload"),
-            Self::QueryParameters => write!(f, "query")
         }
     }
 }
@@ -21,12 +19,6 @@ impl QueryPart {
                     code_occurence: crate::code_occurence_tufa_common!()
                 }
             },
-            Self::QueryParameters => quote::quote!{
-                NoQueryParameters { 
-                    no_query_parameters: std::string::String::from("no query parameters"), 
-                    code_occurence: crate::code_occurence_tufa_common!(),
-                }
-            }
         }
     }
 }
