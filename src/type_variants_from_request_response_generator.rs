@@ -262,12 +262,12 @@ fn type_variants_from_request_response_generator(
         }
     };
     let extraction_logic_token_stream_handle_token_stream = {
-        let tvfrr_extraction_logic_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_tvfrr_extraction_logic_token_stream(
+        let tvfrr_extraction_logic_lower_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_tvfrr_extraction_logic_lower_case_token_stream(
             &ident_lower_case_stringified,
             &proc_macro_name_ident_stringified,
         );
         quote::quote!{
-            async fn #tvfrr_extraction_logic_token_stream<'a>(
+            async fn #tvfrr_extraction_logic_lower_case_token_stream<'a>(
                 future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
             ) -> Result<
                 #desirable_type_token_stream,
