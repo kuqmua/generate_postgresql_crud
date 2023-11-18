@@ -4205,7 +4205,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &proc_macro_name_ident_stringified,
                     dot_space,
                     &try_update_one_response_variants_token_stream,
-                    crate::check_for_none::QueryPart::Payload,
                     true
                 );
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
@@ -5608,14 +5607,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &error_log_call_token_stream,
                     &try_delete_many_with_body_response_variants_token_stream,
                 );
-                let query_part = crate::check_for_none::QueryPart::Payload;
                 let check_for_none_token_stream = crate::check_for_none::check_for_none(
                     &fields_named,
                     &id_field,
                     &proc_macro_name_ident_stringified,
                     dot_space,
                     &try_delete_many_with_body_response_variants_token_stream,
-                    query_part,
                     false
                 );
                 let parameters_match_token_stream = fields_named.iter().map(|field| {
