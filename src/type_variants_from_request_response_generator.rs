@@ -1,6 +1,8 @@
 fn type_variants_from_request_response_generator(
+    desirable_attribute: proc_macro_helpers::attribute::Attribute,
     ident: &syn::Ident,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,//KekwResponseVariants
+    desirable_token_stream: &proc_macro2::TokenStream,
     desirable_type_token_stream: &proc_macro2::TokenStream,//std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
     //
     enum_with_serialize_deserialize_logic_token_stream: std::vec::Vec<proc_macro2::TokenStream>,
@@ -14,6 +16,7 @@ fn type_variants_from_request_response_generator(
     enum_status_codes_checker_name_logic_token_stream: proc_macro2::TokenStream,
     axum_response_into_response_logic_token_stream: proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
+    let http_status_code_quote = desirable_attribute.to_http_status_code_quote();
     let enum_with_serialize_deserialize_logic_token_stream_handle_token_stream = {
         quote::quote!{
             #[derive(Debug, serde::Serialize, serde::Deserialize)]
@@ -50,7 +53,7 @@ fn type_variants_from_request_response_generator(
             impl std::convert::From<&#ident_response_variants_token_stream> for http::StatusCode {
                 fn from(value: &#ident_response_variants_token_stream) -> Self {
                     match value {
-                        #ident_response_variants_token_stream::Desirable(_) => http::StatusCode::CREATED,//todo is it supposed to be so? created status code
+                        #ident_response_variants_token_stream::#desirable_token_stream(_) => #http_status_code_quote,//http::StatusCode::CREATED
                         // KekwResponseVariants::Configuration {
                         //     configuration_box_dyn_error: _,
                         //     code_occurence: _,

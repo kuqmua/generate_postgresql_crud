@@ -62,6 +62,17 @@ impl TypeVariantsFromRequestResponse for Configuration {
         quote::quote!{
 //
             #[derive(Debug, serde :: Serialize, serde :: Deserialize)]
+            enum KekwResponseVariantsTvfrr201Created {
+                Desirable(std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>),
+            }
+            impl std::convert::From<KekwResponseVariantsTvfrr201Created> for KekwResponseVariants {
+                fn from(value: KekwResponseVariantsTvfrr201Created) -> Self {
+                    match value {
+                        KekwResponseVariantsTvfrr201Created::Desirable(i) => Self::Desirable(i),
+                    }
+                }   
+            }
+            #[derive(Debug, serde :: Serialize, serde :: Deserialize)]
             enum KekwResponseVariantsTvfrr500InternalServerError {
                 Configuration {
                     configuration_box_dyn_error: std::string::String,
@@ -80,17 +91,6 @@ impl TypeVariantsFromRequestResponse for Configuration {
                         },
                     }
                 }
-            }
-            #[derive(Debug, serde :: Serialize, serde :: Deserialize)]
-            enum KekwResponseVariantsTvfrr201Created {
-                Desirable(std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>),
-            }
-            impl std::convert::From<KekwResponseVariantsTvfrr201Created> for KekwResponseVariants {
-                fn from(value: KekwResponseVariantsTvfrr201Created) -> Self {
-                    match value {
-                        KekwResponseVariantsTvfrr201Created::Desirable(i) => Self::Desirable(i),
-                    }
-                }   
             }
 //
         }
