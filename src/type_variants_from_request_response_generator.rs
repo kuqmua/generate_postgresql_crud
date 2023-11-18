@@ -4,6 +4,7 @@ fn type_variants_from_request_response_generator(
     ident_response_variants_token_stream: &proc_macro2::TokenStream,//KekwResponseVariants
     desirable_token_stream: &proc_macro2::TokenStream,
     desirable_type_token_stream: &proc_macro2::TokenStream,//std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
+    proc_macro_name_ident_stringified: &std::string::String,
     //
     type_variants_from_request_response: std::vec::Vec<impl crate::type_variants_from_request_response::TypeVariantsFromRequestResponse>,
     // attribute: proc_macro_helpers::attribute::Attribute,
@@ -16,7 +17,7 @@ fn type_variants_from_request_response_generator(
     // enum_status_codes_checker_name_logic_token_stream: proc_macro2::TokenStream,
     // axum_response_into_response_logic_token_stream: proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
-    let http_status_code_quote = desirable_attribute.to_http_status_code_quote();
+    let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     use crate::type_variants_from_request_response::TypeVariantsFromRequestResponse;
     let type_variants_from_request_response_len = type_variants_from_request_response.len();
     let (
@@ -88,7 +89,7 @@ fn type_variants_from_request_response_generator(
             impl std::convert::From<&#ident_response_variants_token_stream> for http::StatusCode {
                 fn from(value: &#ident_response_variants_token_stream) -> Self {
                     match value {
-                        #ident_response_variants_token_stream::#desirable_token_stream(_) => #http_status_code_quote,//http::StatusCode::CREATED
+                        #ident_response_variants_token_stream::#desirable_token_stream(_) => #http_status_code_quote_token_stream,//http::StatusCode::CREATED
                         // KekwResponseVariants::Configuration {
                         //     configuration_box_dyn_error: _,
                         //     code_occurence: _,
@@ -304,8 +305,12 @@ fn type_variants_from_request_response_generator(
         }
     };
     let enum_status_codes_checker_name_logic_token_stream_handle_token_stream = {
+        let enum_status_codes_checker_name_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_enum_status_codes_checker_name_token_stream(
+            &ident,
+            proc_macro_name_ident_stringified,
+        );
         quote::quote!{
-            pub enum KekwStatusCodesChecker {
+            pub enum #enum_status_codes_checker_name_token_stream {
                 // ConfigurationTvfrr500InternalServerError,
             }
         }
@@ -317,17 +322,17 @@ fn type_variants_from_request_response_generator(
                     match &self {
                         #ident_response_variants_token_stream::#desirable_token_stream(_) => {
                             let mut res = axum::Json(self).into_response();
-                            *res.status_mut() = http::StatusCode::CREATED;
+                            *res.status_mut() = #http_status_code_quote_token_stream;//http::StatusCode::CREATED
                             res
                         }
-                        #ident_response_variants_token_stream::Configuration {
-                            configuration_box_dyn_error: _,
-                            code_occurence: _,
-                        } => {
-                            let mut res = axum::Json(self).into_response();
-                            *res.status_mut() = http::StatusCode::INTERNAL_SERVER_ERROR;
-                            res
-                        }
+                        // #ident_response_variants_token_stream::Configuration {
+                        //     configuration_box_dyn_error: _,
+                        //     code_occurence: _,
+                        // } => {
+                        //     let mut res = axum::Json(self).into_response();
+                        //     *res.status_mut() = http::StatusCode::INTERNAL_SERVER_ERROR;
+                        //     res
+                        // }
                     }
                 }
             }
