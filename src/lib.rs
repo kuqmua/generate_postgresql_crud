@@ -4,6 +4,7 @@ mod acquire_pool_and_connection;
 mod from_log_and_return_error;
 mod generate_postgres_transaction;
 mod generate_postgres_execute_query;
+mod type_variants_from_request_response;
 
 // trait Something {
 //     fn something();
@@ -2200,9 +2201,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #enum_status_codes_checker_name_logic_token_stream
                     #axum_response_into_response_logic_token_stream
                     //
-#[derive(Debug, serde :: Serialize, serde :: Deserialize)]
-pub enum TryCreateManyResponseVariants {
-    Desirable(std :: vec :: Vec :: < crate :: server :: postgres ::
+                    #[derive(Debug, serde::Serialize, serde :: Deserialize)]
+                    pub enum TryCreateManyResponseVariants {
+                        Desirable(std :: vec :: Vec :: < crate :: server :: postgres ::
     uuid_wrapper :: PossibleUuidWrapper >), ProjectCommitExtractorNotEqual
     {
         project_commit_not_equal : std :: string :: String < >,
