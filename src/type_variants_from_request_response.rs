@@ -1,20 +1,26 @@
-trait TypeVariantsFromRequestResponse {
-    fn enum_with_serialize_deserialize_logic_token_stream() -> proc_macro2::TokenStream;
-    fn from_logic_token_stream() -> proc_macro2::TokenStream;
-    fn impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream() -> proc_macro2::TokenStream;
-    fn generated_status_code_enums_with_from_impls_logic_token_stream() -> proc_macro2::TokenStream;
-    fn try_from_response_logic_token_stream() -> proc_macro2::TokenStream;
-    fn impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream() -> proc_macro2::TokenStream;
-    fn ident_request_error_logic_token_stream() -> proc_macro2::TokenStream;
-    fn extraction_logic_token_stream() -> proc_macro2::TokenStream;
-    fn enum_status_codes_checker_name_logic_token_stream() -> proc_macro2::TokenStream;
-    fn axum_response_into_response_logic_token_stream() -> proc_macro2::TokenStream;
+pub trait TypeVariantsFromRequestResponse {
+    fn attribute(&self) -> proc_macro_helpers::attribute::Attribute;
+    //
+    fn enum_with_serialize_deserialize_logic_token_stream(&self) -> proc_macro2::TokenStream;
+    fn from_logic_token_stream(&self) -> proc_macro2::TokenStream;
+    fn impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream(&self) -> proc_macro2::TokenStream;
+    fn generated_status_code_enums_with_from_impls_logic_token_stream(&self) -> proc_macro2::TokenStream;
+    fn try_from_response_logic_token_stream(&self) -> proc_macro2::TokenStream;
+    fn impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream(&self) -> proc_macro2::TokenStream;
+    fn ident_request_error_logic_token_stream(&self) -> proc_macro2::TokenStream;
+    fn extraction_logic_token_stream(&self) -> proc_macro2::TokenStream;
+    fn enum_status_codes_checker_name_logic_token_stream(&self) -> proc_macro2::TokenStream;
+    fn axum_response_into_response_logic_token_stream(&self) -> proc_macro2::TokenStream;
 }
 
 struct Configuration{}
 
 impl TypeVariantsFromRequestResponse for Configuration {
-    fn enum_with_serialize_deserialize_logic_token_stream() -> proc_macro2::TokenStream {
+    fn attribute(&self) -> proc_macro_helpers::attribute::Attribute {
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError
+    }
+    //
+    fn enum_with_serialize_deserialize_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
             #[derive(Debug, serde :: Serialize, serde :: Deserialize)]
             pub enum KekwResponseVariants {
@@ -26,7 +32,7 @@ impl TypeVariantsFromRequestResponse for Configuration {
             }
         }
     }
-    fn from_logic_token_stream() -> proc_macro2::TokenStream {
+    fn from_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
             impl std::convert::From<Kekw> for KekwResponseVariants {
                 fn from(val: Kekw) -> Self {
@@ -43,7 +49,7 @@ impl TypeVariantsFromRequestResponse for Configuration {
             }
         }
     }
-    fn impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream() -> proc_macro2::TokenStream {
+    fn impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
             impl std::convert::From<&KekwResponseVariants> for http::StatusCode {
                 fn from(value: &KekwResponseVariants) -> Self {
@@ -58,7 +64,7 @@ impl TypeVariantsFromRequestResponse for Configuration {
             }
         }
     }
-    fn generated_status_code_enums_with_from_impls_logic_token_stream() -> proc_macro2::TokenStream {
+    fn generated_status_code_enums_with_from_impls_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
 //
             #[derive(Debug, serde :: Serialize, serde :: Deserialize)]
@@ -95,7 +101,7 @@ impl TypeVariantsFromRequestResponse for Configuration {
 //
         }
     }
-    fn try_from_response_logic_token_stream() -> proc_macro2::TokenStream {
+    fn try_from_response_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
             async fn try_from_response_kekw(
                 response: reqwest::Response,
@@ -142,7 +148,7 @@ impl TypeVariantsFromRequestResponse for Configuration {
             }
         }
     }
-    fn impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream() -> proc_macro2::TokenStream {
+    fn impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
             impl TryFrom<KekwResponseVariants> for std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper> {
                 type Error = KekwWithSerializeDeserialize;
@@ -161,7 +167,7 @@ impl TypeVariantsFromRequestResponse for Configuration {
             }
         }
     }
-    fn ident_request_error_logic_token_stream() -> proc_macro2::TokenStream {
+    fn ident_request_error_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
             #[derive(Debug, thiserror :: Error, error_occurence :: ErrorOccurence)]
             pub enum KekwRequestError {
@@ -207,7 +213,7 @@ impl TypeVariantsFromRequestResponse for Configuration {
             }
         }
     }
-    fn extraction_logic_token_stream() -> proc_macro2::TokenStream {
+    fn extraction_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
             async fn tvfrr_extraction_logic_kekw<'a>(
                 future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
@@ -264,14 +270,14 @@ impl TypeVariantsFromRequestResponse for Configuration {
             }
         }
     }
-    fn enum_status_codes_checker_name_logic_token_stream() -> proc_macro2::TokenStream {
+    fn enum_status_codes_checker_name_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
             pub enum KekwStatusCodesChecker {
                 ConfigurationTvfrr500InternalServerError,
             }
         }
     }
-    fn axum_response_into_response_logic_token_stream() -> proc_macro2::TokenStream {
+    fn axum_response_into_response_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
             impl axum::response::IntoResponse for KekwResponseVariants {
                 fn into_response(self) -> axum::response::Response {
