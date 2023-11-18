@@ -109,17 +109,17 @@ fn type_variants_from_request_response_generator(
     };
     let generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream = {
         quote::quote!{
-            // #[derive(Debug, serde::Serialize, serde::Deserialize)]
-            // enum KekwResponseVariantsTvfrr201Created {
-            //     #desirable_token_stream(#desirable_type_token_stream),
-            // }
-            // impl std::convert::From<KekwResponseVariantsTvfrr201Created> for KekwResponseVariants {
-            //     fn from(value: KekwResponseVariantsTvfrr201Created) -> Self {
-            //         match value {
-            //             KekwResponseVariantsTvfrr201Created::#desirable_token_stream(i) => Self::#desirable_token_stream(i),
-            //         }
-            //     }   
-            // }
+            #[derive(Debug, serde::Serialize, serde::Deserialize)]
+            enum KekwResponseVariantsTvfrr201Created {
+                #desirable_token_stream(#desirable_type_token_stream),
+            }
+            impl std::convert::From<KekwResponseVariantsTvfrr201Created> for #ident_response_variants_token_stream {
+                fn from(value: KekwResponseVariantsTvfrr201Created) -> Self {
+                    match value {
+                        KekwResponseVariantsTvfrr201Created::#desirable_token_stream(i) => Self::#desirable_token_stream(i),
+                    }
+                }   
+            }
             // #[derive(Debug, serde::Serialize, serde::Deserialize)]
             // enum KekwResponseVariantsTvfrr500InternalServerError {
             //     Configuration {
@@ -127,7 +127,7 @@ fn type_variants_from_request_response_generator(
             //         code_occurence: crate::common::code_occurence::CodeOccurence,
             //     },
             // }
-            // impl std::convert::From<KekwResponseVariantsTvfrr500InternalServerError> for KekwResponseVariants {
+            // impl std::convert::From<KekwResponseVariantsTvfrr500InternalServerError> for #ident_response_variants_token_stream {
             //     fn from(value: KekwResponseVariantsTvfrr500InternalServerError) -> Self {
             //         match value {
             //             KekwResponseVariantsTvfrr500InternalServerError::Configuration {
@@ -144,32 +144,201 @@ fn type_variants_from_request_response_generator(
     };
     let try_from_response_logic_token_stream_handle_token_stream = {
         quote::quote!{
-
+            async fn try_from_response_kekw(
+                response: reqwest::Response,
+            ) -> Result<
+                #ident_response_variants_token_stream,
+                crate::common::api_request_unexpected_error::ApiRequestUnexpectedError,
+            > {
+                let status_code = response.status();
+                let headers = response.headers().clone();
+                if status_code == http::StatusCode::CREATED {
+                    match response.text().await {
+                        Ok(response_text) => match serde_json::from_str::<KekwResponseVariantsTvfrr201Created>(&response_text) {
+                            Ok(value) => Ok(#ident_response_variants_token_stream::from(value)), 
+                            Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::DeserializeBody { 
+                                serde: e, 
+                                status_code, 
+                                headers, 
+                                response_text 
+                            }),
+                        }, 
+                        Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::FailedToGetResponseText { 
+                            reqwest: e,
+                            status_code,
+                            headers,
+                        }),
+                    }
+                } else {
+                    match response.text().await {
+                        Ok(response_text) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::StatusCode {
+                            status_code,
+                            headers,
+                            response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult::ResponseText(response_text)
+                        }), 
+                        Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::StatusCode {
+                            status_code, 
+                            headers, 
+                            response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult::ReqwestError(e),
+                        }),
+                    }
+                }
+            }
         }
     };
     let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream_handle_token_stream = {
         quote::quote!{
-
+            impl TryFrom<#ident_response_variants_token_stream> for #desirable_type_token_stream {
+                type Error = KekwWithSerializeDeserialize;
+                fn try_from(value: #ident_response_variants_token_stream) -> Result<Self, Self::Error> {
+                    match value {
+                        #ident_response_variants_token_stream::#desirable_token_stream(i) => Ok(i),
+                        #ident_response_variants_token_stream::Configuration {
+                            configuration_box_dyn_error,
+                            code_occurence,
+                        } => Err(KekwWithSerializeDeserialize::Configuration {
+                            configuration_box_dyn_error,
+                            code_occurence,
+                        }),
+                    }
+                }
+            }
         }
     };
     let ident_request_error_logic_token_stream_handle_token_stream = {
         quote::quote!{
-
+            #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+            pub enum KekwRequestError {
+                ExpectedType {
+                    #[eo_display_with_serialize_deserialize]
+                    expected_type: KekwWithSerializeDeserialize,
+                    code_occurence: crate::common::code_occurence::CodeOccurence,
+                },
+                UnexpectedStatusCode {
+                    #[eo_display]
+                    status_code: http::StatusCode,
+                    #[eo_display_foreign_type]
+                    headers: reqwest::header::HeaderMap,
+                    #[eo_display_foreign_type]
+                    response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult,
+                    code_occurence: crate::common::code_occurence::CodeOccurence,
+                },
+                FailedToGetResponseText {
+                    #[eo_display_foreign_type]
+                    reqwest: reqwest::Error,
+                    #[eo_display]
+                    status_code: http::StatusCode,
+                    #[eo_display_foreign_type]
+                    headers: reqwest::header::HeaderMap,
+                    code_occurence: crate::common::code_occurence::CodeOccurence,
+                },
+                DeserializeResponse {
+                    #[eo_display]
+                    serde: serde_json::Error,
+                    #[eo_display]
+                    status_code: http::StatusCode,
+                    #[eo_display_foreign_type]
+                    headers: reqwest::header::HeaderMap,
+                    #[eo_display_with_serialize_deserialize]
+                    response_text: std::string::String,
+                    code_occurence: crate::common::code_occurence::CodeOccurence,
+                },
+                Reqwest {
+                    #[eo_display_foreign_type]
+                    reqwest: reqwest::Error,
+                    code_occurence: crate::common::code_occurence::CodeOccurence,
+                },
+            }
         }
     };
     let extraction_logic_token_stream_handle_token_stream = {
         quote::quote!{
-
+            async fn tvfrr_extraction_logic_kekw<'a>(
+                future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
+            ) -> Result<
+                #desirable_type_token_stream,
+                KekwRequestError,
+            > {
+                match future.await {
+                    Ok(response) => match try_from_response_kekw(response).await {
+                        Ok(variants) => match std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>::try_from(variants){
+                            Ok(value) => Ok(value), 
+                            Err(e) => Err(KekwRequestError::ExpectedType {
+                                expected_type: e, 
+                                code_occurence: crate::code_occurence_tufa_common!(),
+                            }),
+                        },
+                        Err(e) => match e {
+                            crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::StatusCode { 
+                                status_code, 
+                                headers, 
+                                response_text_result, 
+                            } => Err(KekwRequestError :: UnexpectedStatusCode {
+                                status_code, 
+                                headers, 
+                                response_text_result, 
+                                code_occurence: crate::code_occurence_tufa_common!()
+                            }),
+                            crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::FailedToGetResponseText { 
+                                reqwest,
+                                status_code,
+                                headers 
+                            } => Err(KekwRequestError::FailedToGetResponseText {
+                                reqwest,
+                                status_code,
+                                headers,
+                                code_occurence: crate::code_occurence_tufa_common!()
+                            }),
+                            crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::DeserializeBody { 
+                                serde,
+                                status_code,
+                                headers,
+                                response_text,
+                            } => Err(KekwRequestError::DeserializeResponse {
+                                serde,
+                                status_code,
+                                headers,
+                                response_text,
+                                code_occurence: crate::code_occurence_tufa_common!()
+                            }),
+                        },
+                    }, 
+                    Err(e) => Err(KekwRequestError::Reqwest {
+                        reqwest: e,
+                        code_occurence: crate::code_occurence_tufa_common!(),
+                    }),
+                }
+            }
         }
     };
     let enum_status_codes_checker_name_logic_token_stream_handle_token_stream = {
         quote::quote!{
-
+            pub enum KekwStatusCodesChecker {
+                ConfigurationTvfrr500InternalServerError,
+            }
         }
     };
     let axum_response_into_response_logic_token_stream_handle_token_stream = {
         quote::quote!{
-
+            impl axum::response::IntoResponse for #ident_response_variants_token_stream {
+                fn into_response(self) -> axum::response::Response {
+                    match &self {
+                        #ident_response_variants_token_stream::#desirable_token_stream(_) => {
+                            let mut res = axum::Json(self).into_response();
+                            *res.status_mut() = http::StatusCode::CREATED;
+                            res
+                        }
+                        #ident_response_variants_token_stream::Configuration {
+                            configuration_box_dyn_error: _,
+                            code_occurence: _,
+                        } => {
+                            let mut res = axum::Json(self).into_response();
+                            *res.status_mut() = http::StatusCode::INTERNAL_SERVER_ERROR;
+                            res
+                        }
+                    }
+                }
+            }
         }
     };
     quote::quote!{

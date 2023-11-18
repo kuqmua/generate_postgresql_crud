@@ -66,7 +66,6 @@ impl TypeVariantsFromRequestResponse for Configuration {
     }
     fn generated_status_code_enums_with_from_impls_logic_token_stream(&self) -> proc_macro2::TokenStream {
         quote::quote!{
-//
             #[derive(Debug, serde :: Serialize, serde :: Deserialize)]
             enum KekwResponseVariantsTvfrr201Created {
                 Desirable(std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>),
@@ -98,7 +97,6 @@ impl TypeVariantsFromRequestResponse for Configuration {
                     }
                 }
             }
-//
         }
     }
     fn try_from_response_logic_token_stream(&self) -> proc_macro2::TokenStream {
