@@ -6,6 +6,8 @@ fn type_variants_from_request_response_generator(
     desirable_token_stream: &proc_macro2::TokenStream,
     desirable_type_token_stream: &proc_macro2::TokenStream,//std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
     proc_macro_name_ident_stringified: &std::string::String,
+    code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
+    code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
     //
     type_variants_from_request_response: std::vec::Vec<impl crate::type_variants_from_request_response::TypeVariantsFromRequestResponse>,
     // attribute: proc_macro_helpers::attribute::Attribute,
@@ -64,7 +66,7 @@ fn type_variants_from_request_response_generator(
                 #desirable_token_stream(#desirable_type_token_stream),
                 // Configuration {
                 //     configuration_box_dyn_error: std::string::String,
-                //     code_occurence: crate::common::code_occurence::CodeOccurence,
+                //     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 // }
                 #(#enum_with_serialize_deserialize_logic_token_stream),*
             }
@@ -121,7 +123,7 @@ fn type_variants_from_request_response_generator(
             // enum KekwResponseVariantsTvfrr500InternalServerError {
             //     Configuration {
             //         configuration_box_dyn_error: std::string::String,
-            //         code_occurence: crate::common::code_occurence::CodeOccurence,
+            //         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
             //     },
             // }
             // impl std::convert::From<KekwResponseVariantsTvfrr500InternalServerError> for #ident_response_variants_token_stream {
@@ -209,7 +211,7 @@ fn type_variants_from_request_response_generator(
                 ExpectedType {
                     #[eo_display_with_serialize_deserialize]
                     expected_type: KekwWithSerializeDeserialize,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
+                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 UnexpectedStatusCode {
                     #[eo_display]
@@ -218,7 +220,7 @@ fn type_variants_from_request_response_generator(
                     headers: reqwest::header::HeaderMap,
                     #[eo_display_foreign_type]
                     response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
+                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 FailedToGetResponseText {
                     #[eo_display_foreign_type]
@@ -227,7 +229,7 @@ fn type_variants_from_request_response_generator(
                     status_code: http::StatusCode,
                     #[eo_display_foreign_type]
                     headers: reqwest::header::HeaderMap,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
+                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 DeserializeResponse {
                     #[eo_display]
@@ -238,12 +240,12 @@ fn type_variants_from_request_response_generator(
                     headers: reqwest::header::HeaderMap,
                     #[eo_display_with_serialize_deserialize]
                     response_text: std::string::String,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
+                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 Reqwest {
                     #[eo_display_foreign_type]
                     reqwest: reqwest::Error,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
+                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
             }
         }
@@ -266,7 +268,7 @@ fn type_variants_from_request_response_generator(
                             Ok(value) => Ok(value), 
                             Err(e) => Err(#ident_request_error_token_stream::ExpectedType {
                                 expected_type: e, 
-                                code_occurence: crate::code_occurence_tufa_common!(),
+                                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                             }),
                         },
                         Err(e) => match e {
@@ -278,7 +280,7 @@ fn type_variants_from_request_response_generator(
                                 status_code, 
                                 headers, 
                                 response_text_result, 
-                                code_occurence: crate::code_occurence_tufa_common!()
+                                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
                             }),
                             crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::FailedToGetResponseText { 
                                 reqwest,
@@ -288,7 +290,7 @@ fn type_variants_from_request_response_generator(
                                 reqwest,
                                 status_code,
                                 headers,
-                                code_occurence: crate::code_occurence_tufa_common!()
+                                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
                             }),
                             crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::DeserializeBody { 
                                 serde,
@@ -300,13 +302,13 @@ fn type_variants_from_request_response_generator(
                                 status_code,
                                 headers,
                                 response_text,
-                                code_occurence: crate::code_occurence_tufa_common!()
+                                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
                             }),
                         },
                     }, 
                     Err(e) => Err(#ident_request_error_token_stream::Reqwest {
                         reqwest: e,
-                        code_occurence: crate::code_occurence_tufa_common!(),
+                        #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                     }),
                 }
             }
