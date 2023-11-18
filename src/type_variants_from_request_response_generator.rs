@@ -29,7 +29,7 @@ fn type_variants_from_request_response_generator(
     };
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let type_variants_from_request_response_len = type_variants_from_request_response.len();
-    let ident_request_error_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_ident_request_error_token_stream(
+    let ident_request_error_camel_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_ident_request_error_camel_case_token_stream(
         &ident,
         &proc_macro_name_ident_stringified,
     );
@@ -218,7 +218,7 @@ fn type_variants_from_request_response_generator(
     let ident_request_error_logic_token_stream_handle_token_stream = {
         quote::quote!{
             #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
-            pub enum #ident_request_error_token_stream {
+            pub enum #ident_request_error_camel_case_token_stream {
                 ExpectedType {
                     #[eo_display_with_serialize_deserialize]
                     expected_type: #ident_with_serialize_deserialize_camel_case_token_stream,
@@ -271,13 +271,13 @@ fn type_variants_from_request_response_generator(
                 future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
             ) -> Result<
                 #desirable_type_token_stream,
-                #ident_request_error_token_stream,
+                #ident_request_error_camel_case_token_stream,
             > {
                 match future.await {
                     Ok(response) => match #try_from_response_lower_case_token_stream(response).await {
                         Ok(variants) => match std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>::try_from(variants){
                             Ok(value) => Ok(value), 
-                            Err(e) => Err(#ident_request_error_token_stream::ExpectedType {
+                            Err(e) => Err(#ident_request_error_camel_case_token_stream::ExpectedType {
                                 expected_type: e, 
                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                             }),
@@ -287,7 +287,7 @@ fn type_variants_from_request_response_generator(
                                 status_code, 
                                 headers, 
                                 response_text_result, 
-                            } => Err(#ident_request_error_token_stream::UnexpectedStatusCode {
+                            } => Err(#ident_request_error_camel_case_token_stream::UnexpectedStatusCode {
                                 status_code, 
                                 headers, 
                                 response_text_result, 
@@ -297,7 +297,7 @@ fn type_variants_from_request_response_generator(
                                 reqwest,
                                 status_code,
                                 headers 
-                            } => Err(#ident_request_error_token_stream::FailedToGetResponseText {
+                            } => Err(#ident_request_error_camel_case_token_stream::FailedToGetResponseText {
                                 reqwest,
                                 status_code,
                                 headers,
@@ -308,7 +308,7 @@ fn type_variants_from_request_response_generator(
                                 status_code,
                                 headers,
                                 response_text,
-                            } => Err(#ident_request_error_token_stream::DeserializeResponse {
+                            } => Err(#ident_request_error_camel_case_token_stream::DeserializeResponse {
                                 serde,
                                 status_code,
                                 headers,
@@ -317,7 +317,7 @@ fn type_variants_from_request_response_generator(
                             }),
                         },
                     }, 
-                    Err(e) => Err(#ident_request_error_token_stream::Reqwest {
+                    Err(e) => Err(#ident_request_error_camel_case_token_stream::Reqwest {
                         reqwest: e,
                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                     }),
