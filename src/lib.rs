@@ -5,6 +5,7 @@ mod from_log_and_return_error;
 mod generate_postgres_transaction;
 mod generate_postgres_execute_query;
 mod type_variants_from_request_response;
+mod type_variants_from_request_response_generator;
 
 // trait Something {
 //     fn something();
