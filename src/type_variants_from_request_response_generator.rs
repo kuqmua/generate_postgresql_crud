@@ -29,8 +29,12 @@ fn type_variants_from_request_response_generator(
     };
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let type_variants_from_request_response_len = type_variants_from_request_response.len();
-    let ident_request_error_token_stream = proc_macro_helpers::type_variants_from_request_response::ident_request_error_token_stream(
+    let ident_request_error_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_ident_request_error_token_stream(
         &ident,
+        &proc_macro_name_ident_stringified,
+    );
+    let try_from_response_lower_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_try_from_response_lower_case_token_stream(
+        &ident_lower_case_stringified,
         &proc_macro_name_ident_stringified,
     );
     let (
@@ -150,7 +154,7 @@ fn type_variants_from_request_response_generator(
     };
     let try_from_response_logic_token_stream_handle_token_stream = {
         quote::quote!{
-            async fn try_from_response_kekw(
+            async fn #try_from_response_lower_case_token_stream(
                 response: reqwest::Response,
             ) -> Result<
                 #ident_response_variants_token_stream,
@@ -270,7 +274,7 @@ fn type_variants_from_request_response_generator(
                 #ident_request_error_token_stream,
             > {
                 match future.await {
-                    Ok(response) => match try_from_response_kekw(response).await {
+                    Ok(response) => match #try_from_response_lower_case_token_stream(response).await {
                         Ok(variants) => match std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>::try_from(variants){
                             Ok(value) => Ok(value), 
                             Err(e) => Err(#ident_request_error_token_stream::ExpectedType {
