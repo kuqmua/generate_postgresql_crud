@@ -8,6 +8,7 @@ fn type_variants_from_request_response_generator(
     proc_macro_name_ident_stringified: &std::string::String,
     code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
     code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
+    with_serialize_deserialize_camel_case_stringified: &std::string::String,
     //
     type_variants_from_request_response: std::vec::Vec<impl crate::type_variants_from_request_response::TypeVariantsFromRequestResponse>,
     // attribute: proc_macro_helpers::attribute::Attribute,
@@ -20,6 +21,12 @@ fn type_variants_from_request_response_generator(
     // enum_status_codes_checker_name_logic_token_stream: proc_macro2::TokenStream,
     // axum_response_into_response_logic_token_stream: proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
+    let ident_with_serialize_deserialize_camel_case_token_stream = {
+        let ident_request_error_stringified = format!("{ident}{with_serialize_deserialize_camel_case_stringified}");
+        ident_request_error_stringified
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_request_error_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let type_variants_from_request_response_len = type_variants_from_request_response.len();
     let ident_request_error_token_stream = proc_macro_helpers::type_variants_from_request_response::ident_request_error_token_stream(
@@ -188,7 +195,7 @@ fn type_variants_from_request_response_generator(
     let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream_handle_token_stream = {
         quote::quote!{
             impl TryFrom<#ident_response_variants_token_stream> for #desirable_type_token_stream {
-                type Error = KekwWithSerializeDeserialize;
+                type Error = #ident_with_serialize_deserialize_camel_case_token_stream;
                 fn try_from(value: #ident_response_variants_token_stream) -> Result<Self, Self::Error> {
                     match value {
                         #ident_response_variants_token_stream::#desirable_token_stream(i) => Ok(i),
@@ -210,7 +217,7 @@ fn type_variants_from_request_response_generator(
             pub enum #ident_request_error_token_stream {
                 ExpectedType {
                     #[eo_display_with_serialize_deserialize]
-                    expected_type: KekwWithSerializeDeserialize,
+                    expected_type: #ident_with_serialize_deserialize_camel_case_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 UnexpectedStatusCode {
