@@ -2187,10 +2187,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream}");
         let try_create_many_error_with_middleware_error_variants_token_stream = {
-            let specific_error_variants_token_stream = quote::quote!{
-                #bind_query_variant_declaration_token_stream,
-                #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream,
-            };
             quote::quote!{
                 #[derive(
                     Debug,
@@ -2205,9 +2201,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #try_create_many_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    #postgres_error_variants_token_stream
                     #json_body_logic_error_variants_token_stream
-                    #specific_error_variants_token_stream
+                    #postgres_error_variants_token_stream
+                    #bind_query_variant_declaration_token_stream,
+                    #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream,
                     #unexpected_case_error_variant_token_stream
                 }
             }
@@ -2580,9 +2577,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_create_error_named_token_stream}");
         let try_create_one_error_with_middleware_error_variants_token_stream = {
-            let specific_error_variants_token_stream = quote::quote!{
-                #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream,
-            };
             quote::quote!{
                 #[derive(
                     Debug,
@@ -2599,7 +2593,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #common_middlewares_error_variants_token_stream
                     #postgres_error_variants_token_stream
                     #json_body_logic_error_variants_token_stream
-                    #specific_error_variants_token_stream
+                    #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream,
                     #unexpected_case_error_variant_token_stream
                 }
             }
@@ -2988,7 +2982,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_read_one_error_named_token_stream}");
         let try_read_one_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #failed_to_deserialize_query_string_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 #read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
@@ -3011,8 +3004,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #try_read_one_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    #postgres_error_variants_token_stream
                     #path_logic_error_variants_token_stream
+                    #postgres_error_variants_token_stream
+                    #failed_to_deserialize_query_string_variant_declaration_token_stream,
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
@@ -3441,11 +3435,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_read_many_with_body_error_named_token_stream}");
         let try_read_many_with_body_error_with_middleware_error_variants_token_stream = {
-            let specific_error_variants_token_stream = quote::quote!{
-                #not_unique_primary_key_variant_declaration_token_stream,
-                #not_unique_name_vec_variant_declaration_token_stream,
-                #not_unique_color_vec_variant_declaration_token_stream,
-                #bind_query_variant_declaration_token_stream,
+            let specific_error_variants_token_stream = quote::quote!{//todo reusage
                 #[tvfrr_400_bad_request]
                 #not_uuid_token_camel_case_stream {
                     #eo_display_attribute_token_stream
@@ -3474,8 +3464,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #try_read_many_with_body_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    #postgres_error_variants_token_stream
                     #json_body_logic_error_variants_token_stream
+                    #postgres_error_variants_token_stream
+                    #not_unique_primary_key_variant_declaration_token_stream,
+                    #not_unique_name_vec_variant_declaration_token_stream,
+                    #not_unique_color_vec_variant_declaration_token_stream,
+                    #bind_query_variant_declaration_token_stream,
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
@@ -4313,11 +4307,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_read_many_error_named_token_stream}");
         let try_read_many_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #not_unique_primary_key_variant_declaration_token_stream,
-                #not_unique_name_vec_need_to_refactor_variant_declaration_token_stream,
-                #not_unique_color_vec_need_to_refactor_variant_declaration_token_stream,
-                #failed_to_deserialize_query_string_variant_declaration_token_stream,
-                #bind_query_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 #read_many_query_try_from_read_many_query_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
@@ -4341,6 +4330,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub enum #try_read_many_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
                     #postgres_error_variants_token_stream
+                    #not_unique_primary_key_variant_declaration_token_stream,
+                    #not_unique_name_vec_need_to_refactor_variant_declaration_token_stream,
+                    #not_unique_color_vec_need_to_refactor_variant_declaration_token_stream,
+                    #failed_to_deserialize_query_string_variant_declaration_token_stream,
+                    #bind_query_variant_declaration_token_stream,
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                     //todo - no parameters case?
@@ -4993,8 +4987,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_update_one_error_named_token_stream}");
         let try_update_one_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #bind_query_variant_declaration_token_stream,
-                #no_payload_fields_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 #update_one_path_try_from_update_one_path_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
@@ -5017,9 +5009,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #try_update_one_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    #postgres_error_variants_token_stream
-                    #json_body_logic_error_variants_token_stream
                     #path_logic_error_variants_token_stream
+                    #json_body_logic_error_variants_token_stream
+                    #postgres_error_variants_token_stream
+                    #bind_query_variant_declaration_token_stream,
+                    #no_payload_fields_variant_declaration_token_stream,
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
@@ -5493,15 +5487,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_update_many_error_named_token_stream}");
         let try_update_many_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #not_unique_primary_key_variant_declaration_token_stream,
-                #bind_query_variant_declaration_token_stream,
-                #checked_add_variant_declaration_token_stream,
-                #no_payload_fields_variant_declaration_token_stream,
-                #commit_failed_variant_declaration_token_stream,
-                #non_existing_primary_keys_variant_declaration_token_stream,
-                #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
-                #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
-                #query_and_rollback_failed_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 #update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
@@ -5525,6 +5510,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #common_middlewares_error_variants_token_stream
                     #postgres_error_variants_token_stream
                     #json_body_logic_error_variants_token_stream
+                    #not_unique_primary_key_variant_declaration_token_stream,
+                    #bind_query_variant_declaration_token_stream,
+                    #checked_add_variant_declaration_token_stream,
+                    #no_payload_fields_variant_declaration_token_stream,
+                    #commit_failed_variant_declaration_token_stream,
+                    #non_existing_primary_keys_variant_declaration_token_stream,
+                    #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
+                    #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
+                    #query_and_rollback_failed_variant_declaration_token_stream,
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
@@ -6389,17 +6383,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_delete_many_with_body_error_named_token_stream}");
         let try_delete_many_with_body_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #not_unique_primary_key_variant_declaration_token_stream,
-                #not_unique_name_vec_variant_declaration_token_stream,
-                #not_unique_color_vec_variant_declaration_token_stream,
-                #bind_query_variant_declaration_token_stream,
-                #no_payload_fields_variant_declaration_token_stream,
-                #no_payload_parameters_variant_declaration_token_stream,
-                #non_existing_primary_keys_variant_declaration_token_stream,
-                #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
-                #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
-                #commit_failed_variant_declaration_token_stream,
-                #query_and_rollback_failed_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 #delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
@@ -6421,8 +6404,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )]
                 pub enum #try_delete_many_with_body_camel_case_token_stream {
                     #common_middlewares_error_variants_token_stream
-                    #postgres_error_variants_token_stream
                     #json_body_logic_error_variants_token_stream
+                    #postgres_error_variants_token_stream
+                    #not_unique_primary_key_variant_declaration_token_stream,
+                    #not_unique_name_vec_variant_declaration_token_stream,
+                    #not_unique_color_vec_variant_declaration_token_stream,
+                    #bind_query_variant_declaration_token_stream,
+                    #no_payload_fields_variant_declaration_token_stream,
+                    #no_payload_parameters_variant_declaration_token_stream,
+                    #non_existing_primary_keys_variant_declaration_token_stream,
+                    #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
+                    #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
+                    #commit_failed_variant_declaration_token_stream,
+                    #query_and_rollback_failed_variant_declaration_token_stream,
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
@@ -7160,16 +7154,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_delete_many_error_named_token_stream}");
         let try_delete_many_error_with_middleware_error_variants_token_stream = {
             let specific_error_variants_token_stream = quote::quote!{
-                #not_unique_primary_key_variant_declaration_token_stream,
-                #not_unique_name_vec_need_to_refactor_variant_declaration_token_stream,
-                #not_unique_color_vec_need_to_refactor_variant_declaration_token_stream,
-                #bind_query_variant_declaration_token_stream,
-                #no_query_parameters_variant_declaration_token_stream,
-                #commit_failed_variant_declaration_token_stream,
-                #non_existing_primary_keys_variant_declaration_token_stream,
-                #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
-                #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
-                #query_and_rollback_failed_variant_declaration_token_stream,
                 #[tvfrr_400_bad_request]
                 #delete_many_query_try_from_delete_many_query_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
@@ -7194,6 +7178,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #common_middlewares_error_variants_token_stream
                     #postgres_error_variants_token_stream
                     #failed_to_deserialize_query_string_variant_declaration_token_stream,
+                    #not_unique_primary_key_variant_declaration_token_stream,
+                    #not_unique_name_vec_need_to_refactor_variant_declaration_token_stream,
+                    #not_unique_color_vec_need_to_refactor_variant_declaration_token_stream,
+                    #bind_query_variant_declaration_token_stream,
+                    #no_query_parameters_variant_declaration_token_stream,
+                    #commit_failed_variant_declaration_token_stream,
+                    #non_existing_primary_keys_variant_declaration_token_stream,
+                    #primary_key_from_row_and_failed_rollback_variant_declaration_token_stream,
+                    #non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream,
+                    #query_and_rollback_failed_variant_declaration_token_stream,
                     #specific_error_variants_token_stream
                     #unexpected_case_error_variant_token_stream
                 }
