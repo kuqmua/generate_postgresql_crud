@@ -8,7 +8,7 @@ fn type_variants_from_request_response_generator(
     proc_macro_name_ident_stringified: &std::string::String,
     code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
     code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
-    with_serialize_deserialize_camel_case_stringified: &std::string::String,
+    ident_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
     error_named_derive_token_stream: &proc_macro2::TokenStream,
     eo_display_attribute_token_stream: &proc_macro2::TokenStream,
     eo_display_foreign_type_token_stream: &proc_macro2::TokenStream,
@@ -26,12 +26,6 @@ fn type_variants_from_request_response_generator(
     // enum_status_codes_checker_name_logic_token_stream: proc_macro2::TokenStream,
     // axum_response_into_response_logic_token_stream: proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
-    let ident_with_serialize_deserialize_camel_case_token_stream = {
-        let ident_request_error_stringified = format!("{ident}{with_serialize_deserialize_camel_case_stringified}");
-        ident_request_error_stringified
-        .parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_request_error_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let type_variants_from_request_response_len = type_variants_from_request_response.len();
     let ident_request_error_camel_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_ident_request_error_camel_case_token_stream(

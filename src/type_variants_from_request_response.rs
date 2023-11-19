@@ -196,8 +196,18 @@ impl TypeVariantsFromRequestResponse for Configuration {
     }
 }
 
+pub struct VariantField {
+    field_name: proc_macro2::TokenStream,
+    field_type: proc_macro2::TokenStream,
+}
+
 fn type_variants_from_request_response(
-    attribute: proc_macro_helpers::attribute::Attribute
+    ident_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,//KekwWithSerializeDeserialize
+    ident_response_variants_token_stream: &proc_macro2::TokenStream,//KekwResponseVariants
+    attribute: proc_macro_helpers::attribute::Attribute,
+    variant_ident: &proc_macro2::TokenStream,//Configuration
+    proc_macro_name_ident_stringified: &std::string::String,
+    fields: std::vec::Vec::<VariantField>,
 ) -> (
     proc_macro_helpers::attribute::Attribute,//attribute
     std::vec::Vec::<proc_macro2::TokenStream>,//enum_with_serialize_deserialize_logic_token_stream
@@ -209,33 +219,51 @@ fn type_variants_from_request_response(
     std::vec::Vec::<proc_macro2::TokenStream>,//enum_status_codes_checker_name_logic_token_stream
     std::vec::Vec::<proc_macro2::TokenStream>,//axum_response_into_response_logic_token_stream
 ) {
-    // fn attribute(&self) -> proc_macro_helpers::attribute::Attribute;
-    //
+    let variant_ident_attribute_camel_case_token_stream = {
+        let variant_ident_attribute_camel_case_stringified = format!("{variant_ident}{attribute}");
+        variant_ident_attribute_camel_case_stringified
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_attribute_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let http_status_code_quote_token_stream = attribute.to_http_status_code_quote();
+    let fields_name_mapped_into_token_stream = fields.iter().map(|element|{
+        let field_name_token_stream = &element.field_name;
+        quote::quote!{#field_name_token_stream}
+    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    let fields_anonymous_types_mapped_into_token_stream = fields.iter().map(|element|{
+        let field_name_token_stream = &element.field_name;
+        quote::quote!{#field_name_token_stream: _}
+    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    // let fields_type_mapped_into_token_stream = fields.iter().map(|element|{
+    //     let field_type_token_stream = &element.field_type;
+    //     quote::quote!{#field_type_token_stream}
+    // }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    let fields_mapped_into_token_stream = fields.iter().map(|element|{
+        let field_name_token_stream = &element.field_name;
+        let field_type_token_stream = &element.field_type;
+        quote::quote!{#field_name_token_stream: #field_type_token_stream}
+    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let enum_with_serialize_deserialize_logic_token_stream = {
         vec![quote::quote!{
-            Configuration {
-                configuration_box_dyn_error: std::string::String,
-                code_occurence: crate::common::code_occurence::CodeOccurence,
+            #variant_ident {
+                #(#fields_mapped_into_token_stream),*
             }
         }]
     };
     let from_logic_token_stream = {
         vec![quote::quote!{
-            KekwWithSerializeDeserialize::Configuration {
-                configuration_box_dyn_error,
-                code_occurence,
-            } => Self::Configuration {
-                configuration_box_dyn_error,
-                code_occurence,
+            #ident_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+                #(#fields_name_mapped_into_token_stream),*
+            } => Self::#variant_ident {
+                #(#fields_name_mapped_into_token_stream),*
             }
         }]
     };
     let impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream = {
         vec![quote::quote!{
-            KekwResponseVariants::Configuration {
-                configuration_box_dyn_error: _,
-                code_occurence: _,
-            } => http::StatusCode::INTERNAL_SERVER_ERROR
+            #ident_response_variants_token_stream::#variant_ident {
+                #(#fields_anonymous_types_mapped_into_token_stream),*
+            } => #http_status_code_quote_token_stream
         }]
     };
     let generated_status_code_enums_with_from_impls_logic_token_stream = {
@@ -309,30 +337,27 @@ fn type_variants_from_request_response(
     };
     let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream = {
         vec![quote::quote!{
-                // #ident_response_variants_token_stream::Configuration {
-                //     configuration_box_dyn_error,
-                //     code_occurence,
-                // } => Err(KekwWithSerializeDeserialize::Configuration {
-                //     configuration_box_dyn_error,
-                //     code_occurence,
-                // })
+                #ident_response_variants_token_stream::#variant_ident {
+                    #(#fields_name_mapped_into_token_stream),*
+                } => Err(#ident_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+                    #(#fields_name_mapped_into_token_stream),*
+                })
         }]
     };
     let enum_status_codes_checker_name_logic_token_stream = {
         vec![quote::quote!{
-            ConfigurationTvfrr500InternalServerError,
+            #variant_ident_attribute_camel_case_token_stream,
         }]
     };
     let axum_response_into_response_logic_token_stream = {
         vec![quote::quote!{
-            // #ident_response_variants_token_stream::Configuration {
-            //     configuration_box_dyn_error: _,
-            //     code_occurence: _,
-            // } => {
-            //     let mut res = axum::Json(self).into_response();
-            //     *res.status_mut() = http::StatusCode::INTERNAL_SERVER_ERROR;
-            //     res
-            // }
+            #ident_response_variants_token_stream::#variant_ident {
+                #(#fields_anonymous_types_mapped_into_token_stream),*
+            } => {
+                let mut res = axum::Json(self).into_response();
+                *res.status_mut() = #http_status_code_quote_token_stream;
+                res
+            }
         }]
     };
     (

@@ -137,6 +137,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let ident = &ast.ident;
     let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
     let proc_macro_name_ident_stringified = format!("{proc_macro_name} {ident}");
+    let with_serialize_deserialize_camel_case_stringified = "WithSerializeDeserialize";
+    let ident_with_serialize_deserialize_camel_case_token_stream = {
+        let ident_request_error_stringified = format!("{ident}{with_serialize_deserialize_camel_case_stringified}");
+        ident_request_error_stringified
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_request_error_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let table_name_stringified = pluralizer::pluralize(&ident_lower_case_stringified, 2, false);
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
         data_struct
@@ -1541,7 +1548,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let serde_json_to_string_token_stream = quote::quote!{serde_json::to_string};
     let into_url_encoding_version_name_token_stream = quote::quote!{into_url_encoding_version}; 
     let payload_element_camel_case_stringified = format!("{payload_camel_case_stringified}Element");
-    let with_serialize_deserialize_camel_case_stringified = "WithSerializeDeserialize";
     let payload_element_with_serialize_deserialize_camel_case_stringified = format!("{payload_element_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}");
     let response_variants_camel_case_stringified = "ResponseVariants";
     let tvfrr_extraction_logic_lower_case_stringified = "tvfrr_extraction_logic";
