@@ -438,7 +438,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let eo_error_occurence_attribute_token_stream = quote::quote!{#[eo_error_occurence]};
     let eo_display_attribute_token_stream = quote::quote!{#[eo_display]};
     let eo_display_with_serialize_deserialize_token_stream = quote::quote!{#[eo_display_with_serialize_deserialize]};
-    let eo_display_foreign_type_token_stream = quote::quote{#[eo_display_foreign_type]};
+    let eo_display_foreign_type_token_stream = quote::quote!{#[eo_display_foreign_type]};
     let eo_vec_error_occurence_token_stream = quote::quote!{#[eo_vec_error_occurence]};
     // let value_token_stream = quote::quote! {value};
     let impl_std_convert_try_from_ident_options_for_struct_variants_token_stream = {

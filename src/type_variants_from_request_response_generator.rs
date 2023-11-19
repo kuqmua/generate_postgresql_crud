@@ -13,6 +13,7 @@ fn type_variants_from_request_response_generator(
     eo_display_attribute_token_stream: &proc_macro2::TokenStream,
     eo_display_foreign_type_token_stream: &proc_macro2::TokenStream,
     eo_display_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
+    derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     //
     type_variants_from_request_response: std::vec::Vec<impl crate::type_variants_from_request_response::TypeVariantsFromRequestResponse>,
     // attribute: proc_macro_helpers::attribute::Attribute,
@@ -42,6 +43,13 @@ fn type_variants_from_request_response_generator(
         &proc_macro_name_ident_stringified,
     );
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream = quote::quote!{crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
+    let crate_common_api_request_unexpected_error_response_text_result_token_stream = quote::quote!{crate::common::api_request_unexpected_error::ResponseTextResult};
+    let ident_response_variants_desirable_attribute_token_stream = {
+        let ident_response_variants_desirable_attribute_stringified = format!("{ident}ResponseVariants{desirable_attribute}");
+        ident_response_variants_desirable_attribute_stringified
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_desirable_attribute_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let (
         attributes,
         enum_with_serialize_deserialize_logic_token_stream,
@@ -77,7 +85,7 @@ fn type_variants_from_request_response_generator(
     });
     let enum_with_serialize_deserialize_logic_token_stream_handle_token_stream = {
         quote::quote!{
-            #[derive(Debug, serde::Serialize, serde::Deserialize)]
+            #derive_debug_serialize_deserialize_token_stream
             pub enum #ident_response_variants_token_stream {
                 #desirable_token_stream(#desirable_type_token_stream),
                 // Configuration {
@@ -124,14 +132,14 @@ fn type_variants_from_request_response_generator(
     };
     let generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream = {
         quote::quote!{
-            #[derive(Debug, serde::Serialize, serde::Deserialize)]
-            enum KekwResponseVariantsTvfrr201Created {
+            #derive_debug_serialize_deserialize_token_stream
+            enum #ident_response_variants_desirable_attribute_token_stream {
                 #desirable_token_stream(#desirable_type_token_stream),
             }
-            impl std::convert::From<KekwResponseVariantsTvfrr201Created> for #ident_response_variants_token_stream {
-                fn from(value: KekwResponseVariantsTvfrr201Created) -> Self {
+            impl std::convert::From<#ident_response_variants_desirable_attribute_token_stream> for #ident_response_variants_token_stream {
+                fn from(value: #ident_response_variants_desirable_attribute_token_stream) -> Self {
                     match value {
-                        KekwResponseVariantsTvfrr201Created::#desirable_token_stream(i) => Self::#desirable_token_stream(i),
+                        #ident_response_variants_desirable_attribute_token_stream::#desirable_token_stream(i) => Self::#desirable_token_stream(i),
                     }
                 }   
             }
@@ -169,7 +177,7 @@ fn type_variants_from_request_response_generator(
                 let headers = response.headers().clone();
                 if status_code == #http_status_code_quote_token_stream {
                     match response.text().await {
-                        Ok(response_text) => match serde_json::from_str::<KekwResponseVariantsTvfrr201Created>(&response_text) {
+                        Ok(response_text) => match serde_json::from_str::<#ident_response_variants_desirable_attribute_token_stream>(&response_text) {
                             Ok(value) => Ok(#ident_response_variants_token_stream::from(value)), 
                             Err(e) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::DeserializeBody { 
                                 serde: e, 
@@ -189,12 +197,12 @@ fn type_variants_from_request_response_generator(
                         Ok(response_text) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::StatusCode {
                             status_code,
                             headers,
-                            response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult::ResponseText(response_text)
+                            response_text_result: #crate_common_api_request_unexpected_error_response_text_result_token_stream::ResponseText(response_text)
                         }), 
                         Err(e) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::StatusCode {
                             status_code, 
                             headers, 
-                            response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult::ReqwestError(e),
+                            response_text_result: #crate_common_api_request_unexpected_error_response_text_result_token_stream::ReqwestError(e),
                         }),
                     }
                 }
@@ -235,7 +243,7 @@ fn type_variants_from_request_response_generator(
                     #eo_display_foreign_type_token_stream
                     headers: reqwest::header::HeaderMap,
                     #eo_display_foreign_type_token_stream
-                    response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult,
+                    response_text_result: #crate_common_api_request_unexpected_error_response_text_result_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 FailedToGetResponseText {
