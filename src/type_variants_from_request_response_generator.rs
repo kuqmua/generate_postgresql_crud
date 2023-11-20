@@ -9,7 +9,8 @@ fn type_variants_from_request_response_generator(
     code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
     code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
     with_serialize_deserialize_camel_case_stringified: &std::string::String,
-    error_named_derive_token_stream: &proc_macro2::TokenStream
+    error_named_derive_token_stream: &proc_macro2::TokenStream,
+    eo_display_attribute_token_stream: &proc_macro2::TokenStream,
     //
     type_variants_from_request_response: std::vec::Vec<impl crate::type_variants_from_request_response::TypeVariantsFromRequestResponse>,
     // attribute: proc_macro_helpers::attribute::Attribute,
@@ -226,7 +227,7 @@ fn type_variants_from_request_response_generator(
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 UnexpectedStatusCode {
-                    #[eo_display]
+                    #eo_display_attribute_token_stream
                     status_code: http::StatusCode,
                     #[eo_display_foreign_type]
                     headers: reqwest::header::HeaderMap,
@@ -237,16 +238,16 @@ fn type_variants_from_request_response_generator(
                 FailedToGetResponseText {
                     #[eo_display_foreign_type]
                     reqwest: reqwest::Error,
-                    #[eo_display]
+                    #eo_display_attribute_token_stream
                     status_code: http::StatusCode,
                     #[eo_display_foreign_type]
                     headers: reqwest::header::HeaderMap,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 DeserializeResponse {
-                    #[eo_display]
+                    #eo_display_attribute_token_stream
                     serde: serde_json::Error,
-                    #[eo_display]
+                    #eo_display_attribute_token_stream
                     status_code: http::StatusCode,
                     #[eo_display_foreign_type]
                     headers: reqwest::header::HeaderMap,
