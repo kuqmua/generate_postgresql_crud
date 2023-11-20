@@ -41,6 +41,7 @@ fn type_variants_from_request_response_generator(
         &ident_lower_case_stringified,
         &proc_macro_name_ident_stringified,
     );
+    let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream = quote::quote!{crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
     let (
         attributes,
         enum_with_serialize_deserialize_logic_token_stream,
@@ -162,7 +163,7 @@ fn type_variants_from_request_response_generator(
                 response: reqwest::Response,
             ) -> Result<
                 #ident_response_variants_token_stream,
-                crate::common::api_request_unexpected_error::ApiRequestUnexpectedError,
+                #crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream,
             > {
                 let status_code = response.status();
                 let headers = response.headers().clone();
@@ -170,14 +171,14 @@ fn type_variants_from_request_response_generator(
                     match response.text().await {
                         Ok(response_text) => match serde_json::from_str::<KekwResponseVariantsTvfrr201Created>(&response_text) {
                             Ok(value) => Ok(#ident_response_variants_token_stream::from(value)), 
-                            Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::DeserializeBody { 
+                            Err(e) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::DeserializeBody { 
                                 serde: e, 
                                 status_code, 
                                 headers, 
                                 response_text 
                             }),
                         }, 
-                        Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::FailedToGetResponseText { 
+                        Err(e) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::FailedToGetResponseText { 
                             reqwest: e,
                             status_code,
                             headers,
@@ -185,12 +186,12 @@ fn type_variants_from_request_response_generator(
                     }
                 } else {
                     match response.text().await {
-                        Ok(response_text) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::StatusCode {
+                        Ok(response_text) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::StatusCode {
                             status_code,
                             headers,
                             response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult::ResponseText(response_text)
                         }), 
-                        Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::StatusCode {
+                        Err(e) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::StatusCode {
                             status_code, 
                             headers, 
                             response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult::ReqwestError(e),
@@ -270,7 +271,6 @@ fn type_variants_from_request_response_generator(
             &ident_lower_case_stringified,
             &proc_macro_name_ident_stringified,
         );
-        let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream = quote::quote!{crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
         quote::quote!{
             async fn #tvfrr_extraction_logic_lower_case_token_stream<'a>(
                 future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
