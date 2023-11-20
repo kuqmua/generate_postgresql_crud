@@ -12,6 +12,7 @@ fn type_variants_from_request_response_generator(
     error_named_derive_token_stream: &proc_macro2::TokenStream,
     eo_display_attribute_token_stream: &proc_macro2::TokenStream,
     eo_display_foreign_type_token_stream: &proc_macro2::TokenStream,
+    eo_display_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     //
     type_variants_from_request_response: std::vec::Vec<impl crate::type_variants_from_request_response::TypeVariantsFromRequestResponse>,
     // attribute: proc_macro_helpers::attribute::Attribute,
@@ -223,7 +224,7 @@ fn type_variants_from_request_response_generator(
             #error_named_derive_token_stream
             pub enum #ident_request_error_camel_case_token_stream {
                 ExpectedType {
-                    #[eo_display_with_serialize_deserialize]
+                    #eo_display_with_serialize_deserialize_token_stream
                     expected_type: #ident_with_serialize_deserialize_camel_case_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
@@ -252,7 +253,7 @@ fn type_variants_from_request_response_generator(
                     status_code: http::StatusCode,
                     #eo_display_foreign_type_token_stream
                     headers: reqwest::header::HeaderMap,
-                    #[eo_display_with_serialize_deserialize]
+                    #eo_display_with_serialize_deserialize_token_stream
                     response_text: std::string::String,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
