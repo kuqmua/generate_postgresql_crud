@@ -266,6 +266,7 @@ fn type_variants_from_request_response_generator(
             &ident_lower_case_stringified,
             &proc_macro_name_ident_stringified,
         );
+        let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream = quote::quote!{crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
         quote::quote!{
             async fn #tvfrr_extraction_logic_lower_case_token_stream<'a>(
                 future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
@@ -283,7 +284,7 @@ fn type_variants_from_request_response_generator(
                             }),
                         },
                         Err(e) => match e {
-                            crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::StatusCode { 
+                            #crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::StatusCode { 
                                 status_code, 
                                 headers, 
                                 response_text_result, 
@@ -293,7 +294,7 @@ fn type_variants_from_request_response_generator(
                                 response_text_result, 
                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
                             }),
-                            crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::FailedToGetResponseText { 
+                            #crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::FailedToGetResponseText { 
                                 reqwest,
                                 status_code,
                                 headers 
@@ -303,7 +304,7 @@ fn type_variants_from_request_response_generator(
                                 headers,
                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
                             }),
-                            crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::DeserializeBody { 
+                            #crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::DeserializeBody { 
                                 serde,
                                 status_code,
                                 headers,
