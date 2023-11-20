@@ -276,7 +276,7 @@ fn type_variants_from_request_response_generator(
             > {
                 match future.await {
                     Ok(response) => match #try_from_response_lower_case_token_stream(response).await {
-                        Ok(variants) => match std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>::try_from(variants){
+                        Ok(variants) => match #desirable_type_token_stream::try_from(variants){
                             Ok(value) => Ok(value), 
                             Err(e) => Err(#ident_request_error_camel_case_token_stream::ExpectedType {
                                 expected_type: e, 
