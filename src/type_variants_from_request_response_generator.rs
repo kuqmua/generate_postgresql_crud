@@ -166,7 +166,7 @@ fn type_variants_from_request_response_generator(
             > {
                 let status_code = response.status();
                 let headers = response.headers().clone();
-                if status_code == http::StatusCode::CREATED {
+                if status_code == #http_status_code_quote_token_stream {
                     match response.text().await {
                         Ok(response_text) => match serde_json::from_str::<KekwResponseVariantsTvfrr201Created>(&response_text) {
                             Ok(value) => Ok(#ident_response_variants_token_stream::from(value)), 
