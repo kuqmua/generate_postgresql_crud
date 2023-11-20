@@ -9,6 +9,7 @@ fn type_variants_from_request_response_generator(
     code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
     code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
     with_serialize_deserialize_camel_case_stringified: &std::string::String,
+    error_named_derive_token_stream: &proc_macro2::TokenStream
     //
     type_variants_from_request_response: std::vec::Vec<impl crate::type_variants_from_request_response::TypeVariantsFromRequestResponse>,
     // attribute: proc_macro_helpers::attribute::Attribute,
@@ -217,7 +218,7 @@ fn type_variants_from_request_response_generator(
     };
     let ident_request_error_logic_token_stream_handle_token_stream = {
         quote::quote!{
-            #[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]
+            #error_named_derive_token_stream
             pub enum #ident_request_error_camel_case_token_stream {
                 ExpectedType {
                     #[eo_display_with_serialize_deserialize]
