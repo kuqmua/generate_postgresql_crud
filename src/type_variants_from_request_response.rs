@@ -6,9 +6,6 @@ pub trait TypeVariantsFromRequestResponse {
     fn impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream(
         &self,
     ) -> proc_macro2::TokenStream;
-    fn generated_status_code_enums_with_from_impls_logic_token_stream(
-        &self,
-    ) -> proc_macro2::TokenStream;
     fn try_from_response_logic_token_stream(&self) -> proc_macro2::TokenStream;
     fn impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream(
         &self,
@@ -65,43 +62,6 @@ impl TypeVariantsFromRequestResponse for Configuration {
                             configuration_box_dyn_error: _,
                             code_occurence: _,
                         } => http::StatusCode::INTERNAL_SERVER_ERROR,
-                    }
-                }
-            }
-        }
-    }
-    fn generated_status_code_enums_with_from_impls_logic_token_stream(
-        &self,
-    ) -> proc_macro2::TokenStream {
-        quote::quote! {
-            #[derive(Debug, serde :: Serialize, serde :: Deserialize)]
-            enum KekwResponseVariantsTvfrr201Created {
-                Desirable(std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>),
-            }
-            impl std::convert::From<KekwResponseVariantsTvfrr201Created> for KekwResponseVariants {
-                fn from(value: KekwResponseVariantsTvfrr201Created) -> Self {
-                    match value {
-                        KekwResponseVariantsTvfrr201Created::Desirable(i) => Self::Desirable(i),
-                    }
-                }
-            }
-            #[derive(Debug, serde :: Serialize, serde :: Deserialize)]
-            enum KekwResponseVariantsTvfrr500InternalServerError {
-                Configuration {
-                    configuration_box_dyn_error: std::string::String,
-                    code_occurence: crate::common::code_occurence::CodeOccurence,
-                },
-            }
-            impl std::convert::From<KekwResponseVariantsTvfrr500InternalServerError> for KekwResponseVariants {
-                fn from(value: KekwResponseVariantsTvfrr500InternalServerError) -> Self {
-                    match value {
-                        KekwResponseVariantsTvfrr500InternalServerError::Configuration {
-                            configuration_box_dyn_error,
-                            code_occurence,
-                        } => Self::Configuration {
-                            configuration_box_dyn_error,
-                            code_occurence,
-                        },
                     }
                 }
             }
@@ -225,7 +185,6 @@ fn type_variants_from_request_response(
     std::vec::Vec<proc_macro2::TokenStream>,  //enum_with_serialize_deserialize_logic_token_stream
     std::vec::Vec<proc_macro2::TokenStream>,  //from_logic_token_stream
     std::vec::Vec<proc_macro2::TokenStream>, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
-    std::vec::Vec<proc_macro2::TokenStream>, //generated_status_code_enums_with_from_impls_logic_token_stream
     std::vec::Vec<proc_macro2::TokenStream>, //try_from_response_logic_token_stream
     std::vec::Vec<proc_macro2::TokenStream>, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
     std::vec::Vec<proc_macro2::TokenStream>, //enum_status_codes_checker_name_logic_token_stream
@@ -285,30 +244,6 @@ fn type_variants_from_request_response(
             #ident_response_variants_token_stream::#variant_ident {
                 #(#fields_anonymous_types_mapped_into_token_stream),*
             } => #http_status_code_quote_token_stream
-        }]
-    };
-    let generated_status_code_enums_with_from_impls_logic_token_stream = {
-        vec![quote::quote! {
-            // #[derive(Debug, serde::Serialize, serde::Deserialize)]
-            // enum KekwResponseVariantsTvfrr500InternalServerError {
-            //     Configuration {
-            //         configuration_box_dyn_error: std::string::String,
-            //         code_occurence: crate::common::code_occurence::CodeOccurence,
-            //     },
-            // }
-            // impl std::convert::From<KekwResponseVariantsTvfrr500InternalServerError> for KekwResponseVariants {
-            //     fn from(value: KekwResponseVariantsTvfrr500InternalServerError) -> Self {
-            //         match value {
-            //             KekwResponseVariantsTvfrr500InternalServerError::Configuration {
-            //                 configuration_box_dyn_error,
-            //                 code_occurence,
-            //             } => Self::Configuration {
-            //                 configuration_box_dyn_error,
-            //                 code_occurence,
-            //             },
-            //         }
-            //     }
-            // }
         }]
     };
     let try_from_response_logic_token_stream = {
@@ -387,7 +322,6 @@ fn type_variants_from_request_response(
         enum_with_serialize_deserialize_logic_token_stream,
         from_logic_token_stream,
         impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-        generated_status_code_enums_with_from_impls_logic_token_stream,
         try_from_response_logic_token_stream,
         impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
         enum_status_codes_checker_name_logic_token_stream,
