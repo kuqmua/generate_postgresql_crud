@@ -269,6 +269,111 @@ fn generate_try_from_response_logic_token_stream(
     //     .parse::<proc_macro2::TokenStream>()
     //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_attribute_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     // };
+    //
+    let status_code_enums_try_from = {
+        let mut is_last_element_found = false;
+        let desirable_status_code_case_token_stream = match response_without_body {
+            true => quote::quote! {
+                Ok(#ident_response_variants_token_stream::#desirable_name_token_stream(()))
+            },
+            false => quote::quote! {
+                match response.text().await {
+                    Ok(response_text) => match serde_json::from_str::<#desirable_enum_name>(&response_text){
+                        Ok(value) => Ok(#ident_response_variants_token_stream::from(value)), 
+                        Err(e) => Err(
+                            #api_request_unexpected_error_path_token_stream::DeserializeBody{ 
+                                serde: e,
+                                status_code,
+                                headers,response_text
+                            }
+                        ),
+                    },
+                    Err(e) => Err(
+                        #api_request_unexpected_error_path_token_stream::FailedToGetResponseText {
+                            reqwest: e,
+                            status_code,
+                            headers,
+                        }
+                    ),
+                }
+            },
+        };
+        let mut status_code_enums_try_from_variants = Vec::with_capacity(unique_status_codes_len + 1);
+        status_code_enums_try_from_variants.push(quote::quote! {
+            if status_code == #desirable_status_code_token_stream {
+                #desirable_status_code_case_token_stream
+            }
+        });
+        unique_status_codes
+        .into_iter()
+        .enumerate()
+        .for_each(
+            |(index, status_code_attribute)| 
+        {
+            let status_code_enum_name_stringified = format!("{ident_response_variants_token_stream}{status_code_attribute}");
+            let status_code_enum_name_token_stream = status_code_enum_name_stringified
+                .parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {status_code_enum_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+            let http_status_code_token_stream = status_code_attribute.to_http_status_code_quote();
+            match index == unique_status_codes_len_minus_one{
+                true => {
+                    is_last_element_found = true;
+                    status_code_enums_try_from_variants.push(quote::quote! {
+                        else {
+                            match response.text().await {
+                                Ok(response_text) => Err(
+                                    #api_request_unexpected_error_path_token_stream::StatusCode {
+                                        status_code,
+                                        headers,
+                                        response_text_result: #api_request_unexpected_error_module_path_token_stream::ResponseTextResult::ResponseText(response_text)
+                                    },
+                                ),
+                                Err(e) => Err(
+                                    #api_request_unexpected_error_path_token_stream::StatusCode {
+                                        status_code,
+                                        headers,
+                                        response_text_result: #api_request_unexpected_error_module_path_token_stream::ResponseTextResult::ReqwestError(e),
+                                    },
+                                ),
+                            }
+                        }
+                    });
+                },
+                false => {
+                    if let false = desirable_attribute == status_code_attribute {
+                        status_code_enums_try_from_variants.push(quote::quote! {
+                            else if status_code == #http_status_code_token_stream {
+                                match response.text().await {
+                                    Ok(response_text) => match serde_json::from_str::<#status_code_enum_name_token_stream>(&response_text){
+                                        Ok(value) => Ok(#ident_response_variants_token_stream::from(value)), 
+                                        Err(e) => Err(
+                                            #api_request_unexpected_error_path_token_stream::DeserializeBody{ 
+                                                serde: e,
+                                                status_code,
+                                                headers,response_text
+                                            }
+                                        ),
+                                    },
+                                    Err(e) => Err(
+                                        #api_request_unexpected_error_path_token_stream::FailedToGetResponseText {
+                                            reqwest: e,
+                                            status_code,
+                                            headers,
+                                        }
+                                    ),
+                                }
+                            }
+                        });
+                    }
+                },
+            }
+        });
+        if let false = is_last_element_found {
+            panic!("{proc_macro_name_ident_stringified} false = is_last_element_found");
+        }
+        status_code_enums_try_from_variants
+    };
+    //
     quote::quote! {
         async fn try_from_response_kekw(
             response: reqwest::Response,
