@@ -161,7 +161,7 @@ fn type_variants_from_request_response(
 
 pub struct ErrorVariantAttribute {
     error_variant_attribute: proc_macro_helpers::attribute::Attribute,
-    error_variant: ErrorVariant
+    error_variant: ErrorVariant,
 }
 
 pub struct ErrorVariant {
@@ -170,7 +170,7 @@ pub struct ErrorVariant {
 }
 
 fn generate_status_code_enums_with_from_impls_logic_token_stream(
-    derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,//#[derive(Debug, serde::Serialize, serde::Deserialize)]
+    derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream, //#[derive(Debug, serde::Serialize, serde::Deserialize)]
     ident_response_variants_stringified: &std::string::String,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
     vec_status_codes: std::vec::Vec<ErrorVariantAttribute>,
@@ -242,5 +242,50 @@ fn generate_status_code_enums_with_from_impls_logic_token_stream(
     });
     quote::quote! {
         #(#status_code_enums_with_from_impls_logic_token_stream)*
+    }
+}
+
+fn generate_try_from_response_logic_token_stream() -> proc_macro2::TokenStream {
+    quote::quote! {
+        // async fn try_from_response_kekw(
+        //     response: reqwest::Response,
+        // ) -> Result<
+        //     #ident_response_variants_token_stream,
+        //     crate::common::api_request_unexpected_error::ApiRequestUnexpectedError,
+        // > {
+        //     let status_code = response.status();
+        //     let headers = response.headers().clone();
+        //     if status_code == http::StatusCode::CREATED {
+        //         match response.text().await {
+        //             Ok(response_text) => match serde_json::from_str::<KekwResponseVariantsTvfrr201Created>(&response_text) {
+        //                 Ok(value) => Ok(#ident_response_variants_token_stream::from(value)),
+        //                 Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::DeserializeBody {
+        //                     serde: e,
+        //                     status_code,
+        //                     headers,
+        //                     response_text
+        //                 }),
+        //             },
+        //             Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::FailedToGetResponseText {
+        //                 reqwest: e,
+        //                 status_code,
+        //                 headers,
+        //             }),
+        //         }
+        //     } else {
+        //         match response.text().await {
+        //             Ok(response_text) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::StatusCode {
+        //                 status_code,
+        //                 headers,
+        //                 response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult::ResponseText(response_text)
+        //             }),
+        //             Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::StatusCode {
+        //                 status_code,
+        //                 headers,
+        //                 response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult::ReqwestError(e),
+        //             }),
+        //         }
+        //     }
+        // }
     }
 }
