@@ -3,6 +3,16 @@ pub struct ErrorVariantField {
     field_type: proc_macro2::TokenStream,
 }
 
+pub struct ErrorVariantAttribute {
+    error_variant_attribute: proc_macro_helpers::attribute::Attribute,
+    error_variant: ErrorVariant,
+}
+
+pub struct ErrorVariant {
+    error_variant_ident: proc_macro2::TokenStream,
+    error_variant_fields: std::vec::Vec<ErrorVariantField>,
+}
+
 fn type_variants_from_request_response(
     ident_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
     ident_response_variants_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
@@ -15,7 +25,6 @@ fn type_variants_from_request_response(
     std::vec::Vec<proc_macro2::TokenStream>,  //enum_with_serialize_deserialize_logic_token_stream
     std::vec::Vec<proc_macro2::TokenStream>,  //from_logic_token_stream
     std::vec::Vec<proc_macro2::TokenStream>, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
-    std::vec::Vec<proc_macro2::TokenStream>, //try_from_response_logic_token_stream
     std::vec::Vec<proc_macro2::TokenStream>, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
     std::vec::Vec<proc_macro2::TokenStream>, //enum_status_codes_checker_name_logic_token_stream
     std::vec::Vec<proc_macro2::TokenStream>, //axum_response_into_response_logic_token_stream
@@ -41,10 +50,6 @@ fn type_variants_from_request_response(
             quote::quote! {#field_name_token_stream: _}
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-    // let fields_type_mapped_into_token_stream = fields.iter().map(|element|{
-    //     let field_type_token_stream = &element.field_type;
-    //     quote::quote!{#field_type_token_stream}
-    // }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let fields_mapped_into_token_stream = fields
         .iter()
         .map(|element| {
@@ -76,51 +81,6 @@ fn type_variants_from_request_response(
             } => #http_status_code_quote_token_stream
         }]
     };
-    let try_from_response_logic_token_stream = {
-        //todo else if for each different status code
-        vec![quote::quote! {
-            // async fn try_from_response_kekw(
-            //     response: reqwest::Response,
-            // ) -> Result<
-            //     #ident_response_variants_token_stream,
-            //     crate::common::api_request_unexpected_error::ApiRequestUnexpectedError,
-            // > {
-            //     let status_code = response.status();
-            //     let headers = response.headers().clone();
-            //     if status_code == http::StatusCode::CREATED {
-            //         match response.text().await {
-            //             Ok(response_text) => match serde_json::from_str::<KekwResponseVariantsTvfrr201Created>(&response_text) {
-            //                 Ok(value) => Ok(#ident_response_variants_token_stream::from(value)),
-            //                 Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::DeserializeBody {
-            //                     serde: e,
-            //                     status_code,
-            //                     headers,
-            //                     response_text
-            //                 }),
-            //             },
-            //             Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::FailedToGetResponseText {
-            //                 reqwest: e,
-            //                 status_code,
-            //                 headers,
-            //             }),
-            //         }
-            //     } else {
-            //         match response.text().await {
-            //             Ok(response_text) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::StatusCode {
-            //                 status_code,
-            //                 headers,
-            //                 response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult::ResponseText(response_text)
-            //             }),
-            //             Err(e) => Err(crate::common::api_request_unexpected_error::ApiRequestUnexpectedError::StatusCode {
-            //                 status_code,
-            //                 headers,
-            //                 response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult::ReqwestError(e),
-            //             }),
-            //         }
-            //     }
-            // }
-        }]
-    };
     let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream = {
         vec![quote::quote! {
                 #ident_response_variants_token_stream::#variant_ident {
@@ -148,25 +108,13 @@ fn type_variants_from_request_response(
     };
     (
         attribute,
-        //
         enum_with_serialize_deserialize_logic_token_stream,
         from_logic_token_stream,
         impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-        try_from_response_logic_token_stream,
         impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
         enum_status_codes_checker_name_logic_token_stream,
         axum_response_into_response_logic_token_stream,
     )
-}
-
-pub struct ErrorVariantAttribute {
-    error_variant_attribute: proc_macro_helpers::attribute::Attribute,
-    error_variant: ErrorVariant,
-}
-
-pub struct ErrorVariant {
-    error_variant_ident: proc_macro2::TokenStream,
-    error_variant_fields: std::vec::Vec<ErrorVariantField>,
 }
 
 fn generate_status_code_enums_with_from_impls_logic_token_stream(
