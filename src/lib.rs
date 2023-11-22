@@ -42,7 +42,7 @@ mod type_variants_from_request_response_generator;
 
 
 
-
+//todo generate for each create update delete body length checked and for path query headers too
 //todo how to write filter logic for sqlx rust postgresql types?
 //todo decide where to do error log (maybe add in some places)
 //todo rename ForUrlEncoding prefix
