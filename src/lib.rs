@@ -2173,38 +2173,39 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let try_create_many_error_with_middleware_error_variants_token_stream = {
             let type_variants_from_reqwest_response_token_stream = {
                 //
-    let f = {
-        crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-            desirable_attribute,//: proc_macro_helpers::attribute::Attribute,
-            &ident,//: &syn::Ident,
-            &ident_lower_case_stringified,//: &std::string::String,
-            &ident_response_variants_token_stream,//: &proc_macro2::TokenStream, //KekwResponseVariants
-            &desirable_token_stream,//: &proc_macro2::TokenStream,
-            &desirable_type_token_stream,//: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
-            &proc_macro_name_ident_stringified,//: &std::string::String,
-            &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,//: &proc_macro2::TokenStream,
-            &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,//: &proc_macro2::TokenStream,
-            &ident_with_serialize_deserialize_camel_case_token_stream,//: &proc_macro2::TokenStream,
-            &error_named_derive_token_stream,//: &proc_macro2::TokenStream,
-            &eo_display_attribute_token_stream,//: &proc_macro2::TokenStream,
-            &eo_display_foreign_type_token_stream,//: &proc_macro2::TokenStream,
-            &eo_display_with_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
-            &derive_debug_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
-            //
-            &type_variants_from_request_response,//
-            // : std::vec::Vec<(
-            //     proc_macro_helpers::attribute::Attribute, //attribute
-            //     std::vec::Vec<proc_macro2::TokenStream>, //enum_with_serialize_deserialize_logic_token_stream
-            //     std::vec::Vec<proc_macro2::TokenStream>, //from_logic_token_stream
-            //     std::vec::Vec<proc_macro2::TokenStream>, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
-            //     std::vec::Vec<proc_macro2::TokenStream>, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
-            //     std::vec::Vec<proc_macro2::TokenStream>, //enum_status_codes_checker_name_logic_token_stream
-            //     std::vec::Vec<proc_macro2::TokenStream>, //axum_response_into_response_logic_token_stream
-            // )>,
-            &generated_status_code_enums_with_from_impls_logic_token_stream,//: &proc_macro2::TokenStream,
-            &try_from_response_logic_token_stream_token_stream,//: &proc_macro2::TokenStream,
-        )
-    };
+                let f = {
+                    let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest;
+                    crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
+                        desirable_attribute,//: proc_macro_helpers::attribute::Attribute,
+                        &ident,//: &syn::Ident,
+                        &ident_lower_case_stringified,//: &std::string::String,
+                        &ident_response_variants_token_stream,//: &proc_macro2::TokenStream, //KekwResponseVariants
+                        &desirable_token_stream,//: &proc_macro2::TokenStream,
+                        &desirable_type_token_stream,//: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
+                        &proc_macro_name_ident_stringified,//: &std::string::String,
+                        &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,//: &proc_macro2::TokenStream,
+                        &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,//: &proc_macro2::TokenStream,
+                        &ident_with_serialize_deserialize_camel_case_token_stream,//: &proc_macro2::TokenStream,
+                        &error_named_derive_token_stream,//: &proc_macro2::TokenStream,
+                        &eo_display_attribute_token_stream,//: &proc_macro2::TokenStream,
+                        &eo_display_foreign_type_token_stream,//: &proc_macro2::TokenStream,
+                        &eo_display_with_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
+                        &derive_debug_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
+                        //
+                        &type_variants_from_request_response,//
+                        // : std::vec::Vec<(
+                        //     proc_macro_helpers::attribute::Attribute, //attribute
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //enum_with_serialize_deserialize_logic_token_stream
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //from_logic_token_stream
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //enum_status_codes_checker_name_logic_token_stream
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //axum_response_into_response_logic_token_stream
+                        // )>,
+                        &generated_status_code_enums_with_from_impls_logic_token_stream,//: &proc_macro2::TokenStream,
+                        &try_from_response_logic_token_stream_token_stream,//: &proc_macro2::TokenStream,
+                    )
+                };
                 //
                 let (
                     enum_with_serialize_deserialize_logic_token_stream,
