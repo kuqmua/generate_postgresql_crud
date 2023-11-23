@@ -137,6 +137,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let ident = &ast.ident;
     let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
     let proc_macro_name_ident_stringified = format!("{proc_macro_name} {ident}");
+    let ident_response_variants_stringified = format!("{ident}ResponseVariants");
+    let ident_response_variants_token_stream = {
+        ident_response_variants_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let with_serialize_deserialize_camel_case_stringified = "WithSerializeDeserialize";
     let ident_with_serialize_deserialize_camel_case_token_stream = {
         let ident_request_error_stringified = format!("{ident}{with_serialize_deserialize_camel_case_stringified}");
@@ -1853,6 +1858,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #project_commit_extractor_middleware_token_stream
         }
     };
+    //
+    let configuration_variant_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
+        &ident_with_serialize_deserialize_camel_case_token_stream,
+        &ident_response_variants_token_stream,
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        &quote::quote!{Configuration},
+        &proc_macro_name_ident_stringified,
+        vec![
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{configuration_box_dyn_error},
+                field_type: quote::quote!{#std_string_string_token_stream},
+            },
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+            },
+        ],
+    );
+    //
     let postgres_error_variants_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error]
         Configuration {
@@ -2174,37 +2198,72 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let type_variants_from_reqwest_response_token_stream = {
                 //
                 let f = {
-                    let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest;
-                    crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                        desirable_attribute,//: proc_macro_helpers::attribute::Attribute,
-                        &ident,//: &syn::Ident,
-                        &ident_lower_case_stringified,//: &std::string::String,
-                        &ident_response_variants_token_stream,//: &proc_macro2::TokenStream, //KekwResponseVariants
-                        &desirable_token_stream,//: &proc_macro2::TokenStream,
-                        &desirable_type_token_stream,//: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
-                        &proc_macro_name_ident_stringified,//: &std::string::String,
-                        &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,//: &proc_macro2::TokenStream,
-                        &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,//: &proc_macro2::TokenStream,
-                        &ident_with_serialize_deserialize_camel_case_token_stream,//: &proc_macro2::TokenStream,
-                        &error_named_derive_token_stream,//: &proc_macro2::TokenStream,
-                        &eo_display_attribute_token_stream,//: &proc_macro2::TokenStream,
-                        &eo_display_foreign_type_token_stream,//: &proc_macro2::TokenStream,
-                        &eo_display_with_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
-                        &derive_debug_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
-                        //
-                        &type_variants_from_request_response,//
-                        // : std::vec::Vec<(
-                        //     proc_macro_helpers::attribute::Attribute, //attribute
-                        //     std::vec::Vec<proc_macro2::TokenStream>, //enum_with_serialize_deserialize_logic_token_stream
-                        //     std::vec::Vec<proc_macro2::TokenStream>, //from_logic_token_stream
-                        //     std::vec::Vec<proc_macro2::TokenStream>, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
-                        //     std::vec::Vec<proc_macro2::TokenStream>, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
-                        //     std::vec::Vec<proc_macro2::TokenStream>, //enum_status_codes_checker_name_logic_token_stream
-                        //     std::vec::Vec<proc_macro2::TokenStream>, //axum_response_into_response_logic_token_stream
-                        // )>,
-                        &generated_status_code_enums_with_from_impls_logic_token_stream,//: &proc_macro2::TokenStream,
-                        &try_from_response_logic_token_stream_token_stream,//: &proc_macro2::TokenStream,
-                    )
+                    //
+                    // let attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
+                    // let ident_response_variants_stringified = format!("{ident}ResponseVariants");
+                    // let ident_response_variants_token_stream = {
+                    //     ident_response_variants_stringified.parse::<proc_macro2::TokenStream>()
+                    //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    // };
+                    // let type_variants_from_request_response = crate::type_variants_from_request_response::type_variants_from_request_response(
+                    //     &ident_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+                    //     &ident_response_variants_token_stream, //KekwResponseVariants
+                    //     &attribute,
+                    //     &variant_ident, //Configuration
+                    //     &proc_macro_name_ident_stringified,
+                    //     &fields,
+                    // );
+                    // let generate_status_code_enums_with_from_impls_logic_token_stream = crate::type_variants_from_request_response::generate_status_code_enums_with_from_impls_logic_token_stream(
+                    //     &derive_debug_serialize_deserialize_token_stream, //#[derive(Debug, serde::Serialize, serde::Deserialize)]
+                    //     &ident_response_variants_stringified,
+                    //     &ident_response_variants_token_stream,
+                    //     &vec_status_codes,
+                    //     &proc_macro_name_ident_stringified,
+                    //     &desirable_attribute,
+                    //     &desirable_name_token_stream,
+                    // );
+                    // let generate_try_from_response_logic_token_stream = crate::type_variants_from_request_response::generate_try_from_response_logic_token_stream(
+                    //     &response_without_body,
+                    //     &desirable_name_token_stream,
+                    //     &ident_lower_case_stringified,
+                    //     &ident_response_variants_stringified,
+                    //     &ident_response_variants_token_stream,
+                    //     &desirable_attribute,
+                    //     &proc_macro_name_ident_stringified,
+                    //     &vec_status_codes,
+                    // );
+                    // //
+                    // let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest;
+                    // crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
+                    //     desirable_attribute,//: proc_macro_helpers::attribute::Attribute,
+                    //     &ident,//: &syn::Ident,
+                    //     &ident_lower_case_stringified,//: &std::string::String,
+                    //     &ident_response_variants_token_stream,//: &proc_macro2::TokenStream, //KekwResponseVariants
+                    //     &desirable_token_stream,//: &proc_macro2::TokenStream,
+                    //     &desirable_type_token_stream,//: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
+                    //     &proc_macro_name_ident_stringified,//: &std::string::String,
+                    //     &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,//: &proc_macro2::TokenStream,
+                    //     &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,//: &proc_macro2::TokenStream,
+                    //     &ident_with_serialize_deserialize_camel_case_token_stream,//: &proc_macro2::TokenStream,
+                    //     &error_named_derive_token_stream,//: &proc_macro2::TokenStream,
+                    //     &eo_display_attribute_token_stream,//: &proc_macro2::TokenStream,
+                    //     &eo_display_foreign_type_token_stream,//: &proc_macro2::TokenStream,
+                    //     &eo_display_with_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
+                    //     &derive_debug_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
+                    //     //
+                    //     &type_variants_from_request_response,//
+                    //     // : std::vec::Vec<(
+                    //     //     proc_macro_helpers::attribute::Attribute, //attribute
+                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //enum_with_serialize_deserialize_logic_token_stream
+                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //from_logic_token_stream
+                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
+                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
+                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //enum_status_codes_checker_name_logic_token_stream
+                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //axum_response_into_response_logic_token_stream
+                    //     // )>,
+                    //     &generated_status_code_enums_with_from_impls_logic_token_stream,//: &proc_macro2::TokenStream,
+                    //     &try_from_response_logic_token_stream_token_stream,//: &proc_macro2::TokenStream,
+                    // )
                 };
                 //
                 let (

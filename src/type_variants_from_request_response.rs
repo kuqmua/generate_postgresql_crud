@@ -1,16 +1,16 @@
 pub struct ErrorVariantField {
-    field_name: proc_macro2::TokenStream,
-    field_type: proc_macro2::TokenStream,
+    pub field_name: proc_macro2::TokenStream,
+    pub field_type: proc_macro2::TokenStream,
 }
 
 pub struct ErrorVariantAttribute {
-    error_variant_attribute: proc_macro_helpers::attribute::Attribute,
-    error_variant: ErrorVariant,
+    pub error_variant_attribute: proc_macro_helpers::attribute::Attribute,
+    pub error_variant: ErrorVariant,
 }
 
 pub struct ErrorVariant {
-    error_variant_ident: proc_macro2::TokenStream,
-    error_variant_fields: std::vec::Vec<ErrorVariantField>,
+    pub error_variant_ident: proc_macro2::TokenStream,
+    pub error_variant_fields: std::vec::Vec<ErrorVariantField>,
 }
 
 pub fn type_variants_from_request_response(
