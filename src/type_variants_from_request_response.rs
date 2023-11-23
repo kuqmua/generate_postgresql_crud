@@ -124,7 +124,6 @@ pub fn generate_status_code_enums_with_from_impls_logic_token_stream(
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
     vec_status_codes: std::vec::Vec<ErrorVariantAttribute>,
     proc_macro_name_ident_stringified: &std::string::String,
-    desirable_attribute: proc_macro_helpers::attribute::Attribute,
     desirable_name_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
     let vec_status_codes_len = vec_status_codes.len();
