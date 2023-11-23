@@ -1876,6 +1876,125 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             },
         ],
     );
+    let database_variant_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
+        &ident_with_serialize_deserialize_camel_case_token_stream,
+        &ident_response_variants_token_stream,
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        &quote::quote!{Database},
+        &proc_macro_name_ident_stringified,
+        vec![
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{box_dyn_database_error},
+                field_type: quote::quote!{#std_string_string_token_stream},
+            },
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+            },
+        ],
+    );
+    let io_variant_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
+        &ident_with_serialize_deserialize_camel_case_token_stream,
+        &ident_response_variants_token_stream,
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        &quote::quote!{Io},
+        &proc_macro_name_ident_stringified,
+        vec![
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{io_error},
+                field_type: quote::quote!{std::io::Error},
+            },
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+            },
+        ],
+    );
+    let tls_variant_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
+        &ident_with_serialize_deserialize_camel_case_token_stream,
+        &ident_response_variants_token_stream,
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        &quote::quote!{Tls},
+        &proc_macro_name_ident_stringified,
+        vec![
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{box_dyn_error},
+                field_type: quote::quote!{#std_string_string_token_stream},
+            },
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+            },
+        ],
+    );
+    let protocol_variant_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
+        &ident_with_serialize_deserialize_camel_case_token_stream,
+        &ident_response_variants_token_stream,
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        &quote::quote!{Protocol},
+        &proc_macro_name_ident_stringified,
+        vec![
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{protocol},
+                field_type: quote::quote!{#std_string_string_token_stream},
+            },
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+            },
+        ],
+    );
+    let row_not_found_variant_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
+        &ident_with_serialize_deserialize_camel_case_token_stream,
+        &ident_response_variants_token_stream,
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        &quote::quote!{RowNotFound},
+        &proc_macro_name_ident_stringified,
+        vec![
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{row_not_found},
+                field_type: quote::quote!{#std_string_string_token_stream},
+            },
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+            },
+        ],
+    );
+    let type_not_found_variant_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
+        &ident_with_serialize_deserialize_camel_case_token_stream,
+        &ident_response_variants_token_stream,
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        &quote::quote!{TypeNotFound},
+        &proc_macro_name_ident_stringified,
+        vec![
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{type_not_found},
+                field_type: quote::quote!{#std_string_string_token_stream},
+            },
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+            },
+        ],
+    );
+    let column_index_out_of_bounds_variant_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
+        &ident_with_serialize_deserialize_camel_case_token_stream,
+        &ident_response_variants_token_stream,
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        &quote::quote!{ColumnIndexOutOfBounds},
+        &proc_macro_name_ident_stringified,
+        vec![
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{column_index_out_of_bounds},
+                field_type: quote::quote!{usize},
+            },
+            crate::type_variants_from_request_response::ErrorVariantField {
+                field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+            },
+        ],
+    );
     //
     let postgres_error_variants_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error]
