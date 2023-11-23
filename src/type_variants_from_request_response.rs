@@ -246,23 +246,55 @@ fn generate_status_code_enums_with_from_impls_logic_token_stream(
 }
 
 fn generate_try_from_response_logic_token_stream(
+    response_without_body: bool,
+    desirable_name_token_stream: &proc_macro2::TokenStream,
     ident_response_variants_stringified: &std::string::String,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
-    attribute: proc_macro_helpers::attribute::Attribute,
+    desirable_attribute: proc_macro_helpers::attribute::Attribute,
     proc_macro_name_ident_stringified: &std::string::String,
+    vec_status_codes: std::vec::Vec<ErrorVariantAttribute>,
 ) -> proc_macro2::TokenStream {
-    let http_status_code_quote_token_stream = attribute.to_http_status_code_quote();
+    let vec_status_codes_len = vec_status_codes.len();
+    let hashmap_unique_status_codes = vec_status_codes.into_iter().fold(
+        std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
+        |mut acc, element| {
+            match acc.get_mut(&element.error_variant_attribute) {
+                Some(value) => {
+                    value.push(element.error_variant);
+                },
+                None => {
+                    acc.insert(element.error_variant_attribute, vec![element.error_variant]);
+                }
+            }
+            acc
+        },
+    );
+    let unique_status_codes_len = hashmap_unique_status_codes.len();
+    if unique_status_codes_len < 1 {
+        panic!("{proc_macro_name_ident_stringified} unique_status_codes_len < 1 {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE);
+    }
+    let unique_status_codes_len_minus_one = unique_status_codes_len - 1;
+    let unique_status_codes = hashmap_unique_status_codes.iter().map(|(key, _)|key).collect::<Vec<&proc_macro_helpers::attribute::Attribute>>();
+    let desirable_enum_name = {
+        let status_code_enum_name_stingified = format!("{ident_response_variants_token_stream}{desirable_attribute}");
+        status_code_enum_name_stingified
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {status_code_enum_name_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream =
         quote::quote! {crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
     let crate_common_api_request_unexpected_error_response_text_result_token_stream =
         quote::quote! {crate::common::api_request_unexpected_error::ResponseTextResult};
     let ident_response_variants_attribute_token_stream = {
         let ident_response_variants_attribute_stingified =
-            format!("{ident_response_variants_stringified}{attribute}");
+            format!("{ident_response_variants_stringified}{desirable_attribute}");
         ident_response_variants_attribute_stingified
         .parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+    let api_request_unexpected_error_module_path_token_stream = quote::quote! { crate::common::api_request_unexpected_error };
+    let api_request_unexpected_error_path_token_stream = quote::quote! { #api_request_unexpected_error_module_path_token_stream::ApiRequestUnexpectedError };
     // let variant_ident_attribute_camel_case_token_stream = {
     //     let variant_ident_attribute_camel_case_stringified = format!("{variant_ident}{attribute}");
     //     variant_ident_attribute_camel_case_stringified
@@ -300,7 +332,7 @@ fn generate_try_from_response_logic_token_stream(
         };
         let mut status_code_enums_try_from_variants = Vec::with_capacity(unique_status_codes_len + 1);
         status_code_enums_try_from_variants.push(quote::quote! {
-            if status_code == #desirable_status_code_token_stream {
+            if status_code == #http_status_code_quote_token_stream {
                 #desirable_status_code_case_token_stream
             }
         });
@@ -340,7 +372,7 @@ fn generate_try_from_response_logic_token_stream(
                     });
                 },
                 false => {
-                    if let false = desirable_attribute == status_code_attribute {
+                    if let false = desirable_attribute == *status_code_attribute {
                         status_code_enums_try_from_variants.push(quote::quote! {
                             else if status_code == #http_status_code_token_stream {
                                 match response.text().await {
