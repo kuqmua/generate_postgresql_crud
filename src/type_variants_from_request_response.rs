@@ -1,4 +1,5 @@
 pub struct ErrorVariantField {
+    pub error_occurence_attribute: proc_macro2::TokenStream,
     pub field_name: proc_macro2::TokenStream,
     pub field_type: proc_macro2::TokenStream,
 }
