@@ -13,7 +13,7 @@ pub struct ErrorVariant {
     error_variant_fields: std::vec::Vec<ErrorVariantField>,
 }
 
-fn type_variants_from_request_response(
+pub fn type_variants_from_request_response(
     ident_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
     ident_response_variants_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
     attribute: proc_macro_helpers::attribute::Attribute,
@@ -117,7 +117,7 @@ fn type_variants_from_request_response(
     )
 }
 
-fn generate_status_code_enums_with_from_impls_logic_token_stream(
+pub fn generate_status_code_enums_with_from_impls_logic_token_stream(
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream, //#[derive(Debug, serde::Serialize, serde::Deserialize)]
     ident_response_variants_stringified: &std::string::String,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
@@ -193,7 +193,7 @@ fn generate_status_code_enums_with_from_impls_logic_token_stream(
     }
 }
 
-fn generate_try_from_response_logic_token_stream(
+pub fn generate_try_from_response_logic_token_stream(
     response_without_body: bool,
     desirable_name_token_stream: &proc_macro2::TokenStream,
     ident_lower_case_stringified: &std::string::String,

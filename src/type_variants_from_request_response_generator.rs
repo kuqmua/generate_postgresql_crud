@@ -1,4 +1,4 @@
-fn type_variants_from_request_response_generator(
+pub fn type_variants_from_request_response_generator(
     desirable_attribute: proc_macro_helpers::attribute::Attribute,
     ident: &syn::Ident,
     ident_lower_case_stringified: &std::string::String,
