@@ -2522,25 +2522,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         },
     };
     //
-    // let unexpected_case_error_variant_handle_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
-    //     &ident_with_serialize_deserialize_camel_case_token_stream,
-    //     &ident_response_variants_token_stream,
-    //     proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-    //     &quote::quote!{UnexpectedCase},
-    //     &proc_macro_name_ident_stringified,
-    //     vec![
-    //         crate::type_variants_from_request_response::ErrorVariantField {
-    //             error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-    //             field_name: quote::quote!{unexpected_case},
-    //             field_type: quote::quote!{#std_string_string_token_stream},
-    //         },
-    //         crate::type_variants_from_request_response::ErrorVariantField {
-    //             error_occurence_attribute: quote::quote!{},
-    //             field_name: quote::quote!{#code_occurence_lower_case_token_stream},
-    //             field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
-    //         },
-    //     ],
-    // );
+    let unexpected_case_variant_attribute = crate::type_variants_from_request_response::ErrorVariantAttribute {
+        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        error_variant: crate::type_variants_from_request_response::ErrorVariant {
+            error_variant_ident: quote::quote!{UnexpectedCase},
+            error_variant_fields: vec![
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                    field_name: quote::quote!{unexpected_case},
+                    field_type: quote::quote!{#std_string_string_token_stream},
+                },
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{},
+                    field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                    field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+                },
+            ],
+        },
+    };
+    let unexpected_case_error_variant_handle_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
+        &ident_with_serialize_deserialize_camel_case_token_stream,
+        &ident_response_variants_token_stream,
+        &proc_macro_name_ident_stringified,
+        &unexpected_case_variant_attribute
+    );
     let unexpected_case_error_variant_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error]
         UnexpectedCase {
