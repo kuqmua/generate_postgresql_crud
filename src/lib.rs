@@ -1652,6 +1652,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         },
     };
     //
+    let bind_query_type_variant_from_request_response = crate::type_variants_from_request_response::type_variants_from_request_response(
+        &ident_with_serialize_deserialize_camel_case_token_stream,
+        &ident_response_variants_token_stream,
+        &proc_macro_name_ident_stringified,
+        &bind_query_variant_attribute
+    );
+    //
     let bind_query_variant_initialization_token_stream = quote::quote!{
         BindQuery { 
             checked_add: e.into_serialize_deserialize_version(), 
@@ -1871,6 +1878,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let content_type_application_json_header_addition_token_stream = quote::quote!{
         .header(reqwest::header::CONTENT_TYPE, "application/json")
     };
+    //
+    // let project_commit_extractor_not_equal_variant_attribute = crate::type_variants_from_request_response::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+    //     error_variant: crate::type_variants_from_request_response::ErrorVariant {
+    //         error_variant_ident: quote::quote!{ProjectCommitExtractorNotEqual},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response::ErrorVariantField {
+    //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+    //                 field_name: quote::quote!{configuration_box_dyn_error},
+    //                 field_type: quote::quote!{#std_string_string_token_stream},
+    //             },
+    //             crate::type_variants_from_request_response::ErrorVariantField {
+    //                 error_occurence_attribute: quote::quote!{},
+    //                 field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+    //                 field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+    //             },
+    //         ],
+    //     },
+    // };
+    //
     //todo move it into custom macro attribute
     let common_middlewares_error_variants_token_stream = {
         let project_commit_extractor_middleware_token_stream = quote::quote!{
@@ -2770,7 +2797,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let try_create_many_error_with_middleware_error_variants_token_stream = {
             let type_variants_from_reqwest_response_token_stream = {
                 //
-                let f = {
+                let generated_type_variants_from_request_response_token_stream = {
                     //
                     let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
                     let vec_status_codes = {
@@ -2802,7 +2829,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         ];
                         vec_status_codes
                     };
-                    let generate_status_code_enums_with_from_impls_logic_token_stream = crate::type_variants_from_request_response::generate_status_code_enums_with_from_impls_logic_token_stream(
+                    let type_variants_from_request_response_vec = {
+                        let mut type_variants_from_request_response = Vec::new();
+                        for element in postgres_error_variants_vec_token_stream {
+                            type_variants_from_request_response.push(element.clone());
+                        }
+                        for element in json_body_logic_error_variants_vec_token_stream  {
+                            type_variants_from_request_response.push(element.clone());
+                        }
+                        type_variants_from_request_response.push(bind_query_type_variant_from_request_response.clone());
+                        type_variants_from_request_response
+                    };
+                    let generated_status_code_enums_with_from_impls_logic_token_stream = crate::type_variants_from_request_response::generate_status_code_enums_with_from_impls_logic_token_stream(
                         &derive_debug_serialize_deserialize_token_stream, //#[derive(Debug, serde::Serialize, serde::Deserialize)]
                         &ident_response_variants_stringified,
                         &ident_response_variants_token_stream,
@@ -2810,7 +2848,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &proc_macro_name_ident_stringified,
                         &desirable_token_stream,
                     );
-                    let generate_try_from_response_logic_token_stream = crate::type_variants_from_request_response::generate_try_from_response_logic_token_stream(
+                    let generated_try_from_response_logic_token_stream = crate::type_variants_from_request_response::generate_try_from_response_logic_token_stream(
                         false,
                         &desirable_token_stream,
                         &ident_lower_case_stringified,
@@ -2820,76 +2858,77 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &proc_macro_name_ident_stringified,
                         vec_status_codes,
                     );
-                    // //
-                    // let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest;
-                    // crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                    //     desirable_attribute,//: proc_macro_helpers::attribute::Attribute,
-                    //     &ident,//: &syn::Ident,
-                    //     &ident_lower_case_stringified,//: &std::string::String,
-                    //     &ident_response_variants_token_stream,//: &proc_macro2::TokenStream, //KekwResponseVariants
-                    //     &desirable_token_stream,//: &proc_macro2::TokenStream,
-                    //     &desirable_type_token_stream,//: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
-                    //     &proc_macro_name_ident_stringified,//: &std::string::String,
-                    //     &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,//: &proc_macro2::TokenStream,
-                    //     &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,//: &proc_macro2::TokenStream,
-                    //     &ident_with_serialize_deserialize_camel_case_token_stream,//: &proc_macro2::TokenStream,
-                    //     &error_named_derive_token_stream,//: &proc_macro2::TokenStream,
-                    //     &eo_display_attribute_token_stream,//: &proc_macro2::TokenStream,
-                    //     &eo_display_foreign_type_token_stream,//: &proc_macro2::TokenStream,
-                    //     &eo_display_with_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
-                    //     &derive_debug_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
-                    //     //
-                    //     &type_variants_from_request_response,//
-                    //     // : std::vec::Vec<(
-                    //     //     proc_macro_helpers::attribute::Attribute, //attribute
-                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //enum_with_serialize_deserialize_logic_token_stream
-                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //from_logic_token_stream
-                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
-                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
-                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //enum_status_codes_checker_name_logic_token_stream
-                    //     //     std::vec::Vec<proc_macro2::TokenStream>, //axum_response_into_response_logic_token_stream
-                    //     // )>,
-                    //     &generated_status_code_enums_with_from_impls_logic_token_stream,//: &proc_macro2::TokenStream,
-                    //     &try_from_response_logic_token_stream_token_stream,//: &proc_macro2::TokenStream,
-                    // )
-                };
-                //
-                let (
-                    enum_with_serialize_deserialize_logic_token_stream,
-                    from_logic_token_stream,
-                    impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                    generated_status_code_enums_with_from_impls_logic_token_stream,
-                    try_from_response_logic_token_stream,
-                    impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                    ident_request_error_logic_token_stream,
-                    extraction_logic_token_stream,
-                    enum_status_codes_checker_name_logic_token_stream,
-                    axum_response_into_response_logic_token_stream
-                ) = {
-                    (
-                        quote::quote!{},
-                        quote::quote!{},
-                        quote::quote!{},
-                        quote::quote!{},
-                        quote::quote!{},
-                        quote::quote!{},
-                        quote::quote!{},
-                        quote::quote!{},
-                        quote::quote!{},
-                        quote::quote!{},
+                    crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
+                        desirable_attribute,//: proc_macro_helpers::attribute::Attribute,
+                        &ident,//: &syn::Ident,
+                        &ident_lower_case_stringified,//: &std::string::String,
+                        &ident_response_variants_token_stream,//: &proc_macro2::TokenStream, //KekwResponseVariants
+                        &desirable_token_stream,//: &proc_macro2::TokenStream,
+                        &quote::quote!{std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>},//: &proc_macro2::TokenStream, //
+                        &proc_macro_name_ident_stringified,//: &std::string::String,
+                        &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,//: &proc_macro2::TokenStream,
+                        &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,//: &proc_macro2::TokenStream,
+                        &ident_with_serialize_deserialize_camel_case_token_stream,//: &proc_macro2::TokenStream,
+                        &error_named_derive_token_stream,//: &proc_macro2::TokenStream,
+                        &eo_display_attribute_token_stream,//: &proc_macro2::TokenStream,
+                        &eo_display_foreign_type_token_stream,//: &proc_macro2::TokenStream,
+                        &eo_display_with_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
+                        &derive_debug_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
+                        //
+                        type_variants_from_request_response_vec,//
+                        // : std::vec::Vec<(
+                        //     proc_macro_helpers::attribute::Attribute, //attribute
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //enum_with_serialize_deserialize_logic_token_stream
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //from_logic_token_stream
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //enum_status_codes_checker_name_logic_token_stream
+                        //     std::vec::Vec<proc_macro2::TokenStream>, //axum_response_into_response_logic_token_stream
+                        // )>,
+                        &generated_status_code_enums_with_from_impls_logic_token_stream,//: &proc_macro2::TokenStream,
+                        &generated_try_from_response_logic_token_stream,//: &proc_macro2::TokenStream,
                     )
                 };
+                //
+                // let (
+                //     enum_with_serialize_deserialize_logic_token_stream,
+                //     from_logic_token_stream,
+                //     impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
+                //     generated_status_code_enums_with_from_impls_logic_token_stream,
+                //     try_from_response_logic_token_stream,
+                //     impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
+                //     ident_request_error_logic_token_stream,
+                //     extraction_logic_token_stream,
+                //     enum_status_codes_checker_name_logic_token_stream,
+                //     axum_response_into_response_logic_token_stream
+                // ) = {
+                //     (
+                //         quote::quote!{},
+                //         quote::quote!{},
+                //         quote::quote!{},
+                //         quote::quote!{},
+                //         quote::quote!{},
+                //         quote::quote!{},
+                //         quote::quote!{},
+                //         quote::quote!{},
+                //         quote::quote!{},
+                //         quote::quote!{},
+                //     )
+                // };
+                // println!("{generated_type_variants_from_request_response_token_stream}");
                 quote::quote!{
-                    #enum_with_serialize_deserialize_logic_token_stream
-                    #from_logic_token_stream
-                    #impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
-                    #generated_status_code_enums_with_from_impls_logic_token_stream
-                    #try_from_response_logic_token_stream
-                    #impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
-                    #ident_request_error_logic_token_stream
-                    #extraction_logic_token_stream
-                    #enum_status_codes_checker_name_logic_token_stream
-                    #axum_response_into_response_logic_token_stream
+                    // #generated_type_variants_from_request_response_token_stream
+                    //
+                    // #enum_with_serialize_deserialize_logic_token_stream
+                    // #from_logic_token_stream
+                    // #impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
+                    // #generated_status_code_enums_with_from_impls_logic_token_stream
+                    // #try_from_response_logic_token_stream
+                    // #impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
+                    // #ident_request_error_logic_token_stream
+                    // #extraction_logic_token_stream
+                    // #enum_status_codes_checker_name_logic_token_stream
+                    // #axum_response_into_response_logic_token_stream
                     //
                     #[derive(Debug, serde::Serialize, serde :: Deserialize)]
                     pub enum TryCreateManyResponseVariants {
