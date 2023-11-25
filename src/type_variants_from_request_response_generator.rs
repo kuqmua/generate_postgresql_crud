@@ -2,7 +2,7 @@ pub fn type_variants_from_request_response_generator(
     desirable_attribute: proc_macro_helpers::attribute::Attribute,
     ident: &syn::Ident,
     ident_lower_case_stringified: &std::string::String,
-    ident_response_variants_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
+    try_operation_response_variants_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
     desirable_token_stream: &proc_macro2::TokenStream,
     desirable_type_token_stream: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
     proc_macro_name_ident_stringified: &std::string::String,
@@ -95,13 +95,13 @@ pub fn type_variants_from_request_response_generator(
                 .collect::<Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             #derive_debug_serialize_deserialize_token_stream
-            pub enum #ident_response_variants_token_stream {
+            pub enum #try_operation_response_variants_token_stream {
                 #desirable_token_stream(#desirable_type_token_stream),
                 // Configuration {
                 //     configuration_box_dyn_error: std::string::String,
                 //     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 // }
-                #(#enum_with_serialize_deserialize_logic_mapped_token_stream)*
+                #(#enum_with_serialize_deserialize_logic_mapped_token_stream),*
             }
         }
     };
@@ -121,7 +121,7 @@ pub fn type_variants_from_request_response_generator(
             )
             .collect::<Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            impl std::convert::From<#ident> for #ident_response_variants_token_stream {
+            impl std::convert::From<#ident> for #try_operation_response_variants_token_stream {
                 fn from(value: #ident) -> Self {
                     match value.into_serialize_deserialize_version() {
                         // KekwWithSerializeDeserialize::Configuration {
@@ -153,10 +153,10 @@ pub fn type_variants_from_request_response_generator(
             )
             .collect::<Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            impl std::convert::From<&#ident_response_variants_token_stream> for http::StatusCode {
-                fn from(value: &#ident_response_variants_token_stream) -> Self {
+            impl std::convert::From<&#try_operation_response_variants_token_stream> for http::StatusCode {
+                fn from(value: &#try_operation_response_variants_token_stream) -> Self {
                     match value {
-                        #ident_response_variants_token_stream::#desirable_token_stream(_) => #http_status_code_quote_token_stream,//http::StatusCode::CREATED
+                        #try_operation_response_variants_token_stream::#desirable_token_stream(_) => #http_status_code_quote_token_stream,//http::StatusCode::CREATED
                         // KekwResponseVariants::Configuration {
                         //     configuration_box_dyn_error: _,
                         //     code_occurence: _,
@@ -173,7 +173,7 @@ pub fn type_variants_from_request_response_generator(
             enum #ident_response_variants_desirable_attribute_token_stream {
                 #desirable_token_stream(#desirable_type_token_stream),
             }
-            impl std::convert::From<#ident_response_variants_desirable_attribute_token_stream> for #ident_response_variants_token_stream {
+            impl std::convert::From<#ident_response_variants_desirable_attribute_token_stream> for #try_operation_response_variants_token_stream {
                 fn from(value: #ident_response_variants_desirable_attribute_token_stream) -> Self {
                     match value {
                         #ident_response_variants_desirable_attribute_token_stream::#desirable_token_stream(i) => Self::#desirable_token_stream(i),
@@ -187,7 +187,7 @@ pub fn type_variants_from_request_response_generator(
             //         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
             //     },
             // }
-            // impl std::convert::From<KekwResponseVariantsTvfrr500InternalServerError> for #ident_response_variants_token_stream {
+            // impl std::convert::From<KekwResponseVariantsTvfrr500InternalServerError> for #try_operation_response_variants_token_stream {
             //     fn from(value: KekwResponseVariantsTvfrr500InternalServerError) -> Self {
             //         match value {
             //             KekwResponseVariantsTvfrr500InternalServerError::Configuration {
@@ -208,7 +208,7 @@ pub fn type_variants_from_request_response_generator(
             // async fn #try_from_response_lower_case_token_stream(
             //     response: reqwest::Response,
             // ) -> Result<
-            //     #ident_response_variants_token_stream,
+            //     #try_operation_response_variants_token_stream,
             //     #crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream,
             // > {
             //     let status_code = response.status();
@@ -216,7 +216,7 @@ pub fn type_variants_from_request_response_generator(
             //     if status_code == #http_status_code_quote_token_stream {
             //         match response.text().await {
             //             Ok(response_text) => match serde_json::from_str::<#ident_response_variants_desirable_attribute_token_stream>(&response_text) {
-            //                 Ok(value) => Ok(#ident_response_variants_token_stream::from(value)),
+            //                 Ok(value) => Ok(#try_operation_response_variants_token_stream::from(value)),
             //                 Err(e) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::DeserializeBody {
             //                     serde: e,
             //                     status_code,
@@ -264,12 +264,12 @@ pub fn type_variants_from_request_response_generator(
             )
             .collect::<Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            impl TryFrom<#ident_response_variants_token_stream> for #desirable_type_token_stream {
+            impl TryFrom<#try_operation_response_variants_token_stream> for #desirable_type_token_stream {
                 type Error = #ident_with_serialize_deserialize_camel_case_token_stream;
-                fn try_from(value: #ident_response_variants_token_stream) -> Result<Self, Self::Error> {
+                fn try_from(value: #try_operation_response_variants_token_stream) -> Result<Self, Self::Error> {
                     match value {
-                        #ident_response_variants_token_stream::#desirable_token_stream(i) => Ok(i),
-                        // #ident_response_variants_token_stream::Configuration {
+                        #try_operation_response_variants_token_stream::#desirable_token_stream(i) => Ok(i),
+                        // #try_operation_response_variants_token_stream::Configuration {
                         //     configuration_box_dyn_error,
                         //     code_occurence,
                         // } => Err(KekwWithSerializeDeserialize::Configuration {
@@ -436,15 +436,15 @@ pub fn type_variants_from_request_response_generator(
                 )
                 .collect::<Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            impl axum::response::IntoResponse for #ident_response_variants_token_stream {
+            impl axum::response::IntoResponse for #try_operation_response_variants_token_stream {
                 fn into_response(self) -> axum::response::Response {
                     match &self {
-                        #ident_response_variants_token_stream::#desirable_token_stream(_) => {
+                        #try_operation_response_variants_token_stream::#desirable_token_stream(_) => {
                             let mut res = axum::Json(self).into_response();
                             *res.status_mut() = #http_status_code_quote_token_stream;//http::StatusCode::CREATED
                             res
                         }
-                        // #ident_response_variants_token_stream::Configuration {
+                        // #try_operation_response_variants_token_stream::Configuration {
                         //     configuration_box_dyn_error: _,
                         //     code_occurence: _,
                         // } => {

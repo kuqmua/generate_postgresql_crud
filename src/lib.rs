@@ -1929,10 +1929,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
                     field_name: quote::quote!{no_project_commit_header},
-                    field_type: quote::quote!{},
+                    field_type: quote::quote!{#std_string_string_token_stream},
                 },
                 crate::type_variants_from_request_response::ErrorVariantField {
-                    error_occurence_attribute: quote::quote!{#std_string_string_token_stream},
+                    error_occurence_attribute: quote::quote!{},
                     field_name: quote::quote!{#code_occurence_lower_case_token_stream},
                     field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
                 },
@@ -2858,16 +2858,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream}");
         let try_create_many_error_with_middleware_error_variants_token_stream = {
             let type_variants_from_reqwest_response_token_stream = {
-                //
                 let generated_type_variants_from_request_response_token_stream = {
-                    //
                     let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
                     let vec_status_codes = {
                         let mut vec_status_codes = vec![
                             project_commit_extractor_not_equal_variant_attribute,
                             project_commit_extractor_to_str_conversion_variant_attribute,
                             no_project_commit_extractor_header_variant_attribute,
-                            common_middlewares_error_variants_vec,
                             //
                             configuration_error_variant_attribute,
                             database_variant_attribute,
@@ -2898,6 +2895,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     let type_variants_from_request_response_vec = {
                         let mut type_variants_from_request_response = Vec::new();
+                        for element in common_middlewares_error_variants_vec {
+                            type_variants_from_request_response.push(element.clone());
+                        }
                         for element in postgres_error_variants_vec_token_stream {
                             type_variants_from_request_response.push(element.clone());
                         }
@@ -2929,7 +2929,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         desirable_attribute,//: proc_macro_helpers::attribute::Attribute,
                         &ident,//: &syn::Ident,
                         &ident_lower_case_stringified,//: &std::string::String,
-                        &ident_response_variants_token_stream,//: &proc_macro2::TokenStream, //KekwResponseVariants
+                        &{
+                            let try_create_many_response_variants_camel_case_stringified = format!("{try_camel_case_stringified}{create_many_name_camel_case_stringified}ResponseVariants");
+                            try_create_many_response_variants_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_create_many_response_variants_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        },//: &proc_macro2::TokenStream, //KekwResponseVariants
                         &desirable_token_stream,//: &proc_macro2::TokenStream,
                         &quote::quote!{std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>},//: &proc_macro2::TokenStream, //
                         &proc_macro_name_ident_stringified,//: &std::string::String,
@@ -2982,7 +2986,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 //         quote::quote!{},
                 //     )
                 // };
-                // println!("{generated_type_variants_from_request_response_token_stream}");
+                println!("{generated_type_variants_from_request_response_token_stream}");
                 quote::quote!{
                     // #generated_type_variants_from_request_response_token_stream
                     //
@@ -2997,115 +3001,115 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     // #enum_status_codes_checker_name_logic_token_stream
                     // #axum_response_into_response_logic_token_stream
                     //
-                    #[derive(Debug, serde::Serialize, serde :: Deserialize)]
-                    pub enum TryCreateManyResponseVariants {
-                        Desirable(std :: vec :: Vec :: < crate :: server :: postgres ::
-    uuid_wrapper :: PossibleUuidWrapper >), ProjectCommitExtractorNotEqual
-    {
-        project_commit_not_equal : std :: string :: String < >,
-        project_commit_to_use : std :: string :: String < >, code_occurence :
-        crate :: common :: code_occurence :: CodeOccurence
-    }, ProjectCommitExtractorToStrConversion
-    {
-        project_commit_to_str_conversion : std :: string :: String,
-        code_occurence : crate :: common :: code_occurence :: CodeOccurence
-    }, NoProjectCommitExtractorHeader
-    {
-        no_project_commit_header : std :: string :: String < >, code_occurence
-        : crate :: common :: code_occurence :: CodeOccurence
-    }, Configuration
-    {
-        configuration_box_dyn_error : std :: string :: String < >,
-        code_occurence : crate :: common :: code_occurence :: CodeOccurence
-    }, Database
-    {
-        box_dyn_database_error : std :: string :: String < >, code_occurence :
-        crate :: common :: code_occurence :: CodeOccurence
-    }, Io
-    {
-        io_error : std :: string :: String, code_occurence : crate :: common
-        :: code_occurence :: CodeOccurence
-    }, Tls
-    {
-        box_dyn_error : std :: string :: String < >, code_occurence : crate ::
-        common :: code_occurence :: CodeOccurence
-    }, Protocol
-    {
-        protocol : std :: string :: String < >, code_occurence : crate ::
-        common :: code_occurence :: CodeOccurence
-    }, RowNotFound
-    {
-        row_not_found : std :: string :: String < >, code_occurence : crate ::
-        common :: code_occurence :: CodeOccurence
-    }, TypeNotFound
-    {
-        type_not_found : std :: string :: String < >, code_occurence : crate
-        :: common :: code_occurence :: CodeOccurence
-    }, ColumnIndexOutOfBounds
-    {
-        column_index_out_of_bounds : usize < >, len : usize < >,
-        code_occurence : crate :: common :: code_occurence :: CodeOccurence
-    }, ColumnNotFound
-    {
-        column_not_found : std :: string :: String < >, code_occurence : crate
-        :: common :: code_occurence :: CodeOccurence
-    }, ColumnDecode
-    {
-        column_decode_index : std :: string :: String < >, source_handle : std
-        :: string :: String < >, code_occurence : crate :: common ::
-        code_occurence :: CodeOccurence
-    }, Decode
-    {
-        decode_box_dyn_error : std :: string :: String < >, code_occurence :
-        crate :: common :: code_occurence :: CodeOccurence
-    }, PoolTimedOut
-    {
-        pool_timed_out : std :: string :: String < >, code_occurence : crate
-        :: common :: code_occurence :: CodeOccurence
-    }, PoolClosed
-    {
-        pool_closed : std :: string :: String < >, code_occurence : crate ::
-        common :: code_occurence :: CodeOccurence
-    }, WorkerCrashed
-    {
-        worker_crashed : std :: string :: String < >, code_occurence : crate
-        :: common :: code_occurence :: CodeOccurence
-    }, Migrate
-    {
-        migrate : std :: string :: String, code_occurence : crate :: common ::
-        code_occurence :: CodeOccurence
-    }, JsonDataError
-    {
-        json_data_error : std :: string :: String, code_occurence : crate ::
-        common :: code_occurence :: CodeOccurence
-    }, JsonSyntaxError
-    {
-        json_syntax_error : std :: string :: String, code_occurence : crate ::
-        common :: code_occurence :: CodeOccurence
-    }, MissingJsonContentType
-    {
-        json_syntax_error : std :: string :: String < >, code_occurence :
-        crate :: common :: code_occurence :: CodeOccurence
-    }, BytesRejection
-    {
-        bytes_rejection : std :: string :: String < >, code_occurence : crate
-        :: common :: code_occurence :: CodeOccurence
-    }, BindQuery
-    {
-        checked_add : crate :: server :: postgres :: bind_query ::
-        TryGenerateBindIncrementsErrorNamedWithSerializeDeserialize,
-        code_occurence : crate :: common :: code_occurence :: CodeOccurence
-    }, CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer
-    {
-        uuid_wrapper_try_from_possible_uuid_wrapper_in_server : std :: string
-        :: String, code_occurence : crate :: common :: code_occurence ::
-        CodeOccurence
-    }, UnexpectedCase
-    {
-        unexpected_case : std :: string :: String < >, code_occurence : crate
-        :: common :: code_occurence :: CodeOccurence
-    }
-}
+//                     #[derive(Debug, serde::Serialize, serde :: Deserialize)]
+//                     pub enum TryCreateManyResponseVariants {
+//                         Desirable(std :: vec :: Vec :: < crate :: server :: postgres ::
+//     uuid_wrapper :: PossibleUuidWrapper >), ProjectCommitExtractorNotEqual
+//     {
+//         project_commit_not_equal : std :: string :: String < >,
+//         project_commit_to_use : std :: string :: String < >, code_occurence :
+//         crate :: common :: code_occurence :: CodeOccurence
+//     }, ProjectCommitExtractorToStrConversion
+//     {
+//         project_commit_to_str_conversion : std :: string :: String,
+//         code_occurence : crate :: common :: code_occurence :: CodeOccurence
+//     }, NoProjectCommitExtractorHeader
+//     {
+//         no_project_commit_header : std :: string :: String < >, code_occurence
+//         : crate :: common :: code_occurence :: CodeOccurence
+//     }, Configuration
+//     {
+//         configuration_box_dyn_error : std :: string :: String < >,
+//         code_occurence : crate :: common :: code_occurence :: CodeOccurence
+//     }, Database
+//     {
+//         box_dyn_database_error : std :: string :: String < >, code_occurence :
+//         crate :: common :: code_occurence :: CodeOccurence
+//     }, Io
+//     {
+//         io_error : std :: string :: String, code_occurence : crate :: common
+//         :: code_occurence :: CodeOccurence
+//     }, Tls
+//     {
+//         box_dyn_error : std :: string :: String < >, code_occurence : crate ::
+//         common :: code_occurence :: CodeOccurence
+//     }, Protocol
+//     {
+//         protocol : std :: string :: String < >, code_occurence : crate ::
+//         common :: code_occurence :: CodeOccurence
+//     }, RowNotFound
+//     {
+//         row_not_found : std :: string :: String < >, code_occurence : crate ::
+//         common :: code_occurence :: CodeOccurence
+//     }, TypeNotFound
+//     {
+//         type_not_found : std :: string :: String < >, code_occurence : crate
+//         :: common :: code_occurence :: CodeOccurence
+//     }, ColumnIndexOutOfBounds
+//     {
+//         column_index_out_of_bounds : usize < >, len : usize < >,
+//         code_occurence : crate :: common :: code_occurence :: CodeOccurence
+//     }, ColumnNotFound
+//     {
+//         column_not_found : std :: string :: String < >, code_occurence : crate
+//         :: common :: code_occurence :: CodeOccurence
+//     }, ColumnDecode
+//     {
+//         column_decode_index : std :: string :: String < >, source_handle : std
+//         :: string :: String < >, code_occurence : crate :: common ::
+//         code_occurence :: CodeOccurence
+//     }, Decode
+//     {
+//         decode_box_dyn_error : std :: string :: String < >, code_occurence :
+//         crate :: common :: code_occurence :: CodeOccurence
+//     }, PoolTimedOut
+//     {
+//         pool_timed_out : std :: string :: String < >, code_occurence : crate
+//         :: common :: code_occurence :: CodeOccurence
+//     }, PoolClosed
+//     {
+//         pool_closed : std :: string :: String < >, code_occurence : crate ::
+//         common :: code_occurence :: CodeOccurence
+//     }, WorkerCrashed
+//     {
+//         worker_crashed : std :: string :: String < >, code_occurence : crate
+//         :: common :: code_occurence :: CodeOccurence
+//     }, Migrate
+//     {
+//         migrate : std :: string :: String, code_occurence : crate :: common ::
+//         code_occurence :: CodeOccurence
+//     }, JsonDataError
+//     {
+//         json_data_error : std :: string :: String, code_occurence : crate ::
+//         common :: code_occurence :: CodeOccurence
+//     }, JsonSyntaxError
+//     {
+//         json_syntax_error : std :: string :: String, code_occurence : crate ::
+//         common :: code_occurence :: CodeOccurence
+//     }, MissingJsonContentType
+//     {
+//         json_syntax_error : std :: string :: String < >, code_occurence :
+//         crate :: common :: code_occurence :: CodeOccurence
+//     }, BytesRejection
+//     {
+//         bytes_rejection : std :: string :: String < >, code_occurence : crate
+//         :: common :: code_occurence :: CodeOccurence
+//     }, BindQuery
+//     {
+//         checked_add : crate :: server :: postgres :: bind_query ::
+//         TryGenerateBindIncrementsErrorNamedWithSerializeDeserialize,
+//         code_occurence : crate :: common :: code_occurence :: CodeOccurence
+//     }, CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer
+//     {
+//         uuid_wrapper_try_from_possible_uuid_wrapper_in_server : std :: string
+//         :: String, code_occurence : crate :: common :: code_occurence ::
+//         CodeOccurence
+//     }, UnexpectedCase
+//     {
+//         unexpected_case : std :: string :: String < >, code_occurence : crate
+//         :: common :: code_occurence :: CodeOccurence
+//     }
+// }
 impl std::convert::From<TryCreateMany> for TryCreateManyResponseVariants {
     fn from(val: TryCreateMany) -> Self {
         match val.into_serialize_deserialize_version()
