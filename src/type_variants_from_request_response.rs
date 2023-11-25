@@ -1,9 +1,3 @@
-pub struct ErrorVariantField {
-    pub error_occurence_attribute: proc_macro2::TokenStream,
-    pub field_name: proc_macro2::TokenStream,
-    pub field_type: proc_macro2::TokenStream,
-}
-
 pub struct ErrorVariantAttribute {
     pub error_variant_attribute: proc_macro_helpers::attribute::Attribute,
     pub error_variant: ErrorVariant,
@@ -14,13 +8,17 @@ pub struct ErrorVariant {
     pub error_variant_fields: std::vec::Vec<ErrorVariantField>,
 }
 
+pub struct ErrorVariantField {
+    pub error_occurence_attribute: proc_macro2::TokenStream,
+    pub field_name: proc_macro2::TokenStream,
+    pub field_type: proc_macro2::TokenStream,
+}
+
 pub fn type_variants_from_request_response(
     ident_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
     ident_response_variants_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
-    attribute: proc_macro_helpers::attribute::Attribute,
-    variant_ident: &proc_macro2::TokenStream, //Configuration
     proc_macro_name_ident_stringified: &std::string::String,
-    fields: std::vec::Vec<ErrorVariantField>,
+    error_variant_attribute: &ErrorVariantAttribute,
 ) -> (
     proc_macro_helpers::attribute::Attribute, //attribute
     std::vec::Vec<proc_macro2::TokenStream>,  //enum_with_serialize_deserialize_logic_token_stream
@@ -31,27 +29,31 @@ pub fn type_variants_from_request_response(
     std::vec::Vec<proc_macro2::TokenStream>, //axum_response_into_response_logic_token_stream
 ) {
     let variant_ident_attribute_camel_case_token_stream = {
-        let variant_ident_attribute_camel_case_stringified = format!("{variant_ident}{attribute}");
+        let variant_ident_attribute_camel_case_stringified = format!(
+            "{}{}",
+            error_variant_attribute.error_variant.error_variant_ident,
+            error_variant_attribute.error_variant_attribute
+        );
         variant_ident_attribute_camel_case_stringified
         .parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_attribute_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    let http_status_code_quote_token_stream = attribute.to_http_status_code_quote();
-    let fields_name_mapped_into_token_stream = fields
+    let http_status_code_quote_token_stream = error_variant_attribute.error_variant_attribute.to_http_status_code_quote();
+    let fields_name_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields
         .iter()
         .map(|element| {
             let field_name_token_stream = &element.field_name;
             quote::quote! {#field_name_token_stream}
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-    let fields_anonymous_types_mapped_into_token_stream = fields
+    let fields_anonymous_types_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields
         .iter()
         .map(|element| {
             let field_name_token_stream = &element.field_name;
             quote::quote! {#field_name_token_stream: _}
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-    let fields_mapped_into_token_stream = fields
+    let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields
         .iter()
         .map(|element| {
             let field_name_token_stream = &element.field_name;
@@ -59,6 +61,7 @@ pub fn type_variants_from_request_response(
             quote::quote! {#field_name_token_stream: #field_type_token_stream}
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
     let enum_with_serialize_deserialize_logic_token_stream = {
         vec![quote::quote! {
             #variant_ident {
@@ -108,7 +111,7 @@ pub fn type_variants_from_request_response(
         }]
     };
     (
-        attribute,
+        error_variant_attribute.error_variant_attribute.clone(),
         enum_with_serialize_deserialize_logic_token_stream,
         from_logic_token_stream,
         impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
