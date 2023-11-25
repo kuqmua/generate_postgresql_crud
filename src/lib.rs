@@ -1632,6 +1632,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    //
+    let bind_query_variant_attribute = crate::type_variants_from_request_response::ErrorVariantAttribute {
+        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        error_variant: crate::type_variants_from_request_response::ErrorVariant {
+            error_variant_ident: quote::quote!{BindQuery},
+            error_variant_fields: vec![
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{#eo_error_occurence_attribute_token_stream},
+                    field_name: quote::quote!{checked_add},
+                    field_type: quote::quote!{crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed},
+                },
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{},
+                    field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                    field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+                },
+            ],
+        },
+    };
+    //
     let bind_query_variant_initialization_token_stream = quote::quote!{
         BindQuery { 
             checked_add: e.into_serialize_deserialize_version(), 
@@ -1755,6 +1775,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    //
+    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute = crate::type_variants_from_request_response::ErrorVariantAttribute {
+        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        error_variant: crate::type_variants_from_request_response::ErrorVariant {
+            error_variant_ident: quote::quote!{CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer},
+            error_variant_fields: vec![
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{#eo_display_attribute_token_stream},
+                    field_name: quote::quote!{uuid_wrapper_try_from_possible_uuid_wrapper_in_server},
+                    field_type: quote::quote!{sqlx::Error},
+                },
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{},
+                    field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                    field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+                },
+            ],
+        },
+    };
+    //
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error] //todo what status should be there?
         CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
@@ -2733,39 +2773,53 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let f = {
                     //
                     let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
-            
+                    let vec_status_codes = {
+                        let mut vec_status_codes = vec![
+                            configuration_error_variant_attribute,
+                            database_variant_attribute,
+                            io_variant_attribute,
+                            tls_variant_attribute,
+                            protocol_variant_attribute,
+                            row_not_found_variant_attribute,
+                            type_not_found_variant_attribute,
+                            column_index_out_of_bounds_variant_attribute,
+                            column_not_found_variant_attribute,
+                            column_decode_variant_attribute,
+                            decode_variant_attribute,
+                            pool_timed_out_variant_attribute,
+                            pool_closed_variant_attribute,
+                            worker_crashed_variant_attribute,
+                            migrate_variant_attribute,
+                            //
+                            json_data_error_variant_attribute,
+                            json_syntax_error_variant_attribute,
+                            missing_json_content_type_variant_attribute,
+                            bytes_rejection_variant_attribute,
+                            //
+                            bind_query_variant_attribute,
+                            created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute,
+                            unexpected_case_variant_attribute,
+                        ];
+                        vec_status_codes
+                    };
                     let generate_status_code_enums_with_from_impls_logic_token_stream = crate::type_variants_from_request_response::generate_status_code_enums_with_from_impls_logic_token_stream(
                         &derive_debug_serialize_deserialize_token_stream, //#[derive(Debug, serde::Serialize, serde::Deserialize)]
                         &ident_response_variants_stringified,
                         &ident_response_variants_token_stream,
-                        vec![
-                            crate::type_variants_from_request_response::ErrorVariantAttribute {
-                                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                                error_variant: crate::type_variants_from_request_response::ErrorVariant {
-                                    error_variant_ident: quote::quote!{},
-                                    error_variant_fields: vec![
-                                        crate::type_variants_from_request_response::ErrorVariantField {
-                                            error_occurence_attribute: quote::quote!{},
-                                            field_name: quote::quote!{},
-                                            field_type: quote::quote!{},
-                                        }
-                                    ],
-                                },
-                            }
-                        ],
+                        vec_status_codes.clone(),
                         &proc_macro_name_ident_stringified,
                         &desirable_token_stream,
                     );
-                    // let generate_try_from_response_logic_token_stream = crate::type_variants_from_request_response::generate_try_from_response_logic_token_stream(
-                    //     &response_without_body,
-                    //     &desirable_name_token_stream,
-                    //     &ident_lower_case_stringified,
-                    //     &ident_response_variants_stringified,
-                    //     &ident_response_variants_token_stream,
-                    //     &desirable_attribute,
-                    //     &proc_macro_name_ident_stringified,
-                    //     &vec_status_codes,
-                    // );
+                    let generate_try_from_response_logic_token_stream = crate::type_variants_from_request_response::generate_try_from_response_logic_token_stream(
+                        false,
+                        &desirable_token_stream,
+                        &ident_lower_case_stringified,
+                        &ident_response_variants_stringified,
+                        &ident_response_variants_token_stream,
+                        &desirable_attribute,
+                        &proc_macro_name_ident_stringified,
+                        vec_status_codes,
+                    );
                     // //
                     // let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest;
                     // crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(

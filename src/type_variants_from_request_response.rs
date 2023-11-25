@@ -1,13 +1,15 @@
+#[derive(Clone)]
 pub struct ErrorVariantAttribute {
     pub error_variant_attribute: proc_macro_helpers::attribute::Attribute,
     pub error_variant: ErrorVariant,
 }
-
+#[derive(Clone)]
 pub struct ErrorVariant {
     pub error_variant_ident: proc_macro2::TokenStream,
     pub error_variant_fields: std::vec::Vec<ErrorVariantField>,
 }
 
+#[derive(Clone)]
 pub struct ErrorVariantField {
     pub error_occurence_attribute: proc_macro2::TokenStream,
     pub field_name: proc_macro2::TokenStream,
@@ -202,7 +204,7 @@ pub fn generate_try_from_response_logic_token_stream(
     ident_lower_case_stringified: &std::string::String,
     ident_response_variants_stringified: &std::string::String,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
-    desirable_attribute: proc_macro_helpers::attribute::Attribute,
+    desirable_attribute: &proc_macro_helpers::attribute::Attribute,
     proc_macro_name_ident_stringified: &std::string::String,
     vec_status_codes: std::vec::Vec<ErrorVariantAttribute>,
 ) -> proc_macro2::TokenStream {
@@ -321,7 +323,7 @@ pub fn generate_try_from_response_logic_token_stream(
                     });
                 },
                 false => {
-                    if let false = desirable_attribute == *status_code_attribute {
+                    if let false = desirable_attribute == status_code_attribute {
                         status_code_enums_try_from_variants.push(quote::quote! {
                             else if status_code == #http_status_code_token_stream {
                                 match response.text().await {
