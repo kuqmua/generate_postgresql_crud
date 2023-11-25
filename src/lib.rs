@@ -2450,14 +2450,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ],
         },
     };
-    let unexpected_case_variant_attribute = crate::type_variants_from_request_response::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    let bytes_rejection_variant_attribute = crate::type_variants_from_request_response::ErrorVariantAttribute {
+        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         error_variant: crate::type_variants_from_request_response::ErrorVariant {
-            error_variant_ident: quote::quote!{UnexpectedCase},
+            error_variant_ident: quote::quote!{BytesRejection},
             error_variant_fields: vec![
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                    field_name: quote::quote!{unexpected_case},
+                    field_name: quote::quote!{bytes_rejection},
                     field_type: quote::quote!{#std_string_string_token_stream},
                 },
                 crate::type_variants_from_request_response::ErrorVariantField {
@@ -2491,7 +2491,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &ident_with_serialize_deserialize_camel_case_token_stream,
             &ident_response_variants_token_stream,
             &proc_macro_name_ident_stringified,
-            &unexpected_case_variant_attribute
+            &bytes_rejection_variant_attribute
         )
     ];
     //
