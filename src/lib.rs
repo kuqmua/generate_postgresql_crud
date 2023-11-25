@@ -6,6 +6,7 @@ mod generate_postgres_transaction;
 mod generate_postgres_execute_query;
 mod type_variants_from_request_response;
 mod type_variants_from_request_response_generator;
+//slavic
 
 // trait Something {
 //     fn something();
