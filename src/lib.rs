@@ -1879,25 +1879,86 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .header(reqwest::header::CONTENT_TYPE, "application/json")
     };
     //
-    // let project_commit_extractor_not_equal_variant_attribute = crate::type_variants_from_request_response::ErrorVariantAttribute {
-    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-    //     error_variant: crate::type_variants_from_request_response::ErrorVariant {
-    //         error_variant_ident: quote::quote!{ProjectCommitExtractorNotEqual},
-    //         error_variant_fields: vec![
-    //             crate::type_variants_from_request_response::ErrorVariantField {
-    //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-    //                 field_name: quote::quote!{configuration_box_dyn_error},
-    //                 field_type: quote::quote!{#std_string_string_token_stream},
-    //             },
-    //             crate::type_variants_from_request_response::ErrorVariantField {
-    //                 error_occurence_attribute: quote::quote!{},
-    //                 field_name: quote::quote!{#code_occurence_lower_case_token_stream},
-    //                 field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
-    //             },
-    //         ],
-    //     },
-    // };
+    let project_commit_extractor_not_equal_variant_attribute = crate::type_variants_from_request_response::ErrorVariantAttribute {
+        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        error_variant: crate::type_variants_from_request_response::ErrorVariant {
+            error_variant_ident: quote::quote!{ProjectCommitExtractorNotEqual},
+            error_variant_fields: vec![
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                    field_name: quote::quote!{project_commit_not_equal},
+                    field_type: quote::quote!{#std_string_string_token_stream},
+                },
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                    field_name: quote::quote!{project_commit_to_use},
+                    field_type: quote::quote!{#std_string_string_token_stream},
+                },
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{},
+                    field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                    field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+                },
+            ],
+        },
+    };
+    let project_commit_extractor_to_str_conversion_variant_attribute = crate::type_variants_from_request_response::ErrorVariantAttribute {
+        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        error_variant: crate::type_variants_from_request_response::ErrorVariant {
+            error_variant_ident: quote::quote!{ProjectCommitExtractorToStrConversion},
+            error_variant_fields: vec![
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{#eo_display_attribute_token_stream},
+                    field_name: quote::quote!{project_commit_to_str_conversion},
+                    field_type: quote::quote!{http::header::ToStrError},
+                },
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{},
+                    field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                    field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+                },
+            ],
+        },
+    };
+    let no_project_commit_extractor_header_variant_attribute = crate::type_variants_from_request_response::ErrorVariantAttribute {
+        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        error_variant: crate::type_variants_from_request_response::ErrorVariant {
+            error_variant_ident: quote::quote!{NoProjectCommitExtractorHeader},
+            error_variant_fields: vec![
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                    field_name: quote::quote!{no_project_commit_header},
+                    field_type: quote::quote!{},
+                },
+                crate::type_variants_from_request_response::ErrorVariantField {
+                    error_occurence_attribute: quote::quote!{#std_string_string_token_stream},
+                    field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+                    field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+                },
+            ],
+        },
+    };
     //
+    let common_middlewares_error_variants_vec = vec![
+        crate::type_variants_from_request_response::type_variants_from_request_response(
+            &ident_with_serialize_deserialize_camel_case_token_stream,
+            &ident_response_variants_token_stream,
+            &proc_macro_name_ident_stringified,
+            &project_commit_extractor_not_equal_variant_attribute
+        ),
+        crate::type_variants_from_request_response::type_variants_from_request_response(
+            &ident_with_serialize_deserialize_camel_case_token_stream,
+            &ident_response_variants_token_stream,
+            &proc_macro_name_ident_stringified,
+            &project_commit_extractor_to_str_conversion_variant_attribute
+        ),
+        crate::type_variants_from_request_response::type_variants_from_request_response(
+            &ident_with_serialize_deserialize_camel_case_token_stream,
+            &ident_response_variants_token_stream,
+            &proc_macro_name_ident_stringified,
+            &no_project_commit_extractor_header_variant_attribute
+        ),
+    ];
     //todo move it into custom macro attribute
     let common_middlewares_error_variants_token_stream = {
         let project_commit_extractor_middleware_token_stream = quote::quote!{
@@ -2802,6 +2863,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
                     let vec_status_codes = {
                         let mut vec_status_codes = vec![
+                            project_commit_extractor_not_equal_variant_attribute,
+                            project_commit_extractor_to_str_conversion_variant_attribute,
+                            no_project_commit_extractor_header_variant_attribute,
+                            common_middlewares_error_variants_vec,
+                            //
                             configuration_error_variant_attribute,
                             database_variant_attribute,
                             io_variant_attribute,
