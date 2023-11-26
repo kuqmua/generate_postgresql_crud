@@ -212,6 +212,9 @@ pub fn generate_try_from_response_logic_token_stream(
     ident_lower_case_stringified: &std::string::String,
     ident_response_variants_stringified: &std::string::String,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
+    try_operation_response_variants_token_stream: &proc_macro2::TokenStream,
+    try_create_many_response_variants_token_stream: &proc_macro2::TokenStream,
+    operation_lower_case_stringified: &std::string::String,
     desirable_attribute: &proc_macro_helpers::attribute::Attribute,
     proc_macro_name_ident_stringified: &std::string::String,
     vec_status_codes: std::vec::Vec<ErrorVariantAttribute>,
@@ -238,7 +241,7 @@ pub fn generate_try_from_response_logic_token_stream(
     let unique_status_codes_len_minus_one = unique_status_codes_len - 1;
     let unique_status_codes = hashmap_unique_status_codes.iter().map(|(key, _)|key).collect::<Vec<&proc_macro_helpers::attribute::Attribute>>();
     let desirable_enum_name = {
-        let status_code_enum_name_stingified = format!("{ident_response_variants_token_stream}{desirable_attribute}");
+        let status_code_enum_name_stingified = format!("{try_operation_response_variants_token_stream}{desirable_attribute}");
         status_code_enum_name_stingified
         .parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {status_code_enum_name_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -257,8 +260,8 @@ pub fn generate_try_from_response_logic_token_stream(
     };
     let api_request_unexpected_error_module_path_token_stream = quote::quote! { crate::common::api_request_unexpected_error };
     let api_request_unexpected_error_path_token_stream = quote::quote! { #api_request_unexpected_error_module_path_token_stream::ApiRequestUnexpectedError };
-    let try_from_response_ident_lower_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_try_from_response_ident_lower_case_token_stream(
-        &ident_lower_case_stringified,
+    let try_from_response_operation_lower_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_try_from_response_ident_lower_case_token_stream(
+        &operation_lower_case_stringified,
         &proc_macro_name_ident_stringified,
     );
     let status_code_enums_try_from = {
@@ -270,7 +273,7 @@ pub fn generate_try_from_response_logic_token_stream(
             false => quote::quote! {
                 match response.text().await {
                     Ok(response_text) => match serde_json::from_str::<#desirable_enum_name>(&response_text){
-                        Ok(value) => Ok(#ident_response_variants_token_stream::from(value)), 
+                        Ok(value) => Ok(#try_operation_response_variants_token_stream::from(value)), 
                         Err(e) => Err(
                             #api_request_unexpected_error_path_token_stream::DeserializeBody{ 
                                 serde: e,
@@ -301,7 +304,7 @@ pub fn generate_try_from_response_logic_token_stream(
         .for_each(
             |(index, status_code_attribute)| 
         {
-            let status_code_enum_name_stringified = format!("{ident_response_variants_token_stream}{status_code_attribute}");
+            let status_code_enum_name_stringified = format!("{try_operation_response_variants_token_stream}{status_code_attribute}");
             let status_code_enum_name_token_stream = status_code_enum_name_stringified
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {status_code_enum_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
@@ -336,7 +339,7 @@ pub fn generate_try_from_response_logic_token_stream(
                             else if status_code == #http_status_code_token_stream {
                                 match response.text().await {
                                     Ok(response_text) => match serde_json::from_str::<#status_code_enum_name_token_stream>(&response_text){
-                                        Ok(value) => Ok(#ident_response_variants_token_stream::from(value)), 
+                                        Ok(value) => Ok(#try_operation_response_variants_token_stream::from(value)), 
                                         Err(e) => Err(
                                             #api_request_unexpected_error_path_token_stream::DeserializeBody{ 
                                                 serde: e,
@@ -406,7 +409,7 @@ pub fn generate_try_from_response_logic_token_stream(
         //         }
         //     }
         // }
-        async fn #try_from_response_ident_lower_case_token_stream(response: reqwest::Response) -> Result<#ident_response_variants_token_stream, #api_request_unexpected_error_path_token_stream> {
+        async fn #try_from_response_operation_lower_case_token_stream(response: reqwest::Response) -> Result<#try_operation_response_variants_token_stream, #api_request_unexpected_error_path_token_stream> {
             let status_code = response.status();
             let headers = response.headers().clone();
             #(#status_code_enums_try_from)*
