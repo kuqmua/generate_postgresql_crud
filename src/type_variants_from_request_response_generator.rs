@@ -4,6 +4,7 @@ pub fn type_variants_from_request_response_generator(
     ident_lower_case_stringified: &std::string::String,
     try_operation_camel_case_token_stream: &proc_macro2::TokenStream,
     try_operation_response_variants_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
+    try_operation_response_variants_desirable_attribute_token_stream: &proc_macro2::TokenStream,
     desirable_token_stream: &proc_macro2::TokenStream,
     desirable_type_token_stream: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
     proc_macro_name_ident_stringified: &std::string::String,
@@ -50,6 +51,7 @@ pub fn type_variants_from_request_response_generator(
         .parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_desirable_attribute_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+
     // let (
     //     attribute,
     //     enum_with_serialize_deserialize_logic_token_stream,
@@ -172,16 +174,20 @@ pub fn type_variants_from_request_response_generator(
     let generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream = {
         quote::quote! {
             #derive_debug_serialize_deserialize_token_stream
-            enum #ident_response_variants_desirable_attribute_token_stream {
+            enum #try_operation_response_variants_desirable_attribute_token_stream {
                 #desirable_token_stream(#desirable_type_token_stream),
             }
-            impl std::convert::From<#ident_response_variants_desirable_attribute_token_stream> for #try_operation_response_variants_token_stream {
-                fn from(value: #ident_response_variants_desirable_attribute_token_stream) -> Self {
+            impl std::convert::From<#try_operation_response_variants_desirable_attribute_token_stream> for #try_operation_response_variants_token_stream {
+                fn from(value: #try_operation_response_variants_desirable_attribute_token_stream) -> Self {
                     match value {
-                        #ident_response_variants_desirable_attribute_token_stream::#desirable_token_stream(i) => Self::#desirable_token_stream(i),
+                        #try_operation_response_variants_desirable_attribute_token_stream::#desirable_token_stream(i) => Self::#desirable_token_stream(i),
                     }
                 }
             }
+
+
+
+
             // #[derive(Debug, serde::Serialize, serde::Deserialize)]
             // enum KekwResponseVariantsTvfrr500InternalServerError {
             //     Configuration {
@@ -465,7 +471,7 @@ pub fn type_variants_from_request_response_generator(
         #enum_with_serialize_deserialize_logic_token_stream_handle_token_stream
         #from_logic_token_stream_handle_token_stream
         #impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_token_stream
-        // #generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream
+        #generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream
         // #try_from_response_logic_token_stream_handle_token_stream
         // #impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream_handle_token_stream
         // #ident_request_error_logic_token_stream_handle_token_stream

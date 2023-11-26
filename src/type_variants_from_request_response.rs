@@ -128,6 +128,7 @@ pub fn generate_status_code_enums_with_from_impls_logic_token_stream(
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream, //#[derive(Debug, serde::Serialize, serde::Deserialize)]
     ident_response_variants_stringified: &std::string::String,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
+    try_operation_response_variants_token_stream: &proc_macro2::TokenStream,
     vec_status_codes: std::vec::Vec<ErrorVariantAttribute>,
     proc_macro_name_ident_stringified: &std::string::String,
     desirable_name_token_stream: &proc_macro2::TokenStream,
@@ -153,6 +154,12 @@ pub fn generate_status_code_enums_with_from_impls_logic_token_stream(
             .parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let try_operation_response_variants_attribute_token_stream = {
+            let try_operation_response_variants_attribute_stingified = format!("{try_operation_response_variants_token_stream}{key}");
+            try_operation_response_variants_attribute_stingified
+            .parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         let enum_variants_token_stream = value.iter().map(|element|{
             let error_variant_ident = &element.error_variant_ident;
             let fields_mapped_into_token_stream = element.error_variant_fields.iter().map(|element| {
@@ -173,20 +180,20 @@ pub fn generate_status_code_enums_with_from_impls_logic_token_stream(
                 quote::quote! {#field_name_token_stream}
             }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
             quote::quote!{
-                #ident_response_variants_attribute_token_stream::#error_variant_ident {
+                #try_operation_response_variants_attribute_token_stream::#error_variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
-                } => Self::Configuration {
+                } => Self::#error_variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
                 }
             }
         });
         quote::quote!{
             #derive_debug_serialize_deserialize_token_stream
-            enum #ident_response_variants_attribute_token_stream {
+            enum #try_operation_response_variants_attribute_token_stream {
                 #(#enum_variants_token_stream),*
             }
-            impl std::convert::From<#ident_response_variants_attribute_token_stream> for #ident_response_variants_token_stream {
-                fn from(value: #ident_response_variants_attribute_token_stream) -> Self {
+            impl std::convert::From<#try_operation_response_variants_attribute_token_stream> for #try_operation_response_variants_token_stream {
+                fn from(value: #try_operation_response_variants_attribute_token_stream) -> Self {
                     match value {
                         #(#std_convert_from_match_variants_token_stream),*
                     }
