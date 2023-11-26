@@ -2969,30 +2969,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type_variants_from_request_response
                 };
                 crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                    desirable_attribute,//: proc_macro_helpers::attribute::Attribute,
-                    &ident,//: &syn::Ident,
-                    &ident_lower_case_stringified,//: &std::string::String,
+                    desirable_attribute,
+                    // &ident,
+                    &ident_lower_case_stringified,
                     &try_create_many_camel_case_token_stream,
-                    &try_operation_response_variants_token_stream,//: &proc_macro2::TokenStream, //KekwResponseVariants
+                    &try_operation_response_variants_token_stream,
                     &try_operation_response_variants_desirable_attribute_token_stream,
                     &create_many_name_lower_case_stringified,
-                    &desirable_token_stream,//: &proc_macro2::TokenStream,
-                    &quote::quote!{std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>},//: &proc_macro2::TokenStream, //
-                    &proc_macro_name_ident_stringified,//: &std::string::String,
-                    &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,//: &proc_macro2::TokenStream,
-                    &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,//: &proc_macro2::TokenStream,
-                    &ident_with_serialize_deserialize_camel_case_token_stream,//: &proc_macro2::TokenStream,
+                    &desirable_token_stream,
+                    &quote::quote!{std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>},
+                    &proc_macro_name_ident_stringified,
+                    &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                    &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+                    // &ident_with_serialize_deserialize_camel_case_token_stream,
                     &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                    &error_named_derive_token_stream,//: &proc_macro2::TokenStream,
-                    &eo_display_attribute_token_stream,//: &proc_macro2::TokenStream,
-                    &eo_display_foreign_type_token_stream,//: &proc_macro2::TokenStream,
-                    &eo_display_with_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
-                    &derive_debug_serialize_deserialize_token_stream,//: &proc_macro2::TokenStream,
-                    type_variants_from_request_response_vec,//
+                    &error_named_derive_token_stream,
+                    &eo_display_attribute_token_stream,
+                    &eo_display_foreign_type_token_stream,
+                    &eo_display_with_serialize_deserialize_token_stream,
+                    &derive_debug_serialize_deserialize_token_stream,
+                    type_variants_from_request_response_vec,
                     &ident_response_variants_stringified,
                     &ident_response_variants_token_stream,
                     vec_status_codes,
-                    &desirable_token_stream,
+                    // &desirable_token_stream,
                     false,
                     &try_create_many_response_variants_token_stream,
                 )
@@ -3010,13 +3010,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 //     tvfrr_201_created
                 // )]
                 pub enum #try_create_many_camel_case_token_stream {
-                    // #common_middlewares_error_variants_token_stream
-                    // #json_body_logic_error_variants_token_stream
-                    // #postgres_error_variants_token_stream
-                    // #bind_query_variant_declaration_token_stream,
-                    // #created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream,
-                    // #unexpected_case_error_variant_token_stream
-                    //
     //#[tvfrr_400_bad_request]
     ProjectCommitExtractorNotEqual {
         #[eo_display_with_serialize_deserialize]
