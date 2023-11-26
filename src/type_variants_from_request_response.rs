@@ -17,6 +17,7 @@ pub struct ErrorVariantField {
 }
 
 pub fn type_variants_from_request_response(
+    try_operation_response_variants_token_stream: &proc_macro2::TokenStream,
     operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
     ident_response_variants_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
     proc_macro_name_ident_stringified: &std::string::String,
@@ -82,7 +83,7 @@ pub fn type_variants_from_request_response(
     };
     let impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream = {
         vec![quote::quote! {
-            #ident_response_variants_token_stream::#variant_ident {
+            #try_operation_response_variants_token_stream::#variant_ident {
                 #(#fields_anonymous_types_mapped_into_token_stream),*
             } => #http_status_code_quote_token_stream
         }]
