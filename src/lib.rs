@@ -3000,8 +3000,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &try_create_many_camel_case_token_stream,
                         &try_operation_response_variants_token_stream,//: &proc_macro2::TokenStream, //KekwResponseVariants
                         &try_operation_response_variants_desirable_attribute_token_stream,
+                        &create_many_name_lower_case_stringified,
                         &desirable_token_stream,//: &proc_macro2::TokenStream,
-                        &quote::quote!{std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>},//: &proc_macro2::TokenStream, //
+                        &quote::quote!{std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>},//: &proc_macro2::TokenStream, //
                         &proc_macro_name_ident_stringified,//: &std::string::String,
                         &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,//: &proc_macro2::TokenStream,
                         &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,//: &proc_macro2::TokenStream,
@@ -3067,221 +3068,60 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     // #enum_status_codes_checker_name_logic_token_stream
                     // #axum_response_into_response_logic_token_stream
                     //
-// impl TryFrom<TryCreateManyResponseVariants>
-//     for std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
-// {
-//     type Error = TryCreateManyWithSerializeDeserialize;
-//     fn try_from(value: TryCreateManyResponseVariants) -> Result<Self, Self::Error> {
-//         match value
+// async fn tvfrr_extraction_logic_try_create_many<'a>(
+//     future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
+// ) -> Result<
+//     std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>,
+//     TryCreateManyRequestError,
+// > {
+//     match future.await
+//     {
+//         Ok(response) => match
+//         try_from_response_try_create_many(response).await
 //         {
-//             TryCreateManyResponseVariants :: Desirable(i) => Ok(i),
-//             TryCreateManyResponseVariants :: ProjectCommitExtractorNotEqual
+//             Ok(variants) => match std :: vec :: Vec :: < crate :: server ::
+//             postgres :: uuid_wrapper :: PossibleUuidWrapper > ::
+//             try_from(variants)
 //             {
-//                 project_commit_not_equal, project_commit_to_use,
-//                 code_occurence
-//             } =>
-//             Err(TryCreateManyWithSerializeDeserialize ::
-//             ProjectCommitExtractorNotEqual
+//                 Ok(value) => Ok(value), Err(e) =>
+//                 Err(TryCreateManyRequestError :: ExpectedType
+//                 {
+//                     expected_type : e, code_occurence : crate ::
+//                     code_occurence_tufa_common! (),
+//                 }),
+//             }, Err(e) => match e
 //             {
-//                 project_commit_not_equal, project_commit_to_use,
-//                 code_occurence
-//             }), TryCreateManyResponseVariants ::
-//             ProjectCommitExtractorToStrConversion
-//             { project_commit_to_str_conversion, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize ::
-//             ProjectCommitExtractorToStrConversion
-//             { project_commit_to_str_conversion, code_occurence }),
-//             TryCreateManyResponseVariants :: NoProjectCommitExtractorHeader
-//             { no_project_commit_header, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize ::
-//             NoProjectCommitExtractorHeader
-//             { no_project_commit_header, code_occurence }),
-//             TryCreateManyResponseVariants :: Configuration
-//             { configuration_box_dyn_error, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: Configuration
-//             { configuration_box_dyn_error, code_occurence }),
-//             TryCreateManyResponseVariants :: Database
-//             { box_dyn_database_error, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: Database
-//             { box_dyn_database_error, code_occurence }),
-//             TryCreateManyResponseVariants :: Io { io_error, code_occurence }
-//             =>
-//             Err(TryCreateManyWithSerializeDeserialize :: Io
-//             { io_error, code_occurence }), TryCreateManyResponseVariants ::
-//             Tls { box_dyn_error, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: Tls
-//             { box_dyn_error, code_occurence }), TryCreateManyResponseVariants
-//             :: Protocol { protocol, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: Protocol
-//             { protocol, code_occurence }), TryCreateManyResponseVariants ::
-//             RowNotFound { row_not_found, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: RowNotFound
-//             { row_not_found, code_occurence }), TryCreateManyResponseVariants
-//             :: TypeNotFound { type_not_found, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: TypeNotFound
-//             { type_not_found, code_occurence }), TryCreateManyResponseVariants
-//             :: ColumnIndexOutOfBounds
-//             { column_index_out_of_bounds, len, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize ::
-//             ColumnIndexOutOfBounds
-//             { column_index_out_of_bounds, len, code_occurence }),
-//             TryCreateManyResponseVariants :: ColumnNotFound
-//             { column_not_found, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: ColumnNotFound
-//             { column_not_found, code_occurence }),
-//             TryCreateManyResponseVariants :: ColumnDecode
-//             { column_decode_index, source_handle, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: ColumnDecode
-//             { column_decode_index, source_handle, code_occurence }),
-//             TryCreateManyResponseVariants :: Decode
-//             { decode_box_dyn_error, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: Decode
-//             { decode_box_dyn_error, code_occurence }),
-//             TryCreateManyResponseVariants :: PoolTimedOut
-//             { pool_timed_out, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: PoolTimedOut
-//             { pool_timed_out, code_occurence }), TryCreateManyResponseVariants
-//             :: PoolClosed { pool_closed, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: PoolClosed
-//             { pool_closed, code_occurence }), TryCreateManyResponseVariants ::
-//             WorkerCrashed { worker_crashed, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: WorkerCrashed
-//             { worker_crashed, code_occurence }), TryCreateManyResponseVariants
-//             :: Migrate { migrate, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: Migrate
-//             { migrate, code_occurence }), TryCreateManyResponseVariants ::
-//             JsonDataError { json_data_error, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: JsonDataError
-//             { json_data_error, code_occurence }),
-//             TryCreateManyResponseVariants :: JsonSyntaxError
-//             { json_syntax_error, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: JsonSyntaxError
-//             { json_syntax_error, code_occurence }),
-//             TryCreateManyResponseVariants :: MissingJsonContentType
-//             { json_syntax_error, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize ::
-//             MissingJsonContentType { json_syntax_error, code_occurence }),
-//             TryCreateManyResponseVariants :: BytesRejection
-//             { bytes_rejection, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: BytesRejection
-//             { bytes_rejection, code_occurence }),
-//             TryCreateManyResponseVariants :: BindQuery
-//             { checked_add, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: BindQuery
-//             { checked_add, code_occurence }), TryCreateManyResponseVariants ::
-//             CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer
-//             {
-//                 uuid_wrapper_try_from_possible_uuid_wrapper_in_server,
-//                 code_occurence
-//             } =>
-//             Err(TryCreateManyWithSerializeDeserialize ::
-//             CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer
-//             {
-//                 uuid_wrapper_try_from_possible_uuid_wrapper_in_server,
-//                 code_occurence
-//             }), TryCreateManyResponseVariants :: UnexpectedCase
-//             { unexpected_case, code_occurence } =>
-//             Err(TryCreateManyWithSerializeDeserialize :: UnexpectedCase
-//             { unexpected_case, code_occurence })
-//         }
+//                 crate :: common :: api_request_unexpected_error ::
+//                 ApiRequestUnexpectedError :: StatusCode
+//                 { status_code, headers, response_text_result, } =>
+//                 Err(TryCreateManyRequestError :: UnexpectedStatusCode
+//                 {
+//                     status_code, headers, response_text_result, code_occurence :
+//                     crate :: code_occurence_tufa_common! ()
+//                 }), crate :: common :: api_request_unexpected_error ::
+//                 ApiRequestUnexpectedError :: FailedToGetResponseText
+//                 { reqwest, status_code, headers } =>
+//                 Err(TryCreateManyRequestError :: FailedToGetResponseText
+//                 {
+//                     reqwest, status_code, headers, code_occurence : crate ::
+//                     code_occurence_tufa_common! ()
+//                 }), crate :: common :: api_request_unexpected_error ::
+//                 ApiRequestUnexpectedError :: DeserializeBody
+//                 { serde, status_code, headers, response_text, } =>
+//                 Err(TryCreateManyRequestError :: DeserializeResponse
+//                 {
+//                     serde, status_code, headers, response_text, code_occurence :
+//                     crate :: code_occurence_tufa_common! ()
+//                 }),
+//             },
+//         }, Err(e) =>
+//         Err(TryCreateManyRequestError :: Reqwest
+//         {
+//             reqwest : e, code_occurence : crate :: code_occurence_tufa_common!
+//             (),
+//         }),
 //     }
 // }
-#[derive(Debug, thiserror :: Error, error_occurence :: ErrorOccurence)]
-pub enum TryCreateManyRequestError {
-    ExpectedType {
-        #[eo_display_with_serialize_deserialize]
-        expected_type: TryCreateManyWithSerializeDeserialize,
-        code_occurence: crate::common::code_occurence::CodeOccurence,
-    },
-    UnexpectedStatusCode {
-        #[eo_display]
-        status_code: http::StatusCode,
-        #[eo_display_foreign_type]
-        headers: reqwest::header::HeaderMap,
-        #[eo_display_foreign_type]
-        response_text_result: crate::common::api_request_unexpected_error::ResponseTextResult,
-        code_occurence: crate::common::code_occurence::CodeOccurence,
-    },
-    FailedToGetResponseText {
-        #[eo_display_foreign_type]
-        reqwest: reqwest::Error,
-        #[eo_display]
-        status_code: http::StatusCode,
-        #[eo_display_foreign_type]
-        headers: reqwest::header::HeaderMap,
-        code_occurence: crate::common::code_occurence::CodeOccurence,
-    },
-    DeserializeResponse {
-        #[eo_display]
-        serde: serde_json::Error,
-        #[eo_display]
-        status_code: http::StatusCode,
-        #[eo_display_foreign_type]
-        headers: reqwest::header::HeaderMap,
-        #[eo_display_with_serialize_deserialize]
-        response_text: std::string::String,
-        code_occurence: crate::common::code_occurence::CodeOccurence,
-    },
-    Reqwest {
-        #[eo_display_foreign_type]
-        reqwest: reqwest::Error,
-        code_occurence: crate::common::code_occurence::CodeOccurence,
-    },
-}
-async fn tvfrr_extraction_logic_try_create_many<'a>(
-    future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
-) -> Result<
-    std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>,
-    TryCreateManyRequestError,
-> {
-    match future.await
-    {
-        Ok(response) => match
-        try_from_response_try_create_many(response).await
-        {
-            Ok(variants) => match std :: vec :: Vec :: < crate :: server ::
-            postgres :: uuid_wrapper :: PossibleUuidWrapper > ::
-            try_from(variants)
-            {
-                Ok(value) => Ok(value), Err(e) =>
-                Err(TryCreateManyRequestError :: ExpectedType
-                {
-                    expected_type : e, code_occurence : crate ::
-                    code_occurence_tufa_common! (),
-                }),
-            }, Err(e) => match e
-            {
-                crate :: common :: api_request_unexpected_error ::
-                ApiRequestUnexpectedError :: StatusCode
-                { status_code, headers, response_text_result, } =>
-                Err(TryCreateManyRequestError :: UnexpectedStatusCode
-                {
-                    status_code, headers, response_text_result, code_occurence :
-                    crate :: code_occurence_tufa_common! ()
-                }), crate :: common :: api_request_unexpected_error ::
-                ApiRequestUnexpectedError :: FailedToGetResponseText
-                { reqwest, status_code, headers } =>
-                Err(TryCreateManyRequestError :: FailedToGetResponseText
-                {
-                    reqwest, status_code, headers, code_occurence : crate ::
-                    code_occurence_tufa_common! ()
-                }), crate :: common :: api_request_unexpected_error ::
-                ApiRequestUnexpectedError :: DeserializeBody
-                { serde, status_code, headers, response_text, } =>
-                Err(TryCreateManyRequestError :: DeserializeResponse
-                {
-                    serde, status_code, headers, response_text, code_occurence :
-                    crate :: code_occurence_tufa_common! ()
-                }),
-            },
-        }, Err(e) =>
-        Err(TryCreateManyRequestError :: Reqwest
-        {
-            reqwest : e, code_occurence : crate :: code_occurence_tufa_common!
-            (),
-        }),
-    }
-}
 pub enum TryCreateManyStatusCodesChecker {
     ProjectCommitExtractorNotEqualTvfrr400BadRequest,
     ProjectCommitExtractorToStrConversionTvfrr400BadRequest,
