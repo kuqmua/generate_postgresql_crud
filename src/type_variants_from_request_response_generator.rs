@@ -433,10 +433,17 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let enum_status_codes_checker_name_logic_token_stream_handle_token_stream = {
-        let enum_status_codes_checker_camel_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_enum_status_codes_checker_camel_case_token_stream(
-            &ident,
-            proc_macro_name_ident_stringified,
-        );
+        // let enum_status_codes_checker_camel_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_enum_status_codes_checker_camel_case_token_stream(
+        //     &ident,
+        //     proc_macro_name_ident_stringified,
+        // );
+        // TryCreateManyStatusCodesChecker
+        let enum_status_codes_checker_camel_case_token_stream = {
+            let enum_status_codes_checker_camel_case_stringified = format!("{try_operation_camel_case_token_stream}StatusCodesChecker");
+            enum_status_codes_checker_camel_case_stringified
+            .parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {enum_status_codes_checker_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         let enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream =
             type_variants_from_request_response
                 .iter()
@@ -449,13 +456,13 @@ pub fn type_variants_from_request_response_generator(
                         _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                         enum_status_codes_checker_name_logic_token_stream,
                         _, //axum_response_into_response_logic_token_stream
-                    )| quote::quote! {#(#enum_status_codes_checker_name_logic_token_stream),*},
+                    )| quote::quote! {#(#enum_status_codes_checker_name_logic_token_stream)*},
                 )
                 .collect::<Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             pub enum #enum_status_codes_checker_camel_case_token_stream {
                 // ConfigurationTvfrr500InternalServerError,
-                #(#enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream),*
+                #(#enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream)*
             }
         }
     };
@@ -508,7 +515,7 @@ pub fn type_variants_from_request_response_generator(
         #impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream_handle_token_stream
         #ident_request_error_logic_token_stream_handle_token_stream
         #extraction_logic_token_stream_handle_token_stream
-        // #enum_status_codes_checker_name_logic_token_stream_handle_token_stream
+        #enum_status_codes_checker_name_logic_token_stream_handle_token_stream
         // #axum_response_into_response_logic_token_stream_handle_token_stream
     }
 }
