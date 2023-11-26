@@ -2,6 +2,7 @@ pub fn type_variants_from_request_response_generator(
     desirable_attribute: proc_macro_helpers::attribute::Attribute,
     ident: &syn::Ident,
     ident_lower_case_stringified: &std::string::String,
+    try_operation_camel_case_token_stream: &proc_macro2::TokenStream,
     try_operation_response_variants_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
     desirable_token_stream: &proc_macro2::TokenStream,
     desirable_type_token_stream: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
@@ -27,6 +28,7 @@ pub fn type_variants_from_request_response_generator(
     generated_status_code_enums_with_from_impls_logic_token_stream: &proc_macro2::TokenStream,
     try_from_response_logic_token_stream_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
+
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let type_variants_from_request_response_len = type_variants_from_request_response.len();
     let ident_request_error_camel_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_ident_request_error_camel_case_token_stream(
@@ -121,8 +123,8 @@ pub fn type_variants_from_request_response_generator(
             )
             .collect::<Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            impl std::convert::From<#ident> for #try_operation_response_variants_token_stream {
-                fn from(value: #ident) -> Self {
+            impl std::convert::From<#try_operation_camel_case_token_stream> for #try_operation_response_variants_token_stream {
+                fn from(value: #try_operation_camel_case_token_stream) -> Self {
                     match value.into_serialize_deserialize_version() {
                         // KekwWithSerializeDeserialize::Configuration {
                         //     configuration_box_dyn_error,
@@ -458,9 +460,10 @@ pub fn type_variants_from_request_response_generator(
             }
         }
     };
+    // println!("{}");
     quote::quote! {
         #enum_with_serialize_deserialize_logic_token_stream_handle_token_stream
-        // #from_logic_token_stream_handle_token_stream
+        #from_logic_token_stream_handle_token_stream
         // #impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_token_stream
         // #generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream
         // #try_from_response_logic_token_stream_handle_token_stream

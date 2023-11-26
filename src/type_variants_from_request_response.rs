@@ -17,7 +17,7 @@ pub struct ErrorVariantField {
 }
 
 pub fn type_variants_from_request_response(
-    ident_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
+    operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
     ident_response_variants_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
     proc_macro_name_ident_stringified: &std::string::String,
     error_variant_attribute: &ErrorVariantAttribute,
@@ -73,7 +73,7 @@ pub fn type_variants_from_request_response(
     };
     let from_logic_token_stream = {
         vec![quote::quote! {
-            #ident_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+            #operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
                 #(#fields_name_mapped_into_token_stream),*
             } => Self::#variant_ident {
                 #(#fields_name_mapped_into_token_stream),*
@@ -91,7 +91,7 @@ pub fn type_variants_from_request_response(
         vec![quote::quote! {
                 #ident_response_variants_token_stream::#variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
-                } => Err(#ident_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+                } => Err(#operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
                 })
         }]

@@ -1642,7 +1642,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{#eo_error_occurence_attribute_token_stream},
                     field_name: quote::quote!{checked_add},
-                    field_type: quote::quote!{crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed},
+                    field_type: quote::quote!{crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamedWithSerializeDeserialize},//crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed 
                 },
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{},
@@ -1653,12 +1653,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         },
     };
     //
-    let bind_query_type_variant_from_request_response = crate::type_variants_from_request_response::type_variants_from_request_response(
-        &ident_with_serialize_deserialize_camel_case_token_stream,
-        &ident_response_variants_token_stream,
-        &proc_macro_name_ident_stringified,
-        &bind_query_variant_attribute
-    );
+
     //
     let bind_query_variant_initialization_token_stream = quote::quote!{
         BindQuery { 
@@ -1792,7 +1787,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{#eo_display_attribute_token_stream},
                     field_name: quote::quote!{uuid_wrapper_try_from_possible_uuid_wrapper_in_server},
-                    field_type: quote::quote!{sqlx::Error},
+                    field_type: quote::quote!{#std_string_string_token_stream},//sqlx::Error
                 },
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{},
@@ -1802,6 +1797,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ],
         },
     };
+
     //
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error] //todo what status should be there?
@@ -1909,9 +1905,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             error_variant_ident: quote::quote!{ProjectCommitExtractorToStrConversion},
             error_variant_fields: vec![
                 crate::type_variants_from_request_response::ErrorVariantField {
-                    error_occurence_attribute: quote::quote!{#eo_display_attribute_token_stream},
+                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
                     field_name: quote::quote!{project_commit_to_str_conversion},
-                    field_type: quote::quote!{http::header::ToStrError},
+                    field_type: quote::quote!{#std_string_string_token_stream},//difference between  common_middlewares_error_variants_vec in type of this variant http::header::ToStrError
                 },
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{},
@@ -1939,27 +1935,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ],
         },
     };
-    //
-    let common_middlewares_error_variants_vec = vec![
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &project_commit_extractor_not_equal_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &project_commit_extractor_to_str_conversion_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &no_project_commit_extractor_header_variant_attribute
-        ),
-    ];
     //todo move it into custom macro attribute
     let common_middlewares_error_variants_token_stream = {
         let project_commit_extractor_middleware_token_stream = quote::quote!{
@@ -1974,7 +1949,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[tvfrr_400_bad_request]
             ProjectCommitExtractorToStrConversion {
                 #eo_display_attribute_token_stream
-                project_commit_to_str_conversion: http::header::ToStrError,
+                project_commit_to_str_conversion: http::header::ToStrError,//what to use - original type or for serialize\deserialize?
                 #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
             },
             #[tvfrr_400_bad_request]
@@ -2033,7 +2008,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{#eo_display_attribute_token_stream},
                     field_name: quote::quote!{io_error},
-                    field_type: quote::quote!{std::io::Error},
+                    field_type: quote::quote!{#std_string_string_token_stream},//std::io::Error
                 },
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{},
@@ -2257,9 +2232,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             error_variant_ident: quote::quote!{Migrate},
             error_variant_fields: vec![
                 crate::type_variants_from_request_response::ErrorVariantField {
-                    error_occurence_attribute: quote::quote!{#eo_display_attribute_token_stream},
+                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
                     field_name: quote::quote!{migrate},
-                    field_type: quote::quote!{sqlx::migrate::MigrateError},
+                    field_type: quote::quote!{#std_string_string_token_stream},//sqlx::migrate::MigrateError
                 },
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{},
@@ -2269,98 +2244,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ],
         },
     };
-    let postgres_error_variants_vec_token_stream = vec![
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &configuration_error_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &database_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &io_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &tls_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &protocol_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &row_not_found_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &type_not_found_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &column_index_out_of_bounds_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &column_not_found_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &column_decode_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &decode_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &pool_timed_out_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &pool_closed_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &worker_crashed_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &migrate_variant_attribute
-        )
-    ];
+    //
     //
     let postgres_error_variants_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error]
@@ -2495,20 +2379,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ],
         },
     };
-    let path_logic_error_variants_vec_token_stream = vec![
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &failed_to_deserialize_path_params_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &missing_path_params_variant_attribute
-        )
-    ];
     //
     let path_logic_error_variants_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
@@ -2533,7 +2403,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{#eo_display_attribute_token_stream},
                     field_name: quote::quote!{json_data_error},
-                    field_type: quote::quote!{axum::extract::rejection::JsonDataError},
+                    field_type: quote::quote!{#std_string_string_token_stream},//axum::extract::rejection::JsonDataError
                 },
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{},
@@ -2551,7 +2421,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{#eo_display_attribute_token_stream},
                     field_name: quote::quote!{json_syntax_error},
-                    field_type: quote::quote!{axum::extract::rejection::JsonSyntaxError},
+                    field_type: quote::quote!{#std_string_string_token_stream},//axum::extract::rejection::JsonSyntaxError
                 },
                 crate::type_variants_from_request_response::ErrorVariantField {
                     error_occurence_attribute: quote::quote!{},
@@ -2597,32 +2467,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ],
         },
     };
-    let json_body_logic_error_variants_vec_token_stream = vec![
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &json_data_error_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &json_syntax_error_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &missing_json_content_type_variant_attribute
-        ),
-        crate::type_variants_from_request_response::type_variants_from_request_response(
-            &ident_with_serialize_deserialize_camel_case_token_stream,
-            &ident_response_variants_token_stream,
-            &proc_macro_name_ident_stringified,
-            &bytes_rejection_variant_attribute
-        )
-    ];
     //
     let json_body_logic_error_variants_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
@@ -2669,12 +2513,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ],
         },
     };
-    let unexpected_case_error_variant_handle_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
-        &ident_with_serialize_deserialize_camel_case_token_stream,
-        &ident_response_variants_token_stream,
-        &proc_macro_name_ident_stringified,
-        &unexpected_case_variant_attribute
-    );
     let unexpected_case_error_variant_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error]
         UnexpectedCase {
@@ -2858,6 +2696,181 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream}");
         let try_create_many_error_with_middleware_error_variants_token_stream = {
             let type_variants_from_reqwest_response_token_stream = {
+                let try_create_many_with_serialize_deserialize_camel_case_token_stream = {
+                    let try_create_many_with_serialize_deserialize_camel_case_stringified = format!("{try_camel_case_stringified}{create_many_name_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}");
+                    try_create_many_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_create_many_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                let bind_query_type_variant_from_request_response = crate::type_variants_from_request_response::type_variants_from_request_response(
+                    &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                    &ident_response_variants_token_stream,
+                    &proc_macro_name_ident_stringified,
+                    &bind_query_variant_attribute
+                );
+                let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_type_variants_from_request_response = crate::type_variants_from_request_response::type_variants_from_request_response(
+                    &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                    &ident_response_variants_token_stream,
+                    &proc_macro_name_ident_stringified,
+                    &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
+                );
+                let common_middlewares_error_variants_vec = vec![
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &project_commit_extractor_not_equal_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &project_commit_extractor_to_str_conversion_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &no_project_commit_extractor_header_variant_attribute
+                    ),
+                ];
+                let postgres_error_variants_vec_token_stream = vec![
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &configuration_error_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &database_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &io_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &tls_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &protocol_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &row_not_found_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &type_not_found_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &column_index_out_of_bounds_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &column_not_found_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &column_decode_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &decode_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &pool_timed_out_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &pool_closed_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &worker_crashed_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &migrate_variant_attribute
+                    )
+                ];
+                let path_logic_error_variants_vec_token_stream = vec![
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &failed_to_deserialize_path_params_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &missing_path_params_variant_attribute
+                    )
+                ];
+                let json_body_logic_error_variants_vec_token_stream = vec![
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &json_data_error_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &json_syntax_error_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &missing_json_content_type_variant_attribute
+                    ),
+                    crate::type_variants_from_request_response::type_variants_from_request_response(
+                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                        &ident_response_variants_token_stream,
+                        &proc_macro_name_ident_stringified,
+                        &bytes_rejection_variant_attribute
+                    )
+                ];
+                let unexpected_case_error_variant_handle_token_stream = crate::type_variants_from_request_response::type_variants_from_request_response(
+                    &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                    &ident_response_variants_token_stream,
+                    &proc_macro_name_ident_stringified,
+                    &unexpected_case_variant_attribute
+                );
                 let generated_type_variants_from_request_response_token_stream = {
                     let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
                     let vec_status_codes = {
@@ -2905,6 +2918,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             type_variants_from_request_response.push(element.clone());
                         }
                         type_variants_from_request_response.push(bind_query_type_variant_from_request_response.clone());
+                        type_variants_from_request_response.push(created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_type_variants_from_request_response.clone());
+                        type_variants_from_request_response.push(unexpected_case_error_variant_handle_token_stream.clone());
                         type_variants_from_request_response
                     };
                     let generated_status_code_enums_with_from_impls_logic_token_stream = crate::type_variants_from_request_response::generate_status_code_enums_with_from_impls_logic_token_stream(
@@ -2929,6 +2944,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         desirable_attribute,//: proc_macro_helpers::attribute::Attribute,
                         &ident,//: &syn::Ident,
                         &ident_lower_case_stringified,//: &std::string::String,
+                        &try_create_many_camel_case_token_stream,
                         &{
                             let try_create_many_response_variants_camel_case_stringified = format!("{try_camel_case_stringified}{create_many_name_camel_case_stringified}ResponseVariants");
                             try_create_many_response_variants_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -2986,9 +3002,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 //         quote::quote!{},
                 //     )
                 // };
-                println!("{generated_type_variants_from_request_response_token_stream}");
                 quote::quote!{
-                    // #generated_type_variants_from_request_response_token_stream
+                    #generated_type_variants_from_request_response_token_stream
                     //
                     // #enum_with_serialize_deserialize_logic_token_stream
                     // #from_logic_token_stream
@@ -3110,106 +3125,106 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 //         :: common :: code_occurence :: CodeOccurence
 //     }
 // }
-impl std::convert::From<TryCreateMany> for TryCreateManyResponseVariants {
-    fn from(val: TryCreateMany) -> Self {
-        match val.into_serialize_deserialize_version()
-        {
-            TryCreateManyWithSerializeDeserialize ::
-            ProjectCommitExtractorNotEqual
-            {
-                project_commit_not_equal, project_commit_to_use,
-                code_occurence
-            } => Self :: ProjectCommitExtractorNotEqual
-            {
-                project_commit_not_equal, project_commit_to_use,
-                code_occurence
-            }, TryCreateManyWithSerializeDeserialize ::
-            ProjectCommitExtractorToStrConversion
-            { project_commit_to_str_conversion, code_occurence } => Self ::
-            ProjectCommitExtractorToStrConversion
-            { project_commit_to_str_conversion, code_occurence },
-            TryCreateManyWithSerializeDeserialize ::
-            NoProjectCommitExtractorHeader
-            { no_project_commit_header, code_occurence } => Self ::
-            NoProjectCommitExtractorHeader
-            { no_project_commit_header, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: Configuration
-            { configuration_box_dyn_error, code_occurence } => Self ::
-            Configuration { configuration_box_dyn_error, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: Database
-            { box_dyn_database_error, code_occurence } => Self :: Database
-            { box_dyn_database_error, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: Io
-            { io_error, code_occurence } => Self :: Io
-            { io_error, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: Tls
-            { box_dyn_error, code_occurence } => Self :: Tls
-            { box_dyn_error, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: Protocol
-            { protocol, code_occurence } => Self :: Protocol
-            { protocol, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: RowNotFound
-            { row_not_found, code_occurence } => Self :: RowNotFound
-            { row_not_found, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: TypeNotFound
-            { type_not_found, code_occurence } => Self :: TypeNotFound
-            { type_not_found, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: ColumnIndexOutOfBounds
-            { column_index_out_of_bounds, len, code_occurence } => Self ::
-            ColumnIndexOutOfBounds
-            { column_index_out_of_bounds, len, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: ColumnNotFound
-            { column_not_found, code_occurence } => Self :: ColumnNotFound
-            { column_not_found, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: ColumnDecode
-            { column_decode_index, source_handle, code_occurence } => Self ::
-            ColumnDecode
-            { column_decode_index, source_handle, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: Decode
-            { decode_box_dyn_error, code_occurence } => Self :: Decode
-            { decode_box_dyn_error, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: PoolTimedOut
-            { pool_timed_out, code_occurence } => Self :: PoolTimedOut
-            { pool_timed_out, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: PoolClosed
-            { pool_closed, code_occurence } => Self :: PoolClosed
-            { pool_closed, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: WorkerCrashed
-            { worker_crashed, code_occurence } => Self :: WorkerCrashed
-            { worker_crashed, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: Migrate
-            { migrate, code_occurence } => Self :: Migrate
-            { migrate, code_occurence }, TryCreateManyWithSerializeDeserialize
-            :: JsonDataError { json_data_error, code_occurence } => Self ::
-            JsonDataError { json_data_error, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: JsonSyntaxError
-            { json_syntax_error, code_occurence } => Self :: JsonSyntaxError
-            { json_syntax_error, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: MissingJsonContentType
-            { json_syntax_error, code_occurence } => Self ::
-            MissingJsonContentType { json_syntax_error, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: BytesRejection
-            { bytes_rejection, code_occurence } => Self :: BytesRejection
-            { bytes_rejection, code_occurence },
-            TryCreateManyWithSerializeDeserialize :: BindQuery
-            { checked_add, code_occurence } => Self :: BindQuery
-            { checked_add, code_occurence },
-            TryCreateManyWithSerializeDeserialize ::
-            CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer
-            {
-                uuid_wrapper_try_from_possible_uuid_wrapper_in_server,
-                code_occurence
-            } => Self ::
-            CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer
-            {
-                uuid_wrapper_try_from_possible_uuid_wrapper_in_server,
-                code_occurence
-            }, TryCreateManyWithSerializeDeserialize :: UnexpectedCase
-            { unexpected_case, code_occurence } => Self :: UnexpectedCase
-            { unexpected_case, code_occurence }
-        }
-    }
-}
+// impl std::convert::From<TryCreateMany> for TryCreateManyResponseVariants {
+//     fn from(val: TryCreateMany) -> Self {
+//         match val.into_serialize_deserialize_version()
+//         {
+//             TryCreateManyWithSerializeDeserialize ::
+//             ProjectCommitExtractorNotEqual
+//             {
+//                 project_commit_not_equal, project_commit_to_use,
+//                 code_occurence
+//             } => Self :: ProjectCommitExtractorNotEqual
+//             {
+//                 project_commit_not_equal, project_commit_to_use,
+//                 code_occurence
+//             }, TryCreateManyWithSerializeDeserialize ::
+//             ProjectCommitExtractorToStrConversion
+//             { project_commit_to_str_conversion, code_occurence } => Self ::
+//             ProjectCommitExtractorToStrConversion
+//             { project_commit_to_str_conversion, code_occurence },
+//             TryCreateManyWithSerializeDeserialize ::
+//             NoProjectCommitExtractorHeader
+//             { no_project_commit_header, code_occurence } => Self ::
+//             NoProjectCommitExtractorHeader
+//             { no_project_commit_header, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: Configuration
+//             { configuration_box_dyn_error, code_occurence } => Self ::
+//             Configuration { configuration_box_dyn_error, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: Database
+//             { box_dyn_database_error, code_occurence } => Self :: Database
+//             { box_dyn_database_error, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: Io
+//             { io_error, code_occurence } => Self :: Io
+//             { io_error, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: Tls
+//             { box_dyn_error, code_occurence } => Self :: Tls
+//             { box_dyn_error, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: Protocol
+//             { protocol, code_occurence } => Self :: Protocol
+//             { protocol, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: RowNotFound
+//             { row_not_found, code_occurence } => Self :: RowNotFound
+//             { row_not_found, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: TypeNotFound
+//             { type_not_found, code_occurence } => Self :: TypeNotFound
+//             { type_not_found, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: ColumnIndexOutOfBounds
+//             { column_index_out_of_bounds, len, code_occurence } => Self ::
+//             ColumnIndexOutOfBounds
+//             { column_index_out_of_bounds, len, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: ColumnNotFound
+//             { column_not_found, code_occurence } => Self :: ColumnNotFound
+//             { column_not_found, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: ColumnDecode
+//             { column_decode_index, source_handle, code_occurence } => Self ::
+//             ColumnDecode
+//             { column_decode_index, source_handle, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: Decode
+//             { decode_box_dyn_error, code_occurence } => Self :: Decode
+//             { decode_box_dyn_error, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: PoolTimedOut
+//             { pool_timed_out, code_occurence } => Self :: PoolTimedOut
+//             { pool_timed_out, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: PoolClosed
+//             { pool_closed, code_occurence } => Self :: PoolClosed
+//             { pool_closed, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: WorkerCrashed
+//             { worker_crashed, code_occurence } => Self :: WorkerCrashed
+//             { worker_crashed, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: Migrate
+//             { migrate, code_occurence } => Self :: Migrate
+//             { migrate, code_occurence }, TryCreateManyWithSerializeDeserialize
+//             :: JsonDataError { json_data_error, code_occurence } => Self ::
+//             JsonDataError { json_data_error, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: JsonSyntaxError
+//             { json_syntax_error, code_occurence } => Self :: JsonSyntaxError
+//             { json_syntax_error, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: MissingJsonContentType
+//             { json_syntax_error, code_occurence } => Self ::
+//             MissingJsonContentType { json_syntax_error, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: BytesRejection
+//             { bytes_rejection, code_occurence } => Self :: BytesRejection
+//             { bytes_rejection, code_occurence },
+//             TryCreateManyWithSerializeDeserialize :: BindQuery
+//             { checked_add, code_occurence } => Self :: BindQuery
+//             { checked_add, code_occurence },
+//             TryCreateManyWithSerializeDeserialize ::
+//             CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer
+//             {
+//                 uuid_wrapper_try_from_possible_uuid_wrapper_in_server,
+//                 code_occurence
+//             } => Self ::
+//             CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer
+//             {
+//                 uuid_wrapper_try_from_possible_uuid_wrapper_in_server,
+//                 code_occurence
+//             }, TryCreateManyWithSerializeDeserialize :: UnexpectedCase
+//             { unexpected_case, code_occurence } => Self :: UnexpectedCase
+//             { unexpected_case, code_occurence }
+//         }
+//     }
+// }
 impl std::convert::From<&TryCreateManyResponseVariants> for http::StatusCode {
     fn from(value: &TryCreateManyResponseVariants) -> Self {
         match value
