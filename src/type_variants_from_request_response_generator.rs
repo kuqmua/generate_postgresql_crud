@@ -11,6 +11,7 @@ pub fn type_variants_from_request_response_generator(
     code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
     code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
     ident_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
+    operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
     error_named_derive_token_stream: &proc_macro2::TokenStream,
     eo_display_attribute_token_stream: &proc_macro2::TokenStream,
     eo_display_foreign_type_token_stream: &proc_macro2::TokenStream,
@@ -51,6 +52,8 @@ pub fn type_variants_from_request_response_generator(
         .parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_desirable_attribute_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+
+    
 
     // let (
     //     attribute,
@@ -273,7 +276,7 @@ pub fn type_variants_from_request_response_generator(
             .collect::<Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             impl TryFrom<#try_operation_response_variants_token_stream> for #desirable_type_token_stream {
-                type Error = #ident_with_serialize_deserialize_camel_case_token_stream;
+                type Error = #operation_with_serialize_deserialize_camel_case_token_stream;
                 fn try_from(value: #try_operation_response_variants_token_stream) -> Result<Self, Self::Error> {
                     match value {
                         #try_operation_response_variants_token_stream::#desirable_token_stream(i) => Ok(i),
@@ -284,7 +287,7 @@ pub fn type_variants_from_request_response_generator(
                         //     configuration_box_dyn_error,
                         //     code_occurence,
                         // }),
-                        #(#impl_try_from_ident_response_variants_token_stream_for_desirable_logic_handle_mapped_token_stream)*
+                        #(#impl_try_from_ident_response_variants_token_stream_for_desirable_logic_handle_mapped_token_stream),*
                     }
                 }
             }
@@ -473,7 +476,7 @@ pub fn type_variants_from_request_response_generator(
         #impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_token_stream
         #generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream
         #try_from_response_logic_token_stream_handle_token_stream
-        // #impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream_handle_token_stream
+        #impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream_handle_token_stream
         // #ident_request_error_logic_token_stream_handle_token_stream
         // #extraction_logic_token_stream_handle_token_stream
         // #enum_status_codes_checker_name_logic_token_stream_handle_token_stream

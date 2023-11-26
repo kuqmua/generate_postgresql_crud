@@ -90,7 +90,7 @@ pub fn type_variants_from_request_response(
     };
     let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream = {
         vec![quote::quote! {
-                #ident_response_variants_token_stream::#variant_ident {
+                #try_operation_response_variants_token_stream::#variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
                 } => Err(#operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
@@ -260,10 +260,19 @@ pub fn generate_try_from_response_logic_token_stream(
     };
     let api_request_unexpected_error_module_path_token_stream = quote::quote! { crate::common::api_request_unexpected_error };
     let api_request_unexpected_error_path_token_stream = quote::quote! { #api_request_unexpected_error_module_path_token_stream::ApiRequestUnexpectedError };
-    let try_from_response_operation_lower_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_try_from_response_ident_lower_case_token_stream(
-        &operation_lower_case_stringified,
-        &proc_macro_name_ident_stringified,
-    );
+    let try_from_response_operation_lower_case_token_stream = {
+        let ident_response_variants_attribute_stingified =
+            format!("try_from_response_try_{operation_lower_case_stringified}");
+        ident_response_variants_attribute_stingified
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    
+    // proc_macro_helpers::type_variants_from_request_response::generate_try_from_response_ident_lower_case_token_stream(
+    //     &operation_lower_case_stringified,
+    //     &proc_macro_name_ident_stringified,
+    // );
+    // println!("{try_from_response_operation_lower_case_token_stream}");
     let status_code_enums_try_from = {
         let mut is_last_element_found = false;
         let desirable_status_code_case_token_stream = match response_without_body {
