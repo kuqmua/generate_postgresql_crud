@@ -516,6 +516,6 @@ pub fn type_variants_from_request_response_generator(
         #ident_request_error_logic_token_stream_handle_token_stream
         #extraction_logic_token_stream_handle_token_stream
         #enum_status_codes_checker_name_logic_token_stream_handle_token_stream
-        // #axum_response_into_response_logic_token_stream_handle_token_stream
+        #axum_response_into_response_logic_token_stream_handle_token_stream
     }
 }

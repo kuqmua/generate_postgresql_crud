@@ -104,7 +104,7 @@ pub fn type_variants_from_request_response(
     };
     let axum_response_into_response_logic_token_stream = {
         vec![quote::quote! {
-            #ident_response_variants_token_stream::#variant_ident {
+            #try_operation_response_variants_token_stream::#variant_ident {
                 #(#fields_anonymous_types_mapped_into_token_stream),*
             } => {
                 let mut res = axum::Json(self).into_response();

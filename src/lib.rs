@@ -3068,167 +3068,167 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     // #enum_status_codes_checker_name_logic_token_stream
                     // #axum_response_into_response_logic_token_stream
                     //
-impl axum::response::IntoResponse for TryCreateManyResponseVariants {
-    fn into_response(self) -> axum::response::Response {
-        match & self
-        {
-            TryCreateManyResponseVariants :: Desirable(_) =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: CREATED ; res
-            } TryCreateManyResponseVariants :: ProjectCommitExtractorNotEqual
-            {
-                project_commit_not_equal : _, project_commit_to_use : _,
-                code_occurence : _
-            } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
-            }, TryCreateManyResponseVariants ::
-            ProjectCommitExtractorToStrConversion
-            { project_commit_to_str_conversion : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
-            }, TryCreateManyResponseVariants :: NoProjectCommitExtractorHeader
-            { no_project_commit_header : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
-            }, TryCreateManyResponseVariants :: Configuration
-            { configuration_box_dyn_error : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: Database
-            { box_dyn_database_error : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: Io
-            { io_error : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: Tls
-            { box_dyn_error : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: Protocol
-            { protocol : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: RowNotFound
-            { row_not_found : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: NOT_FOUND ; res
-            }, TryCreateManyResponseVariants :: TypeNotFound
-            { type_not_found : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
-            }, TryCreateManyResponseVariants :: ColumnIndexOutOfBounds
-            { column_index_out_of_bounds : _, len : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: ColumnNotFound
-            { column_not_found : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
-            }, TryCreateManyResponseVariants :: ColumnDecode
-            { column_decode_index : _, source_handle : _, code_occurence : _ }
-            =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: Decode
-            { decode_box_dyn_error : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: PoolTimedOut
-            { pool_timed_out : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: REQUEST_TIMEOUT ; res
-            }, TryCreateManyResponseVariants :: PoolClosed
-            { pool_closed : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: WorkerCrashed
-            { worker_crashed : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: Migrate
-            { migrate : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: JsonDataError
-            { json_data_error : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
-            }, TryCreateManyResponseVariants :: JsonSyntaxError
-            { json_syntax_error : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
-            }, TryCreateManyResponseVariants :: MissingJsonContentType
-            { json_syntax_error : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
-            }, TryCreateManyResponseVariants :: BytesRejection
-            { bytes_rejection : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: BindQuery
-            { checked_add : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants ::
-            CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer
-            {
-                uuid_wrapper_try_from_possible_uuid_wrapper_in_server : _,
-                code_occurence : _
-            } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }, TryCreateManyResponseVariants :: UnexpectedCase
-            { unexpected_case : _, code_occurence : _ } =>
-            {
-                let mut res = axum :: Json(self).into_response() ; *
-                res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
-                ; res
-            }
-        }
-    }
-}
+// impl axum::response::IntoResponse for TryCreateManyResponseVariants {
+//     fn into_response(self) -> axum::response::Response {
+//         match & self
+//         {
+//             TryCreateManyResponseVariants :: Desirable(_) =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: CREATED ; res
+//             } TryCreateManyResponseVariants :: ProjectCommitExtractorNotEqual
+//             {
+//                 project_commit_not_equal : _, project_commit_to_use : _,
+//                 code_occurence : _
+//             } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
+//             }, TryCreateManyResponseVariants ::
+//             ProjectCommitExtractorToStrConversion
+//             { project_commit_to_str_conversion : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
+//             }, TryCreateManyResponseVariants :: NoProjectCommitExtractorHeader
+//             { no_project_commit_header : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
+//             }, TryCreateManyResponseVariants :: Configuration
+//             { configuration_box_dyn_error : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: Database
+//             { box_dyn_database_error : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: Io
+//             { io_error : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: Tls
+//             { box_dyn_error : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: Protocol
+//             { protocol : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: RowNotFound
+//             { row_not_found : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: NOT_FOUND ; res
+//             }, TryCreateManyResponseVariants :: TypeNotFound
+//             { type_not_found : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
+//             }, TryCreateManyResponseVariants :: ColumnIndexOutOfBounds
+//             { column_index_out_of_bounds : _, len : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: ColumnNotFound
+//             { column_not_found : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
+//             }, TryCreateManyResponseVariants :: ColumnDecode
+//             { column_decode_index : _, source_handle : _, code_occurence : _ }
+//             =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: Decode
+//             { decode_box_dyn_error : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: PoolTimedOut
+//             { pool_timed_out : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: REQUEST_TIMEOUT ; res
+//             }, TryCreateManyResponseVariants :: PoolClosed
+//             { pool_closed : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: WorkerCrashed
+//             { worker_crashed : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: Migrate
+//             { migrate : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: JsonDataError
+//             { json_data_error : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
+//             }, TryCreateManyResponseVariants :: JsonSyntaxError
+//             { json_syntax_error : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
+//             }, TryCreateManyResponseVariants :: MissingJsonContentType
+//             { json_syntax_error : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: BAD_REQUEST ; res
+//             }, TryCreateManyResponseVariants :: BytesRejection
+//             { bytes_rejection : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: BindQuery
+//             { checked_add : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants ::
+//             CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer
+//             {
+//                 uuid_wrapper_try_from_possible_uuid_wrapper_in_server : _,
+//                 code_occurence : _
+//             } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }, TryCreateManyResponseVariants :: UnexpectedCase
+//             { unexpected_case : _, code_occurence : _ } =>
+//             {
+//                 let mut res = axum :: Json(self).into_response() ; *
+//                 res.status_mut() = http :: StatusCode :: INTERNAL_SERVER_ERROR
+//                 ; res
+//             }
+//         }
+//     }
+// }
 
                     //
                 }
