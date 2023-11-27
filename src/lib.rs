@@ -143,12 +143,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let with_serialize_deserialize_camel_case_stringified = "WithSerializeDeserialize";
-    let ident_with_serialize_deserialize_camel_case_token_stream = {
-        let ident_request_error_stringified = format!("{ident}{with_serialize_deserialize_camel_case_stringified}");
-        ident_request_error_stringified
-        .parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_request_error_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
     let table_name_stringified = pluralizer::pluralize(&ident_lower_case_stringified, 2, false);
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
         data_struct
@@ -2342,42 +2336,42 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         },
     };
     //
-    let failed_to_deserialize_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{FailedToDeserializePathParams},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                    field_name: quote::quote!{failed_to_deserialize_path_params},
-                    field_type: quote::quote!{#std_string_string_token_stream},
-                },
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    error_occurence_attribute: quote::quote!{},
-                    field_name: quote::quote!{#code_occurence_lower_case_token_stream},
-                    field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
-                },
-            ],
-        },
-    };
-    let missing_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{MissingPathParams},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                    field_name: quote::quote!{missing_path_params},
-                    field_type: quote::quote!{#std_string_string_token_stream},
-                },
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    error_occurence_attribute: quote::quote!{},
-                    field_name: quote::quote!{#code_occurence_lower_case_token_stream},
-                    field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
-                },
-            ],
-        },
-    };
+    // let failed_to_deserialize_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{FailedToDeserializePathParams},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+    //                 field_name: quote::quote!{failed_to_deserialize_path_params},
+    //                 field_type: quote::quote!{#std_string_string_token_stream},
+    //             },
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 error_occurence_attribute: quote::quote!{},
+    //                 field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+    //                 field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+    //             },
+    //         ],
+    //     },
+    // };
+    // let missing_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{MissingPathParams},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+    //                 field_name: quote::quote!{missing_path_params},
+    //                 field_type: quote::quote!{#std_string_string_token_stream},
+    //             },
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 error_occurence_attribute: quote::quote!{},
+    //                 field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+    //                 field_type: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+    //             },
+    //         ],
+    //     },
+    // };
     //
     let path_logic_error_variants_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
@@ -2714,25 +2708,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     .parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_response_variants_desirable_attribute_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
-                let try_create_many_response_variants_token_stream = {
-                    let try_create_many_response_variants_stringified =
-                        format!("{try_camel_case_stringified}{create_many_name_camel_case_stringified}ResponseVariants");
-                    try_create_many_response_variants_stringified
-                    .parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_create_many_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
+                // let try_create_many_response_variants_token_stream = {
+                //     let try_create_many_response_variants_stringified =
+                //         format!("{try_camel_case_stringified}{create_many_name_camel_case_stringified}ResponseVariants");
+                //     try_create_many_response_variants_stringified
+                //     .parse::<proc_macro2::TokenStream>()
+                //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_create_many_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                // };
                 //
                 let bind_query_type_variant_from_request_response = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                     &try_operation_response_variants_token_stream,
                     &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                    &ident_response_variants_token_stream,
                     &proc_macro_name_ident_stringified,
                     &bind_query_variant_attribute
                 );
                 let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_type_variants_from_request_response = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                     &try_operation_response_variants_token_stream,
                     &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                    &ident_response_variants_token_stream,
                     &proc_macro_name_ident_stringified,
                     &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
                 );
@@ -2740,21 +2732,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &project_commit_extractor_not_equal_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &project_commit_extractor_to_str_conversion_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &no_project_commit_extractor_header_variant_attribute
                     ),
@@ -2763,151 +2752,132 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &configuration_error_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &database_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &io_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &tls_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &protocol_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &row_not_found_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &type_not_found_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &column_index_out_of_bounds_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &column_not_found_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &column_decode_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &decode_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &pool_timed_out_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &pool_closed_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &worker_crashed_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &migrate_variant_attribute
                     )
                 ];
-                let path_logic_error_variants_vec_token_stream = vec![
-                    crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-                        &try_operation_response_variants_token_stream,
-                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
-                        &proc_macro_name_ident_stringified,
-                        &failed_to_deserialize_path_params_variant_attribute
-                    ),
-                    crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-                        &try_operation_response_variants_token_stream,
-                        &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
-                        &proc_macro_name_ident_stringified,
-                        &missing_path_params_variant_attribute
-                    )
-                ];
+                // let path_logic_error_variants_vec_token_stream = vec![
+                //     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+                //         &try_operation_response_variants_token_stream,
+                //         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                //         // &ident_response_variants_token_stream,
+                //         &proc_macro_name_ident_stringified,
+                //         &failed_to_deserialize_path_params_variant_attribute
+                //     ),
+                //     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+                //         &try_operation_response_variants_token_stream,
+                //         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                //         // &ident_response_variants_token_stream,
+                //         &proc_macro_name_ident_stringified,
+                //         &missing_path_params_variant_attribute
+                //     )
+                // ];
                 let json_body_logic_error_variants_vec_token_stream = vec![
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &json_data_error_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &json_syntax_error_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &missing_json_content_type_variant_attribute
                     ),
                     crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                         &try_operation_response_variants_token_stream,
                         &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                        &ident_response_variants_token_stream,
                         &proc_macro_name_ident_stringified,
                         &bytes_rejection_variant_attribute
                     )
@@ -2915,7 +2885,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let unexpected_case_error_variant_handle_token_stream = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                     &try_operation_response_variants_token_stream,
                     &try_create_many_with_serialize_deserialize_camel_case_token_stream,
-                    &ident_response_variants_token_stream,
                     &proc_macro_name_ident_stringified,
                     &unexpected_case_variant_attribute
                 );
@@ -2970,8 +2939,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                     desirable_attribute,
-                    // &ident,
-                    &ident_lower_case_stringified,
                     &try_create_many_camel_case_token_stream,
                     &try_operation_response_variants_token_stream,
                     &try_operation_response_variants_desirable_attribute_token_stream,
@@ -2981,7 +2948,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &proc_macro_name_ident_stringified,
                     &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
-                    // &ident_with_serialize_deserialize_camel_case_token_stream,
                     &try_create_many_with_serialize_deserialize_camel_case_token_stream,
                     &error_named_derive_token_stream,
                     &eo_display_attribute_token_stream,
@@ -2989,12 +2955,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &eo_display_with_serialize_deserialize_token_stream,
                     &derive_debug_serialize_deserialize_token_stream,
                     type_variants_from_request_response_vec,
-                    &ident_response_variants_stringified,
                     &ident_response_variants_token_stream,
                     vec_status_codes,
-                    // &desirable_token_stream,
-                    false,
-                    &try_create_many_response_variants_token_stream,
                 )
             };
             quote::quote!{
