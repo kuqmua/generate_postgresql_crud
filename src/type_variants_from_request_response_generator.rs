@@ -9,7 +9,6 @@ pub fn type_variants_from_request_response_generator(
     proc_macro_name_ident_stringified: &std::string::String,
     code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
     code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
-    // ident_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
     operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
     error_named_derive_token_stream: &proc_macro2::TokenStream,
     eo_display_attribute_token_stream: &proc_macro2::TokenStream,
@@ -28,7 +27,6 @@ pub fn type_variants_from_request_response_generator(
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
     vec_status_codes: std::vec::Vec<ErrorVariantAttribute>,
 ) -> proc_macro2::TokenStream {
-//
     let generated_status_code_enums_with_from_impls_logic_token_stream = generate_status_code_enums_with_from_impls_logic_token_stream(
         &derive_debug_serialize_deserialize_token_stream, //#[derive(Debug, serde::Serialize, serde::Deserialize)]
         &try_operation_response_variants_token_stream,
@@ -48,11 +46,6 @@ pub fn type_variants_from_request_response_generator(
     );
 //
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
-    // let type_variants_from_request_response_len = type_variants_from_request_response.len();
-    // let ident_request_error_camel_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_ident_request_error_camel_case_token_stream(
-    //     &ident,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let try_operation_request_error_token_stream = {
         let try_operation_request_error_stringified =
             format!("{try_operation_camel_case_token_stream}RequestError");
@@ -67,21 +60,10 @@ pub fn type_variants_from_request_response_generator(
         .parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_with_serialize_deserialize_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    // let try_from_response_lower_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_try_from_response_ident_lower_case_token_stream(
-    //     &ident_lower_case_stringified,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream =
         quote::quote! {crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
     let crate_common_api_request_unexpected_error_response_text_result_token_stream =
         quote::quote! {crate::common::api_request_unexpected_error::ResponseTextResult};
-    // let ident_response_variants_desirable_attribute_token_stream = {
-    //     let ident_response_variants_desirable_attribute_stringified =
-    //         format!("{ident}ResponseVariants{desirable_attribute}");
-    //     ident_response_variants_desirable_attribute_stringified
-    //     .parse::<proc_macro2::TokenStream>()
-    //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_desirable_attribute_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    // };
     let enum_with_serialize_deserialize_logic_token_stream_handle_token_stream = {
         let enum_with_serialize_deserialize_logic_mapped_token_stream =
             type_variants_from_request_response
@@ -102,10 +84,6 @@ pub fn type_variants_from_request_response_generator(
             #derive_debug_serialize_deserialize_token_stream
             pub enum #try_operation_response_variants_token_stream {
                 #desirable_token_stream(#desirable_type_token_stream),
-                // Configuration {
-                //     configuration_box_dyn_error: std::string::String,
-                //     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                // }
                 #(#enum_with_serialize_deserialize_logic_mapped_token_stream),*
             }
         }
@@ -129,13 +107,6 @@ pub fn type_variants_from_request_response_generator(
             impl std::convert::From<#try_operation_camel_case_token_stream> for #try_operation_response_variants_token_stream {
                 fn from(value: #try_operation_camel_case_token_stream) -> Self {
                     match value.into_serialize_deserialize_version() {
-                        // KekwWithSerializeDeserialize::Configuration {
-                        //     configuration_box_dyn_error,
-                        //     code_occurence,
-                        // } => Self::Configuration {
-                        //     configuration_box_dyn_error,
-                        //     code_occurence,
-                        // },
                         #(#from_logic_token_stream_mapped_token_stream),*
                     }
                 }
@@ -161,11 +132,7 @@ pub fn type_variants_from_request_response_generator(
             impl std::convert::From<&#try_operation_response_variants_token_stream> for http::StatusCode {
                 fn from(value: &#try_operation_response_variants_token_stream) -> Self {
                     match value {
-                        #try_operation_response_variants_token_stream::#desirable_token_stream(_) => #http_status_code_quote_token_stream,//http::StatusCode::CREATED
-                        // KekwResponseVariants::Configuration {
-                        //     configuration_box_dyn_error: _,
-                        //     code_occurence: _,
-                        // } => http::StatusCode::INTERNAL_SERVER_ERROR,
+                        #try_operation_response_variants_token_stream::#desirable_token_stream(_) => #http_status_code_quote_token_stream,
                         #(#impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_mapped_token_stream),*
                     }
                 }
@@ -185,75 +152,11 @@ pub fn type_variants_from_request_response_generator(
                     }
                 }
             }
-
-
-
-
-            // #[derive(Debug, serde::Serialize, serde::Deserialize)]
-            // enum KekwResponseVariantsTvfrr500InternalServerError {
-            //     Configuration {
-            //         configuration_box_dyn_error: std::string::String,
-            //         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-            //     },
-            // }
-            // impl std::convert::From<KekwResponseVariantsTvfrr500InternalServerError> for #try_operation_response_variants_token_stream {
-            //     fn from(value: KekwResponseVariantsTvfrr500InternalServerError) -> Self {
-            //         match value {
-            //             KekwResponseVariantsTvfrr500InternalServerError::Configuration {
-            //                 configuration_box_dyn_error,
-            //                 code_occurence,
-            //             } => Self::Configuration {
-            //                 configuration_box_dyn_error,
-            //                 code_occurence,
-            //             },
-            //         }
-            //     }
-            // }
             #generated_status_code_enums_with_from_impls_logic_token_stream
         }
     };
     let try_from_response_logic_token_stream_handle_token_stream = {
         quote::quote! {
-            // async fn #try_from_response_lower_case_token_stream(
-            //     response: reqwest::Response,
-            // ) -> Result<
-            //     #try_operation_response_variants_token_stream,
-            //     #crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream,
-            // > {
-            //     let status_code = response.status();
-            //     let headers = response.headers().clone();
-            //     if status_code == #http_status_code_quote_token_stream {
-            //         match response.text().await {
-            //             Ok(response_text) => match serde_json::from_str::<#ident_response_variants_desirable_attribute_token_stream>(&response_text) {
-            //                 Ok(value) => Ok(#try_operation_response_variants_token_stream::from(value)),
-            //                 Err(e) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::DeserializeBody {
-            //                     serde: e,
-            //                     status_code,
-            //                     headers,
-            //                     response_text
-            //                 }),
-            //             },
-            //             Err(e) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::FailedToGetResponseText {
-            //                 reqwest: e,
-            //                 status_code,
-            //                 headers,
-            //             }),
-            //         }
-            //     } else {
-            //         match response.text().await {
-            //             Ok(response_text) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::StatusCode {
-            //                 status_code,
-            //                 headers,
-            //                 response_text_result: #crate_common_api_request_unexpected_error_response_text_result_token_stream::ResponseText(response_text)
-            //             }),
-            //             Err(e) => Err(#crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::StatusCode {
-            //                 status_code,
-            //                 headers,
-            //                 response_text_result: #crate_common_api_request_unexpected_error_response_text_result_token_stream::ReqwestError(e),
-            //             }),
-            //         }
-            //     }
-            // }
             #try_from_response_logic_token_stream_token_stream
         }
     };
@@ -278,13 +181,6 @@ pub fn type_variants_from_request_response_generator(
                 fn try_from(value: #try_operation_response_variants_token_stream) -> Result<Self, Self::Error> {
                     match value {
                         #try_operation_response_variants_token_stream::#desirable_token_stream(i) => Ok(i),
-                        // #try_operation_response_variants_token_stream::Configuration {
-                        //     configuration_box_dyn_error,
-                        //     code_occurence,
-                        // } => Err(KekwWithSerializeDeserialize::Configuration {
-                        //     configuration_box_dyn_error,
-                        //     code_occurence,
-                        // }),
                         #(#impl_try_from_ident_response_variants_token_stream_for_desirable_logic_handle_mapped_token_stream),*
                     }
                 }
@@ -338,10 +234,6 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let extraction_logic_token_stream_handle_token_stream = {
-        // let tvfrr_extraction_logic_lower_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_tvfrr_extraction_logic_lower_case_token_stream(
-        //     &ident_lower_case_stringified,
-        //     &proc_macro_name_ident_stringified,
-        // );
         let tvfrr_extraction_logic_try_operation_lower_case_token_stream = {
             let tvfrr_extraction_logic_try_operation_lower_case_stringified =
                 format!("tvfrr_extraction_logic_try_{operation_lower_case_stringified}");
@@ -416,11 +308,6 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let enum_status_codes_checker_name_logic_token_stream_handle_token_stream = {
-        // let enum_status_codes_checker_camel_case_token_stream = proc_macro_helpers::type_variants_from_request_response::generate_enum_status_codes_checker_camel_case_token_stream(
-        //     &ident,
-        //     proc_macro_name_ident_stringified,
-        // );
-        // TryCreateManyStatusCodesChecker
         let enum_status_codes_checker_camel_case_token_stream = {
             let enum_status_codes_checker_camel_case_stringified = format!("{try_operation_camel_case_token_stream}StatusCodesChecker");
             enum_status_codes_checker_camel_case_stringified
@@ -444,7 +331,6 @@ pub fn type_variants_from_request_response_generator(
                 .collect::<Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             pub enum #enum_status_codes_checker_camel_case_token_stream {
-                // ConfigurationTvfrr500InternalServerError,
                 #(#enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream)*
             }
         }
@@ -615,12 +501,6 @@ pub fn generate_try_from_response_logic_token_stream(
         .parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    
-    // proc_macro_helpers::type_variants_from_request_response::generate_try_from_response_ident_lower_case_token_stream(
-    //     &operation_lower_case_stringified,
-    //     &proc_macro_name_ident_stringified,
-    // );
-    // println!("{try_from_response_operation_lower_case_token_stream}");
     let status_code_enums_try_from = {
         let mut is_last_element_found = false;
         let desirable_status_code_case_token_stream = match response_without_body {
@@ -724,7 +604,6 @@ pub fn generate_try_from_response_logic_token_stream(
         }
         status_code_enums_try_from_variants
     };
-    //
     quote::quote! {
         async fn #try_from_response_operation_lower_case_token_stream(response: reqwest::Response) -> Result<#try_operation_response_variants_token_stream, #api_request_unexpected_error_path_token_stream> {
             let status_code = response.status();
