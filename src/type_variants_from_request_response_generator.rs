@@ -26,6 +26,8 @@ pub fn type_variants_from_request_response_generator(
     )>,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
     vec_status_codes: std::vec::Vec<ErrorVariantAttribute>,
+    try_operation_request_error_token_stream: &proc_macro2::TokenStream,
+    try_operation_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
     let generated_status_code_enums_with_from_impls_logic_token_stream = generate_status_code_enums_with_from_impls_logic_token_stream(
         &derive_debug_serialize_deserialize_token_stream, //#[derive(Debug, serde::Serialize, serde::Deserialize)]
@@ -38,28 +40,12 @@ pub fn type_variants_from_request_response_generator(
         &desirable_token_stream,
         &ident_response_variants_token_stream,
         &try_operation_response_variants_token_stream,
-
         &operation_lower_case_stringified,
         &desirable_attribute,
         &proc_macro_name_ident_stringified,
         vec_status_codes,
     );
-//
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
-    let try_operation_request_error_token_stream = {
-        let try_operation_request_error_stringified =
-            format!("{try_operation_camel_case_token_stream}RequestError");
-        try_operation_request_error_stringified
-        .parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_request_error_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
-    let try_operation_with_serialize_deserialize_token_stream = {
-        let try_operation_with_serialize_deserialize_stringified =
-            format!("{try_operation_camel_case_token_stream}WithSerializeDeserialize");
-        try_operation_with_serialize_deserialize_stringified
-        .parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_with_serialize_deserialize_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream =
         quote::quote! {crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
     let crate_common_api_request_unexpected_error_response_text_result_token_stream =

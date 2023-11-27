@@ -2708,6 +2708,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     .parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_response_variants_desirable_attribute_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
+                let try_operation_request_error_token_stream = {
+                    let try_operation_request_error_stringified =
+                        format!("{try_create_many_camel_case_token_stream}RequestError");
+                    try_operation_request_error_stringified
+                    .parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_request_error_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                let try_operation_with_serialize_deserialize_token_stream = {
+                    let try_operation_with_serialize_deserialize_stringified =
+                        format!("{try_create_many_camel_case_token_stream}WithSerializeDeserialize");
+                    try_operation_with_serialize_deserialize_stringified
+                    .parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_with_serialize_deserialize_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
                 // let try_create_many_response_variants_token_stream = {
                 //     let try_create_many_response_variants_stringified =
                 //         format!("{try_camel_case_stringified}{create_many_name_camel_case_stringified}ResponseVariants");
@@ -2957,6 +2971,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type_variants_from_request_response_vec,
                     &ident_response_variants_token_stream,
                     vec_status_codes,
+                    &try_operation_request_error_token_stream,
+                    &try_operation_with_serialize_deserialize_token_stream
                 )
             };
             quote::quote!{
