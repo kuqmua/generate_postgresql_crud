@@ -2959,12 +2959,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             parameters_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let create_many_payload_element_camel_case_token_stream = generate_payload_element_camel_case_token_stream(
+        let operation_payload_element_camel_case_token_stream = generate_payload_element_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             &payload_element_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let create_many_payload_camel_case_token_stream = quote::quote!{std::vec::Vec<#create_many_payload_element_camel_case_token_stream>};
+        let operation_payload_camel_case_token_stream = quote::quote!{std::vec::Vec<#operation_payload_element_camel_case_token_stream>};
         let try_create_many_error_named_camel_case_token_stream = generate_try_error_named_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
@@ -2986,7 +2986,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #operation_parameters_camel_case_token_stream {
-                    pub #payload_lower_case_token_stream: #create_many_payload_camel_case_token_stream,
+                    pub #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream,
                 }
             }
         };
@@ -3004,7 +3004,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
-                pub struct #create_many_payload_element_camel_case_token_stream {
+                pub struct #operation_payload_element_camel_case_token_stream {
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
@@ -3578,13 +3578,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #create_many_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
-                        #axum_json_token_stream<#create_many_payload_camel_case_token_stream>,
+                        #axum_json_token_stream<#operation_payload_camel_case_token_stream>,
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let #parameters_lower_case_token_stream = #operation_parameters_camel_case_token_stream {
                         #payload_lower_case_token_stream: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
-                            #create_many_payload_camel_case_token_stream,
+                            #operation_payload_camel_case_token_stream,
                             #try_create_many_response_variants_token_stream,
                         >::#try_extract_value_token_stream(#payload_extraction_result_lower_case_token_stream, &#app_info_state_name_token_stream)
                         {
