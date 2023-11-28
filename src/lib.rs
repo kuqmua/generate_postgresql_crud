@@ -3621,7 +3621,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             parameters_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let create_one_payload_camel_case_token_stream = generate_payload_camel_case_token_stream(
+        let operation_payload_camel_case_token_stream = generate_payload_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             payload_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -3647,7 +3647,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #operation_parameters_camel_case_token_stream {
-                    pub #payload_lower_case_token_stream: #create_one_payload_camel_case_token_stream,
+                    pub #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream,
                 }
             }
         };
@@ -3665,7 +3665,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
-                pub struct #create_one_payload_camel_case_token_stream {
+                pub struct #operation_payload_camel_case_token_stream {
                     #(#fields_with_excluded_id_token_stream),*
                 }
             }
@@ -3882,13 +3882,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #create_one_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
-                        #axum_json_token_stream<#create_one_payload_camel_case_token_stream>,
+                        #axum_json_token_stream<#operation_payload_camel_case_token_stream>,
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
                     let #parameters_lower_case_token_stream = #operation_parameters_camel_case_token_stream {
                         #payload_lower_case_token_stream: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
-                            #create_one_payload_camel_case_token_stream,
+                            #operation_payload_camel_case_token_stream,
                             #try_create_one_response_variants_token_stream,
                         >::#try_extract_value_token_stream(#payload_extraction_result_lower_case_token_stream, &#app_info_state_name_token_stream)
                         {
