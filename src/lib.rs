@@ -3935,23 +3935,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_stringified(
+        let operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified = generate_path_try_from_path_with_serialize_deserialize_stringified(
             &operation_name_camel_case_stringified,
             path_camel_case_stringified,
             &try_from_camel_case_stringified,
             with_serialize_deserialize_camel_case_stringified,
         );
         let read_one_path_try_from_read_one_path_with_serialize_deserialize_error_named_camel_case_token_stream = generate_path_try_from_path_with_serialize_deserialize_error_named_token_stream(
-            &read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_stringified,
+            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
             error_named_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let read_one_path_try_from_operation_path_with_serialize_deserialize_camel_case_token_stream = generate_path_try_from_path_with_serialize_deserialize_camel_case_token_stream(
-            &read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_stringified,
+            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let read_one_path_try_from_read_one_path_with_serialize_deserialize_lower_case_token_stream = generate_path_try_from_path_with_serialize_deserialize_lower_case_token_stream(
-            &read_one_path_try_from_read_one_path_with_serialize_deserialize_camel_case_stringified,
+            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let read_one_query_camel_case_token_stream = generate_query_camel_case_token_stream(
