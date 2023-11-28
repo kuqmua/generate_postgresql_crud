@@ -3777,7 +3777,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let route_handler_token_stream = {
             let operation_lower_case_token_stream = operation_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {operation_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-            let try_create_one_token_stream = {
+            let try_operation_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                     &try_operation_camel_case_token_stream,
                     &error_log_call_token_stream,
@@ -3877,7 +3877,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             };
-            // println!("{try_create_one_token_stream}");
+            // println!("{try_operation_token_stream}");
             quote::quote!{
                 pub async fn #operation_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
@@ -3900,7 +3900,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     println!("{:#?}", #parameters_lower_case_token_stream);
                     {
-                        #try_create_one_token_stream
+                        #try_operation_token_stream
                     }
                 }
             }
