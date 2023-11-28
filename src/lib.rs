@@ -4315,26 +4315,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // println!("{read_one_token_stream}");
     let read_many_with_body_token_stream = {
-        let read_many_with_body_name_camel_case_stringified = format!("{read_camel_case_stringified}{many_camel_case_stringified}{with_body_camel_case_stringified}");
-        let read_many_with_body_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&read_many_with_body_name_camel_case_stringified.to_string());
-        let read_many_with_body_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
-            &read_many_with_body_name_camel_case_stringified,
+        let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{many_camel_case_stringified}{with_body_camel_case_stringified}");
+        let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
+        let operation_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
+            &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let read_many_with_body_payload_camel_case_token_stream = generate_payload_camel_case_token_stream(
-            &read_many_with_body_name_camel_case_stringified,
+        let operation_payload_camel_case_token_stream = generate_payload_camel_case_token_stream(
+            &operation_name_camel_case_stringified,
             payload_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream = generate_payload_with_serialize_deserialize_camel_case_token_stream(
-            &read_many_with_body_name_camel_case_stringified,
+        let operation_payload_with_serialize_deserialize_camel_case_token_stream = generate_payload_with_serialize_deserialize_camel_case_token_stream(
+            &operation_name_camel_case_stringified,
             payload_camel_case_stringified,
             with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified = generate_payload_try_from_payload_with_serialize_deserialize_stringified(
-            &read_many_with_body_name_camel_case_stringified,
+            &operation_name_camel_case_stringified,
             payload_camel_case_stringified,
             &try_from_camel_case_stringified,
             with_serialize_deserialize_camel_case_stringified,
@@ -4344,7 +4344,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             error_named_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_camel_case_token_stream(
+        let read_many_with_body_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_camel_case_token_stream(
             &read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
@@ -4354,26 +4354,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         let try_read_many_with_body_error_named_camel_case_token_stream = generate_try_error_named_token_stream(
             try_camel_case_stringified,
-            &read_many_with_body_name_camel_case_stringified,
+            &operation_name_camel_case_stringified,
             error_named_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let try_read_many_with_body_response_variants_token_stream = generate_try_response_variants_token_stream(
             try_camel_case_stringified,
-            &read_many_with_body_name_camel_case_stringified,
+            &operation_name_camel_case_stringified,
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let try_read_many_with_body_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             try_camel_case_stringified,
-            &read_many_with_body_name_camel_case_stringified,
+            &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let parameters_token_stream = {
             quote::quote!{
                 #[derive(Debug)]
-                pub struct #read_many_with_body_parameters_camel_case_token_stream {
-                    pub #payload_lower_case_token_stream: #read_many_with_body_payload_camel_case_token_stream,
+                pub struct #operation_parameters_camel_case_token_stream {
+                    pub #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream,
                 }
             }
         };
@@ -4390,7 +4390,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 #derive_debug_token_stream
-                pub struct #read_many_with_body_payload_camel_case_token_stream {
+                pub struct #operation_payload_camel_case_token_stream {
                     pub #select_token_stream: #column_select_ident_token_stream,
                     pub #id_field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_id_token_stream)*
@@ -4413,7 +4413,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
-                pub struct #read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
+                pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream {
                     pub select: #column_select_ident_token_stream,
                     pub #id_field_ident: std::option::Option<std::vec::Vec<#std_string_string_token_stream>>,
                     #(#fields_with_excluded_id_token_stream)*
@@ -4470,9 +4470,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                impl std::convert::TryFrom<#read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream> for #read_many_with_body_payload_camel_case_token_stream {
+                impl std::convert::TryFrom<#operation_payload_with_serialize_deserialize_camel_case_token_stream> for #operation_payload_camel_case_token_stream {
                     type Error = #read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream;
-                    fn try_from(value: #read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
+                    fn try_from(value: #operation_payload_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
                         let select = value.select;
                         #primary_key_field_assignment_token_stream
                         #(#fields_assignment_excluding_primary_key_token_stream)*
@@ -4512,8 +4512,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                impl std::convert::From<#read_many_with_body_payload_camel_case_token_stream> for #read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
-                    fn from(value: #read_many_with_body_payload_camel_case_token_stream) -> Self {
+                impl std::convert::From<#operation_payload_camel_case_token_stream> for #operation_payload_with_serialize_deserialize_camel_case_token_stream {
+                    fn from(value: #operation_payload_camel_case_token_stream) -> Self {
                         let select = value.select;
                         #primary_key_field_assignment_token_stream
                         #(#fields_assignment_excluding_primary_key_token_stream)*
@@ -4536,7 +4536,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{impl_std_convert_from_read_many_with_body_payload_for_read_many_with_body_payload_with_serialize_deserialize_token_stream}");
         let try_read_many_with_body_error_named_token_stream = {
             let try_read_many_with_body_request_error_camel_case_token_stream = {
-                let try_read_many_with_body_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{read_many_with_body_name_camel_case_stringified}{request_error_camel_case_stringified}");
+                let try_read_many_with_body_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{operation_name_camel_case_stringified}{request_error_camel_case_stringified}");
                 try_read_many_with_body_request_error_camel_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_read_many_with_body_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -4562,7 +4562,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 #[tvfrr_400_bad_request]
-                #read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
+                #read_many_with_body_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
                     #read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_lower_case_token_stream:
                         #read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream,
@@ -4597,12 +4597,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_read_many_with_body_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
             let try_read_many_with_body_lower_case_token_stream = {
-                let try_read_many_with_body_lower_case_stringified = format!("{try_lower_case_stringified}_{read_many_with_body_name_lower_case_stringified}");
+                let try_read_many_with_body_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
                 try_read_many_with_body_lower_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_read_many_with_body_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let tvfrr_extraction_logic_token_stream = {
-                let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{read_many_with_body_name_lower_case_stringified}");
+                let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -4615,13 +4615,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_read_many_with_body_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
-                    #parameters_lower_case_token_stream: #read_many_with_body_parameters_camel_case_token_stream,
+                    #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
                 ) -> Result<
                     std::vec::Vec<#struct_options_ident_token_stream>,
                     #try_read_many_with_body_error_named_camel_case_token_stream,
                 > {
                     let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(
-                        &#read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)
+                        &#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)
                     ) {
                         Ok(value) => value,
                         Err(e) => {
@@ -4651,8 +4651,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
-            let read_many_with_body_lower_case_token_stream = read_many_with_body_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {read_many_with_body_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+            let read_many_with_body_lower_case_token_stream = operation_name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {operation_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             let try_read_many_with_body_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                     &try_read_many_with_body_camel_case_token_stream,
@@ -5043,20 +5043,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #read_many_with_body_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
-                        #axum_json_token_stream<#read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream>,
+                        #axum_json_token_stream<#operation_payload_with_serialize_deserialize_camel_case_token_stream>,
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let #parameters_lower_case_token_stream = #read_many_with_body_parameters_camel_case_token_stream {
+                    let #parameters_lower_case_token_stream = #operation_parameters_camel_case_token_stream {
                         #payload_lower_case_token_stream: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
-                            #read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream,
+                            #operation_payload_with_serialize_deserialize_camel_case_token_stream,
                             #try_read_many_with_body_response_variants_token_stream,
                         >::#try_extract_value_token_stream(#payload_extraction_result_lower_case_token_stream, &#app_info_state_name_token_stream)
                         {
-                            Ok(value) => match #read_many_with_body_payload_camel_case_token_stream::try_from(value) {
+                            Ok(value) => match #operation_payload_camel_case_token_stream::try_from(value) {
                                 Ok(value) => value,
                                 Err(e) => {
-                                    let error = #try_read_many_with_body_camel_case_token_stream::#read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_token_stream {
+                                    let error = #try_read_many_with_body_camel_case_token_stream::#read_many_with_body_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_token_stream {
                                         read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize: e,
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
