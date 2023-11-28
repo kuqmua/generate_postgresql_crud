@@ -4358,7 +4358,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             error_named_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let try_read_many_with_body_response_variants_token_stream = generate_try_response_variants_token_stream(
+        let try_operation_response_variants_token_stream = generate_try_response_variants_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
             response_variants_camel_case_stringified,
@@ -4657,7 +4657,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
                     &try_read_many_with_body_camel_case_token_stream,
                     &error_log_call_token_stream,
-                    &try_read_many_with_body_response_variants_token_stream,
+                    &try_operation_response_variants_token_stream,
                 );
                 let filter_unique_parameters_token_stream = {
                     let filter_unique_parameters_primary_key_token_stream = quote::quote!{
@@ -4681,7 +4681,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             if let false = #not_unique_primary_keys_name_token_stream.is_empty() {
                                 let error = #try_read_many_with_body_camel_case_token_stream::#not_unique_primary_key_variant_initialization_token_stream;
                                 #error_log_call_token_stream
-                                return #try_read_many_with_body_response_variants_token_stream::from(error);
+                                return #try_operation_response_variants_token_stream::from(error);
                             }
                         }
                     };
@@ -4753,7 +4753,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                             };
                                             #error_log_call_token_stream
-                                            return #try_read_many_with_body_response_variants_token_stream::from(error);
+                                            return #try_operation_response_variants_token_stream::from(error);
                                         }
                                     }
                                 }
@@ -4791,7 +4791,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     None => {
                                         //todo - think what to do with #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream and how handle it 
                                         let e = #crate_server_postgres_bind_query_try_generate_bind_increments_error_named_name_token_stream::#checked_add_variant_initialization_token_stream;
-                                        return #try_read_many_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                                        return #try_operation_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                     },
                                 }
                                 additional_parameters.push_str(&format!(
@@ -4847,7 +4847,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 }
                                             },
                                             Err(e) => {
-                                                return #try_read_many_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                                                return #try_operation_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                             },
                                         }
                                     }
@@ -4919,7 +4919,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     ) {
                                         Ok(value) => value,
                                         Err(e) => {
-                                            return #try_read_many_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                                            return #try_operation_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                         },
                                     };
                                     additional_parameters.push_str(&format!(
@@ -4939,7 +4939,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     ) {
                                         Ok(value) => value,
                                         Err(e) => {
-                                            return #try_read_many_with_body_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
+                                            return #try_operation_response_variants_token_stream::#bind_query_variant_initialization_token_stream;
                                         },
                                     };
                                     additional_parameters.push_str(&format!(
@@ -5035,7 +5035,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                         vec_values
                     };
-                    #try_read_many_with_body_response_variants_token_stream::#desirable_token_stream(vec_values)
+                    #try_operation_response_variants_token_stream::#desirable_token_stream(vec_values)
                 }
             };
             // println!("{try_read_many_with_body_token_stream}");
@@ -5050,7 +5050,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let #parameters_lower_case_token_stream = #operation_parameters_camel_case_token_stream {
                         #payload_lower_case_token_stream: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             #operation_payload_with_serialize_deserialize_camel_case_token_stream,
-                            #try_read_many_with_body_response_variants_token_stream,
+                            #try_operation_response_variants_token_stream,
                         >::#try_extract_value_token_stream(#payload_extraction_result_lower_case_token_stream, &#app_info_state_name_token_stream)
                         {
                             Ok(value) => match #operation_payload_camel_case_token_stream::try_from(value) {
@@ -5061,7 +5061,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                     };
                                     #error_log_call_token_stream
-                                    return #try_read_many_with_body_response_variants_token_stream::from(error);
+                                    return #try_operation_response_variants_token_stream::from(error);
                                 }
                             },
                             Err(err) => {
