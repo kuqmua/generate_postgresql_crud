@@ -55,23 +55,6 @@ pub fn type_variants_from_request_response_generator(
     try_operation_request_error_token_stream: &proc_macro2::TokenStream,
     try_operation_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
-    let generated_status_code_enums_with_from_impls_logic_token_stream = generate_status_code_enums_with_from_impls_logic_token_stream(
-        &derive_debug_serialize_deserialize_token_stream, //#[derive(Debug, serde::Serialize, serde::Deserialize)]
-        &try_operation_response_variants_stringified,
-        &try_operation_response_variants_token_stream,
-        vec_status_codes.clone(),
-        &proc_macro_name_ident_stringified,
-    );
-    let try_from_response_logic_token_stream_token_stream = generate_try_from_response_logic_token_stream(
-        false,
-        &desirable_token_stream,
-        &ident_response_variants_token_stream,
-        &try_operation_response_variants_token_stream,
-        &operation_lower_case_stringified,
-        &desirable_attribute,
-        &proc_macro_name_ident_stringified,
-        vec_status_codes,
-    );
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream =
         quote::quote! {crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
@@ -182,6 +165,13 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream = {
+        let generated_status_code_enums_with_from_impls_logic_token_stream = generate_status_code_enums_with_from_impls_logic_token_stream(
+            &derive_debug_serialize_deserialize_token_stream, //#[derive(Debug, serde::Serialize, serde::Deserialize)]
+            &try_operation_response_variants_stringified,
+            &try_operation_response_variants_token_stream,
+            vec_status_codes.clone(),
+            &proc_macro_name_ident_stringified,
+        );
         quote::quote! {
             #derive_debug_serialize_deserialize_token_stream
             enum #try_operation_response_variants_desirable_attribute_token_stream {
@@ -197,11 +187,16 @@ pub fn type_variants_from_request_response_generator(
             #generated_status_code_enums_with_from_impls_logic_token_stream
         }
     };
-    let try_from_response_logic_token_stream_handle_token_stream = {
-        quote::quote! {
-            #try_from_response_logic_token_stream_token_stream
-        }
-    };
+    let try_from_response_logic_token_stream_handle_token_stream = generate_try_from_response_logic_token_stream(
+        false,
+        &desirable_token_stream,
+        &ident_response_variants_token_stream,
+        &try_operation_response_variants_token_stream,
+        &operation_lower_case_stringified,
+        &desirable_attribute,
+        &proc_macro_name_ident_stringified,
+        vec_status_codes,
+    );
     let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream_handle_token_stream = {
         let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_handle_mapped_token_stream = type_variants_from_request_response
             .iter()
