@@ -3671,8 +3671,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{payload_token_stream}");
-        let try_create_one_error_named_token_stream = {
-            let try_create_one_request_error_camel_case_token_stream = {
+        let try_operation_error_named_token_stream = {
+            let try_operation_request_error_camel_case_token_stream = {
                 let try_create_one_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{operation_name_camel_case_stringified}{request_error_camel_case_stringified}");
                 try_create_one_request_error_camel_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_create_one_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -3682,7 +3682,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub enum #try_operation_error_named_camel_case_token_stream {
                     #request_error_camel_case_token_stream {
                         #eo_error_occurence_attribute_token_stream
-                        #request_error_lower_case_token_stream: #try_create_one_request_error_camel_case_token_stream,
+                        #request_error_lower_case_token_stream: #try_operation_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
@@ -3909,7 +3909,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
-            #try_create_one_error_named_token_stream
+            #try_operation_error_named_token_stream
             #try_create_one_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
