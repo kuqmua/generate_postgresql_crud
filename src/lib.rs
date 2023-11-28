@@ -2977,7 +2977,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let try_create_many_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
+        let try_operation_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -3066,14 +3066,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let try_operation_request_error_token_stream = {
                 let try_operation_request_error_stringified =
-                    format!("{try_create_many_camel_case_token_stream}RequestError");
+                    format!("{try_operation_camel_case_token_stream}RequestError");
                 try_operation_request_error_stringified
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_request_error_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let try_operation_with_serialize_deserialize_token_stream = {
                 let try_operation_with_serialize_deserialize_stringified =
-                    format!("{try_create_many_camel_case_token_stream}WithSerializeDeserialize");
+                    format!("{try_operation_camel_case_token_stream}WithSerializeDeserialize");
                 try_operation_with_serialize_deserialize_stringified
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_with_serialize_deserialize_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -3304,7 +3304,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 desirable_attribute,
                 &desirable_token_stream,
                 &quote::quote!{std::vec::Vec::<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>},
-                &try_create_many_camel_case_token_stream,
+                &try_operation_camel_case_token_stream,
                 &try_operation_response_variants_camel_case_stringified,
                 &try_operation_response_variants_camel_case_token_stream,
                 &try_operation_response_variants_desirable_attribute_token_stream,
@@ -3406,7 +3406,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {operation_name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
             let try_create_many_token_stream = {
                 let from_log_and_return_error_token_stream = crate::from_log_and_return_error::from_log_and_return_error(
-                    &try_create_many_camel_case_token_stream,
+                    &try_operation_camel_case_token_stream,
                     &error_log_call_token_stream,
                     &try_operation_response_variants_token_stream,
                 );
@@ -3545,7 +3545,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         {
                             Ok(value) => value,
                             Err(e) => {
-                                let error = #try_create_many_camel_case_token_stream::from(e);
+                                let error = #try_operation_camel_case_token_stream::from(e);
                                 #error_log_call_token_stream
                                 return #try_operation_response_variants_token_stream::from(error);
                             }
@@ -3561,7 +3561,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 );
                             }
                             Err(e) => {
-                                let error = #try_create_many_camel_case_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream {
+                                let error = #try_operation_camel_case_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream {
                                     uuid_wrapper_try_from_possible_uuid_wrapper_in_server: e,
                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                 };
