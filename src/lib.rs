@@ -3310,17 +3310,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 desirable_attribute,
+                &desirable_token_stream,
+                &quote::quote!{std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>},
                 &try_create_many_camel_case_token_stream,
                 &try_operation_response_variants_camel_case_stringified,
                 &try_operation_response_variants_camel_case_token_stream,
                 &try_operation_response_variants_desirable_attribute_token_stream,
+                &try_create_many_with_serialize_deserialize_camel_case_token_stream,
+                &try_operation_request_error_token_stream,
+                &try_operation_with_serialize_deserialize_token_stream,
                 &create_many_name_lower_case_stringified,
-                &desirable_token_stream,
-                &quote::quote!{std::vec::Vec::<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>},
-                &proc_macro_name_ident_stringified,
                 &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
-                &try_create_many_with_serialize_deserialize_camel_case_token_stream,
                 &error_named_derive_token_stream,
                 &eo_display_attribute_token_stream,
                 &eo_display_foreign_type_token_stream,
@@ -3329,9 +3330,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response_vec,
                 &ident_response_variants_token_stream,
                 vec_status_codes,
-                &try_operation_request_error_token_stream,
-                &try_operation_with_serialize_deserialize_token_stream,
-                false
+                false,
+                &proc_macro_name_ident_stringified,
             )
         };
         // println!("{try_create_many_error_with_middleware_error_variants_token_stream}");

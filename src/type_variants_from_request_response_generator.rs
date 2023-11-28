@@ -24,17 +24,18 @@ pub struct ErrorVariantFieldType {
 
 pub fn type_variants_from_request_response_generator(
     desirable_attribute: proc_macro_helpers::attribute::Attribute,
+    desirable_token_stream: &proc_macro2::TokenStream,
+    desirable_type_token_stream: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
     try_operation_camel_case_token_stream: &proc_macro2::TokenStream,
     try_operation_response_variants_camel_case_stringified: &std::string::String,
     try_operation_response_variants_camel_case_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
     try_operation_response_variants_desirable_attribute_token_stream: &proc_macro2::TokenStream,
+    operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
+    try_operation_request_error_token_stream: &proc_macro2::TokenStream,
+    try_operation_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     operation_lower_case_stringified: &std::string::String,
-    desirable_token_stream: &proc_macro2::TokenStream,
-    desirable_type_token_stream: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
-    proc_macro_name_ident_stringified: &std::string::String,
     code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
     code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
-    operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
     error_named_derive_token_stream: &proc_macro2::TokenStream,
     eo_display_attribute_token_stream: &proc_macro2::TokenStream,
     eo_display_foreign_type_token_stream: &proc_macro2::TokenStream,
@@ -52,11 +53,12 @@ pub fn type_variants_from_request_response_generator(
     )>,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
     vec_status_codes: std::vec::Vec<ErrorVariantAttribute>,
-    try_operation_request_error_token_stream: &proc_macro2::TokenStream,
-    try_operation_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
+
     response_without_body: bool,
+    proc_macro_name_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
+    let vec_status_codes_len = vec_status_codes.len();
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream =
         quote::quote! {crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
     let crate_common_api_request_unexpected_error_response_text_result_token_stream =
@@ -167,7 +169,6 @@ pub fn type_variants_from_request_response_generator(
     };
     let generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream = {
         let generated_status_code_enums_with_from_impls_logic_token_stream = {
-            let vec_status_codes_len = vec_status_codes.len();
             let status_code_enums_with_from_impls_logic_token_stream = vec_status_codes.clone().into_iter().fold(
                 std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
                 |mut acc, element| {
@@ -249,8 +250,7 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let try_from_response_logic_token_stream_handle_token_stream = {
-        let vec_status_codes_len = vec_status_codes.clone().len();
-        let hashmap_unique_status_codes = vec_status_codes.clone().into_iter().fold(
+        let hashmap_unique_status_codes = vec_status_codes.into_iter().fold(
             std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
             |mut acc, element| {
                 match acc.get_mut(&element.error_variant_attribute) {
