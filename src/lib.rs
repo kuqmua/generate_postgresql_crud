@@ -4333,23 +4333,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified = generate_payload_try_from_payload_with_serialize_deserialize_stringified(
+        let operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified = generate_payload_try_from_payload_with_serialize_deserialize_stringified(
             &operation_name_camel_case_stringified,
             payload_camel_case_stringified,
             &try_from_camel_case_stringified,
             with_serialize_deserialize_camel_case_stringified,
         );
         let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_error_named_camel_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_error_named_camel_case_token_stream(
-            &read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified,
+            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             error_named_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let read_many_with_body_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_camel_case_token_stream(
-            &read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified,
+            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_lower_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_lower_case_token_stream(
-            &read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_camel_case_stringified,
+            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let try_read_many_with_body_error_named_camel_case_token_stream = generate_try_error_named_token_stream(
