@@ -3330,7 +3330,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &ident_response_variants_token_stream,
                 vec_status_codes,
                 &try_operation_request_error_token_stream,
-                &try_operation_with_serialize_deserialize_token_stream
+                &try_operation_with_serialize_deserialize_token_stream,
+                false
             )
         };
         // println!("{try_create_many_error_with_middleware_error_variants_token_stream}");
