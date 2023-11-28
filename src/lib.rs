@@ -2952,34 +2952,34 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";//
     let create_many_token_stream = {
-        let create_many_name_camel_case_stringified = format!("{create_camel_case_stringified}{many_camel_case_stringified}");
-        let create_many_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&create_many_name_camel_case_stringified.to_string());
+        let operation_name_camel_case_stringified = format!("{create_camel_case_stringified}{many_camel_case_stringified}");
+        let create_many_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let create_many_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
-            &create_many_name_camel_case_stringified,
+            &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let create_many_payload_element_camel_case_token_stream = generate_payload_element_camel_case_token_stream(
-            &create_many_name_camel_case_stringified,
+            &operation_name_camel_case_stringified,
             &payload_element_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let create_many_payload_camel_case_token_stream = quote::quote!{std::vec::Vec<#create_many_payload_element_camel_case_token_stream>};
         let try_create_many_error_named_camel_case_token_stream = generate_try_error_named_token_stream(
             try_camel_case_stringified,
-            &create_many_name_camel_case_stringified,
+            &operation_name_camel_case_stringified,
             error_named_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let try_create_many_response_variants_token_stream = generate_try_response_variants_token_stream(
             try_camel_case_stringified,
-            &create_many_name_camel_case_stringified,
+            &operation_name_camel_case_stringified,
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let try_create_many_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
             try_camel_case_stringified,
-            &create_many_name_camel_case_stringified,
+            &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
         let parameters_token_stream = {
@@ -3012,7 +3012,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{payload_token_stream}");
         let try_create_many_error_named_token_stream = {
             let try_create_many_request_error_camel_case_token_stream = {
-                let try_create_many_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{create_many_name_camel_case_stringified}{request_error_camel_case_stringified}");
+                let try_create_many_request_error_camel_case_stringified = format!("{try_camel_case_stringified}{operation_name_camel_case_stringified}{request_error_camel_case_stringified}");
                 try_create_many_request_error_camel_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_create_many_request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
@@ -3047,19 +3047,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream}");
         let try_create_many_error_with_middleware_error_variants_token_stream = {
             let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
-            let try_operation_response_variants_camel_case_stringified = format!("{try_camel_case_stringified}{create_many_name_camel_case_stringified}{response_variants_camel_case_stringified}");
+            let try_operation_response_variants_camel_case_stringified = format!("{try_camel_case_stringified}{operation_name_camel_case_stringified}{response_variants_camel_case_stringified}");
             let try_operation_response_variants_camel_case_token_stream = {
                 try_operation_response_variants_camel_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_response_variants_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let try_operation_with_serialize_deserialize_camel_case_token_stream = {
-                let try_operation_with_serialize_deserialize_camel_case_stringified = format!("{try_camel_case_stringified}{create_many_name_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}");
+                let try_operation_with_serialize_deserialize_camel_case_stringified = format!("{try_camel_case_stringified}{operation_name_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}");
                 try_operation_with_serialize_deserialize_camel_case_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_with_serialize_deserialize_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             let try_operation_response_variants_desirable_attribute_token_stream = {
                 let try_operation_response_variants_desirable_attribute_stringified =
-                    format!("{try_camel_case_stringified}{create_many_name_camel_case_stringified}{response_variants_camel_case_stringified}{desirable_attribute}");
+                    format!("{try_camel_case_stringified}{operation_name_camel_case_stringified}{response_variants_camel_case_stringified}{desirable_attribute}");
                 try_operation_response_variants_desirable_attribute_stringified
                 .parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_response_variants_desirable_attribute_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
