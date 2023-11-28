@@ -2167,8 +2167,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{project_commit_not_equal},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2178,8 +2178,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{project_commit_to_use},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2218,8 +2218,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{no_project_commit_header},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2267,8 +2267,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{configuration_box_dyn_error},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2287,8 +2287,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{box_dyn_database_error},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2327,8 +2327,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{box_dyn_error},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2347,8 +2347,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{protocol},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2367,8 +2367,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{row_not_found},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2387,8 +2387,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{type_not_found},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2407,8 +2407,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{column_index_out_of_bounds},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{usize},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2418,8 +2418,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{len},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{usize},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2438,8 +2438,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{column_not_found},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2458,8 +2458,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{column_decode_index},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2469,8 +2469,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{source_handle},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2489,8 +2489,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{decode_box_dyn_error},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2509,8 +2509,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{pool_timed_out},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2529,8 +2529,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{pool_closed},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
@@ -2549,8 +2549,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 crate::type_variants_from_request_response_generator::ErrorVariantField {
                     field_name: quote::quote!{worker_crashed},
                     field_type_original: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
-                        error_occurence_attribute: quote::quote!{},
-                        field_type: quote::quote!{},
+                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+                        field_type: quote::quote!{#std_string_string_token_stream},
                     },
                     field_type_with_serialize_deserialize: crate::type_variants_from_request_response_generator::ErrorVariantFieldType {
                         error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
