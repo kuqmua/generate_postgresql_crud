@@ -398,7 +398,7 @@ pub fn generate_status_code_enums_with_from_impls_logic_token_stream(
             let error_variant_ident = &element.error_variant_ident;
             let fields_mapped_into_token_stream = element.error_variant_fields.iter().map(|element| {
                 let field_name_token_stream = &element.field_name;
-                let field_type_token_stream = &element.field_type;
+                let field_type_token_stream = &element.field_type_with_serialize_deserialize.field_type;
                 quote::quote! {#field_name_token_stream: #field_type_token_stream}
             }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
             quote::quote!{
@@ -613,8 +613,14 @@ pub struct ErrorVariant {
 
 #[derive(Clone)]
 pub struct ErrorVariantField {
-    pub error_occurence_attribute: proc_macro2::TokenStream,
     pub field_name: proc_macro2::TokenStream,
+    pub field_type_original: ErrorVariantFieldType,
+    pub field_type_with_serialize_deserialize: ErrorVariantFieldType,
+}
+
+#[derive(Clone)]
+pub struct ErrorVariantFieldType {
+    pub error_occurence_attribute: proc_macro2::TokenStream,
     pub field_type: proc_macro2::TokenStream,
 }
 
@@ -661,7 +667,7 @@ pub fn type_variants_from_request_response(
         .iter()
         .map(|element| {
             let field_name_token_stream = &element.field_name;
-            let field_type_token_stream = &element.field_type;
+            let field_type_token_stream = &element.field_type_with_serialize_deserialize.field_type;
             quote::quote! {#field_name_token_stream: #field_type_token_stream}
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
