@@ -3616,7 +3616,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let create_one_token_stream = {
         let operation_name_camel_case_stringified = format!("{create_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
-        let create_one_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
+        let operation_parameters_camel_case_token_stream = generate_parameters_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -3646,7 +3646,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
-                pub struct #create_one_parameters_camel_case_token_stream {
+                pub struct #operation_parameters_camel_case_token_stream {
                     pub #payload_lower_case_token_stream: #create_one_payload_camel_case_token_stream,
                 }
             }
@@ -3738,7 +3738,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 pub async fn #try_create_one_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
-                    #parameters_lower_case_token_stream: #create_one_parameters_camel_case_token_stream,
+                    #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
                 ) -> Result<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream, #try_create_one_error_named_camel_case_token_stream> {
                     let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
@@ -3886,7 +3886,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #axum_extract_rejection_json_rejection_token_stream,
                     >,
                 ) -> #impl_axum_response_into_response_token_stream {
-                    let #parameters_lower_case_token_stream = #create_one_parameters_camel_case_token_stream {
+                    let #parameters_lower_case_token_stream = #operation_parameters_camel_case_token_stream {
                         #payload_lower_case_token_stream: match #crate_server_routes_helpers_json_extractor_error_json_value_result_extractor_token_stream::<
                             #create_one_payload_camel_case_token_stream,
                             #try_create_one_response_variants_token_stream,
