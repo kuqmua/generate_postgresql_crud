@@ -4348,7 +4348,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_lower_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_lower_case_token_stream(
+        let operation_payload_try_from_operation_payload_with_serialize_deserialize_lower_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_lower_case_token_stream(
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
@@ -4564,7 +4564,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[tvfrr_400_bad_request]
                 #operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_token_stream {
                     #eo_error_occurence_attribute_token_stream
-                    #read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_lower_case_token_stream:
+                    #operation_payload_try_from_operation_payload_with_serialize_deserialize_lower_case_token_stream:
                         #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
