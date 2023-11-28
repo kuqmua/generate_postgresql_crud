@@ -441,7 +441,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream = quote::quote!{
         #code_occurence_lower_case_token_stream: #crate_code_occurence_tufa_common_macro_call_token_stream
     };
-    let eo_error_occurence_attribute_token_stream = quote::quote!{#[eo_error_occurence]};
+    let eo_error_occurence_attribute_token_stream = proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence.to_attribute_view_token_stream();//quote::quote!{#[eo_error_occurence]};
     let eo_display_attribute_token_stream = quote::quote!{#[eo_display]};
     let eo_display_with_serialize_deserialize_token_stream = quote::quote!{#[eo_display_with_serialize_deserialize]};
     let eo_display_foreign_type_token_stream = quote::quote!{#[eo_display_foreign_type]};
