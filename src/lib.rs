@@ -3694,8 +3694,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        // println!("{try_create_error_named_token_stream}");
-        let try_create_one_error_with_middleware_error_variants_token_stream = {
+        // println!("{try_operation_error_named_token_stream}");
+        let try_operation_error_with_middleware_error_variants_token_stream = {
             quote::quote!{
                 #[derive(
                     Debug,
@@ -3717,7 +3717,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        // println!("{try_create_one_error_with_middleware_error_variants_token_stream}");
+        // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
             let try_create_one_lower_case_token_stream = {
                 let try_create_one_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
@@ -3910,7 +3910,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #parameters_token_stream
             #payload_token_stream
             #try_operation_error_named_token_stream
-            #try_create_one_error_with_middleware_error_variants_token_stream
+            #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
         }
