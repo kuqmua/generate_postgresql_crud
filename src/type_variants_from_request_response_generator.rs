@@ -53,8 +53,7 @@ pub fn type_variants_from_request_response_generator(
     )>,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
     vec_status_codes: std::vec::Vec<&ErrorVariantAttribute>,
-
-    response_without_body: bool,
+    is_response_with_body: bool,
     proc_macro_name_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
@@ -286,11 +285,8 @@ pub fn type_variants_from_request_response_generator(
         };
         let status_code_enums_try_from = {
             let mut is_last_element_found = false;
-            let desirable_status_code_case_token_stream = match response_without_body {
+            let desirable_status_code_case_token_stream = match is_response_with_body {
                 true => quote::quote! {
-                    Ok(#ident_response_variants_token_stream::#desirable_token_stream(()))
-                },
-                false => quote::quote! {
                     match response.text().await {
                         Ok(response_text) => match serde_json::from_str::<#desirable_enum_name>(&response_text){
                             Ok(value) => Ok(#try_operation_response_variants_camel_case_token_stream::from(value)), 
@@ -310,6 +306,9 @@ pub fn type_variants_from_request_response_generator(
                             }
                         ),
                     }
+                },
+                false => quote::quote! {//#ident_response_variants_token_stream
+                    Ok(#try_operation_response_variants_camel_case_token_stream::#desirable_token_stream(()))
                 },
             };
             let mut status_code_enums_try_from_variants = Vec::with_capacity(unique_status_codes_len + 1);

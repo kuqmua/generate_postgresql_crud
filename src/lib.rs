@@ -3212,7 +3212,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response_vec,
                 &ident_response_variants_token_stream,
                 vec_status_codes,
-                false,
+                true,
                 &proc_macro_name_ident_stringified,
             )
         };
@@ -3719,7 +3719,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response_vec,
                 &ident_response_variants_token_stream,
                 vec_status_codes,
-                false,
+                true,
                 &proc_macro_name_ident_stringified,
             );
             quote::quote!{
