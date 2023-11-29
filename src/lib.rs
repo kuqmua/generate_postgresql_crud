@@ -3317,8 +3317,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_request_error_token_stream,
                 &try_operation_with_serialize_deserialize_token_stream,
                 &operation_name_lower_case_stringified,
-
-
                 &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                 &error_named_derive_token_stream,

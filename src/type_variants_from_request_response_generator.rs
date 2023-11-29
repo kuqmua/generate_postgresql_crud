@@ -43,13 +43,13 @@ pub fn type_variants_from_request_response_generator(
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response: std::vec::Vec<(
         proc_macro_helpers::attribute::Attribute, //attribute
-        std::vec::Vec<proc_macro2::TokenStream>, //try_operation_token_stream
-        std::vec::Vec<proc_macro2::TokenStream>, //enum_with_serialize_deserialize_logic_token_stream
-        std::vec::Vec<proc_macro2::TokenStream>, //from_logic_token_stream
-        std::vec::Vec<proc_macro2::TokenStream>, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
-        std::vec::Vec<proc_macro2::TokenStream>, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
-        std::vec::Vec<proc_macro2::TokenStream>, //enum_status_codes_checker_name_logic_token_stream
-        std::vec::Vec<proc_macro2::TokenStream>, //axum_response_into_response_logic_token_stream
+        proc_macro2::TokenStream, //try_operation_token_stream
+        proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
+        proc_macro2::TokenStream, //from_logic_token_stream
+        proc_macro2::TokenStream, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
+        proc_macro2::TokenStream, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
+        proc_macro2::TokenStream, //enum_status_codes_checker_name_logic_token_stream
+        proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
     )>,
     ident_response_variants_token_stream: &proc_macro2::TokenStream,
     vec_status_codes: std::vec::Vec<ErrorVariantAttribute>,
@@ -74,9 +74,9 @@ pub fn type_variants_from_request_response_generator(
                 _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                 _, //enum_status_codes_checker_name_logic_token_stream
                 _, //axum_response_into_response_logic_token_stream
-            )| quote::quote! {#(#try_operation_token_stream),*},
+            )| try_operation_token_stream,
         )
-        .collect::<Vec<proc_macro2::TokenStream>>();
+        .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
         quote::quote! {
             #[derive(
                 Debug,
@@ -103,9 +103,9 @@ pub fn type_variants_from_request_response_generator(
                         _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                         _, //enum_status_codes_checker_name_logic_token_stream
                         _, //axum_response_into_response_logic_token_stream
-                    )| quote::quote! {#(#enum_with_serialize_deserialize_logic_token_stream),*},
+                    )| enum_with_serialize_deserialize_logic_token_stream,
                 )
-                .collect::<Vec<proc_macro2::TokenStream>>();
+                .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
         quote::quote! {
             #derive_debug_serialize_deserialize_token_stream
             pub enum #try_operation_response_variants_camel_case_token_stream {
@@ -127,9 +127,9 @@ pub fn type_variants_from_request_response_generator(
                     _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                     _, //enum_status_codes_checker_name_logic_token_stream
                     _, //axum_response_into_response_logic_token_stream
-                )| quote::quote! {#(#from_logic_token_stream),*},
+                )| from_logic_token_stream,
             )
-            .collect::<Vec<proc_macro2::TokenStream>>();
+            .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
         quote::quote! {
             impl std::convert::From<#try_operation_camel_case_token_stream> for #try_operation_response_variants_camel_case_token_stream {
                 fn from(value: #try_operation_camel_case_token_stream) -> Self {
@@ -153,9 +153,9 @@ pub fn type_variants_from_request_response_generator(
                     _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                     _, //enum_status_codes_checker_name_logic_token_stream
                     _, //axum_response_into_response_logic_token_stream
-                )| quote::quote! {#(#impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream),*},
+                )| impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
             )
-            .collect::<Vec<proc_macro2::TokenStream>>();
+            .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
         quote::quote! {
             impl std::convert::From<&#try_operation_response_variants_camel_case_token_stream> for http::StatusCode {
                 fn from(value: &#try_operation_response_variants_camel_case_token_stream) -> Self {
@@ -269,7 +269,7 @@ pub fn type_variants_from_request_response_generator(
             panic!("{proc_macro_name_ident_stringified} unique_status_codes_len < 1 {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE);
         }
         let unique_status_codes_len_minus_one = unique_status_codes_len - 1;
-        let unique_status_codes = hashmap_unique_status_codes.iter().map(|(key, _)|key).collect::<Vec<&proc_macro_helpers::attribute::Attribute>>();
+        let unique_status_codes = hashmap_unique_status_codes.iter().map(|(key, _)|key).collect::<std::vec::Vec<&proc_macro_helpers::attribute::Attribute>>();
         let desirable_enum_name = {
             let status_code_enum_name_stingified = format!("{try_operation_response_variants_camel_case_token_stream}{desirable_attribute}");
             status_code_enum_name_stingified
@@ -406,9 +406,9 @@ pub fn type_variants_from_request_response_generator(
                     impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
                     _, //enum_status_codes_checker_name_logic_token_stream
                     _, //axum_response_into_response_logic_token_stream
-                )| quote::quote! {#(#impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream),*},
+                )| impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
             )
-            .collect::<Vec<proc_macro2::TokenStream>>();
+            .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
         quote::quote! {
             impl TryFrom<#try_operation_response_variants_camel_case_token_stream> for #desirable_type_token_stream {
                 type Error = #operation_with_serialize_deserialize_camel_case_token_stream;
@@ -561,9 +561,9 @@ pub fn type_variants_from_request_response_generator(
                         _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                         enum_status_codes_checker_name_logic_token_stream,
                         _, //axum_response_into_response_logic_token_stream
-                    )| quote::quote! {#(#enum_status_codes_checker_name_logic_token_stream)*},
+                    )| enum_status_codes_checker_name_logic_token_stream,
                 )
-                .collect::<Vec<proc_macro2::TokenStream>>();
+                .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
         quote::quote! {
             pub enum #enum_status_codes_checker_camel_case_token_stream {
                 #(#enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream)*
@@ -584,9 +584,9 @@ pub fn type_variants_from_request_response_generator(
                         _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                         _, //enum_status_codes_checker_name_logic_token_stream
                         axum_response_into_response_logic_token_stream,
-                    )| quote::quote! {#(#axum_response_into_response_logic_token_stream),*},
+                    )| axum_response_into_response_logic_token_stream,
                 )
-                .collect::<Vec<proc_macro2::TokenStream>>();
+                .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
         quote::quote! {
             impl axum::response::IntoResponse for #try_operation_response_variants_camel_case_token_stream {
                 fn into_response(self) -> axum::response::Response {
@@ -625,13 +625,13 @@ pub fn type_variants_from_request_response(
     error_variant_attribute: &ErrorVariantAttribute,
 ) -> (
     proc_macro_helpers::attribute::Attribute, //attribute
-    std::vec::Vec<proc_macro2::TokenStream>, //try_operation_token_stream
-    std::vec::Vec<proc_macro2::TokenStream>, //enum_with_serialize_deserialize_logic_token_stream
-    std::vec::Vec<proc_macro2::TokenStream>, //from_logic_token_stream
-    std::vec::Vec<proc_macro2::TokenStream>, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
-    std::vec::Vec<proc_macro2::TokenStream>, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
-    std::vec::Vec<proc_macro2::TokenStream>, //enum_status_codes_checker_name_logic_token_stream
-    std::vec::Vec<proc_macro2::TokenStream>, //axum_response_into_response_logic_token_stream
+    proc_macro2::TokenStream, //try_operation_token_stream
+    proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
+    proc_macro2::TokenStream, //from_logic_token_stream
+    proc_macro2::TokenStream, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
+    proc_macro2::TokenStream, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
+    proc_macro2::TokenStream, //enum_status_codes_checker_name_logic_token_stream
+    proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
 ) {
     let variant_ident_attribute_camel_case_token_stream = {
         let variant_ident_attribute_camel_case_stringified = format!(
@@ -670,11 +670,11 @@ pub fn type_variants_from_request_response(
             }
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-        vec![quote::quote! {
+        quote::quote! {
             #variant_ident {
                 #(#fields_mapped_into_token_stream),*
             }
-        }]
+        }
     };
     let enum_with_serialize_deserialize_logic_token_stream = {
         let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
@@ -683,44 +683,44 @@ pub fn type_variants_from_request_response(
             quote::quote! {#field_name_token_stream: #field_type_token_stream}
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-        vec![quote::quote! {
+        quote::quote! {
             #variant_ident {
                 #(#fields_mapped_into_token_stream),*
             }
-        }]
+        }
     };
     let from_logic_token_stream = {
-        vec![quote::quote! {
+        quote::quote! {
             #operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
                 #(#fields_name_mapped_into_token_stream),*
             } => Self::#variant_ident {
                 #(#fields_name_mapped_into_token_stream),*
             }
-        }]
+        }
     };
     let impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream = {
-        vec![quote::quote! {
+        quote::quote! {
             #try_operation_response_variants_camel_case_token_stream::#variant_ident {
                 #(#fields_anonymous_types_mapped_into_token_stream),*
             } => #http_status_code_quote_token_stream
-        }]
+        }
     };
     let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream = {
-        vec![quote::quote! {
+        quote::quote! {
                 #try_operation_response_variants_camel_case_token_stream::#variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
                 } => Err(#operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
                 })
-        }]
+        }
     };
     let enum_status_codes_checker_name_logic_token_stream = {
-        vec![quote::quote! {
+        quote::quote! {
             #variant_ident_attribute_camel_case_token_stream,
-        }]
+        }
     };
     let axum_response_into_response_logic_token_stream = {
-        vec![quote::quote! {
+        quote::quote! {
             #try_operation_response_variants_camel_case_token_stream::#variant_ident {
                 #(#fields_anonymous_types_mapped_into_token_stream),*
             } => {
@@ -728,7 +728,7 @@ pub fn type_variants_from_request_response(
                 *res.status_mut() = #http_status_code_quote_token_stream;
                 res
             }
-        }]
+        }
     };
     (
         error_variant_attribute.error_variant_attribute.clone(),
