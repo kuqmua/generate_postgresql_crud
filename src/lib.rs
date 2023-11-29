@@ -3617,7 +3617,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    // println!("{create_many_token_stream}");
+    // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
+    //     &proc_macro_name,
+    //     &create_many_token_stream,
+    //     &proc_macro_name_ident_stringified
+    // );
     let create_one_token_stream = {
         let operation_name_camel_case_stringified = format!("{create_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
@@ -3924,7 +3928,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    // println!("{create_one_token_stream}"); 
+    // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
+    //     &proc_macro_name,
+    //     &create_one_token_stream,
+    //     &proc_macro_name_ident_stringified
+    // );
     let read_one_token_stream = {
         let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
@@ -4326,7 +4334,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    // println!("{read_one_token_stream}");
+    // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
+    //     &proc_macro_name,
+    //     &read_one_token_stream,
+    //     &proc_macro_name_ident_stringified
+    // );
     let read_many_with_body_token_stream = {
         let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{many_camel_case_stringified}{with_body_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
@@ -5107,7 +5119,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    // println!("{read_many_with_body_token_stream}");
+    // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
+    //     &proc_macro_name,
+    //     &read_many_with_body_token_stream,
+    //     &proc_macro_name_ident_stringified
+    // );
     //todo WHY ITS RETURN SUCCESS EVEN IF ROW DOES NOT EXISTS?
     let update_one_token_stream = {
         let operation_name_camel_case_stringified = format!("{update_camel_case_stringified}{one_camel_case_stringified}");
@@ -5561,7 +5577,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    // println!("{update_one_token_stream}");
+    // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
+    //     &proc_macro_name,
+    //     &update_one_token_stream,
+    //     &proc_macro_name_ident_stringified
+    // );
     let update_many_token_stream = {
         let operation_name_camel_case_stringified = format!("{update_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
@@ -6124,7 +6144,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    // println!("{update_many_token_stream}");
+    // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
+    //     &proc_macro_name,
+    //     &update_many_token_stream,
+    //     &proc_macro_name_ident_stringified
+    // );
     let delete_one_token_stream = {
         let operation_name_camel_case_stringified = format!("{delete_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
@@ -6458,7 +6482,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    // println!("{delete_one_token_stream}");
+    // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
+    //     &proc_macro_name,
+    //     &delete_one_token_stream,
+    //     &proc_macro_name_ident_stringified
+    // );
     let delete_many_with_body_token_stream = {
         let operation_name_camel_case_stringified = format!("{delete_camel_case_stringified}{many_camel_case_stringified}{with_body_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
@@ -7217,7 +7245,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #route_handler_token_stream
         }
     };
-    // println!("{delete_many_with_body_token_stream}");
+    // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
+    //     &proc_macro_name,
+    //     &delete_many_with_body_token_stream,
+    //     &proc_macro_name_ident_stringified
+    // );
     let common_token_stream = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
@@ -7232,7 +7264,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
     };
-    // println!("{common_token_stream}");
+    // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
+    //     &proc_macro_name,
+    //     &common_token_stream,
+    //     &proc_macro_name_ident_stringified
+    // );
     let gen = quote::quote! {
         #common_token_stream
 
