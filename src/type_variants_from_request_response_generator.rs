@@ -620,7 +620,7 @@ pub fn type_variants_from_request_response_generator(
 
 pub fn type_variants_from_request_response(
     try_operation_response_variants_camel_case_token_stream: &proc_macro2::TokenStream,
-    operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
+    try_operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
     proc_macro_name_ident_stringified: &std::string::String,
     error_variant_attribute: &ErrorVariantAttribute,
 ) -> (
@@ -691,7 +691,7 @@ pub fn type_variants_from_request_response(
     };
     let from_logic_token_stream = {
         quote::quote! {
-            #operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+            #try_operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
                 #(#fields_name_mapped_into_token_stream),*
             } => Self::#variant_ident {
                 #(#fields_name_mapped_into_token_stream),*
@@ -707,11 +707,11 @@ pub fn type_variants_from_request_response(
     };
     let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream = {
         quote::quote! {
-                #try_operation_response_variants_camel_case_token_stream::#variant_ident {
-                    #(#fields_name_mapped_into_token_stream),*
-                } => Err(#operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
-                    #(#fields_name_mapped_into_token_stream),*
-                })
+            #try_operation_response_variants_camel_case_token_stream::#variant_ident {
+                #(#fields_name_mapped_into_token_stream),*
+            } => Err(#try_operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+                #(#fields_name_mapped_into_token_stream),*
+            })
         }
     };
     let enum_status_codes_checker_name_logic_token_stream = {
