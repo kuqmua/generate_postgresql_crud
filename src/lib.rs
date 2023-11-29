@@ -2977,7 +2977,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let try_operation_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
+        let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -3638,7 +3638,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let try_operation_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
+        let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -3977,7 +3977,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let try_operation_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
+        let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -4364,7 +4364,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let try_operation_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
+        let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -5147,7 +5147,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let try_operation_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
+        let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             &try_camel_case_stringified,
             &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -5592,7 +5592,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let operation_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
+        let operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             &try_camel_case_stringified,
             &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -6150,7 +6150,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let try_operation_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
+        let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             &try_camel_case_stringified,
             &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -6480,7 +6480,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             response_variants_camel_case_stringified,
             &proc_macro_name_ident_stringified
         );
-        let try_operation_camel_case_token_stream = generate_try_ident_camel_case_token_stream(
+        let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
             &proc_macro_name_ident_stringified
@@ -7218,12 +7218,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-fn generate_try_ident_camel_case_token_stream(
+fn generate_try_operation_camel_case_token_stream(
     try_camel_case_stringified: &str,
-    original_name_camel_case_stringified: &str,
+    operation_name_camel_case_stringified: &str,
     proc_macro_name_ident_stringified: &str
 ) -> proc_macro2::TokenStream {
-    let value = format!("{try_camel_case_stringified}{original_name_camel_case_stringified}");
+    let value = format!("{try_camel_case_stringified}{operation_name_camel_case_stringified}");
         value.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {value} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
