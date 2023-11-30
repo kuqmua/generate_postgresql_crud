@@ -166,7 +166,7 @@ pub fn type_variants_from_request_response_generator(
     };
     let generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream = {
         let generated_status_code_enums_with_from_impls_logic_token_stream = {
-            let status_code_enums_with_from_impls_logic_token_stream = type_variants_from_request_response.clone().into_iter().fold(
+            let status_code_enums_with_from_impls_logic_token_stream = type_variants_from_request_response.iter().fold(
                 std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
                 |mut acc, element| {
                     match acc.get_mut(&element.0.error_variant_attribute) {
@@ -252,7 +252,7 @@ pub fn type_variants_from_request_response_generator(
             unique_status_codes_len,
             unique_status_codes_len_minus_one
          ) = {
-            let hashmap_unique_status_codes = type_variants_from_request_response.clone().into_iter().fold(
+            let hashmap_unique_status_codes = type_variants_from_request_response.iter().fold(
                 std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
                 |mut acc, element| {
                     match acc.get_mut(&element.0.error_variant_attribute) {
