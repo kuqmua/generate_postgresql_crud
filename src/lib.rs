@@ -3144,150 +3144,34 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &json_body_logic_error_variants_vec_handle
             );
             let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = Vec::new();
-                for (
-                    error_variant,
-                    try_operation_token_stream,
-                    enum_with_serialize_deserialize_logic_token_stream,
-                    from_logic_token_stream,
-                    impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                    impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                    enum_status_codes_checker_name_logic_token_stream,
-                    axum_response_into_response_logic_token_stream,
-                ) in common_middlewares_error_variants_vec {
-                    type_variants_from_request_response.push((
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ));
+                let mut type_variants_from_request_response = Vec::new();//todo calculate capacity
+                for element in common_middlewares_error_variants_vec {
+                    type_variants_from_request_response.push(element);
                 }
-                for (
-                    error_variant,
-                    try_operation_token_stream,
-                    enum_with_serialize_deserialize_logic_token_stream,
-                    from_logic_token_stream,
-                    impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                    impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                    enum_status_codes_checker_name_logic_token_stream,
-                    axum_response_into_response_logic_token_stream,
-                ) in postgres_error_variants_vec_token_stream {
-                    type_variants_from_request_response.push((
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ));
+                for element in postgres_error_variants_vec_token_stream {
+                    type_variants_from_request_response.push(element);
                 }
-                for (
-                    error_variant,
-                    try_operation_token_stream,
-                    enum_with_serialize_deserialize_logic_token_stream,
-                    from_logic_token_stream,
-                    impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                    impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                    enum_status_codes_checker_name_logic_token_stream,
-                    axum_response_into_response_logic_token_stream,
-                ) in json_body_logic_error_variants_vec_token_stream  {
-                    type_variants_from_request_response.push((
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ));
+                for element in json_body_logic_error_variants_vec_token_stream  {
+                    type_variants_from_request_response.push(element);
                 }
-                type_variants_from_request_response.push({
-                    let (
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ) = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-                        &try_operation_response_variants_camel_case_token_stream,
-                        &try_operation_with_serialize_deserialize_camel_case_token_stream,
-                        &proc_macro_name_ident_stringified,
-                        &bind_query_variant_attribute
-                    );
-                    (
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    )});
-                type_variants_from_request_response.push({
-                    let (
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ) = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-                        &try_operation_response_variants_camel_case_token_stream,
-                        &try_operation_with_serialize_deserialize_camel_case_token_stream,
-                        &proc_macro_name_ident_stringified,
-                        &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
-                    );
-                    (
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    )
-                });
-                type_variants_from_request_response.push({
-                    let (
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ) = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-                        &try_operation_response_variants_camel_case_token_stream,
-                        &try_operation_with_serialize_deserialize_camel_case_token_stream,
-                        &proc_macro_name_ident_stringified,
-                        &unexpected_case_variant_attribute
-                    );
-                    (
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    )
-                });
+                type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+                    &try_operation_response_variants_camel_case_token_stream,
+                    &try_operation_with_serialize_deserialize_camel_case_token_stream,
+                    &proc_macro_name_ident_stringified,
+                    &bind_query_variant_attribute
+                ));
+                type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+                    &try_operation_response_variants_camel_case_token_stream,
+                    &try_operation_with_serialize_deserialize_camel_case_token_stream,
+                    &proc_macro_name_ident_stringified,
+                    &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
+                ));
+                type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+                    &try_operation_response_variants_camel_case_token_stream,
+                    &try_operation_with_serialize_deserialize_camel_case_token_stream,
+                    &proc_macro_name_ident_stringified,
+                    &unexpected_case_variant_attribute
+                ));
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
@@ -3311,7 +3195,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 &ident_response_variants_token_stream,
-                // vec_status_codes,
                 true,
                 &proc_macro_name_ident_stringified,
             )
@@ -3752,123 +3635,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let type_variants_from_request_response_vec = {
                 let mut type_variants_from_request_response = Vec::new();
-                for (
-                    error_variant,
-                    try_operation_token_stream,
-                    enum_with_serialize_deserialize_logic_token_stream,
-                    from_logic_token_stream,
-                    impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                    impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                    enum_status_codes_checker_name_logic_token_stream,
-                    axum_response_into_response_logic_token_stream,
-                ) in common_middlewares_error_variants_vec {
-                    type_variants_from_request_response.push((
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ));
+                for element in common_middlewares_error_variants_vec {
+                    type_variants_from_request_response.push(element);
                 }
-                for (
-                    error_variant,
-                    try_operation_token_stream,
-                    enum_with_serialize_deserialize_logic_token_stream,
-                    from_logic_token_stream,
-                    impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                    impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                    enum_status_codes_checker_name_logic_token_stream,
-                    axum_response_into_response_logic_token_stream,
-                ) in postgres_error_variants_vec_token_stream {
-                    type_variants_from_request_response.push((
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ));
+                for element in postgres_error_variants_vec_token_stream {
+                    type_variants_from_request_response.push(element);
                 }
-                for (
-                    error_variant,
-                    try_operation_token_stream,
-                    enum_with_serialize_deserialize_logic_token_stream,
-                    from_logic_token_stream,
-                    impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                    impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                    enum_status_codes_checker_name_logic_token_stream,
-                    axum_response_into_response_logic_token_stream,
-                ) in json_body_logic_error_variants_vec_token_stream  {
-                    type_variants_from_request_response.push((
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ));
+                for element in json_body_logic_error_variants_vec_token_stream  {
+                    type_variants_from_request_response.push(element);
                 }
-                type_variants_from_request_response.push({
-                    let (
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ) = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-                        &try_operation_response_variants_camel_case_token_stream,
-                        &try_operation_with_serialize_deserialize_camel_case_token_stream,
-                        &proc_macro_name_ident_stringified,
-                        &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
-                    );
-                    (
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    )
-                });
-                type_variants_from_request_response.push({
-                    let (
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    ) = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-                        &try_operation_response_variants_camel_case_token_stream,
-                        &try_operation_with_serialize_deserialize_camel_case_token_stream,
-                        &proc_macro_name_ident_stringified,
-                        &unexpected_case_variant_attribute
-                    );
-                    (
-                        error_variant,
-                        try_operation_token_stream,
-                        enum_with_serialize_deserialize_logic_token_stream,
-                        from_logic_token_stream,
-                        impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-                        impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-                        enum_status_codes_checker_name_logic_token_stream,
-                        axum_response_into_response_logic_token_stream,
-                    )
-                });
+                type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+                    &try_operation_response_variants_camel_case_token_stream,
+                    &try_operation_with_serialize_deserialize_camel_case_token_stream,
+                    &proc_macro_name_ident_stringified,
+                    &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
+                ));
+                type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+                    &try_operation_response_variants_camel_case_token_stream,
+                    &try_operation_with_serialize_deserialize_camel_case_token_stream,
+                    &proc_macro_name_ident_stringified,
+                    &unexpected_case_variant_attribute
+                ));
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
