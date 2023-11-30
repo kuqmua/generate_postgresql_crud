@@ -138,11 +138,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
     let proc_macro_name_ident_stringified = format!("{proc_macro_name} {ident}");
     let response_variants_camel_case_stringified = "ResponseVariants";
-    let ident_response_variants_stringified = format!("{ident}{response_variants_camel_case_stringified}");
-    let ident_response_variants_token_stream = {
-        ident_response_variants_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
+    // let ident_response_variants_stringified = format!("{ident}{response_variants_camel_case_stringified}");
+    // let ident_response_variants_token_stream = {
+    //     ident_response_variants_stringified.parse::<proc_macro2::TokenStream>()
+    //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    // };
     let with_serialize_deserialize_camel_case_stringified = "WithSerializeDeserialize";
     let table_name_stringified = pluralizer::pluralize(&ident_lower_case_stringified, 2, false);
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
@@ -2082,14 +2082,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         },
     };
     //
-    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream = quote::quote!{
-        #[tvfrr_500_internal_server_error] //todo what status should be there?
-        CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
-            #eo_display_token_stream
-            uuid_wrapper_try_from_possible_uuid_wrapper_in_server: sqlx::Error,
-            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-        }
-    };
+    // let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream = quote::quote!{
+    //     #[tvfrr_500_internal_server_error] //todo what status should be there?
+    //     CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
+    //         #eo_display_token_stream
+    //         uuid_wrapper_try_from_possible_uuid_wrapper_in_server: sqlx::Error,
+    //         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+    //     }
+    // };
     let failed_to_deserialize_query_string_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         FailedToDeserializeQueryString {
@@ -2098,11 +2098,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
-    // let mut (
-
-    // ) = .iter().fold(String::from(""), |mut acc, element| {
-        
-    // });
     let not_unique_name_vec_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NotUniqueNameVec {
@@ -2975,10 +2970,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         &worker_crashed_variant_attribute,
         &migrate_variant_attribute
     ];
-    let path_logic_error_variants_vec_handle = vec![
-        &failed_to_deserialize_path_params_variant_attribute,
-        &missing_path_params_variant_attribute
-    ];
+    // let path_logic_error_variants_vec_handle = vec![
+    //     &failed_to_deserialize_path_params_variant_attribute,
+    //     &missing_path_params_variant_attribute
+    // ];
     let json_body_logic_error_variants_vec_handle = vec![
         &json_data_error_variant_attribute,
         &json_syntax_error_variant_attribute,
@@ -3194,7 +3189,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
-                &ident_response_variants_token_stream,
+                // &ident_response_variants_token_stream,
                 true,
                 &proc_macro_name_ident_stringified,
             )
@@ -3678,7 +3673,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
-                &ident_response_variants_token_stream,
+                // &ident_response_variants_token_stream,
                 true,
                 &proc_macro_name_ident_stringified,
             )

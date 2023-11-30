@@ -51,7 +51,7 @@ pub fn type_variants_from_request_response_generator(
         proc_macro2::TokenStream, //enum_status_codes_checker_name_logic_token_stream
         proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
     )>,
-    ident_response_variants_token_stream: &proc_macro2::TokenStream,
+    // ident_response_variants_token_stream: &proc_macro2::TokenStream,
     is_response_with_body: bool,
     proc_macro_name_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
@@ -167,14 +167,14 @@ pub fn type_variants_from_request_response_generator(
     let generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream = {
         let generated_status_code_enums_with_from_impls_logic_token_stream = {
             let status_code_enums_with_from_impls_logic_token_stream = type_variants_from_request_response.iter().fold(
-                std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<&ErrorVariant>>::with_capacity(vec_status_codes_len),
+                std::collections::HashMap::<&proc_macro_helpers::attribute::Attribute, std::vec::Vec<&ErrorVariant>>::with_capacity(vec_status_codes_len),
                 |mut acc, element| {
                     match acc.get_mut(&element.0.error_variant_attribute) {
                         Some(value) => {
                             value.push(&element.0.error_variant);
                         },
                         None => {
-                            acc.insert(element.0.error_variant_attribute.clone(), vec![&element.0.error_variant]);
+                            acc.insert(&element.0.error_variant_attribute, vec![&element.0.error_variant]);
                         }
                     }
                     acc
@@ -252,15 +252,15 @@ pub fn type_variants_from_request_response_generator(
             unique_status_codes_len,
             unique_status_codes_len_minus_one
          ) = {
-            let hashmap_unique_status_codes = type_variants_from_request_response.iter().fold(
-                std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
+            let hashmap_unique_status_codes = type_variants_from_request_response.iter().fold(//todo maybe not need hashmap here? maybe just unique vec?
+                std::collections::HashMap::<&proc_macro_helpers::attribute::Attribute, std::vec::Vec<&ErrorVariant>>::with_capacity(vec_status_codes_len),
                 |mut acc, element| {
                     match acc.get_mut(&element.0.error_variant_attribute) {
                         Some(value) => {
-                            value.push(element.0.error_variant.clone());
+                            value.push(&element.0.error_variant);
                         },
                         None => {
-                            acc.insert(element.0.error_variant_attribute.clone(), vec![element.0.error_variant.clone()]);
+                            acc.insert(&element.0.error_variant_attribute, vec![&element.0.error_variant]);
                         }
                     }
                     acc
@@ -271,7 +271,7 @@ pub fn type_variants_from_request_response_generator(
                 panic!("{proc_macro_name_ident_stringified} unique_status_codes_len < 1 {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE);
             }
             let unique_status_codes_len_minus_one = unique_status_codes_len - 1;
-            let unique_status_codes = hashmap_unique_status_codes.into_iter().map(|(key, _)|key).collect::<std::vec::Vec<proc_macro_helpers::attribute::Attribute>>();
+            let unique_status_codes = hashmap_unique_status_codes.into_iter().map(|(key, _)|key).collect::<std::vec::Vec<&proc_macro_helpers::attribute::Attribute>>();
             (
                 unique_status_codes,
                 unique_status_codes_len,
@@ -360,7 +360,7 @@ pub fn type_variants_from_request_response_generator(
                         });
                     },
                     false => {
-                        if let false = desirable_attribute == status_code_attribute {
+                        if let false = desirable_attribute == *status_code_attribute {
                             status_code_enums_try_from_variants.push(quote::quote! {
                                 else if status_code == #http_status_code_token_stream {
                                     match response.text().await {
