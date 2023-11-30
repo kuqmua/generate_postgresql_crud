@@ -3147,7 +3147,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let mut type_variants_from_request_response = Vec::new();
                 for (
                     error_variant,
-                    attribute,
                     try_operation_token_stream,
                     enum_with_serialize_deserialize_logic_token_stream,
                     from_logic_token_stream,
@@ -3158,7 +3157,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ) in common_middlewares_error_variants_vec {
                     type_variants_from_request_response.push((
                         error_variant,
-                        attribute,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3170,7 +3168,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 for (
                     error_variant,
-                    attribute,
                     try_operation_token_stream,
                     enum_with_serialize_deserialize_logic_token_stream,
                     from_logic_token_stream,
@@ -3181,7 +3178,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ) in postgres_error_variants_vec_token_stream {
                     type_variants_from_request_response.push((
                         error_variant,
-                        attribute,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3193,7 +3189,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 for (
                     error_variant,
-                    attribute,
                     try_operation_token_stream,
                     enum_with_serialize_deserialize_logic_token_stream,
                     from_logic_token_stream,
@@ -3204,7 +3199,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ) in json_body_logic_error_variants_vec_token_stream  {
                     type_variants_from_request_response.push((
                         error_variant,
-                        attribute,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3216,7 +3210,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 type_variants_from_request_response.push({
                     let (
-                        attribute,
+                        error_variant,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3231,8 +3225,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &bind_query_variant_attribute
                     );
                     (
-                        bind_query_variant_attribute.clone(),
-                        attribute,
+                        error_variant,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3243,7 +3236,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )});
                 type_variants_from_request_response.push({
                     let (
-                        attribute,
+                        error_variant,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3258,8 +3251,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
                     );
                     (
-                        created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute.clone(),
-                        attribute,
+                        error_variant,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3271,7 +3263,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 });
                 type_variants_from_request_response.push({
                     let (
-                        attribute,
+                        error_variant,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3286,8 +3278,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &unexpected_case_variant_attribute
                     );
                     (
-                        unexpected_case_variant_attribute.clone(),
-                        attribute,
+                        error_variant,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3763,7 +3754,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let mut type_variants_from_request_response = Vec::new();
                 for (
                     error_variant,
-                    attribute,
                     try_operation_token_stream,
                     enum_with_serialize_deserialize_logic_token_stream,
                     from_logic_token_stream,
@@ -3774,7 +3764,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ) in common_middlewares_error_variants_vec {
                     type_variants_from_request_response.push((
                         error_variant,
-                        attribute,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3786,7 +3775,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 for (
                     error_variant,
-                    attribute,
                     try_operation_token_stream,
                     enum_with_serialize_deserialize_logic_token_stream,
                     from_logic_token_stream,
@@ -3797,7 +3785,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ) in postgres_error_variants_vec_token_stream {
                     type_variants_from_request_response.push((
                         error_variant,
-                        attribute,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3809,7 +3796,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 for (
                     error_variant,
-                    attribute,
                     try_operation_token_stream,
                     enum_with_serialize_deserialize_logic_token_stream,
                     from_logic_token_stream,
@@ -3820,7 +3806,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ) in json_body_logic_error_variants_vec_token_stream  {
                     type_variants_from_request_response.push((
                         error_variant,
-                        attribute,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3832,7 +3817,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 type_variants_from_request_response.push({
                     let (
-                        attribute,
+                        error_variant,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3847,8 +3832,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
                     );
                     (
-                        created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute.clone(),
-                        attribute,
+                        error_variant,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3860,7 +3844,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 });
                 type_variants_from_request_response.push({
                     let (
-                        attribute,
+                        error_variant,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -3875,8 +3859,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &unexpected_case_variant_attribute
                     );
                     (
-                        unexpected_case_variant_attribute.clone(),
-                        attribute,
+                        error_variant,
                         try_operation_token_stream,
                         enum_with_serialize_deserialize_logic_token_stream,
                         from_logic_token_stream,
@@ -8595,7 +8578,6 @@ fn generate_error_variants_vec_token_stream(
     error_variant_attribute: &std::vec::Vec<&crate::type_variants_from_request_response_generator::ErrorVariantAttribute>,
 ) -> std::vec::Vec<(
     crate::type_variants_from_request_response_generator::ErrorVariantAttribute,
-    proc_macro_helpers::attribute::Attribute, //attribute
     proc_macro2::TokenStream, //try_operation_token_stream
     proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
     proc_macro2::TokenStream, //from_logic_token_stream
@@ -8606,7 +8588,7 @@ fn generate_error_variants_vec_token_stream(
 )> {
     error_variant_attribute.clone().into_iter().map(|element| {
         let (
-            attribute,
+            error_variant,
             try_operation_token_stream,
             enum_with_serialize_deserialize_logic_token_stream,
             from_logic_token_stream,
@@ -8620,10 +8602,8 @@ fn generate_error_variants_vec_token_stream(
             &proc_macro_name_ident_stringified,
             &element
         );
-        let f = element.clone();
         (
-            f,
-            attribute,
+            error_variant,
             try_operation_token_stream,
             enum_with_serialize_deserialize_logic_token_stream,
             from_logic_token_stream,

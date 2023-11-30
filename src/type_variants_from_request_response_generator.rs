@@ -43,7 +43,7 @@ pub fn type_variants_from_request_response_generator(
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response: std::vec::Vec<(
         ErrorVariantAttribute,
-        proc_macro_helpers::attribute::Attribute, //attribute
+        // proc_macro_helpers::attribute::Attribute, //attribute
         proc_macro2::TokenStream, //try_operation_token_stream
         proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
         proc_macro2::TokenStream, //from_logic_token_stream
@@ -67,7 +67,6 @@ pub fn type_variants_from_request_response_generator(
         let try_operation_mapped_token_stream = type_variants_from_request_response.clone().into_iter().map(
             |(
                 _,
-                _, //attribute
                 try_operation_token_stream, 
                 _, //enum_with_serialize_deserialize_logic_token_stream,
                 _, //from_logic_token_stream
@@ -97,7 +96,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         _,
-                        _, //attribute
                         _, //try_operation_token_stream
                         enum_with_serialize_deserialize_logic_token_stream,
                         _, //from_logic_token_stream
@@ -122,7 +120,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     _,
-                    _, //attribute
                     _, //try_operation_token_stream
                     _, //enum_with_serialize_deserialize_logic_token_stream
                     from_logic_token_stream,
@@ -149,7 +146,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     _,
-                    _, //attribute
                     _, //try_operation_token_stream
                     _, //enum_with_serialize_deserialize_logic_token_stream
                     _, //from_logic_token_stream
@@ -403,7 +399,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     _,
-                    _, //attribute
                     _, //try_operation_token_stream
                     _, //enum_with_serialize_deserialize_logic_token_stream
                     _, //from_logic_token_stream
@@ -559,7 +554,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         _,
-                        _, //attribute
                         _, //try_operation_token_stream
                         _, //enum_with_serialize_deserialize_logic_token_stream
                         _, //from_logic_token_stream
@@ -583,7 +577,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         _,
-                        _, //attribute
                         _, //try_operation_token_stream
                         _, //enum_with_serialize_deserialize_logic_token_stream
                         _, //from_logic_token_stream
@@ -631,7 +624,7 @@ pub fn type_variants_from_request_response(
     proc_macro_name_ident_stringified: &std::string::String,
     error_variant_attribute: &ErrorVariantAttribute,
 ) -> (
-    proc_macro_helpers::attribute::Attribute, //attribute
+    ErrorVariantAttribute, //error_variant
     proc_macro2::TokenStream, //try_operation_token_stream
     proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
     proc_macro2::TokenStream, //from_logic_token_stream
@@ -738,7 +731,7 @@ pub fn type_variants_from_request_response(
         }
     };
     (
-        error_variant_attribute.error_variant_attribute.clone(),
+        error_variant_attribute.clone(),
         try_operation_token_stream,
         enum_with_serialize_deserialize_logic_token_stream,
         from_logic_token_stream,
