@@ -8586,31 +8586,10 @@ fn generate_error_variants_vec_token_stream(
     proc_macro2::TokenStream, //enum_status_codes_checker_name_logic_token_stream
     proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
 )> {
-    error_variant_attribute.clone().into_iter().map(|element| {
-        let (
-            error_variant,
-            try_operation_token_stream,
-            enum_with_serialize_deserialize_logic_token_stream,
-            from_logic_token_stream,
-            impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-            impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-            enum_status_codes_checker_name_logic_token_stream,
-            axum_response_into_response_logic_token_stream,
-        ) = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-            &try_operation_response_variants_camel_case_token_stream,
-            &try_operation_with_serialize_deserialize_camel_case_token_stream,
-            &proc_macro_name_ident_stringified,
-            &element
-        );
-        (
-            error_variant,
-            try_operation_token_stream,
-            enum_with_serialize_deserialize_logic_token_stream,
-            from_logic_token_stream,
-            impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
-            impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
-            enum_status_codes_checker_name_logic_token_stream,
-            axum_response_into_response_logic_token_stream,
-        )
-    }).collect()
+    error_variant_attribute.clone().into_iter().map(|element|crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+        &try_operation_response_variants_camel_case_token_stream,
+        &try_operation_with_serialize_deserialize_camel_case_token_stream,
+        &proc_macro_name_ident_stringified,
+        &element
+    )).collect()
 }
