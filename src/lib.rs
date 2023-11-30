@@ -8586,7 +8586,7 @@ fn generate_error_variants_vec_token_stream(
     proc_macro2::TokenStream, //enum_status_codes_checker_name_logic_token_stream
     proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
 )> {
-    error_variant_attribute.clone().into_iter().map(|element|crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+    error_variant_attribute.iter().map(|element|crate::type_variants_from_request_response_generator::type_variants_from_request_response(
         &try_operation_response_variants_camel_case_token_stream,
         &try_operation_with_serialize_deserialize_camel_case_token_stream,
         &proc_macro_name_ident_stringified,
