@@ -247,26 +247,37 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let try_from_response_logic_token_stream_handle_token_stream = {
-        let hashmap_unique_status_codes = type_variants_from_request_response.clone().into_iter().fold(
-            std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
-            |mut acc, element| {
-                match acc.get_mut(&element.0.error_variant_attribute) {
-                    Some(value) => {
-                        value.push(element.0.error_variant.clone());
-                    },
-                    None => {
-                        acc.insert(element.0.error_variant_attribute.clone(), vec![element.0.error_variant.clone()]);
+        let (
+            unique_status_codes,
+            unique_status_codes_len,
+            unique_status_codes_len_minus_one
+         ) = {
+            let hashmap_unique_status_codes = type_variants_from_request_response.clone().into_iter().fold(
+                std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
+                |mut acc, element| {
+                    match acc.get_mut(&element.0.error_variant_attribute) {
+                        Some(value) => {
+                            value.push(element.0.error_variant.clone());
+                        },
+                        None => {
+                            acc.insert(element.0.error_variant_attribute.clone(), vec![element.0.error_variant.clone()]);
+                        }
                     }
-                }
-                acc
-            },
-        );
-        let unique_status_codes_len = hashmap_unique_status_codes.len();
-        if unique_status_codes_len < 1 {
-            panic!("{proc_macro_name_ident_stringified} unique_status_codes_len < 1 {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE);
-        }
-        let unique_status_codes_len_minus_one = unique_status_codes_len - 1;
-        let unique_status_codes = hashmap_unique_status_codes.iter().map(|(key, _)|key).collect::<std::vec::Vec<&proc_macro_helpers::attribute::Attribute>>();
+                    acc
+                },
+            );
+            let unique_status_codes_len = hashmap_unique_status_codes.len();
+            if unique_status_codes_len < 1 {
+                panic!("{proc_macro_name_ident_stringified} unique_status_codes_len < 1 {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE);
+            }
+            let unique_status_codes_len_minus_one = unique_status_codes_len - 1;
+            let unique_status_codes = hashmap_unique_status_codes.into_iter().map(|(key, _)|key).collect::<std::vec::Vec<proc_macro_helpers::attribute::Attribute>>();
+            (
+                unique_status_codes,
+                unique_status_codes_len,
+                unique_status_codes_len_minus_one
+            )
+        };
         let desirable_enum_name = {
             let status_code_enum_name_stingified = format!("{try_operation_response_variants_camel_case_token_stream}{desirable_attribute}");
             status_code_enum_name_stingified
@@ -349,7 +360,7 @@ pub fn type_variants_from_request_response_generator(
                         });
                     },
                     false => {
-                        if let false = desirable_attribute == *status_code_attribute {
+                        if let false = desirable_attribute == status_code_attribute {
                             status_code_enums_try_from_variants.push(quote::quote! {
                                 else if status_code == #http_status_code_token_stream {
                                     match response.text().await {
