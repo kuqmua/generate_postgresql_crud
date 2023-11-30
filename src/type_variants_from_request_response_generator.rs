@@ -167,14 +167,14 @@ pub fn type_variants_from_request_response_generator(
     let generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream = {
         let generated_status_code_enums_with_from_impls_logic_token_stream = {
             let status_code_enums_with_from_impls_logic_token_stream = type_variants_from_request_response.iter().fold(
-                std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
+                std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<&ErrorVariant>>::with_capacity(vec_status_codes_len),
                 |mut acc, element| {
                     match acc.get_mut(&element.0.error_variant_attribute) {
                         Some(value) => {
-                            value.push(element.0.error_variant.clone());
+                            value.push(&element.0.error_variant);
                         },
                         None => {
-                            acc.insert(element.0.error_variant_attribute.clone(), vec![element.0.error_variant.clone()]);
+                            acc.insert(element.0.error_variant_attribute.clone(), vec![&element.0.error_variant]);
                         }
                     }
                     acc
