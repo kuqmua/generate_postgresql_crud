@@ -4069,6 +4069,121 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
+            //
+            // let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
+            // let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified
+            // );
+            // let try_operation_response_variants_camel_case_token_stream = generate_try_operation_response_variants_camel_case_token_stream(
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_camel_case_token_stream = generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified,
+            //     &desirable_attribute,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_request_error_token_stream = generate_try_operation_request_error_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &request_error_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // //
+            // let common_middlewares_error_variants_vec = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &common_middlewares_error_variants_vec_handle
+            // );
+            // let postgres_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &postgres_error_variants_vec_handle
+            // );
+            // // let path_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            // //     &try_operation_response_variants_camel_case_token_stream,
+            // //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            // //     &proc_macro_name_ident_stringified,
+            // //     &path_logic_error_variants_vec_handle
+            // // );
+            // let json_body_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &json_body_logic_error_variants_vec_handle
+            // );
+            // let type_variants_from_request_response_vec = {
+            //     let mut type_variants_from_request_response = Vec::new();//todo calculate capacity
+            //     for element in common_middlewares_error_variants_vec {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in postgres_error_variants_vec_token_stream {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in json_body_logic_error_variants_vec_token_stream  {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &bind_query_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &unexpected_case_variant_attribute
+            //     ));
+            //     type_variants_from_request_response
+            // };
+            // crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
+            //     desirable_attribute,
+            //     &desirable_token_stream,
+            //     &quote::quote!{std::vec::Vec::<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>},
+            //     &try_operation_camel_case_token_stream,
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_response_variants_desirable_attribute_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //     &try_operation_request_error_token_stream,
+            //     &try_operation_with_serialize_deserialize_token_stream,
+            //     &operation_name_lower_case_stringified,
+            //     &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+            //     &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+            //     &error_named_derive_token_stream,
+            //     &eo_display_token_stream,
+            //     &eo_display_foreign_type_token_stream,
+            //     &eo_display_with_serialize_deserialize_token_stream,
+            //     &derive_debug_serialize_deserialize_token_stream,
+            //     type_variants_from_request_response_vec,
+            //     // &ident_response_variants_token_stream,
+            //     true,
+            //     &proc_macro_name_ident_stringified,
+            // )
+            //
             let specific_error_variants_token_stream = quote::quote!{
                 #[tvfrr_400_bad_request]
                 #operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_token_stream {
@@ -4531,6 +4646,121 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
+            //
+            // let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
+            // let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified
+            // );
+            // let try_operation_response_variants_camel_case_token_stream = generate_try_operation_response_variants_camel_case_token_stream(
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_camel_case_token_stream = generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified,
+            //     &desirable_attribute,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_request_error_token_stream = generate_try_operation_request_error_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &request_error_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // //
+            // let common_middlewares_error_variants_vec = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &common_middlewares_error_variants_vec_handle
+            // );
+            // let postgres_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &postgres_error_variants_vec_handle
+            // );
+            // // let path_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            // //     &try_operation_response_variants_camel_case_token_stream,
+            // //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            // //     &proc_macro_name_ident_stringified,
+            // //     &path_logic_error_variants_vec_handle
+            // // );
+            // let json_body_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &json_body_logic_error_variants_vec_handle
+            // );
+            // let type_variants_from_request_response_vec = {
+            //     let mut type_variants_from_request_response = Vec::new();//todo calculate capacity
+            //     for element in common_middlewares_error_variants_vec {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in postgres_error_variants_vec_token_stream {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in json_body_logic_error_variants_vec_token_stream  {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &bind_query_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &unexpected_case_variant_attribute
+            //     ));
+            //     type_variants_from_request_response
+            // };
+            // crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
+            //     desirable_attribute,
+            //     &desirable_token_stream,
+            //     &quote::quote!{std::vec::Vec::<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>},
+            //     &try_operation_camel_case_token_stream,
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_response_variants_desirable_attribute_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //     &try_operation_request_error_token_stream,
+            //     &try_operation_with_serialize_deserialize_token_stream,
+            //     &operation_name_lower_case_stringified,
+            //     &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+            //     &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+            //     &error_named_derive_token_stream,
+            //     &eo_display_token_stream,
+            //     &eo_display_foreign_type_token_stream,
+            //     &eo_display_with_serialize_deserialize_token_stream,
+            //     &derive_debug_serialize_deserialize_token_stream,
+            //     type_variants_from_request_response_vec,
+            //     // &ident_response_variants_token_stream,
+            //     true,
+            //     &proc_macro_name_ident_stringified,
+            // )
+            //
             let specific_error_variants_token_stream = quote::quote!{//todo reusage
                 #[tvfrr_400_bad_request]
                 #not_uuid_token_camel_case_stream {
@@ -5239,6 +5469,121 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
+            //
+            // let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
+            // let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified
+            // );
+            // let try_operation_response_variants_camel_case_token_stream = generate_try_operation_response_variants_camel_case_token_stream(
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_camel_case_token_stream = generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified,
+            //     &desirable_attribute,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_request_error_token_stream = generate_try_operation_request_error_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &request_error_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // //
+            // let common_middlewares_error_variants_vec = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &common_middlewares_error_variants_vec_handle
+            // );
+            // let postgres_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &postgres_error_variants_vec_handle
+            // );
+            // // let path_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            // //     &try_operation_response_variants_camel_case_token_stream,
+            // //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            // //     &proc_macro_name_ident_stringified,
+            // //     &path_logic_error_variants_vec_handle
+            // // );
+            // let json_body_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &json_body_logic_error_variants_vec_handle
+            // );
+            // let type_variants_from_request_response_vec = {
+            //     let mut type_variants_from_request_response = Vec::new();//todo calculate capacity
+            //     for element in common_middlewares_error_variants_vec {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in postgres_error_variants_vec_token_stream {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in json_body_logic_error_variants_vec_token_stream  {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &bind_query_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &unexpected_case_variant_attribute
+            //     ));
+            //     type_variants_from_request_response
+            // };
+            // crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
+            //     desirable_attribute,
+            //     &desirable_token_stream,
+            //     &quote::quote!{std::vec::Vec::<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>},
+            //     &try_operation_camel_case_token_stream,
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_response_variants_desirable_attribute_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //     &try_operation_request_error_token_stream,
+            //     &try_operation_with_serialize_deserialize_token_stream,
+            //     &operation_name_lower_case_stringified,
+            //     &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+            //     &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+            //     &error_named_derive_token_stream,
+            //     &eo_display_token_stream,
+            //     &eo_display_foreign_type_token_stream,
+            //     &eo_display_with_serialize_deserialize_token_stream,
+            //     &derive_debug_serialize_deserialize_token_stream,
+            //     type_variants_from_request_response_vec,
+            //     // &ident_response_variants_token_stream,
+            //     true,
+            //     &proc_macro_name_ident_stringified,
+            // )
+            //
             let specific_error_variants_token_stream = quote::quote!{
                 #[tvfrr_400_bad_request]
                 #operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_token_stream {
@@ -5726,6 +6071,121 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{impl_std_convert_try_from_operation_payload_element_with_serialize_deserialize_for_operation_payload_element_token_stream}");
         let try_operation_error_named_token_stream = {
+            //
+            // let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
+            // let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified
+            // );
+            // let try_operation_response_variants_camel_case_token_stream = generate_try_operation_response_variants_camel_case_token_stream(
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_camel_case_token_stream = generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified,
+            //     &desirable_attribute,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_request_error_token_stream = generate_try_operation_request_error_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &request_error_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // //
+            // let common_middlewares_error_variants_vec = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &common_middlewares_error_variants_vec_handle
+            // );
+            // let postgres_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &postgres_error_variants_vec_handle
+            // );
+            // // let path_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            // //     &try_operation_response_variants_camel_case_token_stream,
+            // //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            // //     &proc_macro_name_ident_stringified,
+            // //     &path_logic_error_variants_vec_handle
+            // // );
+            // let json_body_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &json_body_logic_error_variants_vec_handle
+            // );
+            // let type_variants_from_request_response_vec = {
+            //     let mut type_variants_from_request_response = Vec::new();//todo calculate capacity
+            //     for element in common_middlewares_error_variants_vec {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in postgres_error_variants_vec_token_stream {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in json_body_logic_error_variants_vec_token_stream  {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &bind_query_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &unexpected_case_variant_attribute
+            //     ));
+            //     type_variants_from_request_response
+            // };
+            // crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
+            //     desirable_attribute,
+            //     &desirable_token_stream,
+            //     &quote::quote!{std::vec::Vec::<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>},
+            //     &try_operation_camel_case_token_stream,
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_response_variants_desirable_attribute_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //     &try_operation_request_error_token_stream,
+            //     &try_operation_with_serialize_deserialize_token_stream,
+            //     &operation_name_lower_case_stringified,
+            //     &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+            //     &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+            //     &error_named_derive_token_stream,
+            //     &eo_display_token_stream,
+            //     &eo_display_foreign_type_token_stream,
+            //     &eo_display_with_serialize_deserialize_token_stream,
+            //     &derive_debug_serialize_deserialize_token_stream,
+            //     type_variants_from_request_response_vec,
+            //     // &ident_response_variants_token_stream,
+            //     true,
+            //     &proc_macro_name_ident_stringified,
+            // )
+            //
             let try_operation_request_error_camel_case_token_stream = generate_try_operation_request_error_camel_case_token_stream(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -6232,6 +6692,121 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
+            //
+            // let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
+            // let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified
+            // );
+            // let try_operation_response_variants_camel_case_token_stream = generate_try_operation_response_variants_camel_case_token_stream(
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_camel_case_token_stream = generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified,
+            //     &desirable_attribute,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_request_error_token_stream = generate_try_operation_request_error_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &request_error_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // //
+            // let common_middlewares_error_variants_vec = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &common_middlewares_error_variants_vec_handle
+            // );
+            // let postgres_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &postgres_error_variants_vec_handle
+            // );
+            // // let path_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            // //     &try_operation_response_variants_camel_case_token_stream,
+            // //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            // //     &proc_macro_name_ident_stringified,
+            // //     &path_logic_error_variants_vec_handle
+            // // );
+            // let json_body_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &json_body_logic_error_variants_vec_handle
+            // );
+            // let type_variants_from_request_response_vec = {
+            //     let mut type_variants_from_request_response = Vec::new();//todo calculate capacity
+            //     for element in common_middlewares_error_variants_vec {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in postgres_error_variants_vec_token_stream {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in json_body_logic_error_variants_vec_token_stream  {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &bind_query_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &unexpected_case_variant_attribute
+            //     ));
+            //     type_variants_from_request_response
+            // };
+            // crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
+            //     desirable_attribute,
+            //     &desirable_token_stream,
+            //     &quote::quote!{std::vec::Vec::<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>},
+            //     &try_operation_camel_case_token_stream,
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_response_variants_desirable_attribute_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //     &try_operation_request_error_token_stream,
+            //     &try_operation_with_serialize_deserialize_token_stream,
+            //     &operation_name_lower_case_stringified,
+            //     &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+            //     &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+            //     &error_named_derive_token_stream,
+            //     &eo_display_token_stream,
+            //     &eo_display_foreign_type_token_stream,
+            //     &eo_display_with_serialize_deserialize_token_stream,
+            //     &derive_debug_serialize_deserialize_token_stream,
+            //     type_variants_from_request_response_vec,
+            //     // &ident_response_variants_token_stream,
+            //     true,
+            //     &proc_macro_name_ident_stringified,
+            // )
+            //
             let specific_error_variants_token_stream = quote::quote!{
                     #[tvfrr_400_bad_request]
                     #operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_token_stream {
@@ -6638,6 +7213,121 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         //
         let try_operation_error_named_token_stream = {
+            //
+            // let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
+            // let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified
+            // );
+            // let try_operation_response_variants_camel_case_token_stream = generate_try_operation_response_variants_camel_case_token_stream(
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_camel_case_token_stream = generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+            //     &try_camel_case_stringified,
+            //     &operation_name_camel_case_stringified,
+            //     &response_variants_camel_case_stringified,
+            //     &desirable_attribute,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_request_error_token_stream = generate_try_operation_request_error_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &request_error_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
+            //     &try_operation_camel_case_stringified,
+            //     &with_serialize_deserialize_camel_case_stringified,
+            //     &proc_macro_name_ident_stringified
+            // );
+            // //
+            // let common_middlewares_error_variants_vec = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &common_middlewares_error_variants_vec_handle
+            // );
+            // let postgres_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &postgres_error_variants_vec_handle
+            // );
+            // // let path_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            // //     &try_operation_response_variants_camel_case_token_stream,
+            // //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            // //     &proc_macro_name_ident_stringified,
+            // //     &path_logic_error_variants_vec_handle
+            // // );
+            // let json_body_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+            //     &proc_macro_name_ident_stringified,
+            //     &json_body_logic_error_variants_vec_handle
+            // );
+            // let type_variants_from_request_response_vec = {
+            //     let mut type_variants_from_request_response = Vec::new();//todo calculate capacity
+            //     for element in common_middlewares_error_variants_vec {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in postgres_error_variants_vec_token_stream {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     for element in json_body_logic_error_variants_vec_token_stream  {
+            //         type_variants_from_request_response.push(element);
+            //     }
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &bind_query_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute
+            //     ));
+            //     type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            //         &try_operation_response_variants_camel_case_token_stream,
+            //         &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //         &proc_macro_name_ident_stringified,
+            //         &unexpected_case_variant_attribute
+            //     ));
+            //     type_variants_from_request_response
+            // };
+            // crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
+            //     desirable_attribute,
+            //     &desirable_token_stream,
+            //     &quote::quote!{std::vec::Vec::<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>},
+            //     &try_operation_camel_case_token_stream,
+            //     &try_operation_response_variants_camel_case_stringified,
+            //     &try_operation_response_variants_camel_case_token_stream,
+            //     &try_operation_response_variants_desirable_attribute_token_stream,
+            //     &try_operation_with_serialize_deserialize_camel_case_token_stream,
+            //     &try_operation_request_error_token_stream,
+            //     &try_operation_with_serialize_deserialize_token_stream,
+            //     &operation_name_lower_case_stringified,
+            //     &code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+            //     &code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+            //     &error_named_derive_token_stream,
+            //     &eo_display_token_stream,
+            //     &eo_display_foreign_type_token_stream,
+            //     &eo_display_with_serialize_deserialize_token_stream,
+            //     &derive_debug_serialize_deserialize_token_stream,
+            //     type_variants_from_request_response_vec,
+            //     // &ident_response_variants_token_stream,
+            //     true,
+            //     &proc_macro_name_ident_stringified,
+            // )
+            //
             let try_operation_request_error_camel_case_token_stream = generate_try_operation_request_error_camel_case_token_stream(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
