@@ -4070,52 +4070,52 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
             //
-            // let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
-            // let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
-            //     &try_camel_case_stringified,
-            //     &operation_name_camel_case_stringified,
-            //     &response_variants_camel_case_stringified
-            // );
-            // let try_operation_response_variants_camel_case_token_stream = generate_try_operation_response_variants_camel_case_token_stream(
-            //     &try_operation_response_variants_camel_case_stringified,
-            //     &proc_macro_name_ident_stringified
-            // );
-            // let try_operation_with_serialize_deserialize_camel_case_token_stream = generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
-            //     &try_camel_case_stringified,
-            //     &operation_name_camel_case_stringified,
-            //     &with_serialize_deserialize_camel_case_stringified,
-            //     &proc_macro_name_ident_stringified
-            // );
-            // let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
-            //     &try_camel_case_stringified,
-            //     &operation_name_camel_case_stringified,
-            //     &response_variants_camel_case_stringified,
-            //     &desirable_attribute,
-            //     &proc_macro_name_ident_stringified
-            // );
-            // let try_operation_request_error_token_stream = generate_try_operation_request_error_token_stream(
-            //     &try_operation_camel_case_stringified,
-            //     &request_error_camel_case_stringified,
-            //     &proc_macro_name_ident_stringified
-            // );
-            // let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
-            //     &try_operation_camel_case_stringified,
-            //     &with_serialize_deserialize_camel_case_stringified,
-            //     &proc_macro_name_ident_stringified
-            // );
-            // //
-            // let common_middlewares_error_variants_vec = generate_error_variants_vec_token_stream(
-            //     &try_operation_response_variants_camel_case_token_stream,
-            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
-            //     &proc_macro_name_ident_stringified,
-            //     &common_middlewares_error_variants_vec_handle
-            // );
-            // let postgres_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
-            //     &try_operation_response_variants_camel_case_token_stream,
-            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
-            //     &proc_macro_name_ident_stringified,
-            //     &postgres_error_variants_vec_handle
-            // );
+            let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
+            let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified
+            );
+            let try_operation_response_variants_camel_case_token_stream = generate_try_operation_response_variants_camel_case_token_stream(
+                &try_operation_response_variants_camel_case_stringified,
+                &proc_macro_name_ident_stringified
+            );
+            let try_operation_with_serialize_deserialize_camel_case_token_stream = generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &with_serialize_deserialize_camel_case_stringified,
+                &proc_macro_name_ident_stringified
+            );
+            let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
+                &desirable_attribute,
+                &proc_macro_name_ident_stringified
+            );
+            let try_operation_request_error_token_stream = generate_try_operation_request_error_token_stream(
+                &try_operation_camel_case_stringified,
+                &request_error_camel_case_stringified,
+                &proc_macro_name_ident_stringified
+            );
+            let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
+                &try_operation_camel_case_stringified,
+                &with_serialize_deserialize_camel_case_stringified,
+                &proc_macro_name_ident_stringified
+            );
+            //
+            let common_middlewares_error_variants_vec = generate_error_variants_vec_token_stream(
+                &try_operation_response_variants_camel_case_token_stream,
+                &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+                &proc_macro_name_ident_stringified,
+                &common_middlewares_error_variants_vec_handle
+            );
+            let postgres_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
+                &try_operation_response_variants_camel_case_token_stream,
+                &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
+                &proc_macro_name_ident_stringified,
+                &postgres_error_variants_vec_handle
+            );
             // // let path_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
             // //     &try_operation_response_variants_camel_case_token_stream,
             // //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
