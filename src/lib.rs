@@ -4161,12 +4161,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 for element in common_middlewares_error_variants_vec {
                     type_variants_from_request_response.push(element);
                 }
+                for element in path_logic_error_variants_vec_token_stream  {
+                    type_variants_from_request_response.push(element);
+                }
                 for element in postgres_error_variants_vec_token_stream {
                     type_variants_from_request_response.push(element);
                 }
                 // for element in json_body_logic_error_variants_vec_token_stream  {
                 //     type_variants_from_request_response.push(element);
                 // }
+
+    // #[tvfrr_400_bad_request]
+    // FailedToDeserializeQueryString {
+    //     #[eo_display_with_serialize_deserialize]
+    //     failed_to_deserialize_query_string: std::string::String,
+    //     code_occurence: crate::common::code_occurence::CodeOccurence,
+    // },
+    // #[tvfrr_400_bad_request]
+    // ReadOnePathTryFromReadOnePathWithSerializeDeserialize {
+    //     #[eo_error_occurence]
+    //     read_one_path_try_from_read_one_path_with_serialize_deserialize:
+    //         ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamed,
+    //     code_occurence: crate::common::code_occurence::CodeOccurence,
+    // },
+
                 // type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
                 //     &try_operation_response_variants_camel_case_token_stream,
                 //     &try_operation_with_serialize_deserialize_camel_case_token_stream,
