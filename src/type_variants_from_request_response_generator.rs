@@ -490,6 +490,20 @@ pub fn type_variants_from_request_response_generator(
             .parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_from_response_try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
+        let try_from_response_try_operation_lower_case_token_stream_result_ok_token_stream = match is_response_with_body {
+            true => quote::quote!{
+                match #desirable_type_token_stream::try_from(variants){
+                    Ok(value) => Ok(value),
+                    Err(e) => Err(#try_operation_request_error_token_stream::ExpectedType {
+                        expected_type: e,
+                        #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+                    }),
+                }
+            },
+            false => quote::quote!{
+                Ok(#desirable_type_token_stream)
+            },
+        };
         quote::quote! {
             async fn #tvfrr_extraction_logic_try_operation_lower_case_token_stream<'a>(
                 future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
@@ -499,13 +513,7 @@ pub fn type_variants_from_request_response_generator(
             > {
                 match future.await {
                     Ok(response) => match #try_from_response_try_operation_lower_case_token_stream(response).await {
-                        Ok(variants) => match #desirable_type_token_stream::try_from(variants){
-                            Ok(value) => Ok(value),
-                            Err(e) => Err(#try_operation_request_error_token_stream::ExpectedType {
-                                expected_type: e,
-                                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
-                            }),
-                        },
+                        Ok(variants) => #try_from_response_try_operation_lower_case_token_stream_result_ok_token_stream,
                         Err(e) => match e {
                             #crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::StatusCode {
                                 status_code,
