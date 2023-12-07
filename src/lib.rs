@@ -7324,18 +7324,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_ident_stringified,
                 &common_error_variant_attribute_vec
             );
-            // let common_middlewares_error_variants_vec = generate_error_variants_vec_token_stream(
-            //     &try_operation_response_variants_camel_case_token_stream,
-            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
-            //     &proc_macro_name_ident_stringified,
-            //     &common_middlewares_error_variants_vec_handle
-            // );
-            // let postgres_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
-            //     &try_operation_response_variants_camel_case_token_stream,
-            //     &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
-            //     &proc_macro_name_ident_stringified,
-            //     &postgres_error_variants_vec_handle
-            // );
             let json_body_logic_error_variants_vec_token_stream = generate_error_variants_vec_token_stream(
                 &try_operation_response_variants_camel_case_token_stream,
                 &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
@@ -7347,12 +7335,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 for element in common_error_variant_attribute_vec_handle {
                     type_variants_from_request_response.push(element);
                 }
-                // for element in common_middlewares_error_variants_vec {
-                //     type_variants_from_request_response.push(element);
-                // }
-                // for element in postgres_error_variants_vec_token_stream {
-                //     type_variants_from_request_response.push(element);
-                // }
                 for element in json_body_logic_error_variants_vec_token_stream  {
                     type_variants_from_request_response.push(element);
                 }
