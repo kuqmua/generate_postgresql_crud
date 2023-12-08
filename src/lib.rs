@@ -1644,7 +1644,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut handle = syn::punctuated::Punctuated::new();
                             handle.push(
                                 syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("test", proc_macro2::Span::call_site()),
+                                    ident: proc_macro2::Ident::new("tvfrr_500_internal_server_error", proc_macro2::Span::call_site()),
                                     arguments: syn::PathArguments::None,
                                 }
                             );
@@ -1654,7 +1654,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     tokens: proc_macro2::TokenStream::new(),
                 },
             ],
-            ident: syn::Ident::new("test", proc_macro2::Span::call_site()),
+            ident: syn::Ident::new("BindQuery", proc_macro2::Span::call_site()),
             fields: syn::Fields::Named(
                 syn::FieldsNamed {
                     brace_token: syn::token::Brace {
@@ -1676,11 +1676,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         path: syn::Path {
                                             leading_colon: None,
                                             segments: {
-                                                // syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>
                                                 let mut handle = syn::punctuated::Punctuated::new();
                                                 handle.push(
                                                     syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("test", proc_macro2::Span::call_site()),
+                                                        ident: proc_macro2::Ident::new("eo_error_occurence", proc_macro2::Span::call_site()),
                                                         arguments: syn::PathArguments::None,
                                                     }
                                                 );
@@ -1692,7 +1691,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 ],
                                 vis: syn::Visibility::Inherited,
                                 ident: Some(
-                                    syn::Ident::new("test", proc_macro2::Span::call_site())
+                                    syn::Ident::new("checked_add", proc_macro2::Span::call_site())
                                 ),
                                 colon_token: Some(
                                     syn::token::Colon {
@@ -1706,12 +1705,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             leading_colon: None,
                                             segments: {
                                                 let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                                                handle.push(
+                                                handle.push_value(
                                                     syn::PathSegment {
                                                         ident: proc_macro2::Ident::new("test", proc_macro2::Span::call_site()),
                                                         arguments: syn::PathArguments::None,
                                                     }
                                                 );
+                                                handle.push_punct();
+                                                // crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed
                                                 handle
                                             }
                                         },
