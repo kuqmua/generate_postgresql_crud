@@ -1638,9 +1638,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         span: proc_macro2::Span::call_site(),
                     },
                     path: syn::Path {
-                        leading_colon: None,//Option<syn::token::Colon2>
+                        leading_colon: None,
                         segments: {
-                            //syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>
                             let mut handle = syn::punctuated::Punctuated::new();
                             handle.push(
                                 syn::PathSegment {
@@ -1707,22 +1706,57 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                                 let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                                                 handle.push_value(
                                                     syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("test", proc_macro2::Span::call_site()),
+                                                        ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
                                                         arguments: syn::PathArguments::None,
                                                     }
                                                 );
-                                                handle.push_punct();
-                                                // crate::server::postgres::bind_query::TryGenerateBindIncrementsErrorNamed
+                                                handle.push_punct(syn::token::Colon2{
+                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                                });
+                                                handle.push_value(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new("server", proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
+                                                handle.push_punct(syn::token::Colon2{
+                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                                });
+                                                handle.push_value(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new("postgres", proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
+                                                handle.push_punct(syn::token::Colon2{
+                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                                });
+                                                handle.push_value(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new("bind_query", proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
+                                                handle.push_punct(syn::token::Colon2{
+                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                                });
+                                                handle.push_value(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new("TryGenerateBindIncrementsErrorNamed", proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
                                                 handle
                                             }
                                         },
                                     },
                                 ),
                             }
-                            // ,
-                            // syn::token::Comma {
-                            //     spans: [proc_macro2::Span::call_site()],
-                            // }
+                        );
+                        handle.push_punct(
+                            syn::token::Comma {
+                                spans: [proc_macro2::Span::call_site()],
+                            }
                         );
                         handle
                     },
