@@ -1641,8 +1641,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         leading_colon: None,//Option<syn::token::Colon2>
                         segments: {
                             //syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>
-                            let mut f_segments_punctuated = syn::punctuated::Punctuated::new();
-                            f_segments_punctuated
+                            let mut handle = syn::punctuated::Punctuated::new();
+                            handle.push(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("test", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle
                         },
                     },
                     tokens: proc_macro2::TokenStream::new(),
@@ -1655,8 +1661,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         span: proc_macro2::Span::call_site(),
                     },
                     named: {
-                        let mut f_segments_punctuated_three = syn::punctuated::Punctuated::new();
-                        f_segments_punctuated_three.push_value(
+                        let mut handle = syn::punctuated::Punctuated::new();
+                        handle.push_value(
                             syn::Field {
                                 attrs: vec![
                                     syn::Attribute {
@@ -1671,8 +1677,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                             leading_colon: None,
                                             segments: {
                                                 // syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>
-                                                let mut f_segments_punctuated_two = syn::punctuated::Punctuated::new();
-                                                f_segments_punctuated_two
+                                                let mut handle = syn::punctuated::Punctuated::new();
+                                                handle.push(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new("test", proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
+                                                handle
                                             },
                                         },
                                         tokens: proc_macro2::TokenStream::new(),
@@ -1711,7 +1723,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             //     spans: [proc_macro2::Span::call_site()],
                             // }
                         );
-                        f_segments_punctuated_three
+                        handle
                     },
                 },
             ),
