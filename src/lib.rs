@@ -1626,204 +1626,200 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
-    let f = [
-        syn::Variant {
-            attrs: vec![
-                syn::Attribute {
-                    pound_token: syn::token::Pound {
-                        spans: [proc_macro2::Span::call_site()],
-                    },
-                    style: syn::AttrStyle::Outer,
-                    bracket_token: syn::token::Bracket {
-                        span: proc_macro2::Span::call_site(),
-                    },
-                    path: syn::Path {
-                        leading_colon: None,
-                        segments: {
-                            let mut handle = syn::punctuated::Punctuated::new();
-                            handle.push(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("tvfrr_500_internal_server_error", proc_macro2::Span::call_site()),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        },
-                    },
-                    tokens: proc_macro2::TokenStream::new(),
+    let bind_query_syn_variant = syn::Variant {
+        attrs: vec![
+            syn::Attribute {
+                pound_token: syn::token::Pound {
+                    spans: [proc_macro2::Span::call_site()],
                 },
-            ],
-            ident: syn::Ident::new("BindQuery", proc_macro2::Span::call_site()),
-            fields: syn::Fields::Named(
-                syn::FieldsNamed {
-                    brace_token: syn::token::Brace {
-                        span: proc_macro2::Span::call_site(),
-                    },
-                    named: {
+                style: syn::AttrStyle::Outer,
+                bracket_token: syn::token::Bracket {
+                    span: proc_macro2::Span::call_site(),
+                },
+                path: syn::Path {
+                    leading_colon: None,
+                    segments: {
                         let mut handle = syn::punctuated::Punctuated::new();
-                        handle.push_value(
-                            syn::Field {
-                                attrs: vec![
-                                    syn::Attribute {
-                                        pound_token: syn::token::Pound {
-                                            spans: [proc_macro2::Span::call_site()],
-                                        },
-                                        style: syn::AttrStyle::Outer,
-                                        bracket_token: syn::token::Bracket {
-                                            span: proc_macro2::Span::call_site(),
-                                        },
-                                        path: syn::Path {
-                                            leading_colon: None,
-                                            segments: {
-                                                let mut handle = syn::punctuated::Punctuated::new();
-                                                handle.push(
-                                                    syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("eo_error_occurence", proc_macro2::Span::call_site()),
-                                                        arguments: syn::PathArguments::None,
-                                                    }
-                                                );
-                                                handle
-                                            },
-                                        },
-                                        tokens: proc_macro2::TokenStream::new(),
-                                    },
-                                ],
-                                vis: syn::Visibility::Inherited,
-                                ident: Some(
-                                    syn::Ident::new("checked_add", proc_macro2::Span::call_site())
-                                ),
-                                colon_token: Some(
-                                    syn::token::Colon {
-                                        spans: [proc_macro2::Span::call_site()],
-                                    },
-                                ),
-                                ty: syn::Type::Path(
-                                    syn::TypePath {
-                                        qself: None,
-                                        path: syn::Path {
-                                            leading_colon: None,
-                                            segments: {
-                                                let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                                                handle.push_value(
-                                                    syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
-                                                        arguments: syn::PathArguments::None,
-                                                    }
-                                                );
-                                                handle.push_punct(syn::token::Colon2{
-                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(
-                                                    syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("server", proc_macro2::Span::call_site()),
-                                                        arguments: syn::PathArguments::None,
-                                                    }
-                                                );
-                                                handle.push_punct(syn::token::Colon2{
-                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(
-                                                    syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("postgres", proc_macro2::Span::call_site()),
-                                                        arguments: syn::PathArguments::None,
-                                                    }
-                                                );
-                                                handle.push_punct(syn::token::Colon2{
-                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(
-                                                    syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("bind_query", proc_macro2::Span::call_site()),
-                                                        arguments: syn::PathArguments::None,
-                                                    }
-                                                );
-                                                handle.push_punct(syn::token::Colon2{
-                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(
-                                                    syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("TryGenerateBindIncrementsErrorNamed", proc_macro2::Span::call_site()),
-                                                        arguments: syn::PathArguments::None,
-                                                    }
-                                                );
-                                                handle
-                                            }
-                                        },
-                                    },
-                                ),
-                            }
-                        );
-                        handle.push_punct(
-                            syn::token::Comma {
-                                spans: [proc_macro2::Span::call_site()],
-                            }
-                        );
-                        handle.push_value(
-                            syn::Field {
-                                attrs: vec![],
-                                vis: syn::Visibility::Inherited,
-                                ident: Some(
-                                    syn::Ident::new("code_occurence", proc_macro2::Span::call_site())
-                                ),
-                                colon_token: Some(
-                                    syn::token::Colon {
-                                        spans: [proc_macro2::Span::call_site()],
-                                    },
-                                ),
-                                ty: syn::Type::Path(
-                                    syn::TypePath {
-                                        qself: None,
-                                        path: syn::Path {
-                                            leading_colon: None,
-                                            segments: {
-                                                let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                                                handle.push_value(
-                                                    syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
-                                                        arguments: syn::PathArguments::None,
-                                                    }
-                                                );
-                                                handle.push_punct(syn::token::Colon2{
-                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(
-                                                    syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("common", proc_macro2::Span::call_site()),
-                                                        arguments: syn::PathArguments::None,
-                                                    }
-                                                );
-                                                handle.push_punct(syn::token::Colon2{
-                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(
-                                                    syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("code_occurence", proc_macro2::Span::call_site()),
-                                                        arguments: syn::PathArguments::None,
-                                                    }
-                                                );
-                                                handle.push_punct(syn::token::Colon2{
-                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(
-                                                    syn::PathSegment {
-                                                        ident: proc_macro2::Ident::new("CodeOccurence", proc_macro2::Span::call_site()),
-                                                        arguments: syn::PathArguments::None,
-                                                    }
-                                                );
-                                                handle
-                                            }
-                                        },
-                                    },
-                                ),
-                            }
-                        );
-                        handle
+                        handle.push(syn::PathSegment {
+                            ident: proc_macro2::Ident::new("tvfrr_500_internal_server_error", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        });
+                       handle
                     },
                 },
-            ),
-            discriminant: None,
-        }
-    ];
+                tokens: proc_macro2::TokenStream::new(),
+            },
+        ],
+        ident: syn::Ident::new("BindQuery", proc_macro2::Span::call_site()),
+        fields: syn::Fields::Named(
+            syn::FieldsNamed {
+                brace_token: syn::token::Brace {
+                    span: proc_macro2::Span::call_site(),
+                },
+                named: {
+                    let mut handle = syn::punctuated::Punctuated::new();
+                    handle.push_value(
+                        syn::Field {
+                            attrs: vec![
+                                syn::Attribute {
+                                    pound_token: syn::token::Pound {
+                                        spans: [proc_macro2::Span::call_site()],
+                                    },
+                                    style: syn::AttrStyle::Outer,
+                                    bracket_token: syn::token::Bracket {
+                                        span: proc_macro2::Span::call_site(),
+                                    },
+                                    path: syn::Path {
+                                        leading_colon: None,
+                                        segments: {
+                                            let mut handle = syn::punctuated::Punctuated::new();
+                                            handle.push(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("eo_error_occurence", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle
+                                        },
+                                    },
+                                    tokens: proc_macro2::TokenStream::new(),
+                                },
+                            ],
+                            vis: syn::Visibility::Inherited,
+                            ident: Some(
+                                syn::Ident::new("checked_add", proc_macro2::Span::call_site())
+                            ),
+                            colon_token: Some(
+                                syn::token::Colon {
+                                    spans: [proc_macro2::Span::call_site()],
+                                },
+                            ),
+                            ty: syn::Type::Path(
+                                syn::TypePath {
+                                    qself: None,
+                                    path: syn::Path {
+                                        leading_colon: None,
+                                        segments: {
+                                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                            handle.push_value(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle.push_punct(syn::token::Colon2{
+                                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                            });
+                                            handle.push_value(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("server", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle.push_punct(syn::token::Colon2{
+                                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                            });
+                                            handle.push_value(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("postgres", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle.push_punct(syn::token::Colon2{
+                                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                            });
+                                            handle.push_value(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("bind_query", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle.push_punct(syn::token::Colon2{
+                                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                            });
+                                            handle.push_value(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("TryGenerateBindIncrementsErrorNamed", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle
+                                        }
+                                    },
+                                },
+                            ),
+                        }
+                    );
+                    handle.push_punct(
+                        syn::token::Comma {
+                            spans: [proc_macro2::Span::call_site()],
+                        }
+                    );
+                    handle.push_value(
+                        syn::Field {
+                            attrs: vec![],
+                            vis: syn::Visibility::Inherited,
+                            ident: Some(
+                                syn::Ident::new("code_occurence", proc_macro2::Span::call_site())
+                            ),
+                            colon_token: Some(
+                                syn::token::Colon {
+                                    spans: [proc_macro2::Span::call_site()],
+                                },
+                            ),
+                            ty: syn::Type::Path(
+                                syn::TypePath {
+                                    qself: None,
+                                    path: syn::Path {
+                                        leading_colon: None,
+                                        segments: {
+                                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                            handle.push_value(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle.push_punct(syn::token::Colon2{
+                                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                            });
+                                            handle.push_value(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("common", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle.push_punct(syn::token::Colon2{
+                                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                            });
+                                            handle.push_value(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("code_occurence", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle.push_punct(syn::token::Colon2{
+                                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                            });
+                                            handle.push_value(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("CodeOccurence", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle
+                                        }
+                                    },
+                                },
+                            ),
+                        }
+                    );
+                    handle
+                },
+            },
+        ),
+        discriminant: None,
+    };
     let error_occurence_variant_field = crate::type_variants_from_request_response_generator::ErrorVariantField {
         field_name: quote::quote!{#code_occurence_lower_case_token_stream},
         error_occurence_attribute: quote::quote!{},
