@@ -1840,6 +1840,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let query_and_rollback_failed_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        "QueryAndRollbackFailed",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                "query_error", 
+                std_string_string_syn_punctuated_punctuated.clone()
+            ),
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                "rollback_error", 
+                std_string_string_syn_punctuated_punctuated.clone()
+            )   
+        ]
+    );
     let query_and_rollback_failed_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -1878,6 +1895,59 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let primary_key_from_row_and_failed_rollback_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        "PrimaryKeyFromRowAndFailedRollback",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                "primary_key_from_row", 
+                {
+                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle.push_punct(syn::token::Colon2{
+                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                    });
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("Error", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle
+                }
+            ),
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                "rollback_error", 
+                {
+                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle.push_punct(syn::token::Colon2{
+                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                    });
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("Error", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle
+                }
+            )
+        ]
+    );
     let primary_key_from_row_and_failed_rollback_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
