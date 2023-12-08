@@ -1626,6 +1626,42 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let std_string_string_syn_type_path = syn::Type::Path(
+        syn::TypePath {
+            qself: None,
+            path: syn::Path {
+                leading_colon: None,
+                segments: {
+                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle.push_punct(syn::token::Colon2{
+                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                    });
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("string", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle.push_punct(syn::token::Colon2{
+                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                    });
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("String", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle
+                }
+            },
+        },
+    );
     let code_occurence_field = syn::Field {
         attrs: vec![],
         vis: syn::Visibility::Inherited,
@@ -1682,6 +1718,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
             },
         ),
+    };
+    let error_occurence_variant_field = crate::type_variants_from_request_response_generator::ErrorVariantField {
+        field_name: quote::quote!{#code_occurence_lower_case_token_stream},
+        error_occurence_attribute: quote::quote!{},
+        field_type_original: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
+        field_type_with_serialize_deserialize: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
     };
     let bind_query_syn_variant = syn::Variant {
         attrs: vec![
@@ -1819,12 +1861,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         ),
         discriminant: None,
     };
-    let error_occurence_variant_field = crate::type_variants_from_request_response_generator::ErrorVariantField {
-        field_name: quote::quote!{#code_occurence_lower_case_token_stream},
-        error_occurence_attribute: quote::quote!{},
-        field_type_original: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
-        field_type_with_serialize_deserialize: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
-    };
     let bind_query_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -1854,7 +1890,89 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
-//
+    let checked_add_syn_variant = syn::Variant {
+        attrs: vec![
+            syn::Attribute {
+                pound_token: syn::token::Pound {
+                    spans: [proc_macro2::Span::call_site()],
+                },
+                style: syn::AttrStyle::Outer,
+                bracket_token: syn::token::Bracket {
+                    span: proc_macro2::Span::call_site(),
+                },
+                path: syn::Path {
+                    leading_colon: None,
+                    segments: {
+                        let mut handle = syn::punctuated::Punctuated::new();
+                        handle.push(syn::PathSegment {
+                            ident: proc_macro2::Ident::new("tvfrr_500_internal_server_error", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        });
+                       handle
+                    },
+                },
+                tokens: proc_macro2::TokenStream::new(),
+            },
+        ],
+        ident: syn::Ident::new("CheckedAdd", proc_macro2::Span::call_site()),
+        fields: syn::Fields::Named(
+            syn::FieldsNamed {
+                brace_token: syn::token::Brace {
+                    span: proc_macro2::Span::call_site(),
+                },
+                named: {
+                    let mut handle = syn::punctuated::Punctuated::new();
+                    handle.push_value(
+                        syn::Field {
+                            attrs: vec![
+                                syn::Attribute {
+                                    pound_token: syn::token::Pound {
+                                        spans: [proc_macro2::Span::call_site()],
+                                    },
+                                    style: syn::AttrStyle::Outer,
+                                    bracket_token: syn::token::Bracket {
+                                        span: proc_macro2::Span::call_site(),
+                                    },
+                                    path: syn::Path {
+                                        leading_colon: None,
+                                        segments: {
+                                            let mut handle = syn::punctuated::Punctuated::new();
+                                            handle.push(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new("eo_display_with_serialize_deserialize", proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            handle
+                                        },
+                                    },
+                                    tokens: proc_macro2::TokenStream::new(),
+                                },
+                            ],
+                            vis: syn::Visibility::Inherited,
+                            ident: Some(
+                                syn::Ident::new("checked_add", proc_macro2::Span::call_site())//tood maybe change naming?
+                            ),
+                            colon_token: Some(
+                                syn::token::Colon {
+                                    spans: [proc_macro2::Span::call_site()],
+                                },
+                            ),
+                            ty: std_string_string_syn_type_path.clone(),
+                        }
+                    );
+                    handle.push_punct(
+                        syn::token::Comma {
+                            spans: [proc_macro2::Span::call_site()],
+                        }
+                    );
+                    handle.push_value(code_occurence_field.clone());
+                    handle
+                },
+            },
+        ),
+        discriminant: None,
+    };
     let checked_add_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -8758,4 +8876,105 @@ fn generate_error_variants_vec_token_stream<'a>(
         &proc_macro_name_ident_stringified,
         &element
     )).collect()
+}
+
+fn construct_syn_variant(
+    tvfrr_status_attribute: proc_macro_helpers::attribute::Attribute,
+    variant_name: &str,
+    code_occurence_field: &syn::Field,
+    fields: std::vec::Vec<(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute, &str, syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>)>
+) -> syn::Variant {
+    syn::Variant {
+        attrs: vec![
+            syn::Attribute {
+                pound_token: syn::token::Pound {
+                    spans: [proc_macro2::Span::call_site()],
+                },
+                style: syn::AttrStyle::Outer,
+                bracket_token: syn::token::Bracket {
+                    span: proc_macro2::Span::call_site(),
+                },
+                path: syn::Path {
+                    leading_colon: None,
+                    segments: {
+                        let mut handle = syn::punctuated::Punctuated::new();
+                        handle.push(syn::PathSegment {
+                            ident: proc_macro2::Ident::new(&tvfrr_status_attribute.to_string(), proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        });
+                       handle
+                    },
+                },
+                tokens: proc_macro2::TokenStream::new(),
+            },
+        ],
+        ident: syn::Ident::new(variant_name, proc_macro2::Span::call_site()),
+        fields: syn::Fields::Named(
+            syn::FieldsNamed {
+                brace_token: syn::token::Brace {
+                    span: proc_macro2::Span::call_site(),
+                },
+                named: {
+                    let mut handle = fields.into_iter().fold(syn::punctuated::Punctuated::new(), |mut acc, element| {
+                        acc.push_value(
+                            syn::Field {
+                                attrs: vec![
+                                    syn::Attribute {
+                                        pound_token: syn::token::Pound {
+                                            spans: [proc_macro2::Span::call_site()],
+                                        },
+                                        style: syn::AttrStyle::Outer,
+                                        bracket_token: syn::token::Bracket {
+                                            span: proc_macro2::Span::call_site(),
+                                        },
+                                        path: syn::Path {
+                                            leading_colon: None,
+                                            segments: {
+                                                let mut handle = syn::punctuated::Punctuated::new();
+                                                handle.push(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new(&element.0.to_string(), proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
+                                                handle
+                                            },
+                                        },
+                                        tokens: proc_macro2::TokenStream::new(),
+                                    },
+                                ],
+                                vis: syn::Visibility::Inherited,
+                                ident: Some(
+                                    syn::Ident::new(&element.1, proc_macro2::Span::call_site())
+                                ),
+                                colon_token: Some(
+                                    syn::token::Colon {
+                                        spans: [proc_macro2::Span::call_site()],
+                                    },
+                                ),
+                                ty: syn::Type::Path(
+                                    syn::TypePath {
+                                        qself: None,
+                                        path: syn::Path {
+                                            leading_colon: None,
+                                            segments: element.2
+                                        },
+                                    },
+                                ),
+                            }
+                        );
+                        acc.push_punct(
+                            syn::token::Comma {
+                                spans: [proc_macro2::Span::call_site()],
+                            }
+                        );
+                        acc
+                    });
+                    handle.push_value(code_occurence_field.clone());
+                    handle
+                },
+            },
+        ),
+        discriminant: None,
+    }
 }
