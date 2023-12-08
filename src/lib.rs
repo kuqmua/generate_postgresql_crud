@@ -1626,283 +1626,98 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
-    //
-    // let f = [
-    // syn::Variant {
-    //     attrs: [
-    //         syn::Attribute {
-    //             pound_token: syn::token::Pound,
-    //             style: syn::AttrStyle::Outer,
-    //             bracket_token: syn::token::Bracket,
-    //             path: syn::Path {
-    //                 leading_colon: None,
-    //                 segments: [
-    //                     syn::PathSegment {
-    //                         ident: proc_macro2::Ident::new("tvfrr_400_bad_request", proc_macro2::Span::call_site()),
-    //                         arguments: None,
-    //                     },
-    //                 ],
-    //             },
-    //             tokens: TokenStream [],
-    //         },
-    //     ],
-    //     ident: syn::Ident::new("ProjectCommitExtractorToStrConversion", proc_macro2::Span::call_site()),
-    //     fields: syn::Fields::Named(
-    //         syn::FieldsNamed {
-    //             brace_token: syn::token::Brace,
-    //             named: [
-    //                 syn::Field {
-    //                     attrs: [
-    //                         syn::Attribute {
-    //                             pound_token: syn::token::Pound,
-    //                             style: syn::AttrStyle::Outer,
-    //                             bracket_token: syn::token::Bracket,
-    //                             path: syn::Path {
-    //                                 leading_colon: None,
-    //                                 segments: [
-    //                                     syn::PathSegment {
-    //                                         ident: syn::Ident::new("eo_display", proc_macro2::Span::call_site()),
-    //                                         arguments: None,
-    //                                     },
-    //                                 ],
-    //                             },
-    //                             tokens: proc_macro2::TokenStream [],
-    //                         },
-    //                     ],
-    //                     vis: syn::Visibility::Inherited,
-    //                     ident: Some(
-    //                         syn::Ident::new("project_commit_to_str_conversion", proc_macro2::Span::call_site())
-    //                     ),
-    //                     colon_token: Some(
-    //                         syn::token::Colon,
-    //                     ),
-    //                     ty: syn::Type::Path(
-    //                         syn::TypePath {
-    //                             qself: None,
-    //                             path: syn::Path {
-    //                                 leading_colon: None,
-    //                                 segments: [
-    //                                     syn::PathSegment {
-    //                                         ident: proc_macro2::Ident::new("http", proc_macro2::Span::call_site()),
-    //                                         arguments: None,
-    //                                     },
-    //                                     syn::token::Colon2,
-    //                                     syn::PathSegment {
-    //                                         ident: proc_macro2::Ident::new("header", proc_macro2::Span::call_site()),
-    //                                         arguments: None,
-    //                                     },
-    //                                     syn::token::Colon2,
-    //                                     syn::PathSegment {
-    //                                         ident: proc_macro2::Ident::new("ToStrError", proc_macro2::Span::call_site()),
-    //                                         arguments: None,
-    //                                     },
-    //                                 ],
-    //                             },
-    //                         },
-    //                     ),
-    //                 },
-    //                 syn::token::Comma,
-    //                 syn::Field {
-    //                     attrs: [],
-    //                     vis: syn::Visibility::Inherited,
-    //                     ident: Some(
-    //                         proc_macro2::Ident::new("code_occurence", proc_macro2::Span::call_site()),
-    //                     ),
-    //                     colon_token: Some(
-    //                         syn::token::Colon,
-    //                     ),
-    //                     ty: syn::Type::Path(
-    //                         syn::TypePath {
-    //                             qself: None,
-    //                             path: Path {
-    //                                 leading_colon: None,
-    //                                 segments: [
-    //                                     syn::PathSegment {
-    //                                         ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
-    //                                         arguments: None,
-    //                                     },
-    //                                     syn::token::Colon2,
-    //                                     syn::PathSegment {
-    //                                         ident: proc_macro2::Ident::new("common", proc_macro2::Span::call_site()),
-    //                                         arguments: None,
-    //                                     },
-    //                                     syn::token::Colon2,
-    //                                     syn::PathSegment {
-    //                                         ident: proc_macro2::Ident::new("code_occurence", proc_macro2::Span::call_site()),
-    //                                         arguments: None,
-    //                                     },
-    //                                     syn::token::Colon2,
-    //                                     syn::PathSegment {
-    //                                         ident: proc_macro2::Ident::new("CodeOccurence", proc_macro2::Span::call_site()),
-    //                                         arguments: None,
-    //                                     },
-    //                                 ],
-    //                             },
-    //                         },
-    //                     ),
-    //                 },
-    //                 syn::token::Comma,
-    //             ],
-    //         },
-    //     ),
-    //     discriminant: None,
-    // },
-    // // Variant {
-    // //     attrs: [
-    // //         Attribute {
-    // //             pound_token: Pound,
-    // //             style: Outer,
-    // //             bracket_token: Bracket,
-    // //             path: Path {
-    // //                 leading_colon: None,
-    // //                 segments: [
-    // //                     PathSegment {
-    // //                         ident: Ident {
-    // //                             ident: "tvfrr_400_bad_request",
-    // //                             span: #0 bytes(242149..242170),
-    // //                         },
-    // //                         arguments: None,
-    // //                     },
-    // //                 ],
-    // //             },
-    // //             tokens: TokenStream [],
-    // //         },
-    // //     ],
-    // //     ident: Ident {
-    // //         ident: "NoProjectCommitExtractorHeader",
-    // //         span: #0 bytes(242176..242206),
-    // //     },
-    // //     fields: Named(
-    // //         FieldsNamed {
-    // //             brace_token: Brace,
-    // //             named: [
-    // //                 Field {
-    // //                     attrs: [
-    // //                         Attribute {
-    // //                             pound_token: Pound,
-    // //                             style: Outer,
-    // //                             bracket_token: Bracket,
-    // //                             path: Path {
-    // //                                 leading_colon: None,
-    // //                                 segments: [
-    // //                                     PathSegment {
-    // //                                         ident: Ident {
-    // //                                             ident: "eo_display_with_serialize_deserialize",
-    // //                                             span: #0 bytes(242219..242256),
-    // //                                         },
-    // //                                         arguments: None,
-    // //                                     },
-    // //                                 ],
-    // //                             },
-    // //                             tokens: TokenStream [],
-    // //                         },
-    // //                     ],
-    // //                     vis: Inherited,
-    // //                     ident: Some(
-    // //                         Ident {
-    // //                             ident: "no_project_commit_header",
-    // //                             span: #0 bytes(242266..242290),
-    // //                         },
-    // //                     ),
-    // //                     colon_token: Some(
-    // //                         Colon,
-    // //                     ),
-    // //                     ty: Path(
-    // //                         TypePath {
-    // //                             qself: None,
-    // //                             path: Path {
-    // //                                 leading_colon: None,
-    // //                                 segments: [
-    // //                                     PathSegment {
-    // //                                         ident: Ident {
-    // //                                             ident: "std",
-    // //                                             span: #0 bytes(242292..242295),
-    // //                                         },
-    // //                                         arguments: None,
-    // //                                     },
-    // //                                     Colon2,
-    // //                                     PathSegment {
-    // //                                         ident: Ident {
-    // //                                             ident: "string",
-    // //                                             span: #0 bytes(242297..242303),
-    // //                                         },
-    // //                                         arguments: None,
-    // //                                     },
-    // //                                     Colon2,
-    // //                                     PathSegment {
-    // //                                         ident: Ident {
-    // //                                             ident: "String",
-    // //                                             span: #0 bytes(242305..242311),
-    // //                                         },
-    // //                                         arguments: None,
-    // //                                     },
-    // //                                 ],
-    // //                             },
-    // //                         },
-    // //                     ),
-    // //                 },
-    // //                 Comma,
-    // //                 Field {
-    // //                     attrs: [],
-    // //                     vis: Inherited,
-    // //                     ident: Some(
-    // //                         Ident {
-    // //                             ident: "code_occurence",
-    // //                             span: #0 bytes(242321..242335),
-    // //                         },
-    // //                     ),
-    // //                     colon_token: Some(
-    // //                         Colon,
-    // //                     ),
-    // //                     ty: Path(
-    // //                         TypePath {
-    // //                             qself: None,
-    // //                             path: Path {
-    // //                                 leading_colon: None,
-    // //                                 segments: [
-    // //                                     PathSegment {
-    // //                                         ident: Ident {
-    // //                                             ident: "crate",
-    // //                                             span: #0 bytes(242337..242342),
-    // //                                         },
-    // //                                         arguments: None,
-    // //                                     },
-    // //                                     Colon2,
-    // //                                     PathSegment {
-    // //                                         ident: Ident {
-    // //                                             ident: "common",
-    // //                                             span: #0 bytes(242344..242350),
-    // //                                         },
-    // //                                         arguments: None,
-    // //                                     },
-    // //                                     Colon2,
-    // //                                     PathSegment {
-    // //                                         ident: Ident {
-    // //                                             ident: "code_occurence",
-    // //                                             span: #0 bytes(242352..242366),
-    // //                                         },
-    // //                                         arguments: None,
-    // //                                     },
-    // //                                     Colon2,
-    // //                                     PathSegment {
-    // //                                         ident: Ident {
-    // //                                             ident: "CodeOccurence",
-    // //                                             span: #0 bytes(242368..242381),
-    // //                                         },
-    // //                                         arguments: None,
-    // //                                     },
-    // //                                 ],
-    // //                             },
-    // //                         },
-    // //                     ),
-    // //                 },
-    // //                 Comma,
-    // //             ],
-    // //         },
-    // //     ),
-    // //     discriminant: None,
-    // // },
-    // ];
+    let f = [
+        syn::Variant {
+            attrs: vec![
+                syn::Attribute {
+                    pound_token: syn::token::Pound {
+                        spans: [proc_macro2::Span::call_site()],
+                    },
+                    style: syn::AttrStyle::Outer,
+                    bracket_token: syn::token::Bracket {
+                        span: proc_macro2::Span::call_site(),
+                    },
+                    path: syn::Path {
+                        leading_colon: None,//Option<syn::token::Colon2>
+                        segments: {
+                            //syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>
+                            let mut f_segments_punctuated = syn::punctuated::Punctuated::new();
+                            f_segments_punctuated
+                        },
+                    },
+                    tokens: proc_macro2::TokenStream::new(),
+                },
+            ],
+            ident: syn::Ident::new("test", proc_macro2::Span::call_site()),
+            fields: syn::Fields::Named(
+                syn::FieldsNamed {
+                    brace_token: syn::token::Brace {
+                        span: proc_macro2::Span::call_site(),
+                    },
+                    named: {
+                        let mut f_segments_punctuated_three = syn::punctuated::Punctuated::new();
+                        f_segments_punctuated_three.push_value(
+                            syn::Field {
+                                attrs: vec![
+                                    syn::Attribute {
+                                        pound_token: syn::token::Pound {
+                                            spans: [proc_macro2::Span::call_site()],
+                                        },
+                                        style: syn::AttrStyle::Outer,
+                                        bracket_token: syn::token::Bracket {
+                                            span: proc_macro2::Span::call_site(),
+                                        },
+                                        path: syn::Path {
+                                            leading_colon: None,
+                                            segments: {
+                                                // syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>
+                                                let mut f_segments_punctuated_two = syn::punctuated::Punctuated::new();
+                                                f_segments_punctuated_two
+                                            },
+                                        },
+                                        tokens: proc_macro2::TokenStream::new(),
+                                    },
+                                ],
+                                vis: syn::Visibility::Inherited,
+                                ident: Some(
+                                    syn::Ident::new("test", proc_macro2::Span::call_site())
+                                ),
+                                colon_token: Some(
+                                    syn::token::Colon {
+                                        spans: [proc_macro2::Span::call_site()],
+                                    },
+                                ),
+                                ty: syn::Type::Path(
+                                    syn::TypePath {
+                                        qself: None,
+                                        path: syn::Path {
+                                            leading_colon: None,
+                                            segments: {
+                                                let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                                handle.push(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new("test", proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
+                                                handle
+                                            }
+                                        },
+                                    },
+                                ),
+                            }
+                            // ,
+                            // syn::token::Comma {
+                            //     spans: [proc_macro2::Span::call_site()],
+                            // }
+                        );
+                        f_segments_punctuated_three
+                    },
+                },
+            ),
+            discriminant: None,//Option<(syn::token::Eq, syn::Expr)>
+        }
+    ];
     let error_occurence_variant_field = crate::type_variants_from_request_response_generator::ErrorVariantField {
         field_name: quote::quote!{#code_occurence_lower_case_token_stream},
         error_occurence_attribute: quote::quote!{},
