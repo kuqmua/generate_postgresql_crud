@@ -1758,11 +1758,70 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 spans: [proc_macro2::Span::call_site()],
                             }
                         );
+                        handle.push_value(
+                            syn::Field {
+                                attrs: vec![],
+                                vis: syn::Visibility::Inherited,
+                                ident: Some(
+                                    syn::Ident::new("code_occurence", proc_macro2::Span::call_site())
+                                ),
+                                colon_token: Some(
+                                    syn::token::Colon {
+                                        spans: [proc_macro2::Span::call_site()],
+                                    },
+                                ),
+                                ty: syn::Type::Path(
+                                    syn::TypePath {
+                                        qself: None,
+                                        path: syn::Path {
+                                            leading_colon: None,
+                                            segments: {
+                                                let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                                handle.push_value(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
+                                                handle.push_punct(syn::token::Colon2{
+                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                                });
+                                                handle.push_value(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new("common", proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
+                                                handle.push_punct(syn::token::Colon2{
+                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                                });
+                                                handle.push_value(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new("code_occurence", proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
+                                                handle.push_punct(syn::token::Colon2{
+                                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                                });
+                                                handle.push_value(
+                                                    syn::PathSegment {
+                                                        ident: proc_macro2::Ident::new("CodeOccurence", proc_macro2::Span::call_site()),
+                                                        arguments: syn::PathArguments::None,
+                                                    }
+                                                );
+                                                handle
+                                            }
+                                        },
+                                    },
+                                ),
+                            }
+                        );
                         handle
                     },
                 },
             ),
-            discriminant: None,//Option<(syn::token::Eq, syn::Expr)>
+            discriminant: None,
         }
     ];
     let error_occurence_variant_field = crate::type_variants_from_request_response_generator::ErrorVariantField {
