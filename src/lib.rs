@@ -1626,6 +1626,63 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let code_occurence_field = syn::Field {
+        attrs: vec![],
+        vis: syn::Visibility::Inherited,
+        ident: Some(
+            syn::Ident::new("code_occurence", proc_macro2::Span::call_site())
+        ),
+        colon_token: Some(
+            syn::token::Colon {
+                spans: [proc_macro2::Span::call_site()],
+            },
+        ),
+        ty: syn::Type::Path(
+            syn::TypePath {
+                qself: None,
+                path: syn::Path {
+                    leading_colon: None,
+                    segments: {
+                        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("common", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("code_occurence", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("CodeOccurence", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle
+                    }
+                },
+            },
+        ),
+    };
     let bind_query_syn_variant = syn::Variant {
         attrs: vec![
             syn::Attribute {
@@ -1755,65 +1812,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             spans: [proc_macro2::Span::call_site()],
                         }
                     );
-                    handle.push_value(
-                        syn::Field {
-                            attrs: vec![],
-                            vis: syn::Visibility::Inherited,
-                            ident: Some(
-                                syn::Ident::new("code_occurence", proc_macro2::Span::call_site())
-                            ),
-                            colon_token: Some(
-                                syn::token::Colon {
-                                    spans: [proc_macro2::Span::call_site()],
-                                },
-                            ),
-                            ty: syn::Type::Path(
-                                syn::TypePath {
-                                    qself: None,
-                                    path: syn::Path {
-                                        leading_colon: None,
-                                        segments: {
-                                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                                            handle.push_value(
-                                                syn::PathSegment {
-                                                    ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
-                                                    arguments: syn::PathArguments::None,
-                                                }
-                                            );
-                                            handle.push_punct(syn::token::Colon2{
-                                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                                            });
-                                            handle.push_value(
-                                                syn::PathSegment {
-                                                    ident: proc_macro2::Ident::new("common", proc_macro2::Span::call_site()),
-                                                    arguments: syn::PathArguments::None,
-                                                }
-                                            );
-                                            handle.push_punct(syn::token::Colon2{
-                                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                                            });
-                                            handle.push_value(
-                                                syn::PathSegment {
-                                                    ident: proc_macro2::Ident::new("code_occurence", proc_macro2::Span::call_site()),
-                                                    arguments: syn::PathArguments::None,
-                                                }
-                                            );
-                                            handle.push_punct(syn::token::Colon2{
-                                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                                            });
-                                            handle.push_value(
-                                                syn::PathSegment {
-                                                    ident: proc_macro2::Ident::new("CodeOccurence", proc_macro2::Span::call_site()),
-                                                    arguments: syn::PathArguments::None,
-                                                }
-                                            );
-                                            handle
-                                        }
-                                    },
-                                },
-                            ),
-                        }
-                    );
+                    handle.push_value(code_occurence_field.clone());
                     handle
                 },
             },
