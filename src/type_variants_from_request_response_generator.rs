@@ -12,14 +12,9 @@ pub struct ErrorVariant {
 #[derive(Clone)]
 pub struct ErrorVariantField {
     pub field_name: proc_macro2::TokenStream,
-    pub field_type_original: ErrorVariantFieldType,
-    pub field_type_with_serialize_deserialize: ErrorVariantFieldType,
-}
-
-#[derive(Clone)]
-pub struct ErrorVariantFieldType {
     pub error_occurence_attribute: proc_macro2::TokenStream,
-    pub field_type: proc_macro2::TokenStream,
+    pub field_type_original: proc_macro2::TokenStream,
+    pub field_type_with_serialize_deserialize: proc_macro2::TokenStream,
 }
 
 pub fn type_variants_from_request_response_generator(
@@ -190,7 +185,7 @@ pub fn type_variants_from_request_response_generator(
                     let error_variant_ident = &element.error_variant_ident;
                     let fields_mapped_into_token_stream = element.error_variant_fields.iter().map(|element| {
                         let field_name_token_stream = &element.field_name;
-                        let field_type_token_stream = &element.field_type_with_serialize_deserialize.field_type;
+                        let field_type_token_stream = &element.field_type_with_serialize_deserialize;
                         quote::quote! {#field_name_token_stream: #field_type_token_stream}
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
@@ -677,9 +672,9 @@ pub fn type_variants_from_request_response<'a>(
     let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
     let try_operation_token_stream = {
         let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
-            let error_occurence_attribute_token_stream = &element.field_type_original.error_occurence_attribute;
+            let error_occurence_attribute_token_stream = &element.error_occurence_attribute;
             let field_name_token_stream = &element.field_name;
-            let field_type_token_stream = &element.field_type_original.field_type;
+            let field_type_token_stream = &element.field_type_original;
             quote::quote! {
                 #error_occurence_attribute_token_stream
                 #field_name_token_stream: #field_type_token_stream
@@ -695,7 +690,7 @@ pub fn type_variants_from_request_response<'a>(
     let enum_with_serialize_deserialize_logic_token_stream = {
         let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
             let field_name_token_stream = &element.field_name;
-            let field_type_token_stream = &element.field_type_with_serialize_deserialize.field_type;
+            let field_type_token_stream = &element.field_type_with_serialize_deserialize;
             quote::quote! {#field_name_token_stream: #field_type_token_stream}
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
