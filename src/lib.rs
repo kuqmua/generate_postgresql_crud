@@ -1755,6 +1755,89 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         handle
     };
+    let std_vec_vec_crate_server_postgres_regex_filter_regex_filter_syn_punctuated_punctuated = {
+        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+        handle.push_value(
+            syn::PathSegment {
+                ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
+                arguments: syn::PathArguments::None,
+            }
+        );
+        handle.push_punct(syn::token::Colon2{
+            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+        });
+        handle.push_value(
+            syn::PathSegment {
+                ident: proc_macro2::Ident::new("vec", proc_macro2::Span::call_site()),
+                arguments: syn::PathArguments::None,
+            }
+        );
+        handle.push_punct(syn::token::Colon2{
+            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+        });
+        handle.push_value(
+            syn::PathSegment {
+                ident: proc_macro2::Ident::new("Vec", proc_macro2::Span::call_site()),
+                arguments: syn::PathArguments::AngleBracketed(syn::AngleBracketedGenericArguments{
+                    colon2_token: None,
+                    lt_token: syn::token::Lt{
+                        spans: [proc_macro2::Span::call_site()],
+                    },
+                    args: {
+                        let mut handle = syn::punctuated::Punctuated::<syn::GenericArgument, syn::token::Comma>::new();
+                        handle.push(syn::GenericArgument::Type(syn::Type::Path(syn::TypePath{
+                            qself: None,
+                            path: syn::Path {
+                                leading_colon: None,
+                                segments: {
+                                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                    handle.push_value(syn::PathSegment{
+                                        ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    });
+                                    handle.push_punct(syn::token::Colon2 {
+                                        spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
+                                    });
+                                    handle.push_value(syn::PathSegment{
+                                        ident: proc_macro2::Ident::new("server", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    });
+                                    handle.push_punct(syn::token::Colon2 {
+                                        spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
+                                    });
+                                    handle.push_value(syn::PathSegment{
+                                        ident: proc_macro2::Ident::new("postgres", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    });
+                                    handle.push_punct(syn::token::Colon2 {
+                                        spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
+                                    });
+                                    handle.push_value(syn::PathSegment{
+                                        ident: proc_macro2::Ident::new("regex_filter", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    });
+                                    handle.push_punct(syn::token::Colon2 {
+                                        spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
+                                    });
+                                    handle.push_value(syn::PathSegment{
+                                        ident: proc_macro2::Ident::new("RegexFilter", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    });
+                                    handle
+                                },
+                            },
+                        })));
+                        handle
+                    },
+                    gt_token: syn::token::Gt {
+                        spans: [proc_macro2::Span::call_site()],
+                    },
+                }),
+            }
+        );
+        handle
+    };
+    //
     let code_occurence_field = syn::Field {
         attrs: vec![],
         vis: syn::Visibility::Inherited,
@@ -2470,6 +2553,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             code_occurence: crate::common::code_occurence::CodeOccurence,
         } 
     };
+    let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "DeleteOnePathTryFromDeleteOnePathWithSerializeDeserialize",//todo reuse generation naming 
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                "delete_one_path_try_from_delete_one_path_with_serialize_deserialize",//todo reuse generation naming 
+                {
+                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("DeleteOnePathTryFromDeleteOnePathWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),//todo reuse generation naming 
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle
+                }
+            )
+        ]
+    );
     let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -2493,6 +2597,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             code_occurence: crate::common::code_occurence::CodeOccurence,
         }
     };
+    let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserialize",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                "delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize", 
+                {
+                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle
+                }
+            )
+        ]
+    );
     let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -2516,7 +2641,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             code_occurence: crate::common::code_occurence::CodeOccurence,
         }
     };
-    //
+    let not_unique_name_vec_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "NotUniqueNameVec",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplayWithSerializeDeserialize, 
+                "not_unique_name_vec",
+                std_vec_vec_crate_server_postgres_regex_filter_regex_filter_syn_punctuated_punctuated.clone()
+            )
+        ]
+    );
     //todo generate it. now its const
     let not_unique_name_vec_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
