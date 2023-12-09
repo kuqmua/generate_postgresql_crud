@@ -3609,6 +3609,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         for element in postgres_error_variants_vec_handle_owned {
             common_error_variants_vec.push(element);
         }
+        let unexpected_case_syn_variant = construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            "UnexpectedCase",
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                    "unexpected_case", 
+                    std_string_string_syn_punctuated_punctuated.clone()
+                )
+            ]
+        );
         let unexpected_case_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
             error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
             error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3629,6 +3641,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let common_error_variant_attribute_vec = common_error_variant_attribute_vec_owned.iter().map(|element|element).collect::<std::vec::Vec<&crate::type_variants_from_request_response_generator::ErrorVariantAttribute>>();
     let path_logic_error_variants_vec_handle_owned = {
+        let failed_to_deserialize_path_params_syn_variant = construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            "FailedToDeserializePathParams",
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                    "failed_to_deserialize_path_params", 
+                    std_string_string_syn_punctuated_punctuated.clone()
+                )
+            ]
+        );
         let failed_to_deserialize_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
             error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3644,6 +3668,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ],
             },
         };
+        let missing_path_params_syn_variant = construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            "MissingPathParams",
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                    "missing_path_params", 
+                    std_string_string_syn_punctuated_punctuated.clone()
+                )
+            ]
+        );
         let missing_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
             error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3666,6 +3702,54 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let path_logic_error_variants_vec_handle = path_logic_error_variants_vec_handle_owned.iter().map(|element|element).collect();
     let json_body_logic_error_variants_vec_handle_owned = {
+        let json_data_error_syn_variant = construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            "JsonDataError",
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                    "json_data_error", 
+                    {
+                        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("axum", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("extract", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("rejection", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("JsonDataError", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle
+                    }
+                )
+            ]
+        );
         let json_data_error_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
             error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3681,6 +3765,54 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ],
             },
         };
+        let json_syntax_error_syn_variant = construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            "JsonSyntaxError",
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                    "json_syntax_error", 
+                    {
+                        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("axum", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("extract", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("rejection", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("JsonSyntaxError", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle
+                    }
+                )
+            ]
+        );
         let json_syntax_error_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
             error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3696,6 +3828,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ],
             },
         };
+        let missing_json_content_type_syn_variant = construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            "MissingJsonContentType",
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                    "json_syntax_error", 
+                    std_string_string_syn_punctuated_punctuated.clone()
+                )
+            ]
+        );
         let missing_json_content_type_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
             error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3711,6 +3855,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 ],
             },
         };
+        let bytes_rejection_syn_variant = construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            "BytesRejection",
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                    "bytes_rejection", 
+                    std_string_string_syn_punctuated_punctuated.clone()
+                )
+            ]
+        );
         let bytes_rejection_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
             error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
             error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
