@@ -2643,12 +2643,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let not_unique_name_vec_syn_variant = construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        "NotUniqueNameVec",
+        "NotUniqueNameVec",//todo reuse generation naming 
         &code_occurence_field,
         vec![
             (
                 proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplayWithSerializeDeserialize, 
-                "not_unique_name_vec",
+                "not_unique_name_vec",//todo reuse generation naming 
                 std_vec_vec_crate_server_postgres_regex_filter_regex_filter_syn_punctuated_punctuated.clone()
             )
         ]
@@ -2677,6 +2677,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let not_unique_color_vec_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "NotUniqueColorVec",//todo reuse generation naming 
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplayWithSerializeDeserialize, 
+                "not_unique_color_vec",//todo reuse generation naming 
+                std_vec_vec_crate_server_postgres_regex_filter_regex_filter_syn_punctuated_punctuated.clone()
+            )
+        ]
+    );
     let not_unique_color_vec_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
