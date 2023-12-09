@@ -1673,7 +1673,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         handle
     };
-    let std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream_syn_punctuated_punctuated = {
+    let std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_syn_punctuated_punctuated = {
         let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
         handle.push_value(
             syn::PathSegment {
@@ -2142,7 +2142,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             (
                 proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplay, 
                 "non_existing_primary_keys",
-                std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream_syn_punctuated_punctuated.clone()
+                std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_syn_punctuated_punctuated.clone()
             )
         ]
     );
@@ -2183,7 +2183,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             (
                 proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplay, 
                 "non_existing_primary_keys", 
-                std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream_syn_punctuated_punctuated.clone()
+                std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_syn_punctuated_punctuated.clone()
             ),
             (
                 proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
@@ -2295,7 +2295,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             (
                 proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplay, 
                 "not_unique_primary_keys",
-                std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream_syn_punctuated_punctuated.clone() 
+                std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_syn_punctuated_punctuated.clone() 
             )
         ]
     );
