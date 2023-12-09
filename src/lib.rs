@@ -2959,6 +2959,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let common_error_variant_attribute_vec_owned = {
         let mut common_error_variants_vec = std::vec::Vec::new();
         let common_middlewares_error_variants_vec_handle_owned = {
+            let project_commit_extractor_not_equal_syn_variant = construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                "ProjectCommitExtractorNotEqual",
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        "project_commit_not_equal", 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    ),
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        "project_commit_to_use", 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    ),
+                ]
+            );
             let project_commit_extractor_not_equal_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
                 error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -2980,6 +2997,45 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ],
                 },
             };
+            let project_commit_extractor_to_str_conversion_syn_variant = construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                "ProjectCommitExtractorToStrConversion",
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                        "project_commit_to_str_conversion", 
+                        {
+                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("http", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle.push_punct(syn::token::Colon2{
+                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                            });
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("header", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle.push_punct(syn::token::Colon2{
+                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                            });
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("ToStrError", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle
+                        }
+                    )
+                ]
+            );
             let project_commit_extractor_to_str_conversion_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
                 error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
