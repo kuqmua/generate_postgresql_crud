@@ -2714,6 +2714,54 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     //
+    let not_uuid_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "NotUuid",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                "not_uuid", 
+                {
+                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle.push_punct(syn::token::Colon2{
+                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                    });
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("types", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle.push_punct(syn::token::Colon2{
+                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                    });
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("uuid", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle.push_punct(syn::token::Colon2{
+                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                    });
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("Error", proc_macro2::Span::call_site()),
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle
+                }
+            )
+        ]
+    );
     let not_uuid_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
