@@ -2148,7 +2148,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
-    //
+    let commit_failed_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        "CommitFailed",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                "commit_error", 
+                sqlx_error_syn_punctuated_punctuated.clone()
+            )
+        ]
+    );
     let commit_failed_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -2164,7 +2175,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ],
         },
     };
-    //
     let commit_failed_variant_initialization_token_stream = quote::quote!{
         CommitFailed {
             commit_error: e,
@@ -2194,6 +2204,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let not_unique_primary_key_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "NotUniquePrimaryKey",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplay, 
+                "not_unique_primary_keys",
+                std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream_syn_punctuated_punctuated.clone() 
+            )
+        ]
+    );
     let not_unique_primary_key_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -2209,6 +2231,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ],
         },
     };
+    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        "CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                "uuid_wrapper_try_from_possible_uuid_wrapper_in_server", 
+                sqlx_error_syn_punctuated_punctuated.clone()
+            )
+        ]
+    );
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -2232,6 +2266,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let failed_to_deserialize_query_string_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "FailedToDeserializeQueryString",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayForeignTypeWithSerializeDeserialize, 
+                "failed_to_deserialize_query_string", 
+                std_string_string_syn_punctuated_punctuated.clone()
+            )
+        ]
+    );
     let failed_to_deserialize_query_string_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
