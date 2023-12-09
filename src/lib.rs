@@ -3361,6 +3361,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ],
                 },
             };
+            let column_not_found_syn_variant = construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                "ColumnNotFound",
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        "column_not_found", 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            );
             let column_not_found_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
                 error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3376,6 +3388,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ],
                 },
             };
+            let column_decode_syn_variant = construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                "ColumnDecode",
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        "column_decode_index", 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    ),
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        "source_handle", 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            );
             let column_decode_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
                 error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3397,6 +3426,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ],
                 },
             };
+            let decode_syn_variant = construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                "Decode",
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        "decode_box_dyn_error", 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            );
             let decode_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
                 error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3412,6 +3453,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ],
                 },
             };
+            let pool_timed_out_syn_variant = construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr408RequestTimeout,
+                "PoolTimedOut",
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        "pool_timed_out", 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            );
             let pool_timed_out_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
                 error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr408RequestTimeout,
                 error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3427,6 +3480,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ],
                 },
             };
+            let pool_closed_syn_variant = construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                "PoolClosed",
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        "pool_closed", 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            );
             let pool_closed_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
                 error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3442,6 +3507,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ],
                 },
             };
+            let worker_crashed_syn_variant = construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                "WorkerCrashed",
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        "worker_crashed", 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            );
             let worker_crashed_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
                 error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -3457,6 +3534,45 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ],
                 },
             };
+            let migrate_syn_variant = construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                "Migrate",
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                        "migrate", 
+                        {
+                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle.push_punct(syn::token::Colon2{
+                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                            });
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("migrate", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle.push_punct(syn::token::Colon2{
+                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                            });
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("MigrateError", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle
+                        }
+                    )
+                ]
+            );
             let migrate_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
                 error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
