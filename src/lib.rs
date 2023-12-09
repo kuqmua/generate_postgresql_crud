@@ -9906,166 +9906,20 @@ fn something<'a>(
                                     Some(path_segment) => &path_segment.ident,
                                     None => panic!("attr.path.segments.iter().next() is None"),
                                 };
-                                if let true = attr_ident == &attribute_display_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay);
-                                    }
+                                match {
+                                    use std::str::FromStr;
+                                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&attr_ident.to_string())
+                                } {
+                                    Ok(value) => {
+                                        if let true = option_attribute.is_some() {
+                                            panic!("{error_message}");
+                                        }
+                                        else {
+                                            option_attribute = Some(value);
+                                        }
+                                    },
+                                    Err(_) => ()//other attributes are not for this proc_macro
                                 }
-                                else if let true = attr_ident == &attribute_display_with_serialize_deserialize_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_display_foreign_type_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayForeignType);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_display_foreign_type_with_serialize_deserialize_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayForeignTypeWithSerializeDeserialize);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_error_occurence_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_vec_display_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplay);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_vec_display_with_serialize_deserialize_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplayWithSerializeDeserialize);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_vec_display_foreign_type_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplayForeignType);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_vec_display_foreign_type_with_serialize_deserialize_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplayForeignTypeWithSerializeDeserialize);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_vec_error_occurence_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecErrorOccurence);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_hashmap_key_display_with_serialize_deserialize_value_display_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoHashMapKeyDisplayWithSerializeDeserializeValueDisplay);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_hashmap_key_display_with_serialize_deserialize_value_display_with_serialize_deserialize_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoHashMapKeyDisplayWithSerializeDeserializeValueDisplayWithSerializeDeserialize);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_hashmap_key_display_with_serialize_deserialize_value_display_foreign_type_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoHashMapKeyDisplayWithSerializeDeserializeValueDisplayForeignType);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_hashmap_key_display_with_serialize_deserialize_value_display_foreign_type_with_serialize_deserialize_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoHashMapKeyDisplayWithSerializeDeserializeValueDisplayForeignTypeWithSerializeDeserialize);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_hashmap_key_display_with_serialize_deserialize_value_error_occurence_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoHashMapKeyDisplayWithSerializeDeserializeValueErrorOccurence);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_hashmap_key_display_foreign_type_value_display_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoHashMapKeyDisplayForeignTypeValueDisplay);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_hashmap_key_display_foreign_type_value_display_with_serialize_deserialize_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoHashMapKeyDisplayForeignTypeValueDisplayWithSerializeDeserialize);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_hashmap_key_display_foreign_type_value_display_foreign_type_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoHashMapKeyDisplayForeignTypeValueDisplayForeignType);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_hashmap_key_display_foreign_type_value_display_foreign_type_with_serialize_deserialize_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoHashMapKeyDisplayForeignTypeValueDisplayForeignTypeWithSerializeDeserialize);
-                                    }
-                                }
-                                else if let true = attr_ident == &attribute_hashmap_key_display_foreign_type_value_error_occurence_stringified {
-                                    if let true = option_attribute.is_some() {
-                                        panic!("{error_message}");
-                                    }
-                                    else {
-                                        option_attribute = Some(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoHashMapKeyDisplayForeignTypeValueErrorOccurence);
-                                    }
-                                }//other attributes are not for this proc_macro
                             }//other attributes are not for this proc_macro
                         });
                         option_attribute.unwrap_or_else(|| panic!(
