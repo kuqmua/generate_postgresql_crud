@@ -2302,6 +2302,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     //todo
+    let read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "ReadOnePathTryFromReadOnePathWithSerializeDeserialize",//todo reuse generation naming 
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                "read_one_path_try_from_read_one_path_with_serialize_deserialize",//todo reuse generation naming 
+                {
+                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),//todo reuse generation naming 
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle
+                }
+            )
+        ]
+    );
     let read_one_path_try_from_read_one_path_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -2317,6 +2338,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ],
         },
     };
+    let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize",//todo reuse generation naming 
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                "read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize", //todo reuse generation naming 
+                {
+                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),//todo reuse generation naming 
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle
+                }
+            )
+        ]
+    );
     let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
