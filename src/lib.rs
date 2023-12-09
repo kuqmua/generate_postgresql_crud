@@ -9822,27 +9822,6 @@ fn something<'a>(
     code_occurence_lower_case: &'a str,
     code_occurence_camel_case: &'a str,
     syn_type_path_stringified: &'a str,
-    
-    attribute_display_stringified: &'a str,
-    attribute_display_with_serialize_deserialize_stringified: &'a str,
-    attribute_display_foreign_type_stringified: &'a str,
-    attribute_display_foreign_type_with_serialize_deserialize_stringified: &'a str,
-    attribute_error_occurence_stringified: &'a str,
-    attribute_vec_display_stringified: &'a str,
-    attribute_vec_display_with_serialize_deserialize_stringified: &'a str,
-    attribute_vec_display_foreign_type_stringified: &'a str,
-    attribute_vec_display_foreign_type_with_serialize_deserialize_stringified: &'a str,
-    attribute_vec_error_occurence_stringified: &'a str,
-    attribute_hashmap_key_display_with_serialize_deserialize_value_display_stringified: &'a str,
-    attribute_hashmap_key_display_with_serialize_deserialize_value_display_with_serialize_deserialize_stringified: &'a str,
-    attribute_hashmap_key_display_with_serialize_deserialize_value_display_foreign_type_stringified: &'a str,
-    attribute_hashmap_key_display_with_serialize_deserialize_value_display_foreign_type_with_serialize_deserialize_stringified: &'a str,
-    attribute_hashmap_key_display_with_serialize_deserialize_value_error_occurence_stringified: &'a str,
-    attribute_hashmap_key_display_foreign_type_value_display_stringified: &'a str,
-    attribute_hashmap_key_display_foreign_type_value_display_with_serialize_deserialize_stringified: &'a str,
-    attribute_hashmap_key_display_foreign_type_value_display_foreign_type_stringified: &'a str,
-    attribute_hashmap_key_display_foreign_type_value_display_foreign_type_with_serialize_deserialize_stringified: &'a str,
-    attribute_hashmap_key_display_foreign_type_value_error_occurence_stringified: &'a str,
 //
 ) -> (proc_macro2::Ident, std::vec::Vec<(proc_macro2::Ident, proc_macro_helpers::error_occurence::error_field_or_code_occurence::ErrorFieldOrCodeOccurence)>) {
     let variant_fields_vec = if let syn::Fields::Named(fields_named) = &variant.fields {
