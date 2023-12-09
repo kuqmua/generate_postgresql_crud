@@ -2382,6 +2382,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             code_occurence: crate::common::code_occurence::CodeOccurence,
         }
     };
+    let update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "UpdateOnePathTryFromUpdateOnePathWithSerializeDeserialize",//todo reuse generation naming 
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                "update_one_path_try_from_update_one_path_with_serialize_deserialize", //todo reuse generation naming 
+                {
+                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("UpdateOnePathTryFromUpdateOnePathWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),//todo reuse generation naming 
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle
+                }
+            )
+        ]
+    );
     let update_one_path_try_from_update_one_path_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
@@ -2405,6 +2426,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             code_occurence: crate::common::code_occurence::CodeOccurence,
         }
     };
+    let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserialize",//todo reuse generation naming 
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                "update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize", //todo reuse generation naming 
+                {
+                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                    handle.push_value(
+                        syn::PathSegment {
+                            ident: proc_macro2::Ident::new("UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),//todo reuse generation naming 
+                            arguments: syn::PathArguments::None,
+                        }
+                    );
+                    handle
+                }
+            )
+        ]
+    );
     let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
