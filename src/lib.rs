@@ -1654,6 +1654,107 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         handle
     };
+    let sqlx_error_syn_punctuated_punctuated = {
+        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+        handle.push_value(
+            syn::PathSegment {
+                ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
+                arguments: syn::PathArguments::None,
+            }
+        );
+        handle.push_punct(syn::token::Colon2{
+            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+        });
+        handle.push_value(
+            syn::PathSegment {
+                ident: proc_macro2::Ident::new("Error", proc_macro2::Span::call_site()),
+                arguments: syn::PathArguments::None,
+            }
+        );
+        handle
+    };
+    let std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream_syn_punctuated_punctuated = {
+        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+        handle.push_value(
+            syn::PathSegment {
+                ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
+                arguments: syn::PathArguments::None,
+            }
+        );
+        handle.push_punct(syn::token::Colon2{
+            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+        });
+        handle.push_value(
+            syn::PathSegment {
+                ident: proc_macro2::Ident::new("vec", proc_macro2::Span::call_site()),
+                arguments: syn::PathArguments::None,
+            }
+        );
+        handle.push_punct(syn::token::Colon2{
+            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+        });
+        handle.push_value(
+            syn::PathSegment {
+                ident: proc_macro2::Ident::new("Vec", proc_macro2::Span::call_site()),
+                arguments: syn::PathArguments::AngleBracketed(syn::AngleBracketedGenericArguments{
+                    colon2_token: None,
+                    lt_token: syn::token::Lt{
+                        spans: [proc_macro2::Span::call_site()],
+                    },
+                    args: {
+                        let mut handle = syn::punctuated::Punctuated::<syn::GenericArgument, syn::token::Comma>::new();
+                        handle.push(syn::GenericArgument::Type(syn::Type::Path(syn::TypePath{
+                            qself: None,
+                            path: syn::Path {
+                                leading_colon: None,
+                                segments: {
+                                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                    handle.push_value(syn::PathSegment{
+                                        ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    });
+                                    handle.push_punct(syn::token::Colon2 {
+                                        spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
+                                    });
+                                    handle.push_value(syn::PathSegment{
+                                        ident: proc_macro2::Ident::new("server", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    });
+                                    handle.push_punct(syn::token::Colon2 {
+                                        spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
+                                    });
+                                    handle.push_value(syn::PathSegment{
+                                        ident: proc_macro2::Ident::new("postgres", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    });
+                                    handle.push_punct(syn::token::Colon2 {
+                                        spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
+                                    });
+                                    handle.push_value(syn::PathSegment{
+                                        ident: proc_macro2::Ident::new("uuid_wrapper", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    });
+                                    handle.push_punct(syn::token::Colon2 {
+                                        spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
+                                    });
+                                    handle.push_value(syn::PathSegment{
+                                        ident: proc_macro2::Ident::new("UuidWrapper", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    });
+                                    handle
+                                },
+                            },
+                        })));
+                        handle
+                    },
+                    gt_token: syn::token::Gt {
+                        spans: [proc_macro2::Span::call_site()],
+                    },
+                }),
+            }
+        );
+        handle
+    };
     let code_occurence_field = syn::Field {
         attrs: vec![],
         vis: syn::Visibility::Inherited,
@@ -1902,49 +2003,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         vec![
             (
                 proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                "primary_key_from_row", 
-                {
-                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::None,
-                        }
-                    );
-                    handle.push_punct(syn::token::Colon2{
-                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                    });
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("Error", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::None,
-                        }
-                    );
-                    handle
-                }
+                "primary_key_from_row",
+                sqlx_error_syn_punctuated_punctuated.clone() 
             ),
             (
                 proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
                 "rollback_error", 
-                {
-                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::None,
-                        }
-                    );
-                    handle.push_punct(syn::token::Colon2{
-                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                    });
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("Error", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::None,
-                        }
-                    );
-                    handle
-                }
+                sqlx_error_syn_punctuated_punctuated.clone()
             )
         ]
     );
@@ -1994,88 +2059,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             (
                 proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplay, 
                 "non_existing_primary_keys",
-                {
-                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::None,
-                        }
-                    );
-                    handle.push_punct(syn::token::Colon2{
-                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                    });
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("vec", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::None,
-                        }
-                    );
-                    handle.push_punct(syn::token::Colon2{
-                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                    });
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("Vec", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::AngleBracketed(syn::AngleBracketedGenericArguments{
-                                colon2_token: None,
-                                lt_token: syn::token::Lt{
-                                    spans: [proc_macro2::Span::call_site()],
-                                },
-                                args: {
-                                    let mut handle = syn::punctuated::Punctuated::<syn::GenericArgument, syn::token::Comma>::new();
-                                    handle.push(syn::GenericArgument::Type(syn::Type::Path(syn::TypePath{
-                                        qself: None,
-                                        path: syn::Path {
-                                            leading_colon: None,
-                                            segments: {
-                                                let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                                                handle.push_value(syn::PathSegment{
-                                                    ident: proc_macro2::Ident::new("crate", proc_macro2::Span::call_site()),
-                                                    arguments: syn::PathArguments::None,
-                                                });
-                                                handle.push_punct(syn::token::Colon2 {
-                                                    spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(syn::PathSegment{
-                                                    ident: proc_macro2::Ident::new("server", proc_macro2::Span::call_site()),
-                                                    arguments: syn::PathArguments::None,
-                                                });
-                                                handle.push_punct(syn::token::Colon2 {
-                                                    spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(syn::PathSegment{
-                                                    ident: proc_macro2::Ident::new("postgres", proc_macro2::Span::call_site()),
-                                                    arguments: syn::PathArguments::None,
-                                                });
-                                                handle.push_punct(syn::token::Colon2 {
-                                                    spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(syn::PathSegment{
-                                                    ident: proc_macro2::Ident::new("uuid_wrapper", proc_macro2::Span::call_site()),
-                                                    arguments: syn::PathArguments::None,
-                                                });
-                                                handle.push_punct(syn::token::Colon2 {
-                                                    spans: [proc_macro2::Span::call_site(), proc_macro2::Span::call_site()],
-                                                });
-                                                handle.push_value(syn::PathSegment{
-                                                    ident: proc_macro2::Ident::new("UuidWrapper", proc_macro2::Span::call_site()),
-                                                    arguments: syn::PathArguments::None,
-                                                });
-                                                handle
-                                            },
-                                        },
-                                    })));
-                                    handle
-                                },
-                                gt_token: syn::token::Gt {
-                                    spans: [proc_macro2::Span::call_site()],
-                                },
-                            }),
-                        }
-                    );
-                    handle
-                }
+                std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream_syn_punctuated_punctuated.clone()
             )
         ]
     );
@@ -2108,6 +2092,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    let non_existing_primary_keys_and_failed_rollback_syn_variant = construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        "NonExistingPrimaryKeysAndFailedRollback",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplay, 
+                "non_existing_primary_keys", 
+                std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream_syn_punctuated_punctuated.clone()
+            ),
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                "rollback_error",
+                sqlx_error_syn_punctuated_punctuated.clone()
+            )
+        ]
+    );
     let non_existing_primary_keys_and_failed_rollback_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
