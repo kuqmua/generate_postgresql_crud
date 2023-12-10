@@ -1906,7 +1906,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         "BindQuery",
         &code_occurence_field,
         vec![(
-            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
             "checked_add", 
             {
                 let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
@@ -1955,6 +1955,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 handle
             }
         )]
+    );
+    let f = something(
+        bind_query_syn_variant,
+        &proc_macro_name_ident_stringified,
     );
     let bind_query_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
@@ -9736,7 +9740,7 @@ fn construct_syn_variant(
                     segments: {
                         let mut handle = syn::punctuated::Punctuated::new();
                         handle.push(syn::PathSegment {
-                            ident: proc_macro2::Ident::new(&tvfrr_status_attribute.to_string(), proc_macro2::Span::call_site()),
+                            ident: proc_macro2::Ident::new(&tvfrr_status_attribute.to_string_lower_case(), proc_macro2::Span::call_site()),
                             arguments: syn::PathArguments::None,
                         });
                        handle
@@ -9816,68 +9820,107 @@ fn construct_syn_variant(
     }
 }
 
-fn something<'a>(
+fn something(
     variant: syn::Variant,
-    proc_macro_name_ident_stringified: &'a std::string::String,
-    code_occurence_lower_case: &'a str,
-    code_occurence_camel_case: &'a str,
-    syn_type_path_stringified: &'a str,
-) -> (proc_macro2::Ident, std::vec::Vec<(proc_macro2::Ident, proc_macro_helpers::error_occurence::error_field_or_code_occurence::ErrorFieldOrCodeOccurence)>) {
+    proc_macro_name_ident_stringified: &std::string::String,
+) -> crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    let variant_ident = &variant.ident;
+    // println!("{variant:#?}");
+    let error_variant_attribute = {
+        let mut option_attribute: Option<proc_macro_helpers::attribute::Attribute> = None;
+        for element in variant.attrs {
+            if let true = element.path.segments.len() == 1 {
+                let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
+                if let Ok(value) = proc_macro_helpers::attribute::Attribute::try_from(&segment.ident.to_string()) {
+                    match option_attribute {
+                        Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({value}) are not supported"),
+                        None => {
+                            option_attribute = Some(value);
+                        }
+                    }
+                }
+            }
+        }
+        match option_attribute {
+            Some(value) => value,
+            None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
+        }
+    };
     let fields_named = if let syn::Fields::Named(fields_named) = &variant.fields {
         fields_named
     }
     else {
         panic!("{proc_macro_name_ident_stringified} expected fields would be named");
     };
-    let variant_fields_vec = fields_named.named.iter().map(|field|{
+    let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
+    let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
+    let error_variant_fields = fields_named.named.iter().map(|field|{
         let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
             "{proc_macro_name_ident_stringified} field.ident {}",
             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
         ));
-        let error_or_code_occurence = match field_ident == code_occurence_lower_case {
-            true => {
-                let (code_occurence_type_stringified, code_occurence_lifetime) = {
-                    if let syn::Type::Path(type_path) = &field.ty {
-                        (
-                            {
-                                let mut code_occurence_type_repeat_checker = false;
-                                let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
-                                .fold(String::from(""), |mut acc, path_segment| {
-                                    let path_segment_ident = &path_segment.ident;
-                                    match *path_segment_ident == code_occurence_camel_case {
-                                        true => {
-                                            if code_occurence_type_repeat_checker {
-                                                panic!("{proc_macro_name_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case} inside type path");
-                                            }
-                                            acc.push_str(&path_segment_ident.to_string());
-                                            code_occurence_type_repeat_checker = true;
-                                        },
-                                        false => acc.push_str(&format!("{path_segment_ident}::")),
-                                    }
-                                    acc
-                                });
-                                if !code_occurence_type_repeat_checker {
-                                    panic!("{proc_macro_name_ident_stringified} no {code_occurence_camel_case} named field");
+        let error_occurence_attribute = match field_ident == code_occurence_lower_case {
+            true => quote::quote! {},
+            false => {
+                let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
+                for element in &field.attrs {
+                    if let true = element.path.segments.len() == 1 {
+                        let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
+                        if let Ok(value) = {
+                            use std::str::FromStr;
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&segment.ident.to_string())
+                        } {
+                            match error_occurence_attribute {
+                                Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
+                                None => {
+                                    error_occurence_attribute = Some(value);
                                 }
-                                code_occurence_segments_stringified_handle
-                            },
-                            proc_macro_helpers::error_occurence::form_last_arg_lifetime_vec::form_last_arg_lifetime_vec(
-                                &type_path.path.segments,
-                                proc_macro_name_ident_stringified
-                            ),
-                        )
+                            }
+                        }
+                    }
+                }
+                match error_occurence_attribute {
+                    Some(value) => value.to_attribute_view_token_stream(),
+                    None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
+                }
+            }
+        };
+        let field_type_original = &field.ty;
+        let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
+            true => {
+                let code_occurence_type_token_stream = {
+                    if let syn::Type::Path(type_path) = &field.ty {
+                        let mut code_occurence_type_repeat_checker = false;
+                        let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
+                        .fold(String::from(""), |mut acc, path_segment| {
+                            let path_segment_ident = &path_segment.ident;
+                            match *path_segment_ident == code_occurence_camel_case {
+                                true => {
+                                    if code_occurence_type_repeat_checker {
+                                        panic!("{proc_macro_name_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case} inside type path");
+                                    }
+                                    acc.push_str(&path_segment_ident.to_string());
+                                    code_occurence_type_repeat_checker = true;
+                                },
+                                false => acc.push_str(&format!("{path_segment_ident}::")),
+                            }
+                            acc
+                        });
+                        if !code_occurence_type_repeat_checker {
+                            panic!("{proc_macro_name_ident_stringified} no {code_occurence_camel_case} named field");
+                        }
+                        code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     }
                     else {
+                        let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
                         panic!(
                             "{proc_macro_name_ident_stringified} {code_occurence_lower_case} {} {syn_type_path_stringified}",
                             proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
                         );
                     }
                 };
-                proc_macro_helpers::error_occurence::error_field_or_code_occurence::ErrorFieldOrCodeOccurence::CodeOccurence {
-                    field_type: code_occurence_type_stringified,
-                    vec_lifetime: code_occurence_lifetime
-                }
+                code_occurence_type_token_stream
             },
             false => {
                 let attribute = {
@@ -9914,25 +9957,36 @@ fn something<'a>(
                     &field,
                     &proc_macro_name_ident_stringified,
                 );
-                proc_macro_helpers::error_occurence::error_field_or_code_occurence::ErrorFieldOrCodeOccurence::ErrorField {
+                println!("{supported_container:#?}");
+                println!("{attribute:#?}");
+                let field_type_with_serialize_deserialize = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_field_type_with_serialize_deserialize_version(
                     attribute,
                     supported_container,
-                }
+                    &proc_macro_name_ident_stringified,
+                );
+                // proc_macro_helpers::error_occurence::error_field_or_code_occurence::ErrorFieldOrCodeOccurence::ErrorField {
+                //     attribute,
+                //     supported_container,
+                // }
+                // todo!()
+                field_type_with_serialize_deserialize
             },
         };
-        (
-            field_ident,
-            error_or_code_occurence,
-        )
+        crate::type_variants_from_request_response_generator::ErrorVariantField {
+            field_name: quote::quote! {#field_ident},
+            error_occurence_attribute,
+            field_type_original: quote::quote! {#field_type_original},
+            field_type_with_serialize_deserialize,
+        }
     })
-    .collect::<Vec<(
-        proc_macro2::Ident,
-        proc_macro_helpers::error_occurence::error_field_or_code_occurence::ErrorFieldOrCodeOccurence
-    )>>();
-    (
-        variant.ident.clone(),
-        variant_fields_vec,
-    )
+    .collect::<Vec<crate::type_variants_from_request_response_generator::ErrorVariantField>>();
+    crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+        error_variant_attribute,
+        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            error_variant_ident: quote::quote! {#variant_ident},
+            error_variant_fields,//std::vec::Vec<ErrorVariantField>
+        }
+    }
 }
 
 // #[derive(Clone)]
