@@ -2049,8 +2049,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )   
         ]
     );
-    let _variant_attribute = generate_error_variant_attribute(
-        ,
+    let query_and_rollback_failed_variant_attribute = generate_error_variant_attribute(
+        query_and_rollback_failed_syn_variant,
         &proc_macro_name_ident_stringified,
     );
     // let query_and_rollback_failed_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
@@ -2108,8 +2108,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let _variant_attribute = generate_error_variant_attribute(
-        ,
+    let primary_key_from_row_and_failed_rollback_variant_attribute = generate_error_variant_attribute(
+        primary_key_from_row_and_failed_rollback_syn_variant,
         &proc_macro_name_ident_stringified,
     );
     // let primary_key_from_row_and_failed_rollback_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
@@ -2162,8 +2162,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let _variant_attribute = generate_error_variant_attribute(
-        ,
+    let non_existing_primary_keys_variant_attribute = generate_error_variant_attribute(
+        non_existing_primary_keys_syn_variant,
         &proc_macro_name_ident_stringified,
     );
     // let non_existing_primary_keys_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
@@ -2212,8 +2212,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let _variant_attribute = generate_error_variant_attribute(
-        ,
+    let non_existing_primary_keys_and_failed_rollback_variant_attribute = generate_error_variant_attribute(
+        non_existing_primary_keys_and_failed_rollback_syn_variant,
         &proc_macro_name_ident_stringified,
     );
     // let non_existing_primary_keys_and_failed_rollback_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
@@ -2267,8 +2267,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let _variant_attribute = generate_error_variant_attribute(
-        ,
+    let commit_failed_variant_attribute = generate_error_variant_attribute(
+        commit_failed_syn_variant,
         &proc_macro_name_ident_stringified,
     );
     // let commit_failed_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
@@ -2327,8 +2327,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let _variant_attribute = generate_error_variant_attribute(
-        ,
+    let not_unique_primary_key_variant_attribute = generate_error_variant_attribute(
+        not_unique_primary_key_syn_variant,
         &proc_macro_name_ident_stringified,
     );
     // let not_unique_primary_key_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
@@ -2358,21 +2358,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{uuid_wrapper_try_from_possible_uuid_wrapper_in_server},
-                    error_occurence_attribute: quote::quote!{#eo_display_token_stream},
-                    field_type_original: quote::quote!{sqlx::Error},
-                    field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute = generate_error_variant_attribute(
+        created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{uuid_wrapper_try_from_possible_uuid_wrapper_in_server},
+    //                 error_occurence_attribute: quote::quote!{#eo_display_token_stream},
+    //                 field_type_original: quote::quote!{sqlx::Error},
+    //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error] //todo what status should be there?
         CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
@@ -2393,21 +2397,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let failed_to_deserialize_query_string_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{FailedToDeserializeQueryString},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{failed_to_deserialize_query_string},
-                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                    field_type_original: quote::quote!{#std_string_string_token_stream},
-                    field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let failed_to_deserialize_query_string_variant_attribute = generate_error_variant_attribute(
+        failed_to_deserialize_query_string_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let failed_to_deserialize_query_string_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{FailedToDeserializeQueryString},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{failed_to_deserialize_query_string},
+    //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+    //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+    //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let failed_to_deserialize_query_string_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         FailedToDeserializeQueryString {
@@ -2438,21 +2446,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let read_one_path_try_from_read_one_path_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{ReadOnePathTryFromReadOnePathWithSerializeDeserialize},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{read_one_path_try_from_read_one_path_with_serialize_deserialize},
-                    error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
-                    field_type_original: quote::quote!{ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamed},
-                    field_type_with_serialize_deserialize: quote::quote!{ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let read_one_path_try_from_read_one_path_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
+        read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let read_one_path_try_from_read_one_path_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{ReadOnePathTryFromReadOnePathWithSerializeDeserialize},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{read_one_path_try_from_read_one_path_with_serialize_deserialize},
+    //                 error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
+    //                 field_type_original: quote::quote!{ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamed},
+    //                 field_type_with_serialize_deserialize: quote::quote!{ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant = construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize",//todo reuse generation naming 
@@ -2474,21 +2486,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize},
-                    error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
-                    field_type_original: quote::quote!{ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserializeErrorNamed},
-                    field_type_with_serialize_deserialize: quote::quote!{ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
+        read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize},
+    //                 error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
+    //                 field_type_original: quote::quote!{ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserializeErrorNamed},
+    //                 field_type_with_serialize_deserialize: quote::quote!{ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize {
@@ -2518,21 +2534,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let update_one_path_try_from_update_one_path_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{UpdateOnePathTryFromUpdateOnePathWithSerializeDeserialize},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{update_one_path_try_from_update_one_path_with_serialize_deserialize},
-                    error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
-                    field_type_original: quote::quote!{UpdateOnePathTryFromUpdateOnePathWithSerializeDeserializeErrorNamed},
-                    field_type_with_serialize_deserialize: quote::quote!{UpdateOnePathTryFromUpdateOnePathWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let update_one_path_try_from_update_one_path_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
+        update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let update_one_path_try_from_update_one_path_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{UpdateOnePathTryFromUpdateOnePathWithSerializeDeserialize},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{update_one_path_try_from_update_one_path_with_serialize_deserialize},
+    //                 error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
+    //                 field_type_original: quote::quote!{UpdateOnePathTryFromUpdateOnePathWithSerializeDeserializeErrorNamed},
+    //                 field_type_with_serialize_deserialize: quote::quote!{UpdateOnePathTryFromUpdateOnePathWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let update_one_path_try_from_update_one_path_with_serialize_deserialize_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         UpdateOnePathTryFromUpdateOnePathWithSerializeDeserialize {
@@ -2562,21 +2582,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserialize},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize},
-                    error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
-                    field_type_original: quote::quote!{UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserializeErrorNamed},
-                    field_type_with_serialize_deserialize: quote::quote!{UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
+        update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserialize},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize},
+    //                 error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
+    //                 field_type_original: quote::quote!{UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserializeErrorNamed},
+    //                 field_type_with_serialize_deserialize: quote::quote!{UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserialize {
@@ -2606,21 +2630,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{DeleteOnePathTryFromDeleteOnePathWithSerializeDeserialize},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{delete_one_path_try_from_delete_one_path_with_serialize_deserialize},
-                    error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
-                    field_type_original: quote::quote!{DeleteOnePathTryFromDeleteOnePathWithSerializeDeserializeErrorNamed},
-                    field_type_with_serialize_deserialize: quote::quote!{DeleteOnePathTryFromDeleteOnePathWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
+        delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{DeleteOnePathTryFromDeleteOnePathWithSerializeDeserialize},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{delete_one_path_try_from_delete_one_path_with_serialize_deserialize},
+    //                 error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
+    //                 field_type_original: quote::quote!{DeleteOnePathTryFromDeleteOnePathWithSerializeDeserializeErrorNamed},
+    //                 field_type_with_serialize_deserialize: quote::quote!{DeleteOnePathTryFromDeleteOnePathWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         DeleteOnePathTryFromDeleteOnePathWithSerializeDeserialize {
@@ -2650,21 +2678,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserialize},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize},
-                    error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
-                    field_type_original: quote::quote!{DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserializeErrorNamed},
-                    field_type_with_serialize_deserialize: quote::quote!{DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
+        delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserialize},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize},
+    //                 error_occurence_attribute: quote::quote!{#[eo_error_occurence]},
+    //                 field_type_original: quote::quote!{DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserializeErrorNamed},
+    //                 field_type_with_serialize_deserialize: quote::quote!{DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserializeErrorNamedWithSerializeDeserialize},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request] 
         DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserialize {
@@ -2685,22 +2717,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
+    let not_unique_name_vec_variant_attribute = generate_error_variant_attribute(
+        not_unique_name_vec_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
     //todo generate it. now its const
-    let not_unique_name_vec_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{NotUniqueNameVec},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{not_unique_name_vec},
-                    error_occurence_attribute: quote::quote!{#[eo_vec_display_with_serialize_deserialize]},
-                    field_type_original: quote::quote!{std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>},
-                    field_type_with_serialize_deserialize: quote::quote!{std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    // let not_unique_name_vec_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{NotUniqueNameVec},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{not_unique_name_vec},
+    //                 error_occurence_attribute: quote::quote!{#[eo_vec_display_with_serialize_deserialize]},
+    //                 field_type_original: quote::quote!{std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>},
+    //                 field_type_with_serialize_deserialize: quote::quote!{std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let not_unique_name_vec_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NotUniqueNameVec {
@@ -2721,21 +2757,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let not_unique_color_vec_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{NotUniqueColorVec},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{not_unique_color_vec},
-                    error_occurence_attribute: quote::quote!{#[eo_vec_display_with_serialize_deserialize]},
-                    field_type_original: quote::quote!{std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>},
-                    field_type_with_serialize_deserialize: quote::quote!{std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let not_unique_color_vec_variant_attribute = generate_error_variant_attribute(
+        not_unique_color_vec_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let not_unique_color_vec_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{NotUniqueColorVec},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{not_unique_color_vec},
+    //                 error_occurence_attribute: quote::quote!{#[eo_vec_display_with_serialize_deserialize]},
+    //                 field_type_original: quote::quote!{std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>},
+    //                 field_type_with_serialize_deserialize: quote::quote!{std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     //todo use not_unique_name_vec_need_to_refactor_variant_declaration_token_stream instead of not_unique_name_vec_variant_declaration_token_stream
     let not_unique_color_vec_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
@@ -2794,21 +2834,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let not_uuid_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{NotUuid},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{not_uuid},
-                    error_occurence_attribute: quote::quote!{#[eo_display]},
-                    field_type_original: quote::quote!{sqlx::types::uuid::Error},
-                    field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let not_uuid_variant_attribute = generate_error_variant_attribute(
+        not_uuid_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let not_uuid_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{NotUuid},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{not_uuid},
+    //                 error_occurence_attribute: quote::quote!{#[eo_display]},
+    //                 field_type_original: quote::quote!{sqlx::types::uuid::Error},
+    //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let not_uuid_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NotUuid {
@@ -2829,21 +2873,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let no_payload_fields_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{NoPayloadFields},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{no_payload_fields},
-                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                    field_type_original: quote::quote!{#std_string_string_token_stream},
-                    field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let no_payload_fields_variant_attribute = generate_error_variant_attribute(
+        no_payload_fields_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let no_payload_fields_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{NoPayloadFields},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{no_payload_fields},
+    //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+    //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+    //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let no_payload_fields_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NoPayloadFields {
@@ -2864,21 +2912,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let no_payload_parameters_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-        error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-            error_variant_ident: quote::quote!{NoPayloadParameters},
-            error_variant_fields: vec![
-                crate::type_variants_from_request_response_generator::ErrorVariantField {
-                    field_name: quote::quote!{no_payload_parameters},
-                    error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                    field_type_original: quote::quote!{#std_string_string_token_stream},
-                    field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                },
-                error_occurence_variant_field.clone(),
-            ],
-        },
-    };
+    let no_payload_parameters_variant_attribute = generate_error_variant_attribute(
+        no_payload_parameters_syn_variant,
+        &proc_macro_name_ident_stringified,
+    );
+    // let no_payload_parameters_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+    //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+    //         error_variant_ident: quote::quote!{NoPayloadParameters},
+    //         error_variant_fields: vec![
+    //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+    //                 field_name: quote::quote!{no_payload_parameters},
+    //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+    //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+    //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+    //             },
+    //             error_occurence_variant_field.clone(),
+    //         ],
+    //     },
+    // };
     let no_payload_parameters_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NoPayloadParameters {
@@ -3008,27 +3060,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ),
                 ]
             );
-            let project_commit_extractor_not_equal_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{ProjectCommitExtractorNotEqual},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{project_commit_not_equal},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{project_commit_to_use},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let project_commit_extractor_not_equal_variant_attribute = generate_error_variant_attribute(
+                project_commit_extractor_not_equal_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let project_commit_extractor_not_equal_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{ProjectCommitExtractorNotEqual},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{project_commit_not_equal},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{project_commit_to_use},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let project_commit_extractor_to_str_conversion_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 "ProjectCommitExtractorToStrConversion",
@@ -3068,21 +3124,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let project_commit_extractor_to_str_conversion_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{ProjectCommitExtractorToStrConversion},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{project_commit_to_str_conversion},
-                            error_occurence_attribute: quote::quote!{#[eo_display]},
-                            field_type_original: quote::quote!{http::header::ToStrError},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let project_commit_extractor_to_str_conversion_variant_attribute = generate_error_variant_attribute(
+                project_commit_extractor_to_str_conversion_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let project_commit_extractor_to_str_conversion_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{ProjectCommitExtractorToStrConversion},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{project_commit_to_str_conversion},
+            //                 error_occurence_attribute: quote::quote!{#[eo_display]},
+            //                 field_type_original: quote::quote!{http::header::ToStrError},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let no_project_commit_extractor_header_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 "NoProjectCommitExtractorHeader",
@@ -3095,21 +3155,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let no_project_commit_extractor_header_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{NoProjectCommitExtractorHeader},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{no_project_commit_header},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let no_project_commit_extractor_header_variant_attribute = generate_error_variant_attribute(
+                no_project_commit_extractor_header_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let no_project_commit_extractor_header_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{NoProjectCommitExtractorHeader},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{no_project_commit_header},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             vec![
                 project_commit_extractor_not_equal_variant_attribute,
                 project_commit_extractor_to_str_conversion_variant_attribute,
@@ -3132,22 +3196,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
+            let configuration_error_variant_attribute = generate_error_variant_attribute(
+                configuration_error_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
             //todo move it into custom macro attribute
-            let configuration_error_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{Configuration},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{configuration_box_dyn_error},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            // let configuration_error_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{Configuration},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{configuration_box_dyn_error},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let database_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Database",
@@ -3160,21 +3228,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let database_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{Database},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{box_dyn_database_error},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let database_variant_attribute = generate_error_variant_attribute(
+                database_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let database_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{Database},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{box_dyn_database_error},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let io_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Io",
@@ -3214,21 +3286,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let io_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{Io},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{io_error},
-                            error_occurence_attribute: quote::quote!{#[eo_display]},
-                            field_type_original: quote::quote!{std::io::Error},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let io_variant_attribute = generate_error_variant_attribute(
+                io_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let io_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{Io},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{io_error},
+            //                 error_occurence_attribute: quote::quote!{#[eo_display]},
+            //                 field_type_original: quote::quote!{std::io::Error},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let tls_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Tls",
@@ -3241,21 +3317,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let tls_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{Tls},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{box_dyn_error},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let tls_variant_attribute = generate_error_variant_attribute(
+                tls_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let tls_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{Tls},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{box_dyn_error},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let protocol_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Protocol",
@@ -3268,21 +3348,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let protocol_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{Protocol},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{protocol},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let protocol_variant_attribute = generate_error_variant_attribute(
+                protocol_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let protocol_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{Protocol},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{protocol},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let row_not_found_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr404NotFound,
                 "RowNotFound",
@@ -3295,21 +3379,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let row_not_found_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr404NotFound,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{RowNotFound},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{row_not_found},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let row_not_found_variant_attribute = generate_error_variant_attribute(
+                row_not_found_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let row_not_found_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr404NotFound,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{RowNotFound},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{row_not_found},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let type_not_found_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 "TypeNotFound",
@@ -3322,21 +3410,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let type_not_found_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{TypeNotFound},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{type_not_found},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let type_not_found_variant_attribute = generate_error_variant_attribute(
+                type_not_found_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let type_not_found_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{TypeNotFound},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{type_not_found},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let column_index_out_of_bounds_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "ColumnIndexOutOfBounds",
@@ -3372,27 +3464,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let column_index_out_of_bounds_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{ColumnIndexOutOfBounds},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{column_index_out_of_bounds},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{usize},
-                            field_type_with_serialize_deserialize: quote::quote!{usize},
-                        },
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{len},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{usize},
-                            field_type_with_serialize_deserialize: quote::quote!{usize},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let column_index_out_of_bounds_variant_attribute = generate_error_variant_attribute(
+                column_index_out_of_bounds_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let column_index_out_of_bounds_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{ColumnIndexOutOfBounds},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{column_index_out_of_bounds},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{usize},
+            //                 field_type_with_serialize_deserialize: quote::quote!{usize},
+            //             },
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{len},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{usize},
+            //                 field_type_with_serialize_deserialize: quote::quote!{usize},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let column_not_found_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 "ColumnNotFound",
@@ -3405,21 +3501,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let column_not_found_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{ColumnNotFound},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{column_not_found},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let column_not_found_variant_attribute = generate_error_variant_attribute(
+                column_not_found_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let column_not_found_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{ColumnNotFound},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{column_not_found},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let column_decode_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "ColumnDecode",
@@ -3437,27 +3537,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let column_decode_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{ColumnDecode},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{column_decode_index},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{source_handle},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let column_decode_variant_attribute = generate_error_variant_attribute(
+                column_decode_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let column_decode_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{ColumnDecode},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{column_decode_index},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{source_handle},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let decode_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Decode",
@@ -3470,21 +3574,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let decode_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{Decode},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{decode_box_dyn_error},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let decode_variant_attribute = generate_error_variant_attribute(
+                decode_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let decode_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{Decode},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{decode_box_dyn_error},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let pool_timed_out_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr408RequestTimeout,
                 "PoolTimedOut",
@@ -3497,21 +3605,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let pool_timed_out_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr408RequestTimeout,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{PoolTimedOut},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{pool_timed_out},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let pool_timed_out_variant_attribute = generate_error_variant_attribute(
+                pool_timed_out_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let pool_timed_out_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr408RequestTimeout,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{PoolTimedOut},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{pool_timed_out},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let pool_closed_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "PoolClosed",
@@ -3524,21 +3636,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let pool_closed_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{PoolClosed},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{pool_closed},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let pool_closed_variant_attribute = generate_error_variant_attribute(
+                pool_closed_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let pool_closed_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{PoolClosed},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{pool_closed},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let worker_crashed_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "WorkerCrashed",
@@ -3551,21 +3667,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let worker_crashed_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{WorkerCrashed},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{worker_crashed},
-                            error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                            field_type_original: quote::quote!{#std_string_string_token_stream},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let worker_crashed_variant_attribute = generate_error_variant_attribute(
+                worker_crashed_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let worker_crashed_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{WorkerCrashed},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{worker_crashed},
+            //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+            //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             let migrate_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Migrate",
@@ -3605,21 +3725,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let migrate_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-                error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                    error_variant_ident: quote::quote!{Migrate},
-                    error_variant_fields: vec![
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
-                            field_name: quote::quote!{migrate},
-                            error_occurence_attribute: quote::quote!{#[eo_display]},
-                            field_type_original: quote::quote!{sqlx::migrate::MigrateError},
-                            field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                        },
-                        error_occurence_variant_field.clone(),
-                    ],
-                },
-            };
+            let migrate_variant_attribute = generate_error_variant_attribute(
+                migrate_syn_variant,
+                &proc_macro_name_ident_stringified,
+            );
+            // let migrate_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+            //         error_variant_ident: quote::quote!{Migrate},
+            //         error_variant_fields: vec![
+            //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+            //                 field_name: quote::quote!{migrate},
+            //                 error_occurence_attribute: quote::quote!{#[eo_display]},
+            //                 field_type_original: quote::quote!{sqlx::migrate::MigrateError},
+            //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+            //             },
+            //             error_occurence_variant_field.clone(),
+            //         ],
+            //     },
+            // };
             vec![
                 configuration_error_variant_attribute,
                 database_variant_attribute,
@@ -3653,21 +3777,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        let unexpected_case_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{UnexpectedCase},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{unexpected_case},
-                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                        field_type_original: quote::quote!{#std_string_string_token_stream},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let unexpected_case_variant_attribute = generate_error_variant_attribute(
+            unexpected_case_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
+        // let unexpected_case_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+        //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+        //         error_variant_ident: quote::quote!{UnexpectedCase},
+        //         error_variant_fields: vec![
+        //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+        //                 field_name: quote::quote!{unexpected_case},
+        //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+        //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+        //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+        //             },
+        //             error_occurence_variant_field.clone(),
+        //         ],
+        //     },
+        // };
         common_error_variants_vec.push(unexpected_case_variant_attribute);
         common_error_variants_vec
     };
@@ -3685,21 +3813,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        let failed_to_deserialize_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{FailedToDeserializePathParams},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{failed_to_deserialize_path_params},
-                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                        field_type_original: quote::quote!{#std_string_string_token_stream},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let failed_to_deserialize_path_params_variant_attribute = generate_error_variant_attribute(
+            failed_to_deserialize_path_params_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
+        // let failed_to_deserialize_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+        //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+        //         error_variant_ident: quote::quote!{FailedToDeserializePathParams},
+        //         error_variant_fields: vec![
+        //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+        //                 field_name: quote::quote!{failed_to_deserialize_path_params},
+        //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+        //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+        //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+        //             },
+        //             error_occurence_variant_field.clone(),
+        //         ],
+        //     },
+        // };
         let missing_path_params_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             "MissingPathParams",
@@ -3712,21 +3844,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        let missing_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{MissingPathParams},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{missing_path_params},
-                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                        field_type_original: quote::quote!{#std_string_string_token_stream},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let missing_path_params_variant_attribute = generate_error_variant_attribute(
+            missing_path_params_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
+        // let missing_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+        //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+        //         error_variant_ident: quote::quote!{MissingPathParams},
+        //         error_variant_fields: vec![
+        //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+        //                 field_name: quote::quote!{missing_path_params},
+        //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+        //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+        //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+        //             },
+        //             error_occurence_variant_field.clone(),
+        //         ],
+        //     },
+        // };
         vec![
             failed_to_deserialize_path_params_variant_attribute,
             missing_path_params_variant_attribute
@@ -3782,21 +3918,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        let json_data_error_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{JsonDataError},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{json_data_error},
-                        error_occurence_attribute: quote::quote!{#[eo_display]},
-                        field_type_original: quote::quote!{axum::extract::rejection::JsonDataError},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let json_data_error_variant_attribute = generate_error_variant_attribute(
+            json_data_error_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
+        // let json_data_error_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+        //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+        //         error_variant_ident: quote::quote!{JsonDataError},
+        //         error_variant_fields: vec![
+        //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+        //                 field_name: quote::quote!{json_data_error},
+        //                 error_occurence_attribute: quote::quote!{#[eo_display]},
+        //                 field_type_original: quote::quote!{axum::extract::rejection::JsonDataError},
+        //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+        //             },
+        //             error_occurence_variant_field.clone(),
+        //         ],
+        //     },
+        // };
         let json_syntax_error_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             "JsonSyntaxError",
@@ -3845,21 +3985,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        let json_syntax_error_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{JsonSyntaxError},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{json_syntax_error},
-                        error_occurence_attribute: quote::quote!{#[eo_display]},
-                        field_type_original: quote::quote!{axum::extract::rejection::JsonSyntaxError},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let json_syntax_error_variant_attribute = generate_error_variant_attribute(
+            json_syntax_error_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
+        // let json_syntax_error_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+        //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+        //         error_variant_ident: quote::quote!{JsonSyntaxError},
+        //         error_variant_fields: vec![
+        //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+        //                 field_name: quote::quote!{json_syntax_error},
+        //                 error_occurence_attribute: quote::quote!{#[eo_display]},
+        //                 field_type_original: quote::quote!{axum::extract::rejection::JsonSyntaxError},
+        //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+        //             },
+        //             error_occurence_variant_field.clone(),
+        //         ],
+        //     },
+        // };
         let missing_json_content_type_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             "MissingJsonContentType",
@@ -3872,21 +4016,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        let missing_json_content_type_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{MissingJsonContentType},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{json_syntax_error},
-                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                        field_type_original: quote::quote!{#std_string_string_token_stream},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let missing_json_content_type_variant_attribute = generate_error_variant_attribute(
+             missing_json_content_type_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
+        // let missing_json_content_type_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+        //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+        //         error_variant_ident: quote::quote!{MissingJsonContentType},
+        //         error_variant_fields: vec![
+        //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+        //                 field_name: quote::quote!{json_syntax_error},
+        //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+        //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+        //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+        //             },
+        //             error_occurence_variant_field.clone(),
+        //         ],
+        //     },
+        // };
         let bytes_rejection_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
             "BytesRejection",
@@ -3899,21 +4047,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        let bytes_rejection_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{BytesRejection},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{bytes_rejection},
-                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                        field_type_original: quote::quote!{#std_string_string_token_stream},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let bytes_rejection_variant_attribute = generate_error_variant_attribute(
+            bytes_rejection_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
+        // let bytes_rejection_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+        //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+        //         error_variant_ident: quote::quote!{BytesRejection},
+        //         error_variant_fields: vec![
+        //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+        //                 field_name: quote::quote!{bytes_rejection},
+        //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+        //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+        //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+        //             },
+        //             error_occurence_variant_field.clone(),
+        //         ],
+        //     },
+        // };
         vec![
             json_data_error_variant_attribute,
             json_syntax_error_variant_attribute,
