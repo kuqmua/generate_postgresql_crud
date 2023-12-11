@@ -37,7 +37,7 @@ pub fn type_variants_from_request_response_generator(
     eo_display_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response: std::vec::Vec<(
-        &ErrorVariantAttribute,
+        ErrorVariantAttribute,
         proc_macro2::TokenStream, //try_operation_token_stream
         proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
         proc_macro2::TokenStream, //from_logic_token_stream
@@ -633,9 +633,9 @@ pub fn type_variants_from_request_response<'a>(
     try_operation_response_variants_camel_case_token_stream: &proc_macro2::TokenStream,
     try_operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
     proc_macro_name_ident_stringified: &std::string::String,
-    error_variant_attribute: &'a ErrorVariantAttribute,
+    error_variant: &'a syn::Variant,
 ) -> (
-    &'a ErrorVariantAttribute, //error_variant
+    ErrorVariantAttribute, //error_variant
     proc_macro2::TokenStream, //try_operation_token_stream
     proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
     proc_macro2::TokenStream, //from_logic_token_stream
@@ -644,6 +644,10 @@ pub fn type_variants_from_request_response<'a>(
     proc_macro2::TokenStream, //enum_status_codes_checker_name_logic_token_stream
     proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
 ) {
+    let error_variant_attribute = crate::generate_error_variant_attribute(
+        error_variant.clone(),//todo
+        &proc_macro_name_ident_stringified,
+    );
     let variant_ident_attribute_camel_case_token_stream = {
         let variant_ident_attribute_camel_case_stringified = format!(
             "{}{}",
@@ -742,7 +746,7 @@ pub fn type_variants_from_request_response<'a>(
         }
     };
     (
-        error_variant_attribute,
+        error_variant_attribute.clone(),
         try_operation_token_stream,
         enum_with_serialize_deserialize_logic_token_stream,
         from_logic_token_stream,
