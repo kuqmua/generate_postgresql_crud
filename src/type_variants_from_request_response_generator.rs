@@ -1,15 +1,15 @@
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct ErrorVariantAttribute {
     pub error_variant_attribute: proc_macro_helpers::attribute::Attribute,
     pub error_variant: ErrorVariant,
 }
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct ErrorVariant {
     pub error_variant_ident: proc_macro2::TokenStream,
     pub error_variant_fields: std::vec::Vec<ErrorVariantField>,
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct ErrorVariantField {
     pub field_name: proc_macro2::TokenStream,
     pub error_occurence_attribute: proc_macro2::TokenStream,
