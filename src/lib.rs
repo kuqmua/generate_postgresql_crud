@@ -3176,25 +3176,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let failed_to_deserialize_path_params_variant_attribute = generate_error_variant_attribute(
-        //     failed_to_deserialize_path_params_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
-        let failed_to_deserialize_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{FailedToDeserializePathParams},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{failed_to_deserialize_path_params},
-                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                        field_type_original: quote::quote!{#std_string_string_token_stream},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let failed_to_deserialize_path_params_variant_attribute = generate_error_variant_attribute(
+            failed_to_deserialize_path_params_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
+        // let failed_to_deserialize_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+        //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+        //         error_variant_ident: quote::quote!{FailedToDeserializePathParams},
+        //         error_variant_fields: vec![
+        //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+        //                 field_name: quote::quote!{failed_to_deserialize_path_params},
+        //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+        //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+        //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+        //             },
+        //             error_occurence_variant_field.clone(),
+        //         ],
+        //     },
+        // };
         let missing_path_params_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             "MissingPathParams",
@@ -3207,25 +3207,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let missing_path_params_variant_attribute = generate_error_variant_attribute(
-        //     missing_path_params_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
-        let missing_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{MissingPathParams},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{missing_path_params},
-                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                        field_type_original: quote::quote!{#std_string_string_token_stream},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let missing_path_params_variant_attribute = generate_error_variant_attribute(
+            missing_path_params_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
+        // let missing_path_params_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+        //     error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+        //     error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+        //         error_variant_ident: quote::quote!{MissingPathParams},
+        //         error_variant_fields: vec![
+        //             crate::type_variants_from_request_response_generator::ErrorVariantField {
+        //                 field_name: quote::quote!{missing_path_params},
+        //                 error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
+        //                 field_type_original: quote::quote!{#std_string_string_token_stream},
+        //                 field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
+        //             },
+        //             error_occurence_variant_field.clone(),
+        //         ],
+        //     },
+        // };
         vec![
             failed_to_deserialize_path_params_variant_attribute,
             missing_path_params_variant_attribute
@@ -3281,25 +3281,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let json_data_error_variant_attribute = generate_error_variant_attribute(
-        //     json_data_error_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
-        let json_data_error_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{JsonDataError},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{json_data_error},
-                        error_occurence_attribute: quote::quote!{#[eo_display]},
-                        field_type_original: quote::quote!{axum::extract::rejection::JsonDataError},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let json_data_error_variant_attribute = generate_error_variant_attribute(
+            json_data_error_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
         let json_syntax_error_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             "JsonSyntaxError",
@@ -3348,25 +3333,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let json_syntax_error_variant_attribute = generate_error_variant_attribute(
-        //     json_syntax_error_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
-        let json_syntax_error_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{JsonSyntaxError},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{json_syntax_error},
-                        error_occurence_attribute: quote::quote!{#[eo_display]},
-                        field_type_original: quote::quote!{axum::extract::rejection::JsonSyntaxError},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let json_syntax_error_variant_attribute = generate_error_variant_attribute(
+            json_syntax_error_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
         let missing_json_content_type_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             "MissingJsonContentType",
@@ -3379,25 +3349,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let missing_json_content_type_variant_attribute = generate_error_variant_attribute(
-        //      missing_json_content_type_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
-        let missing_json_content_type_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{MissingJsonContentType},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{json_syntax_error},
-                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                        field_type_original: quote::quote!{#std_string_string_token_stream},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let missing_json_content_type_variant_attribute = generate_error_variant_attribute(
+             missing_json_content_type_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
         let bytes_rejection_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
             "BytesRejection",
@@ -3410,25 +3365,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let bytes_rejection_variant_attribute = generate_error_variant_attribute(
-        //     bytes_rejection_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
-        let bytes_rejection_variant_attribute = crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-            error_variant_attribute: proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-                error_variant_ident: quote::quote!{BytesRejection},
-                error_variant_fields: vec![
-                    crate::type_variants_from_request_response_generator::ErrorVariantField {
-                        field_name: quote::quote!{bytes_rejection},
-                        error_occurence_attribute: quote::quote!{#eo_display_with_serialize_deserialize_token_stream},
-                        field_type_original: quote::quote!{#std_string_string_token_stream},
-                        field_type_with_serialize_deserialize: quote::quote!{#std_string_string_token_stream},
-                    },
-                    error_occurence_variant_field.clone(),
-                ],
-            },
-        };
+        let bytes_rejection_variant_attribute = generate_error_variant_attribute(
+            bytes_rejection_syn_variant,
+            &proc_macro_name_ident_stringified,
+        );
         vec![
             json_data_error_variant_attribute,
             json_syntax_error_variant_attribute,
