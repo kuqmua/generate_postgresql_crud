@@ -645,7 +645,7 @@ pub fn type_variants_from_request_response<'a>(
     proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
 ) {
     let error_variant_attribute = generate_error_variant_attribute(
-        error_variant.clone(),//todo
+        &error_variant,
         &proc_macro_name_ident_stringified,
     );
     let variant_ident_attribute_camel_case_token_stream = {
@@ -758,14 +758,13 @@ pub fn type_variants_from_request_response<'a>(
 }
 
 fn generate_error_variant_attribute(
-    variant: syn::Variant,
+    variant: &syn::Variant,
     proc_macro_name_ident_stringified: &std::string::String,
 ) -> crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
     let variant_ident = &variant.ident;
-    // println!("{variant:#?}");
     let error_variant_attribute = {
         let mut option_attribute: Option<proc_macro_helpers::attribute::Attribute> = None;
-        for element in variant.attrs {
+        for element in &variant.attrs {
             if let true = element.path.segments.len() == 1 {
                 let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
                 if let Ok(value) = proc_macro_helpers::attribute::Attribute::try_from(&segment.ident.to_string()) {
@@ -894,17 +893,11 @@ fn generate_error_variant_attribute(
                     &field,
                     &proc_macro_name_ident_stringified,
                 );
-                // println!("{supported_container:#?}");
-                // println!("{attribute:#?}");
                 let field_type_with_serialize_deserialize = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_field_type_with_serialize_deserialize_version(
                     attribute,
                     supported_container,
                     &proc_macro_name_ident_stringified,
                 );
-                // proc_macro_helpers::error_occurence::error_field_or_code_occurence::ErrorFieldOrCodeOccurence::ErrorField {
-                //     attribute,
-                //     supported_container,
-                // }
                 field_type_with_serialize_deserialize
             },
         };
@@ -920,7 +913,7 @@ fn generate_error_variant_attribute(
         error_variant_attribute,
         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
             error_variant_ident: quote::quote! {#variant_ident},
-            error_variant_fields,//std::vec::Vec<ErrorVariantField>
+            error_variant_fields,
         }
     }
 }

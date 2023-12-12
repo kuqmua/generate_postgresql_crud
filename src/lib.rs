@@ -8958,11 +8958,11 @@ struct FieldNamedWrapperExcludingPrimaryKey {
     supported_field_type: SupportedFieldType
 }
 
-fn generate_error_variants_vec_token_stream<'a>(
+fn generate_error_variants_vec_token_stream(
     try_operation_response_variants_camel_case_token_stream: &proc_macro2::TokenStream,
     try_operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
     proc_macro_name_ident_stringified: &std::string::String,
-    error_variant_attribute: &std::vec::Vec<&'a syn::Variant>,//crate::type_variants_from_request_response_generator::ErrorVariantAttribute
+    error_variant_attribute: &std::vec::Vec<&syn::Variant>,
 ) -> std::vec::Vec<(
     crate::type_variants_from_request_response_generator::ErrorVariantAttribute,
     proc_macro2::TokenStream, //try_operation_token_stream
