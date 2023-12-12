@@ -1964,6 +1964,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
+    //
+    let f = crate::type_variants_from_request_response_generator::generate_variant_declaration(
+        &bind_query_syn_variant,
+        &proc_macro_name_ident_stringified
+    );
+    println!("---  {f} ---");
+    //
     let checked_add_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         "CheckedAdd",

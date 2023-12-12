@@ -762,26 +762,8 @@ fn generate_error_variant_attribute(
     proc_macro_name_ident_stringified: &std::string::String,
 ) -> crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
     let variant_ident = &variant.ident;
-    let error_variant_attribute = {
-        let mut option_attribute: Option<proc_macro_helpers::attribute::Attribute> = None;
-        for element in &variant.attrs {
-            if let true = element.path.segments.len() == 1 {
-                let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
-                if let Ok(value) = proc_macro_helpers::attribute::Attribute::try_from(&segment.ident.to_string()) {
-                    match option_attribute {
-                        Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({value}) are not supported"),
-                        None => {
-                            option_attribute = Some(value);
-                        }
-                    }
-                }
-            }
-        }
-        match option_attribute {
-            Some(value) => value,
-            None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
-        }
-    };
+    let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(&variant)
+    .unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
     let fields_named = if let syn::Fields::Named(fields_named) = &variant.fields {
         fields_named
     }
@@ -1039,5 +1021,85 @@ pub fn construct_syn_variant(
             },
         ),
         discriminant: None,
+    }
+}
+
+pub fn generate_variant_declaration(
+    variant: &syn::Variant,
+    proc_macro_name_ident_stringified: &str
+)-> proc_macro2::TokenStream {
+    let variant_ident = &variant.ident;
+    let error_variant_attribute_view_token_stream = {
+        let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(&variant)
+        .unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
+        let error_variant_attribute_view_stringified = proc_macro_helpers::error_occurence::attribute_view::attribute_view(&error_variant_attribute.to_string());
+        error_variant_attribute_view_stringified
+        .parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {error_variant_attribute_view_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let fields_token_stream = {
+        let fields_named = if let syn::Fields::Named(fields_named) = &variant.fields {
+            fields_named
+        }
+        else {
+            panic!("{proc_macro_name_ident_stringified} expected fields would be named");
+        };
+        //
+        // let error_variant_fields = fields_named.named.iter().map(|field|{
+        //     let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
+        //         "{proc_macro_name_ident_stringified} field.ident {}",
+        //         proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+        //     ));
+        //     let error_occurence_attribute = match field_ident == code_occurence_lower_case {
+        //         true => quote::quote! {},
+        //         false => {
+        //             let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
+        //             for element in &field.attrs {
+        //                 if let true = element.path.segments.len() == 1 {
+        //                     let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
+        //                     if let Ok(value) = {
+        //                         use std::str::FromStr;
+        //                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&segment.ident.to_string())
+        //                     } {
+        //                         match error_occurence_attribute {
+        //                             Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
+        //                             None => {
+        //                                 error_occurence_attribute = Some(value);
+        //                             }
+        //                         }
+        //                     }
+        //                 }
+        //             }
+        //             match error_occurence_attribute {
+        //                 Some(value) => value.to_attribute_view_token_stream(),
+        //                 None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
+        //             }
+        //         }
+        //     };
+
+        //     // .to_attribute_view_token_stream()
+
+        //     // let field_type_original = &field.ty;
+        //     // crate::type_variants_from_request_response_generator::ErrorVariantField {
+        //     //     field_name: quote::quote! {#field_ident},
+        //     //     error_occurence_attribute,
+        //     //     field_type_original: quote::quote! {#field_type_original},
+        //     //     field_type_with_serialize_deserialize,
+        //     // }
+        //     todo!()
+            
+        // })
+        // .collect::<Vec<crate::type_variants_from_request_response_generator::ErrorVariantField>>();
+        vec![quote::quote!{}]
+    };
+    quote::quote!{
+        #error_variant_attribute_view_token_stream
+        #variant_ident {
+            // #eo_display_token_stream
+            // primary_key_from_row: sqlx::Error,
+            // #eo_display_token_stream
+            // rollback_error: sqlx::Error,
+            // #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
     }
 }
