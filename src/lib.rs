@@ -1956,10 +1956,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         )]
     );
-    // let bind_query_variant_attribute = generate_error_variant_attribute(
-    //     bind_query_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let bind_query_variant_initialization_token_stream = quote::quote!{
         BindQuery { 
             checked_add: e.into_serialize_deserialize_version(), 
@@ -1984,10 +1980,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             std_string_string_syn_punctuated_punctuated.clone()
         )]
     );
-    // let checked_add_variant_attribute = generate_error_variant_attribute(
-    //     checked_add_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let checked_add_variant_initialization_token_stream = quote::quote!{
         CheckedAdd { //todo remove it? refactor it?
             checked_add: #std_string_string_token_stream::from("checked_add is None"), 
@@ -2019,10 +2011,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )   
         ]
     );
-    // let query_and_rollback_failed_variant_attribute = generate_error_variant_attribute(
-    //     query_and_rollback_failed_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let query_and_rollback_failed_variant_initialization_token_stream = quote::quote!{
         QueryAndRollbackFailed {
             query_error: e,
@@ -2057,10 +2045,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let primary_key_from_row_and_failed_rollback_variant_attribute = generate_error_variant_attribute(
-    //     primary_key_from_row_and_failed_rollback_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let primary_key_from_row_and_failed_rollback_variant_initialization_token_stream = quote::quote!{
         PrimaryKeyFromRowAndFailedRollback {
             primary_key_from_row: e,
@@ -2090,10 +2074,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let non_existing_primary_keys_variant_attribute = generate_error_variant_attribute(
-    //     non_existing_primary_keys_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let non_existing_primary_keys_variant_initialization_token_stream = quote::quote!{
         NonExistingPrimaryKeys {
             #non_existing_primary_keys_name_token_stream,
@@ -2125,10 +2105,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let non_existing_primary_keys_and_failed_rollback_variant_attribute = generate_error_variant_attribute(
-    //     non_existing_primary_keys_and_failed_rollback_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let non_existing_primary_keys_and_failed_rollback_variant_initialization_token_stream = quote::quote!{
         NonExistingPrimaryKeysAndFailedRollback {
             #non_existing_primary_keys_name_token_stream,
@@ -2159,10 +2135,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let commit_failed_variant_attribute = generate_error_variant_attribute(
-    //     commit_failed_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let commit_failed_variant_initialization_token_stream = quote::quote!{
         CommitFailed {
             commit_error: e,
@@ -2204,10 +2176,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let not_unique_primary_key_variant_attribute = generate_error_variant_attribute(
-    //     not_unique_primary_key_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         "CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer",
@@ -2220,10 +2188,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_attribute = generate_error_variant_attribute(
-    //     created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_500_internal_server_error] //todo what status should be there?
         CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
@@ -2244,10 +2208,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let failed_to_deserialize_query_string_variant_attribute = generate_error_variant_attribute(
-    //     failed_to_deserialize_query_string_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let failed_to_deserialize_query_string_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         FailedToDeserializeQueryString {
@@ -2278,10 +2238,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let read_one_path_try_from_read_one_path_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
-    //     read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant = construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize",//todo reuse generation naming 
@@ -2303,10 +2259,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
-    //     read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize {
@@ -2336,10 +2288,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let update_one_path_try_from_update_one_path_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
-    //     update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let update_one_path_try_from_update_one_path_with_serialize_deserialize_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         UpdateOnePathTryFromUpdateOnePathWithSerializeDeserialize {
@@ -2369,10 +2317,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
-    //     update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserialize {
@@ -2402,10 +2346,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
-    //     delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         DeleteOnePathTryFromDeleteOnePathWithSerializeDeserialize {
@@ -2435,10 +2375,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_variant_attribute = generate_error_variant_attribute(
-    //     delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request] 
         DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserialize {
@@ -2459,10 +2395,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let not_unique_name_vec_variant_attribute = generate_error_variant_attribute(
-    //     not_unique_name_vec_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let not_unique_name_vec_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NotUniqueNameVec {
@@ -2483,10 +2415,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let not_unique_color_vec_variant_attribute = generate_error_variant_attribute(
-    //     not_unique_color_vec_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     //todo use not_unique_name_vec_need_to_refactor_variant_declaration_token_stream instead of not_unique_name_vec_variant_declaration_token_stream
     let not_unique_color_vec_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
@@ -2496,7 +2424,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
-    //
     let not_uuid_syn_variant = construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "NotUuid",
@@ -2545,10 +2472,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let not_uuid_variant_attribute = generate_error_variant_attribute(
-    //     not_uuid_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let not_uuid_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NotUuid {
@@ -2569,10 +2492,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let no_payload_fields_variant_attribute = generate_error_variant_attribute(
-    //     no_payload_fields_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let no_payload_fields_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NoPayloadFields {
@@ -2593,10 +2512,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    // let no_payload_parameters_variant_attribute = generate_error_variant_attribute(
-    //     no_payload_parameters_syn_variant,
-    //     &proc_macro_name_ident_stringified,
-    // );
     let no_payload_parameters_variant_declaration_token_stream = quote::quote!{
         #[tvfrr_400_bad_request]
         NoPayloadParameters {
@@ -2726,10 +2641,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ),
                 ]
             );
-            // let project_commit_extractor_not_equal_variant_attribute = generate_error_variant_attribute(
-            //     project_commit_extractor_not_equal_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let project_commit_extractor_to_str_conversion_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 "ProjectCommitExtractorToStrConversion",
@@ -2769,10 +2680,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let project_commit_extractor_to_str_conversion_variant_attribute = generate_error_variant_attribute(
-            //     project_commit_extractor_to_str_conversion_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let no_project_commit_extractor_header_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 "NoProjectCommitExtractorHeader",
@@ -2785,10 +2692,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let no_project_commit_extractor_header_variant_attribute = generate_error_variant_attribute(
-            //     no_project_commit_extractor_header_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             vec![
                 project_commit_extractor_not_equal_syn_variant,
                 project_commit_extractor_to_str_conversion_syn_variant,
@@ -2811,10 +2714,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let configuration_error_variant_attribute = generate_error_variant_attribute(
-            //     configuration_error_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             //todo move it into custom macro attribute
             let database_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
@@ -2828,10 +2727,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let database_variant_attribute = generate_error_variant_attribute(
-            //     database_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let io_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Io",
@@ -2871,10 +2766,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let io_variant_attribute = generate_error_variant_attribute(
-            //     io_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let tls_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Tls",
@@ -2887,10 +2778,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let tls_variant_attribute = generate_error_variant_attribute(
-            //     tls_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let protocol_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Protocol",
@@ -2903,10 +2790,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let protocol_variant_attribute = generate_error_variant_attribute(
-            //     protocol_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let row_not_found_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr404NotFound,
                 "RowNotFound",
@@ -2919,10 +2802,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let row_not_found_variant_attribute = generate_error_variant_attribute(
-            //     row_not_found_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let type_not_found_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 "TypeNotFound",
@@ -2935,10 +2814,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let type_not_found_variant_attribute = generate_error_variant_attribute(
-            //     type_not_found_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let column_index_out_of_bounds_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "ColumnIndexOutOfBounds",
@@ -2974,10 +2849,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let column_index_out_of_bounds_variant_attribute = generate_error_variant_attribute(
-            //     column_index_out_of_bounds_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let column_not_found_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
                 "ColumnNotFound",
@@ -2990,10 +2861,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let column_not_found_variant_attribute = generate_error_variant_attribute(
-            //     column_not_found_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let column_decode_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "ColumnDecode",
@@ -3011,10 +2878,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let column_decode_variant_attribute = generate_error_variant_attribute(
-            //     column_decode_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let decode_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Decode",
@@ -3027,10 +2890,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let decode_variant_attribute = generate_error_variant_attribute(
-            //     decode_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let pool_timed_out_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr408RequestTimeout,
                 "PoolTimedOut",
@@ -3043,10 +2902,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let pool_timed_out_variant_attribute = generate_error_variant_attribute(
-            //     pool_timed_out_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let pool_closed_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "PoolClosed",
@@ -3059,10 +2914,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let pool_closed_variant_attribute = generate_error_variant_attribute(
-            //     pool_closed_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let worker_crashed_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "WorkerCrashed",
@@ -3075,10 +2926,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let worker_crashed_variant_attribute = generate_error_variant_attribute(
-            //     worker_crashed_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             let migrate_syn_variant = construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Migrate",
@@ -3118,10 +2965,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            // let migrate_variant_attribute = generate_error_variant_attribute(
-            //     migrate_syn_variant,
-            //     &proc_macro_name_ident_stringified,
-            // );
             vec![
                 configuration_error_syn_variant,
                 database_syn_variant,
@@ -3155,10 +2998,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let unexpected_case_variant_attribute = generate_error_variant_attribute(
-        //     unexpected_case_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
         common_error_variants_vec.push(unexpected_case_syn_variant);
         common_error_variants_vec
     };
@@ -3176,10 +3015,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let failed_to_deserialize_path_params_variant_attribute = generate_error_variant_attribute(
-        //     failed_to_deserialize_path_params_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
         let missing_path_params_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             "MissingPathParams",
@@ -3192,10 +3027,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let missing_path_params_variant_attribute = generate_error_variant_attribute(
-        //     missing_path_params_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
         vec![
             failed_to_deserialize_path_params_syn_variant,
             missing_path_params_syn_variant
@@ -3251,10 +3082,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let json_data_error_variant_attribute = generate_error_variant_attribute(
-        //     json_data_error_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
         let json_syntax_error_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             "JsonSyntaxError",
@@ -3303,10 +3130,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let json_syntax_error_variant_attribute = generate_error_variant_attribute(
-        //     json_syntax_error_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
         let missing_json_content_type_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             "MissingJsonContentType",
@@ -3319,10 +3142,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let missing_json_content_type_variant_attribute = generate_error_variant_attribute(
-        //      missing_json_content_type_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
         let bytes_rejection_syn_variant = construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
             "BytesRejection",
@@ -3335,10 +3154,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        // let bytes_rejection_variant_attribute = generate_error_variant_attribute(
-        //     bytes_rejection_syn_variant,
-        //     &proc_macro_name_ident_stringified,
-        // );
         vec![
             json_data_error_syn_variant,
             json_syntax_error_syn_variant,
@@ -9169,10 +8984,6 @@ fn generate_error_variants_vec_token_stream<'a>(
         &try_operation_with_serialize_deserialize_camel_case_token_stream,
         &proc_macro_name_ident_stringified,
         element,
-        // &generate_error_variant_attribute(
-        //     (*element).clone(),//todo
-        //     &proc_macro_name_ident_stringified,
-        // )
     )).collect()
 }
 
