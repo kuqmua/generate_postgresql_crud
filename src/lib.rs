@@ -1895,12 +1895,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             },
         ),
     };
-    let error_occurence_variant_field = crate::type_variants_from_request_response_generator::ErrorVariantField {
-        field_name: quote::quote!{#code_occurence_lower_case_token_stream},
-        error_occurence_attribute: quote::quote!{},
-        field_type_original: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
-        field_type_with_serialize_deserialize: quote::quote!{#crate_common_code_occurence_code_occurence_token_stream},
-    };
     let bind_query_syn_variant = construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         "BindQuery",
@@ -8970,7 +8964,8 @@ fn generate_error_variants_vec_token_stream<'a>(
     proc_macro_name_ident_stringified: &std::string::String,
     error_variant_attribute: &std::vec::Vec<&'a syn::Variant>,//crate::type_variants_from_request_response_generator::ErrorVariantAttribute
 ) -> std::vec::Vec<(
-    crate::type_variants_from_request_response_generator::ErrorVariantAttribute,
+    // crate::type_variants_from_request_response_generator::ErrorVariantAttribute,
+    &'a syn::Variant,
     proc_macro2::TokenStream, //try_operation_token_stream
     proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
     proc_macro2::TokenStream, //from_logic_token_stream
