@@ -746,7 +746,7 @@ pub fn type_variants_from_request_response<'a>(
         }
     };
     (
-        error_variant_attribute.clone(),
+        error_variant_attribute,
         try_operation_token_stream,
         enum_with_serialize_deserialize_logic_token_stream,
         from_logic_token_stream,
