@@ -102,16 +102,29 @@ pub fn type_variants_from_request_response_generator(
                 .iter()
                 .map(
                     |(
-                        _,
-                        enum_with_serialize_deserialize_logic_token_stream,
+                        error_variant_attribute,
+                        _, //enum_with_serialize_deserialize_logic_token_stream
                         _, //from_logic_token_stream
                         _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
                         _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                         _, //enum_status_codes_checker_name_logic_token_stream
                         _, //axum_response_into_response_logic_token_stream
-                    )| enum_with_serialize_deserialize_logic_token_stream,
+                    )| {
+                        let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
+                        let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
+                            let field_name_token_stream = &element.field_name;
+                            let field_type_token_stream = &element.field_type_with_serialize_deserialize;
+                            quote::quote! {#field_name_token_stream: #field_type_token_stream}
+                        })
+                        .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                        quote::quote! {
+                            #variant_ident {
+                                #(#fields_mapped_into_token_stream),*
+                            }
+                        }
+                    },
                 )
-                .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
+                .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             #derive_debug_serialize_deserialize_token_stream
             pub enum #try_operation_response_variants_camel_case_token_stream {
@@ -683,23 +696,6 @@ pub fn type_variants_from_request_response<'a>(
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
-    // let try_operation_token_stream = {
-    //     let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
-    //         let error_occurence_attribute_token_stream = &element.error_occurence_attribute;
-    //         let field_name_token_stream = &element.field_name;
-    //         let field_type_token_stream = &element.field_type_original;
-    //         quote::quote! {
-    //             #error_occurence_attribute_token_stream
-    //             #field_name_token_stream: #field_type_token_stream
-    //         }
-    //     })
-    //     .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-    //     quote::quote! {
-    //         #variant_ident {
-    //             #(#fields_mapped_into_token_stream),*
-    //         }
-    //     }
-    // };
     let enum_with_serialize_deserialize_logic_token_stream = {
         let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
             let field_name_token_stream = &element.field_name;
