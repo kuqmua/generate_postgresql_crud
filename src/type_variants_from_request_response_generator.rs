@@ -1024,51 +1024,51 @@ pub fn construct_syn_variant(
     }
 }
 
-pub fn generate_variant_declaration(
-    variant: &syn::Variant,
-    proc_macro_name_ident_stringified: &str
-)-> proc_macro2::TokenStream {
-    let variant_ident = &variant.ident;
-    let error_variant_attribute_view_token_stream = {
-        let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(&variant)
-        .unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
-        error_variant_attribute.to_attribute_view_token_stream()
-    };
-    let fields_token_stream = {
-        let fields_named = if let syn::Fields::Named(fields_named) = &variant.fields {
-            fields_named
-        }
-        else {
-            panic!("{proc_macro_name_ident_stringified} expected fields would be named");
-        };
-        let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
-        let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
-        fields_named.named.iter().map(|field|{
-            let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-                "{proc_macro_name_ident_stringified} field.ident {}",
-                proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
-            ));
-            let field_attribute_view_token_stream = match field_ident.to_string() == code_occurence_lower_case {
-                true => proc_macro2::TokenStream::new(),
-                false => {
-                    let field_attribute = proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::try_from(&field).unwrap_or_else(|e| panic!(
-                        "{proc_macro_name_ident_stringified} failed to get NamedAttribute {e}"
-                    ));
-                    field_attribute.to_attribute_view_token_stream()
-                }
-            };
-            let field_type_original = &field.ty;
-            quote::quote!{
-                #field_attribute_view_token_stream
-                #field_ident: #field_type_original
-            }
-        })
-        .collect::<Vec<proc_macro2::TokenStream>>()
-    };
-    quote::quote!{
-        #error_variant_attribute_view_token_stream
-        #variant_ident {
-            #(#fields_token_stream),*
-        }
-    }
-}
+// pub fn generate_variant_declaration(
+//     variant: &syn::Variant,
+//     proc_macro_name_ident_stringified: &str
+// )-> proc_macro2::TokenStream {
+//     let variant_ident = &variant.ident;
+//     let error_variant_attribute_view_token_stream = {
+//         let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(&variant)
+//         .unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
+//         error_variant_attribute.to_attribute_view_token_stream()
+//     };
+//     let fields_token_stream = {
+//         let fields_named = if let syn::Fields::Named(fields_named) = &variant.fields {
+//             fields_named
+//         }
+//         else {
+//             panic!("{proc_macro_name_ident_stringified} expected fields would be named");
+//         };
+//         let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
+//         let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
+//         fields_named.named.iter().map(|field|{
+//             let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
+//                 "{proc_macro_name_ident_stringified} field.ident {}",
+//                 proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+//             ));
+//             let field_attribute_view_token_stream = match field_ident.to_string() == code_occurence_lower_case {
+//                 true => proc_macro2::TokenStream::new(),
+//                 false => {
+//                     let field_attribute = proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::try_from(&field).unwrap_or_else(|e| panic!(
+//                         "{proc_macro_name_ident_stringified} failed to get NamedAttribute {e}"
+//                     ));
+//                     field_attribute.to_attribute_view_token_stream()
+//                 }
+//             };
+//             let field_type_original = &field.ty;
+//             quote::quote!{
+//                 #field_attribute_view_token_stream
+//                 #field_ident: #field_type_original
+//             }
+//         })
+//         .collect::<Vec<proc_macro2::TokenStream>>()
+//     };
+//     quote::quote!{
+//         #error_variant_attribute_view_token_stream
+//         #variant_ident {
+//             #(#fields_token_stream),*
+//         }
+//     }
+// }

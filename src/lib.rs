@@ -1956,10 +1956,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
         }
     };
-    let bind_query_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &bind_query_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let checked_add_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         "CheckedAdd",
@@ -1976,10 +1972,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
         }
     };
-    let checked_add_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &checked_add_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let query_and_rollback_failed_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         "QueryAndRollbackFailed",
@@ -2004,10 +1996,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let query_and_rollback_failed_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &query_and_rollback_failed_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let primary_key_from_row_and_failed_rollback_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         "PrimaryKeyFromRowAndFailedRollback",
@@ -2032,10 +2020,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let primary_key_from_row_and_failed_rollback_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &primary_key_from_row_and_failed_rollback_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let non_existing_primary_keys_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "NonExistingPrimaryKeys",
@@ -2054,10 +2038,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let non_existing_primary_keys_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &non_existing_primary_keys_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let non_existing_primary_keys_and_failed_rollback_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "NonExistingPrimaryKeysAndFailedRollback",
@@ -2082,10 +2062,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let non_existing_primary_keys_and_failed_rollback_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &non_existing_primary_keys_and_failed_rollback_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let commit_failed_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         "CommitFailed",
@@ -2104,10 +2080,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let commit_failed_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &commit_failed_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let not_unique_primary_keys_name_token_stream = quote::quote!{not_unique_primary_keys};
     let not_unique_primary_key_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
@@ -2127,10 +2099,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let not_unique_primary_key_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &not_unique_primary_key_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
         "CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer",
@@ -2143,10 +2111,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let failed_to_deserialize_query_string_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "FailedToDeserializeQueryString",
@@ -2158,10 +2122,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 std_string_string_syn_punctuated_punctuated.clone()
             )
         ]
-    );
-    let failed_to_deserialize_query_string_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &failed_to_deserialize_query_string_syn_variant,
-        &proc_macro_name_ident_stringified
     );
     //todo
     let read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
@@ -2206,10 +2166,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "UpdateOnePathTryFromUpdateOnePathWithSerializeDeserialize",//todo reuse generation naming 
@@ -2230,10 +2186,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             )
         ]
-    );
-    let update_one_path_try_from_update_one_path_with_serialize_deserialize_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant,
-        &proc_macro_name_ident_stringified
     );
     let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
@@ -2256,10 +2208,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "DeleteOnePathTryFromDeleteOnePathWithSerializeDeserialize",//todo reuse generation naming 
@@ -2280,10 +2228,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             )
         ]
-    );
-    let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant,
-        &proc_macro_name_ident_stringified
     );
     let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
@@ -2306,10 +2250,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let not_unique_name_vec_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "NotUniqueNameVec",//todo reuse generation naming 
@@ -2322,10 +2262,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let not_unique_name_vec_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &not_unique_name_vec_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let not_unique_color_vec_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "NotUniqueColorVec",//todo reuse generation naming 
@@ -2337,10 +2273,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 std_vec_vec_crate_server_postgres_regex_filter_regex_filter_syn_punctuated_punctuated.clone()
             )
         ]
-    );
-    let not_unique_color_vec_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &not_unique_color_vec_syn_variant,
-        &proc_macro_name_ident_stringified
     );
     let not_uuid_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
@@ -2390,10 +2322,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let not_uuid_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &not_uuid_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let no_payload_fields_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "NoPayloadFields",
@@ -2406,10 +2334,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
-    let no_payload_fields_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &no_payload_fields_syn_variant,
-        &proc_macro_name_ident_stringified
-    );
     let no_payload_parameters_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "NoPayloadParameters",
@@ -2421,10 +2345,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 std_string_string_syn_punctuated_punctuated.clone()
             )
         ]
-    );
-    let no_payload_parameters_variant_declaration_token_stream = crate::type_variants_from_request_response_generator::generate_variant_declaration(
-        &no_payload_parameters_syn_variant,
-        &proc_macro_name_ident_stringified
     );
     let query_encode_variant_token_stream = quote::quote!{
         #query_encode_token_stream {
