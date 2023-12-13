@@ -137,22 +137,21 @@ pub fn type_variants_from_request_response_generator(
                     _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                     _, //axum_response_into_response_logic_token_stream
                 )| {
-                    // let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
-                    // let fields_name_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
-                    //     let field_name_token_stream = &element.field_name;
-                    //     quote::quote! {#field_name_token_stream}
-                    // }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                    // quote::quote! {
-                    //     #try_operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
-                    //         #(#fields_name_mapped_into_token_stream),*
-                    //     } => Self::#variant_ident {
-                    //         #(#fields_name_mapped_into_token_stream),*
-                    //     }
-                    // }
-                    from_logic_token_stream
+                    let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
+                    let fields_name_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
+                        let field_name_token_stream = &element.field_name;
+                        quote::quote! {#field_name_token_stream}
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                    quote::quote! {
+                        #operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+                            #(#fields_name_mapped_into_token_stream),*
+                        } => Self::#variant_ident {
+                            #(#fields_name_mapped_into_token_stream),*
+                        }
+                    }
                 },
             )
-            .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
+            .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             impl std::convert::From<#try_operation_camel_case_token_stream> for #try_operation_response_variants_camel_case_token_stream {
                 fn from(value: #try_operation_camel_case_token_stream) -> Self {
