@@ -3120,38 +3120,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_ident_stringified
             );
-            let common_error_variant_attribute_vec_handle = crate::type_variants_from_request_response_generator::generate_error_variants_vec_token_stream(
-                &try_operation_response_variants_camel_case_token_stream,
-                &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
-                &proc_macro_name_ident_stringified,
-                &common_error_variant_attribute_vec
-            );
-            let json_body_logic_error_variants_vec_token_stream = crate::type_variants_from_request_response_generator::generate_error_variants_vec_token_stream(
-                &try_operation_response_variants_camel_case_token_stream,
-                &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
-                &proc_macro_name_ident_stringified,
-                &json_body_logic_error_variants_vec_handle
-            );
             let type_variants_from_request_response_vec = {
                 let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
-                for element in common_error_variant_attribute_vec_handle {
+                for element in common_error_variant_attribute_vec {
                     type_variants_from_request_response.push(element);
                 }
-                for element in json_body_logic_error_variants_vec_token_stream  {
+                for element in json_body_logic_error_variants_vec_handle {
                     type_variants_from_request_response.push(element);
                 }
-                type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-                    &try_operation_response_variants_camel_case_token_stream,
-                    &try_operation_with_serialize_deserialize_camel_case_token_stream,
-                    &proc_macro_name_ident_stringified,
-                    &bind_query_syn_variant
-                ));
-                type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-                    &try_operation_response_variants_camel_case_token_stream,
-                    &try_operation_with_serialize_deserialize_camel_case_token_stream,
-                    &proc_macro_name_ident_stringified,
-                    &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant
-                ));
+                type_variants_from_request_response.push(&bind_query_syn_variant);
+                type_variants_from_request_response.push(&created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
@@ -3587,32 +3565,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_ident_stringified
             );
-            let common_error_variant_attribute_vec_handle = crate::type_variants_from_request_response_generator::generate_error_variants_vec_token_stream(
-                &try_operation_response_variants_camel_case_token_stream,
-                &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
-                &proc_macro_name_ident_stringified,
-                &common_error_variant_attribute_vec
-            );
-            let json_body_logic_error_variants_vec_token_stream = crate::type_variants_from_request_response_generator::generate_error_variants_vec_token_stream(
-                &try_operation_response_variants_camel_case_token_stream,
-                &try_operation_with_serialize_deserialize_camel_case_token_stream, //KekwWithSerializeDeserialize
-                &proc_macro_name_ident_stringified,
-                &json_body_logic_error_variants_vec_handle
-            );
             let type_variants_from_request_response_vec = {
                 let mut type_variants_from_request_response = std::vec::Vec::new();
-                for element in common_error_variant_attribute_vec_handle {
+                for element in common_error_variant_attribute_vec {
                     type_variants_from_request_response.push(element);
                 }
-                for element in json_body_logic_error_variants_vec_token_stream  {
+                for element in json_body_logic_error_variants_vec_handle  {
                     type_variants_from_request_response.push(element);
                 }
-                type_variants_from_request_response.push(crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-                    &try_operation_response_variants_camel_case_token_stream,
-                    &try_operation_with_serialize_deserialize_camel_case_token_stream,
-                    &proc_macro_name_ident_stringified,
-                    &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant
-                ));
+                type_variants_from_request_response.push(&created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(

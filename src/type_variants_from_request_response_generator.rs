@@ -36,11 +36,22 @@ pub fn type_variants_from_request_response_generator(
     eo_display_foreign_type_token_stream: &proc_macro2::TokenStream,
     eo_display_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
-    type_variants_from_request_response: std::vec::Vec<ErrorVariantAttribute>,
+    type_variants_from_request_response: std::vec::Vec<&syn::Variant>,
     // ident_response_variants_token_stream: &proc_macro2::TokenStream,
     is_response_with_body: bool,
     proc_macro_name_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
+    let type_variants_from_request_response: std::vec::Vec<ErrorVariantAttribute> = type_variants_from_request_response.iter().map(|element|{
+        let f = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
+            &try_operation_response_variants_camel_case_token_stream,
+            &operation_with_serialize_deserialize_camel_case_token_stream,
+            &proc_macro_name_ident_stringified,
+            &element,
+        );
+        f
+    }).collect();
+    
+    
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let vec_status_codes_len = type_variants_from_request_response.len();
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream =
