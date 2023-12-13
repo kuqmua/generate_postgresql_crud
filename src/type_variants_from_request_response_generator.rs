@@ -38,7 +38,6 @@ pub fn type_variants_from_request_response_generator(
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response: std::vec::Vec<(
         ErrorVariantAttribute,
-        proc_macro2::TokenStream, //from_logic_token_stream
         proc_macro2::TokenStream, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
         proc_macro2::TokenStream, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
         proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
@@ -57,7 +56,6 @@ pub fn type_variants_from_request_response_generator(
         let try_operation_mapped_token_stream = type_variants_from_request_response.iter().map(
             |(
                 error_variant_attribute,
-                _, //from_logic_token_stream
                 _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
                 _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                 _, //axum_response_into_response_logic_token_stream
@@ -98,7 +96,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         error_variant_attribute,
-                        _, //from_logic_token_stream
                         _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
                         _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                         _, //axum_response_into_response_logic_token_stream
@@ -132,7 +129,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     error_variant_attribute,
-                    from_logic_token_stream,
                     _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
                     _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                     _, //axum_response_into_response_logic_token_stream
@@ -168,7 +164,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     _,
-                    _, //from_logic_token_stream
                     impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
                     _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                     _, //axum_response_into_response_logic_token_stream
@@ -429,7 +424,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     _,
-                    _, //from_logic_token_stream
                     _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
                     impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
                     _, //axum_response_into_response_logic_token_stream
@@ -589,7 +583,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         error_variant_attribute,
-                        _, //from_logic_token_stream
                         _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
                         _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                         _, //axum_response_into_response_logic_token_stream
@@ -625,7 +618,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         _,
-                        _, //from_logic_token_stream
                         _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
                         _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                         axum_response_into_response_logic_token_stream,
@@ -670,7 +662,6 @@ pub fn type_variants_from_request_response<'a>(
     error_variant: &'a syn::Variant,
 ) -> (
     ErrorVariantAttribute, //error_variant
-    proc_macro2::TokenStream, //from_logic_token_stream
     proc_macro2::TokenStream, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
     proc_macro2::TokenStream, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
     proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
@@ -705,15 +696,6 @@ pub fn type_variants_from_request_response<'a>(
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
-    let from_logic_token_stream = {
-        quote::quote! {
-            #operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
-                #(#fields_name_mapped_into_token_stream),*
-            } => Self::#variant_ident {
-                #(#fields_name_mapped_into_token_stream),*
-            }
-        }
-    };
     let impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream = {
         quote::quote! {
             #try_operation_response_variants_camel_case_token_stream::#variant_ident {
@@ -743,7 +725,6 @@ pub fn type_variants_from_request_response<'a>(
     };
     (
         error_variant_attribute,
-        from_logic_token_stream,
         impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
         impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream,
         axum_response_into_response_logic_token_stream,
@@ -900,7 +881,6 @@ pub fn generate_error_variants_vec_token_stream(
     error_variant_attribute: &std::vec::Vec<&syn::Variant>,
 ) -> std::vec::Vec<(
     crate::type_variants_from_request_response_generator::ErrorVariantAttribute,
-    proc_macro2::TokenStream, //from_logic_token_stream
     proc_macro2::TokenStream, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
     proc_macro2::TokenStream, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
     proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
