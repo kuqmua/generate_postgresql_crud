@@ -38,7 +38,7 @@ pub fn type_variants_from_request_response_generator(
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response: std::vec::Vec<(
         ErrorVariantAttribute,
-        proc_macro2::TokenStream, //try_operation_token_stream
+        // proc_macro2::TokenStream, //try_operation_token_stream
         proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
         proc_macro2::TokenStream, //from_logic_token_stream
         proc_macro2::TokenStream, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
@@ -59,17 +59,32 @@ pub fn type_variants_from_request_response_generator(
     let try_operation_token_stream = {
         let try_operation_mapped_token_stream = type_variants_from_request_response.iter().map(
             |(
-                _,
-                try_operation_token_stream, 
+                error_variant_attribute,
                 _, //enum_with_serialize_deserialize_logic_token_stream,
                 _, //from_logic_token_stream
                 _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
                 _, //impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream
                 _, //enum_status_codes_checker_name_logic_token_stream
                 _, //axum_response_into_response_logic_token_stream
-            )| try_operation_token_stream,
-        )
-        .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
+            )| {
+                let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
+                let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
+                    let error_occurence_attribute_token_stream = &element.error_occurence_attribute;
+                    let field_name_token_stream = &element.field_name;
+                    let field_type_token_stream = &element.field_type_original;
+                    quote::quote! {
+                        #error_occurence_attribute_token_stream
+                        #field_name_token_stream: #field_type_token_stream
+                    }
+                })
+                .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                quote::quote! {
+                    #variant_ident {
+                        #(#fields_mapped_into_token_stream),*
+                    }
+                }
+        })
+        .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             #[derive(
                 Debug,
@@ -88,7 +103,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         _,
-                        _, //try_operation_token_stream
                         enum_with_serialize_deserialize_logic_token_stream,
                         _, //from_logic_token_stream
                         _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
@@ -112,7 +126,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     _,
-                    _, //try_operation_token_stream
                     _, //enum_with_serialize_deserialize_logic_token_stream
                     from_logic_token_stream,
                     _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
@@ -138,7 +151,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     _,
-                    _, //try_operation_token_stream
                     _, //enum_with_serialize_deserialize_logic_token_stream
                     _, //from_logic_token_stream
                     impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
@@ -402,7 +414,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     _,
-                    _, //try_operation_token_stream
                     _, //enum_with_serialize_deserialize_logic_token_stream
                     _, //from_logic_token_stream
                     _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
@@ -565,7 +576,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         _,
-                        _, //try_operation_token_stream
                         _, //enum_with_serialize_deserialize_logic_token_stream
                         _, //from_logic_token_stream
                         _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
@@ -588,7 +598,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         _,
-                        _, //try_operation_token_stream
                         _, //enum_with_serialize_deserialize_logic_token_stream
                         _, //from_logic_token_stream
                         _, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
@@ -636,7 +645,7 @@ pub fn type_variants_from_request_response<'a>(
     error_variant: &'a syn::Variant,
 ) -> (
     ErrorVariantAttribute, //error_variant
-    proc_macro2::TokenStream, //try_operation_token_stream
+    // proc_macro2::TokenStream, //try_operation_token_stream
     proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
     proc_macro2::TokenStream, //from_logic_token_stream
     proc_macro2::TokenStream, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
@@ -674,23 +683,23 @@ pub fn type_variants_from_request_response<'a>(
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
-    let try_operation_token_stream = {
-        let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
-            let error_occurence_attribute_token_stream = &element.error_occurence_attribute;
-            let field_name_token_stream = &element.field_name;
-            let field_type_token_stream = &element.field_type_original;
-            quote::quote! {
-                #error_occurence_attribute_token_stream
-                #field_name_token_stream: #field_type_token_stream
-            }
-        })
-        .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-        quote::quote! {
-            #variant_ident {
-                #(#fields_mapped_into_token_stream),*
-            }
-        }
-    };
+    // let try_operation_token_stream = {
+    //     let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
+    //         let error_occurence_attribute_token_stream = &element.error_occurence_attribute;
+    //         let field_name_token_stream = &element.field_name;
+    //         let field_type_token_stream = &element.field_type_original;
+    //         quote::quote! {
+    //             #error_occurence_attribute_token_stream
+    //             #field_name_token_stream: #field_type_token_stream
+    //         }
+    //     })
+    //     .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    //     quote::quote! {
+    //         #variant_ident {
+    //             #(#fields_mapped_into_token_stream),*
+    //         }
+    //     }
+    // };
     let enum_with_serialize_deserialize_logic_token_stream = {
         let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
             let field_name_token_stream = &element.field_name;
@@ -747,7 +756,7 @@ pub fn type_variants_from_request_response<'a>(
     };
     (
         error_variant_attribute,
-        try_operation_token_stream,
+        // try_operation_token_stream,
         enum_with_serialize_deserialize_logic_token_stream,
         from_logic_token_stream,
         impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream,
@@ -907,7 +916,7 @@ pub fn generate_error_variants_vec_token_stream(
     error_variant_attribute: &std::vec::Vec<&syn::Variant>,
 ) -> std::vec::Vec<(
     crate::type_variants_from_request_response_generator::ErrorVariantAttribute,
-    proc_macro2::TokenStream, //try_operation_token_stream
+    // proc_macro2::TokenStream, //try_operation_token_stream
     proc_macro2::TokenStream, //enum_with_serialize_deserialize_logic_token_stream
     proc_macro2::TokenStream, //from_logic_token_stream
     proc_macro2::TokenStream, //impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream
@@ -1023,52 +1032,3 @@ pub fn construct_syn_variant(
         discriminant: None,
     }
 }
-
-// pub fn generate_variant_declaration(
-//     variant: &syn::Variant,
-//     proc_macro_name_ident_stringified: &str
-// )-> proc_macro2::TokenStream {
-//     let variant_ident = &variant.ident;
-//     let error_variant_attribute_view_token_stream = {
-//         let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(&variant)
-//         .unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
-//         error_variant_attribute.to_attribute_view_token_stream()
-//     };
-//     let fields_token_stream = {
-//         let fields_named = if let syn::Fields::Named(fields_named) = &variant.fields {
-//             fields_named
-//         }
-//         else {
-//             panic!("{proc_macro_name_ident_stringified} expected fields would be named");
-//         };
-//         let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
-//         let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
-//         fields_named.named.iter().map(|field|{
-//             let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-//                 "{proc_macro_name_ident_stringified} field.ident {}",
-//                 proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
-//             ));
-//             let field_attribute_view_token_stream = match field_ident.to_string() == code_occurence_lower_case {
-//                 true => proc_macro2::TokenStream::new(),
-//                 false => {
-//                     let field_attribute = proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::try_from(&field).unwrap_or_else(|e| panic!(
-//                         "{proc_macro_name_ident_stringified} failed to get NamedAttribute {e}"
-//                     ));
-//                     field_attribute.to_attribute_view_token_stream()
-//                 }
-//             };
-//             let field_type_original = &field.ty;
-//             quote::quote!{
-//                 #field_attribute_view_token_stream
-//                 #field_ident: #field_type_original
-//             }
-//         })
-//         .collect::<Vec<proc_macro2::TokenStream>>()
-//     };
-//     quote::quote!{
-//         #error_variant_attribute_view_token_stream
-//         #variant_ident {
-//             #(#fields_token_stream),*
-//         }
-//     }
-// }
