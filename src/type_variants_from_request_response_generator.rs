@@ -38,7 +38,6 @@ pub fn type_variants_from_request_response_generator(
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response: std::vec::Vec<(
         ErrorVariantAttribute,
-        proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
     )>,
     // ident_response_variants_token_stream: &proc_macro2::TokenStream,
     is_response_with_body: bool,
@@ -54,7 +53,6 @@ pub fn type_variants_from_request_response_generator(
         let try_operation_mapped_token_stream = type_variants_from_request_response.iter().map(
             |(
                 error_variant_attribute,
-                _, //axum_response_into_response_logic_token_stream
             )| {
                 let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
                 let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
@@ -92,7 +90,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         error_variant_attribute,
-                        _, //axum_response_into_response_logic_token_stream
                     )| {
                         let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
                         let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
@@ -123,7 +120,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     error_variant_attribute,
-                    _, //axum_response_into_response_logic_token_stream
                 )| {
                     let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
                     let fields_name_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
@@ -156,7 +152,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     error_variant_attribute,
-                    _, //axum_response_into_response_logic_token_stream
                 )| {
                     let fields_anonymous_types_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
                         let field_name_token_stream = &element.field_name;
@@ -425,7 +420,6 @@ pub fn type_variants_from_request_response_generator(
             .map(
                 |(
                     error_variant_attribute,
-                    _, //axum_response_into_response_logic_token_stream
                 )| {
                     let fields_name_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields
                         .iter()
@@ -598,7 +592,6 @@ pub fn type_variants_from_request_response_generator(
                 .map(
                     |(
                         error_variant_attribute,
-                        _, //axum_response_into_response_logic_token_stream
                     )| {
                         //
                         let variant_ident_attribute_camel_case_token_stream = {
@@ -630,11 +623,28 @@ pub fn type_variants_from_request_response_generator(
                 .iter()
                 .map(
                     |(
-                        _,
-                        axum_response_into_response_logic_token_stream,
-                    )| axum_response_into_response_logic_token_stream,
+                        error_variant_attribute,
+                    )| {
+                        let fields_anonymous_types_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields
+                            .iter()
+                            .map(|element| {
+                                let field_name_token_stream = &element.field_name;
+                                quote::quote! {#field_name_token_stream: _}
+                            })
+                            .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                        let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
+                        quote::quote! {
+                            #try_operation_response_variants_camel_case_token_stream::#variant_ident {
+                                #(#fields_anonymous_types_mapped_into_token_stream),*
+                            } => {
+                                let mut res = axum::Json(self).into_response();
+                                *res.status_mut() = #http_status_code_quote_token_stream;
+                                res
+                            }
+                        }
+                    },
                 )
-                .collect::<std::vec::Vec<&proc_macro2::TokenStream>>();
+                .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             impl axum::response::IntoResponse for #try_operation_response_variants_camel_case_token_stream {
                 fn into_response(self) -> axum::response::Response {
@@ -673,7 +683,6 @@ pub fn type_variants_from_request_response<'a>(
     error_variant: &'a syn::Variant,
 ) -> (
     ErrorVariantAttribute, //error_variant
-    proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
 ) {
     let error_variant_attribute = generate_error_variant_attribute(
         &error_variant,
@@ -705,20 +714,8 @@ pub fn type_variants_from_request_response<'a>(
         })
         .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
-    let axum_response_into_response_logic_token_stream = {
-        quote::quote! {
-            #try_operation_response_variants_camel_case_token_stream::#variant_ident {
-                #(#fields_anonymous_types_mapped_into_token_stream),*
-            } => {
-                let mut res = axum::Json(self).into_response();
-                *res.status_mut() = #http_status_code_quote_token_stream;
-                res
-            }
-        }
-    };
     (
         error_variant_attribute,
-        axum_response_into_response_logic_token_stream,
     )
 }
 
@@ -872,7 +869,6 @@ pub fn generate_error_variants_vec_token_stream(
     error_variant_attribute: &std::vec::Vec<&syn::Variant>,
 ) -> std::vec::Vec<(
     crate::type_variants_from_request_response_generator::ErrorVariantAttribute,
-    proc_macro2::TokenStream, //axum_response_into_response_logic_token_stream
 )> {
     error_variant_attribute.iter().map(|element|crate::type_variants_from_request_response_generator::type_variants_from_request_response(
         &try_operation_response_variants_camel_case_token_stream,
