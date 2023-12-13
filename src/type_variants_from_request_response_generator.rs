@@ -665,7 +665,7 @@ pub fn type_variants_from_request_response_generator(
 
 pub fn type_variants_from_request_response<'a>(
     try_operation_response_variants_camel_case_token_stream: &proc_macro2::TokenStream,
-    try_operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
+    operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
     proc_macro_name_ident_stringified: &std::string::String,
     error_variant: &'a syn::Variant,
 ) -> (
@@ -707,7 +707,7 @@ pub fn type_variants_from_request_response<'a>(
     let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
     let from_logic_token_stream = {
         quote::quote! {
-            #try_operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+            #operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
                 #(#fields_name_mapped_into_token_stream),*
             } => Self::#variant_ident {
                 #(#fields_name_mapped_into_token_stream),*
@@ -725,7 +725,7 @@ pub fn type_variants_from_request_response<'a>(
         quote::quote! {
             #try_operation_response_variants_camel_case_token_stream::#variant_ident {
                 #(#fields_name_mapped_into_token_stream),*
-            } => Err(#try_operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+            } => Err(#operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
                 #(#fields_name_mapped_into_token_stream),*
             })
         }
