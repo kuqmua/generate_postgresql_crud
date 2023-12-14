@@ -853,20 +853,6 @@ fn generate_error_variant_attribute(
     }
 }
 
-pub fn generate_error_variants_vec_token_stream(
-    try_operation_response_variants_camel_case_token_stream: &proc_macro2::TokenStream,
-    try_operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
-    proc_macro_name_ident_stringified: &std::string::String,
-    error_variant_attribute: &std::vec::Vec<&syn::Variant>,
-) -> std::vec::Vec<crate::type_variants_from_request_response_generator::ErrorVariantAttribute> {
-    error_variant_attribute.iter().map(|element|crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-        &try_operation_response_variants_camel_case_token_stream,
-        &try_operation_with_serialize_deserialize_camel_case_token_stream,
-        &proc_macro_name_ident_stringified,
-        element,
-    )).collect()
-}
-
 pub fn construct_syn_variant(
     tvfrr_status_attribute: proc_macro_helpers::attribute::Attribute,
     variant_name: &str,
