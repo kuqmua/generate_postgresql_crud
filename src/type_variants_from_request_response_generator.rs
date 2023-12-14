@@ -36,12 +36,12 @@ pub fn type_variants_from_request_response_generator(
     eo_display_foreign_type_token_stream: &proc_macro2::TokenStream,
     eo_display_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
-    type_variants_from_request_response: std::vec::Vec<&syn::Variant>,
+    type_variants_from_request_response_syn_variants: std::vec::Vec<&syn::Variant>,
     // ident_response_variants_token_stream: &proc_macro2::TokenStream,
     is_response_with_body: bool,
     proc_macro_name_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
-    let type_variants_from_request_response: std::vec::Vec<ErrorVariantAttribute> = type_variants_from_request_response.iter().map(|element|{
+    let type_variants_from_request_response: std::vec::Vec<ErrorVariantAttribute> = type_variants_from_request_response_syn_variants.iter().map(|element|{
         let variant_ident = &element.ident;
         let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
         .unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
