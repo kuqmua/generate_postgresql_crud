@@ -184,59 +184,57 @@ pub fn type_variants_from_request_response_generator(
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream = quote::quote! {crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
     let crate_common_api_request_unexpected_error_response_text_result_token_stream = quote::quote! {crate::common::api_request_unexpected_error::ResponseTextResult};
     let try_operation_token_stream = {
-        let try_operation_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(
-            |error_variant_attribute| {
-                let variant_ident = &error_variant_attribute.ident;
-                let fields_named = if let syn::Fields::Named(fields_named) = &error_variant_attribute.fields {
-                    fields_named
-                }
-                else {
-                    panic!("{proc_macro_name_ident_stringified} expected fields would be named");
-                };
-                let fields_mapped_into_token_stream = fields_named.named.iter().map(|field|{
-                    let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-                        "{proc_macro_name_ident_stringified} field.ident {}",
-                        proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
-                    ));
-                    let error_occurence_attribute = match field_ident == code_occurence_lower_case {
-                        true => quote::quote! {},
-                        false => {
-                            let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
-                            for element in &field.attrs {
-                                if let true = element.path.segments.len() == 1 {
-                                    let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
-                                    if let Ok(value) = {
-                                        use std::str::FromStr;
-                                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&segment.ident.to_string())
-                                    } {
-                                        match error_occurence_attribute {
-                                            Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
-                                            None => {
-                                                error_occurence_attribute = Some(value);
-                                            }
+        let try_operation_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant_attribute| {
+            let variant_ident = &error_variant_attribute.ident;
+            let fields_named = if let syn::Fields::Named(fields_named) = &error_variant_attribute.fields {
+                fields_named
+            }
+            else {
+                panic!("{proc_macro_name_ident_stringified} expected fields would be named");
+            };
+            let fields_mapped_into_token_stream = fields_named.named.iter().map(|field|{
+                let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
+                    "{proc_macro_name_ident_stringified} field.ident {}",
+                    proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+                ));
+                let error_occurence_attribute = match field_ident == code_occurence_lower_case {
+                    true => quote::quote! {},
+                    false => {
+                        let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
+                        for element in &field.attrs {
+                            if let true = element.path.segments.len() == 1 {
+                                let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
+                                if let Ok(value) = {
+                                    use std::str::FromStr;
+                                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&segment.ident.to_string())
+                                } {
+                                    match error_occurence_attribute {
+                                        Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
+                                        None => {
+                                            error_occurence_attribute = Some(value);
                                         }
                                     }
                                 }
                             }
-                            match error_occurence_attribute {
-                                Some(value) => value.to_attribute_view_token_stream(),
-                                None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
-                            }
                         }
-                    };
-                    let field_type = &field.ty;
-                    quote::quote! {
-                        #error_occurence_attribute
-                        #field_ident: #field_type
+                        match error_occurence_attribute {
+                            Some(value) => value.to_attribute_view_token_stream(),
+                            None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
+                        }
                     }
-                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                };
+                let field_type = &field.ty;
                 quote::quote! {
-                    #variant_ident {
-                        #(#fields_mapped_into_token_stream),*
-                    }
+                    #error_occurence_attribute
+                    #field_ident: #field_type
                 }
-        })
-        .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+            }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+            quote::quote! {
+                #variant_ident {
+                    #(#fields_mapped_into_token_stream),*
+                }
+            }
+        }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             #[derive(
                 Debug,
@@ -250,25 +248,106 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let enum_with_serialize_deserialize_logic_token_stream_handle_token_stream = {
-        let enum_with_serialize_deserialize_logic_mapped_token_stream = type_variants_from_request_response
-                .iter()
-                .map(
-                    |error_variant_attribute| {
-                        let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
-                        let fields_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
-                            let field_name_token_stream = &element.field_name;
-                            let field_type_token_stream = &element.field_type_with_serialize_deserialize;
-                            quote::quote! {#field_name_token_stream: #field_type_token_stream}
-                        })
-                        .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                        quote::quote! {
-                            #variant_ident {
-                                #(#fields_mapped_into_token_stream),*
+        let enum_with_serialize_deserialize_logic_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant_attribute| {
+            let variant_ident = &error_variant_attribute.ident;
+            let fields_named = if let syn::Fields::Named(fields_named) = &error_variant_attribute.fields {
+                fields_named
+            }
+            else {
+                panic!("{proc_macro_name_ident_stringified} expected fields would be named");
+            };
+            let fields_mapped_into_token_stream = fields_named.named.iter().map(|field|{
+                let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
+                    "{proc_macro_name_ident_stringified} field.ident {}",
+                    proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+                ));
+                let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
+                    true => {
+                        let code_occurence_type_token_stream = {
+                            if let syn::Type::Path(type_path) = &field.ty {
+                                let mut code_occurence_type_repeat_checker = false;
+                                let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
+                                .fold(String::from(""), |mut acc, path_segment| {
+                                    let path_segment_ident = &path_segment.ident;
+                                    match *path_segment_ident == code_occurence_camel_case {
+                                        true => {
+                                            if code_occurence_type_repeat_checker {
+                                                panic!("{proc_macro_name_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case} inside type path");
+                                            }
+                                            acc.push_str(&path_segment_ident.to_string());
+                                            code_occurence_type_repeat_checker = true;
+                                        },
+                                        false => acc.push_str(&format!("{path_segment_ident}::")),
+                                    }
+                                    acc
+                                });
+                                if !code_occurence_type_repeat_checker {
+                                    panic!("{proc_macro_name_ident_stringified} no {code_occurence_camel_case} named field");
+                                }
+                                code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
+                                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                             }
-                        }
+                            else {
+                                let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
+                                panic!(
+                                    "{proc_macro_name_ident_stringified} {code_occurence_lower_case} {} {syn_type_path_stringified}",
+                                    proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
+                                );
+                            }
+                        };
+                        code_occurence_type_token_stream
                     },
-                )
-                .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                    false => {
+                        let attribute = {
+                            let mut option_attribute = None;
+                            field.attrs.iter().for_each(|attr|{
+                                if let true = attr.path.segments.len() == 1 {
+                                    let error_message = format!("{proc_macro_name_ident_stringified} two or more supported attributes!");
+                                    let attr_ident = match attr.path.segments.iter().next() {
+                                        Some(path_segment) => &path_segment.ident,
+                                        None => panic!("attr.path.segments.iter().next() is None"),
+                                    };
+                                    match {
+                                        use std::str::FromStr;
+                                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&attr_ident.to_string())
+                                    } {
+                                        Ok(value) => {
+                                            if let true = option_attribute.is_some() {
+                                                panic!("{error_message}");
+                                            }
+                                            else {
+                                                option_attribute = Some(value);
+                                            }
+                                        },
+                                        Err(_) => ()//other attributes are not for this proc_macro
+                                    }
+                                }//other attributes are not for this proc_macro
+                            });
+                            option_attribute.unwrap_or_else(|| panic!(
+                                "{proc_macro_name_ident_stringified} option attribute {}",
+                                proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+                            ))
+                        };
+                        let supported_container = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_supported_container(
+                            &field,
+                            &proc_macro_name_ident_stringified,
+                        );
+                        let field_type_with_serialize_deserialize = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_field_type_with_serialize_deserialize_version(
+                            attribute,
+                            supported_container,
+                            &proc_macro_name_ident_stringified,
+                        );
+                        field_type_with_serialize_deserialize
+                    },
+                };
+                quote::quote! {#field_ident: #field_type_with_serialize_deserialize}
+            }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+            quote::quote! {
+                #variant_ident {
+                    #(#fields_mapped_into_token_stream),*
+                }
+            }
+        }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();      
         quote::quote! {
             #derive_debug_serialize_deserialize_token_stream
             pub enum #try_operation_response_variants_camel_case_token_stream {
