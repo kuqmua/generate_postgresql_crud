@@ -42,145 +42,142 @@ pub fn type_variants_from_request_response_generator(
     proc_macro_name_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
     let type_variants_from_request_response: std::vec::Vec<ErrorVariantAttribute> = type_variants_from_request_response.iter().map(|element|{
-//
-let variant_ident = &element.ident;
-let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
-.unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
-let fields_named = if let syn::Fields::Named(fields_named) = &element.fields {
-    fields_named
-}
-else {
-    panic!("{proc_macro_name_ident_stringified} expected fields would be named");
-};
-let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
-let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
-let error_variant_fields = fields_named.named.iter().map(|field|{
-    let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-        "{proc_macro_name_ident_stringified} field.ident {}",
-        proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
-    ));
-    let error_occurence_attribute = match field_ident == code_occurence_lower_case {
-        true => quote::quote! {},
-        false => {
-            let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
-            for element in &field.attrs {
-                if let true = element.path.segments.len() == 1 {
-                    let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
-                    if let Ok(value) = {
-                        use std::str::FromStr;
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&segment.ident.to_string())
-                    } {
-                        match error_occurence_attribute {
-                            Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
-                            None => {
-                                error_occurence_attribute = Some(value);
+        let variant_ident = &element.ident;
+        let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
+        .unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
+        let fields_named = if let syn::Fields::Named(fields_named) = &element.fields {
+            fields_named
+        }
+        else {
+            panic!("{proc_macro_name_ident_stringified} expected fields would be named");
+        };
+        let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
+        let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
+        let error_variant_fields = fields_named.named.iter().map(|field|{
+            let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
+                "{proc_macro_name_ident_stringified} field.ident {}",
+                proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+            ));
+            let error_occurence_attribute = match field_ident == code_occurence_lower_case {
+                true => quote::quote! {},
+                false => {
+                    let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
+                    for element in &field.attrs {
+                        if let true = element.path.segments.len() == 1 {
+                            let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
+                            if let Ok(value) = {
+                                use std::str::FromStr;
+                                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&segment.ident.to_string())
+                            } {
+                                match error_occurence_attribute {
+                                    Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
+                                    None => {
+                                        error_occurence_attribute = Some(value);
+                                    }
+                                }
                             }
                         }
                     }
+                    match error_occurence_attribute {
+                        Some(value) => value.to_attribute_view_token_stream(),
+                        None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
+                    }
                 }
+            };
+            let field_type_original = &field.ty;
+            let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
+                true => {
+                    let code_occurence_type_token_stream = {
+                        if let syn::Type::Path(type_path) = &field.ty {
+                            let mut code_occurence_type_repeat_checker = false;
+                            let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
+                            .fold(String::from(""), |mut acc, path_segment| {
+                                let path_segment_ident = &path_segment.ident;
+                                match *path_segment_ident == code_occurence_camel_case {
+                                    true => {
+                                        if code_occurence_type_repeat_checker {
+                                            panic!("{proc_macro_name_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case} inside type path");
+                                        }
+                                        acc.push_str(&path_segment_ident.to_string());
+                                        code_occurence_type_repeat_checker = true;
+                                    },
+                                    false => acc.push_str(&format!("{path_segment_ident}::")),
+                                }
+                                acc
+                            });
+                            if !code_occurence_type_repeat_checker {
+                                panic!("{proc_macro_name_ident_stringified} no {code_occurence_camel_case} named field");
+                            }
+                            code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
+                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                        }
+                        else {
+                            let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
+                            panic!(
+                                "{proc_macro_name_ident_stringified} {code_occurence_lower_case} {} {syn_type_path_stringified}",
+                                proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
+                            );
+                        }
+                    };
+                    code_occurence_type_token_stream
+                },
+                false => {
+                    let attribute = {
+                        let mut option_attribute = None;
+                        field.attrs.iter().for_each(|attr|{
+                            if let true = attr.path.segments.len() == 1 {
+                                let error_message = format!("{proc_macro_name_ident_stringified} two or more supported attributes!");
+                                let attr_ident = match attr.path.segments.iter().next() {
+                                    Some(path_segment) => &path_segment.ident,
+                                    None => panic!("attr.path.segments.iter().next() is None"),
+                                };
+                                match {
+                                    use std::str::FromStr;
+                                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&attr_ident.to_string())
+                                } {
+                                    Ok(value) => {
+                                        if let true = option_attribute.is_some() {
+                                            panic!("{error_message}");
+                                        }
+                                        else {
+                                            option_attribute = Some(value);
+                                        }
+                                    },
+                                    Err(_) => ()//other attributes are not for this proc_macro
+                                }
+                            }//other attributes are not for this proc_macro
+                        });
+                        option_attribute.unwrap_or_else(|| panic!(
+                            "{proc_macro_name_ident_stringified} option attribute {}",
+                            proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+                        ))
+                    };
+                    let supported_container = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_supported_container(
+                        &field,
+                        &proc_macro_name_ident_stringified,
+                    );
+                    let field_type_with_serialize_deserialize = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_field_type_with_serialize_deserialize_version(
+                        attribute,
+                        supported_container,
+                        &proc_macro_name_ident_stringified,
+                    );
+                    field_type_with_serialize_deserialize
+                },
+            };
+            crate::type_variants_from_request_response_generator::ErrorVariantField {
+                field_name: quote::quote! {#field_ident},
+                error_occurence_attribute,
+                field_type_original: quote::quote! {#field_type_original},
+                field_type_with_serialize_deserialize,
             }
-            match error_occurence_attribute {
-                Some(value) => value.to_attribute_view_token_stream(),
-                None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
+        }).collect::<Vec<crate::type_variants_from_request_response_generator::ErrorVariantField>>();
+        crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
+            error_variant_attribute,
+            error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
+                error_variant_ident: quote::quote! {#variant_ident},
+                error_variant_fields,
             }
         }
-    };
-    let field_type_original = &field.ty;
-    let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
-        true => {
-            let code_occurence_type_token_stream = {
-                if let syn::Type::Path(type_path) = &field.ty {
-                    let mut code_occurence_type_repeat_checker = false;
-                    let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
-                    .fold(String::from(""), |mut acc, path_segment| {
-                        let path_segment_ident = &path_segment.ident;
-                        match *path_segment_ident == code_occurence_camel_case {
-                            true => {
-                                if code_occurence_type_repeat_checker {
-                                    panic!("{proc_macro_name_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case} inside type path");
-                                }
-                                acc.push_str(&path_segment_ident.to_string());
-                                code_occurence_type_repeat_checker = true;
-                            },
-                            false => acc.push_str(&format!("{path_segment_ident}::")),
-                        }
-                        acc
-                    });
-                    if !code_occurence_type_repeat_checker {
-                        panic!("{proc_macro_name_ident_stringified} no {code_occurence_camel_case} named field");
-                    }
-                    code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                }
-                else {
-                    let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
-                    panic!(
-                        "{proc_macro_name_ident_stringified} {code_occurence_lower_case} {} {syn_type_path_stringified}",
-                        proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
-                    );
-                }
-            };
-            code_occurence_type_token_stream
-        },
-        false => {
-            let attribute = {
-                let mut option_attribute = None;
-                field.attrs.iter().for_each(|attr|{
-                    if let true = attr.path.segments.len() == 1 {
-                        let error_message = format!("{proc_macro_name_ident_stringified} two or more supported attributes!");
-                        let attr_ident = match attr.path.segments.iter().next() {
-                            Some(path_segment) => &path_segment.ident,
-                            None => panic!("attr.path.segments.iter().next() is None"),
-                        };
-                        match {
-                            use std::str::FromStr;
-                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&attr_ident.to_string())
-                        } {
-                            Ok(value) => {
-                                if let true = option_attribute.is_some() {
-                                    panic!("{error_message}");
-                                }
-                                else {
-                                    option_attribute = Some(value);
-                                }
-                            },
-                            Err(_) => ()//other attributes are not for this proc_macro
-                        }
-                    }//other attributes are not for this proc_macro
-                });
-                option_attribute.unwrap_or_else(|| panic!(
-                    "{proc_macro_name_ident_stringified} option attribute {}",
-                    proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
-                ))
-            };
-            let supported_container = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_supported_container(
-                &field,
-                &proc_macro_name_ident_stringified,
-            );
-            let field_type_with_serialize_deserialize = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_field_type_with_serialize_deserialize_version(
-                attribute,
-                supported_container,
-                &proc_macro_name_ident_stringified,
-            );
-            field_type_with_serialize_deserialize
-        },
-    };
-    crate::type_variants_from_request_response_generator::ErrorVariantField {
-        field_name: quote::quote! {#field_ident},
-        error_occurence_attribute,
-        field_type_original: quote::quote! {#field_type_original},
-        field_type_with_serialize_deserialize,
-    }
-})
-.collect::<Vec<crate::type_variants_from_request_response_generator::ErrorVariantField>>();
-crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-    error_variant_attribute,
-    error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-        error_variant_ident: quote::quote! {#variant_ident},
-        error_variant_fields,
-    }
-}
-//
     }).collect();
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let vec_status_codes_len = type_variants_from_request_response.len();
@@ -798,149 +795,6 @@ crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
         #axum_response_into_response_logic_token_stream_handle_token_stream
     }
 }
-
-// fn generate_error_variant_attribute(
-//     variant: &syn::Variant,
-//     proc_macro_name_ident_stringified: &std::string::String,
-// ) -> crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-//     let variant_ident = &variant.ident;
-//     let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(&variant)
-//     .unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
-//     let fields_named = if let syn::Fields::Named(fields_named) = &variant.fields {
-//         fields_named
-//     }
-//     else {
-//         panic!("{proc_macro_name_ident_stringified} expected fields would be named");
-//     };
-//     let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
-//     let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
-//     let error_variant_fields = fields_named.named.iter().map(|field|{
-//         let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-//             "{proc_macro_name_ident_stringified} field.ident {}",
-//             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
-//         ));
-//         let error_occurence_attribute = match field_ident == code_occurence_lower_case {
-//             true => quote::quote! {},
-//             false => {
-//                 let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
-//                 for element in &field.attrs {
-//                     if let true = element.path.segments.len() == 1 {
-//                         let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
-//                         if let Ok(value) = {
-//                             use std::str::FromStr;
-//                             proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&segment.ident.to_string())
-//                         } {
-//                             match error_occurence_attribute {
-//                                 Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
-//                                 None => {
-//                                     error_occurence_attribute = Some(value);
-//                                 }
-//                             }
-//                         }
-//                     }
-//                 }
-//                 match error_occurence_attribute {
-//                     Some(value) => value.to_attribute_view_token_stream(),
-//                     None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
-//                 }
-//             }
-//         };
-//         let field_type_original = &field.ty;
-//         let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
-//             true => {
-//                 let code_occurence_type_token_stream = {
-//                     if let syn::Type::Path(type_path) = &field.ty {
-//                         let mut code_occurence_type_repeat_checker = false;
-//                         let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
-//                         .fold(String::from(""), |mut acc, path_segment| {
-//                             let path_segment_ident = &path_segment.ident;
-//                             match *path_segment_ident == code_occurence_camel_case {
-//                                 true => {
-//                                     if code_occurence_type_repeat_checker {
-//                                         panic!("{proc_macro_name_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case} inside type path");
-//                                     }
-//                                     acc.push_str(&path_segment_ident.to_string());
-//                                     code_occurence_type_repeat_checker = true;
-//                                 },
-//                                 false => acc.push_str(&format!("{path_segment_ident}::")),
-//                             }
-//                             acc
-//                         });
-//                         if !code_occurence_type_repeat_checker {
-//                             panic!("{proc_macro_name_ident_stringified} no {code_occurence_camel_case} named field");
-//                         }
-//                         code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
-//                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-//                     }
-//                     else {
-//                         let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
-//                         panic!(
-//                             "{proc_macro_name_ident_stringified} {code_occurence_lower_case} {} {syn_type_path_stringified}",
-//                             proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
-//                         );
-//                     }
-//                 };
-//                 code_occurence_type_token_stream
-//             },
-//             false => {
-//                 let attribute = {
-//                     let mut option_attribute = None;
-//                     field.attrs.iter().for_each(|attr|{
-//                         if let true = attr.path.segments.len() == 1 {
-//                             let error_message = format!("{proc_macro_name_ident_stringified} two or more supported attributes!");
-//                             let attr_ident = match attr.path.segments.iter().next() {
-//                                 Some(path_segment) => &path_segment.ident,
-//                                 None => panic!("attr.path.segments.iter().next() is None"),
-//                             };
-//                             match {
-//                                 use std::str::FromStr;
-//                                 proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&attr_ident.to_string())
-//                             } {
-//                                 Ok(value) => {
-//                                     if let true = option_attribute.is_some() {
-//                                         panic!("{error_message}");
-//                                     }
-//                                     else {
-//                                         option_attribute = Some(value);
-//                                     }
-//                                 },
-//                                 Err(_) => ()//other attributes are not for this proc_macro
-//                             }
-//                         }//other attributes are not for this proc_macro
-//                     });
-//                     option_attribute.unwrap_or_else(|| panic!(
-//                         "{proc_macro_name_ident_stringified} option attribute {}",
-//                         proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
-//                     ))
-//                 };
-//                 let supported_container = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_supported_container(
-//                     &field,
-//                     &proc_macro_name_ident_stringified,
-//                 );
-//                 let field_type_with_serialize_deserialize = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_field_type_with_serialize_deserialize_version(
-//                     attribute,
-//                     supported_container,
-//                     &proc_macro_name_ident_stringified,
-//                 );
-//                 field_type_with_serialize_deserialize
-//             },
-//         };
-//         crate::type_variants_from_request_response_generator::ErrorVariantField {
-//             field_name: quote::quote! {#field_ident},
-//             error_occurence_attribute,
-//             field_type_original: quote::quote! {#field_type_original},
-//             field_type_with_serialize_deserialize,
-//         }
-//     })
-//     .collect::<Vec<crate::type_variants_from_request_response_generator::ErrorVariantField>>();
-//     crate::type_variants_from_request_response_generator::ErrorVariantAttribute {
-//         error_variant_attribute,
-//         error_variant: crate::type_variants_from_request_response_generator::ErrorVariant {
-//             error_variant_ident: quote::quote! {#variant_ident},
-//             error_variant_fields,
-//         }
-//     }
-// }
 
 pub fn construct_syn_variant(
     tvfrr_status_attribute: proc_macro_helpers::attribute::Attribute,
