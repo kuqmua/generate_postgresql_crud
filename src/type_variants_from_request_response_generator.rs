@@ -1101,29 +1101,21 @@ pub fn type_variants_from_request_response_generator(
             .parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {enum_status_codes_checker_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream =
-            type_variants_from_request_response
-                .iter()
-                .map(
-                    |error_variant_attribute| {
-                        //
-                        let variant_ident_attribute_camel_case_token_stream = {
-                            let variant_ident_attribute_camel_case_stringified = format!(
-                                "{}{}",
-                                error_variant_attribute.error_variant.error_variant_ident,
-                                error_variant_attribute.error_variant_attribute
-                            );
-                            variant_ident_attribute_camel_case_stringified
-                            .parse::<proc_macro2::TokenStream>()
-                            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_attribute_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                        };
-                        //
-                        quote::quote! {
-                            #variant_ident_attribute_camel_case_token_stream,
-                        }
-                    },
-                )
-                .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+        let enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant_attribute| {
+                let variant_ident = &error_variant_attribute.ident;
+                let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(error_variant_attribute)
+                .unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
+                let variant_ident_attribute_camel_case_token_stream = {
+                    let variant_ident_attribute_camel_case_stringified = format!("{variant_ident}{error_variant_attribute}");
+                    variant_ident_attribute_camel_case_stringified
+                    .parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_attribute_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote! {
+                    #variant_ident_attribute_camel_case_token_stream,
+                }
+            },
+        ).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             pub enum #enum_status_codes_checker_camel_case_token_stream {
                 #(#enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream)*
