@@ -41,17 +41,10 @@ pub fn type_variants_from_request_response_generator(
     is_response_with_body: bool,
     proc_macro_name_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
-    let type_variants_from_request_response: std::vec::Vec<ErrorVariantAttribute> = type_variants_from_request_response.iter().map(|element|{
-        let f = crate::type_variants_from_request_response_generator::type_variants_from_request_response(
-            &try_operation_response_variants_camel_case_token_stream,
-            &operation_with_serialize_deserialize_camel_case_token_stream,
-            &proc_macro_name_ident_stringified,
-            &element,
-        );
-        f
-    }).collect();
-    
-    
+    let type_variants_from_request_response: std::vec::Vec<ErrorVariantAttribute> = type_variants_from_request_response.iter().map(|element|generate_error_variant_attribute(
+        &element,
+        &proc_macro_name_ident_stringified,
+    )).collect();
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let vec_status_codes_len = type_variants_from_request_response.len();
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream =
@@ -669,45 +662,6 @@ pub fn type_variants_from_request_response_generator(
         #enum_status_codes_checker_name_logic_token_stream_handle_token_stream
         #axum_response_into_response_logic_token_stream_handle_token_stream
     }
-}
-
-pub fn type_variants_from_request_response<'a>(
-    try_operation_response_variants_camel_case_token_stream: &proc_macro2::TokenStream,
-    operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream, //KekwWithSerializeDeserialize
-    proc_macro_name_ident_stringified: &std::string::String,
-    error_variant: &'a syn::Variant,
-) -> ErrorVariantAttribute {
-    let error_variant_attribute = generate_error_variant_attribute(
-        &error_variant,
-        &proc_macro_name_ident_stringified,
-    );
-    let variant_ident_attribute_camel_case_token_stream = {
-        let variant_ident_attribute_camel_case_stringified = format!(
-            "{}{}",
-            error_variant_attribute.error_variant.error_variant_ident,
-            error_variant_attribute.error_variant_attribute
-        );
-        variant_ident_attribute_camel_case_stringified
-        .parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {variant_ident_attribute_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
-    let http_status_code_quote_token_stream = error_variant_attribute.error_variant_attribute.to_http_status_code_quote();
-    let fields_name_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields
-        .iter()
-        .map(|element| {
-            let field_name_token_stream = &element.field_name;
-            quote::quote! {#field_name_token_stream}
-        })
-        .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-    let fields_anonymous_types_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields
-        .iter()
-        .map(|element| {
-            let field_name_token_stream = &element.field_name;
-            quote::quote! {#field_name_token_stream: _}
-        })
-        .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-    let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
-    error_variant_attribute
 }
 
 fn generate_error_variant_attribute(
