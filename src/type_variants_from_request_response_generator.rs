@@ -648,7 +648,6 @@ pub fn type_variants_from_request_response_generator(
             let hashmap_unique_status_codes = type_variants_from_request_response_syn_variants.iter().fold(//todo maybe not need hashmap here? maybe just unique vec?
                 std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
                 |mut acc, element| {
-                    //
                     let variant_ident = &element.ident;
                     let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
                     .unwrap_or_else(|e| {panic!("{proc_macro_name_ident_stringified} variant {variant_ident} failed: {e}")});
@@ -780,7 +779,6 @@ pub fn type_variants_from_request_response_generator(
                         error_variant_ident: quote::quote! {#variant_ident},
                         error_variant_fields,
                     };
-                    //
                     match acc.get_mut(&error_variant_attribute) {
                         Some(value) => {
                             value.push(error_variant);
@@ -792,20 +790,6 @@ pub fn type_variants_from_request_response_generator(
                     acc
                 },
             );
-            // let hashmap_unique_status_codes = type_variants_from_request_response.iter().fold(//todo maybe not need hashmap here? maybe just unique vec?
-            //     std::collections::HashMap::<&proc_macro_helpers::attribute::Attribute, std::vec::Vec<&ErrorVariant>>::with_capacity(vec_status_codes_len),
-            //     |mut acc, element| {
-            //         match acc.get_mut(&element.error_variant_attribute) {
-            //             Some(value) => {
-            //                 value.push(&element.error_variant);
-            //             },
-            //             None => {
-            //                 acc.insert(&element.error_variant_attribute, vec![&element.error_variant]);
-            //             }
-            //         }
-            //         acc
-            //     },
-            // );
             let unique_status_codes_len = hashmap_unique_status_codes.len();
             if unique_status_codes_len < 1 {
                 panic!("{proc_macro_name_ident_stringified} unique_status_codes_len < 1 {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE);
@@ -942,18 +926,24 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_token_stream_handle_token_stream = {
-        let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_handle_mapped_token_stream = type_variants_from_request_response
+        let impl_try_from_ident_response_variants_token_stream_for_desirable_logic_handle_mapped_token_stream = type_variants_from_request_response_syn_variants
             .iter()
             .map(
                 |error_variant_attribute| {
-                    let fields_name_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields
-                        .iter()
-                        .map(|element| {
-                            let field_name_token_stream = &element.field_name;
-                            quote::quote! {#field_name_token_stream}
-                        })
-                        .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                    let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
+                    let variant_ident = &error_variant_attribute.ident;
+                    let fields_named = if let syn::Fields::Named(fields_named) = &error_variant_attribute.fields {
+                        fields_named
+                    }
+                    else {
+                        panic!("{proc_macro_name_ident_stringified} expected fields would be named");
+                    };
+                    let fields_name_mapped_into_token_stream = fields_named.named.iter().map(|field|{
+                        let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
+                            "{proc_macro_name_ident_stringified} field.ident {}",
+                            proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+                        ));
+                        quote::quote! {#field_ident}
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote! {
                         #try_operation_response_variants_camel_case_token_stream::#variant_ident {
                             #(#fields_name_mapped_into_token_stream),*
