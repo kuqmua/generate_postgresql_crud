@@ -275,15 +275,24 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_token_stream = {
-        let impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_mapped_token_stream = type_variants_from_request_response
+        let impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_mapped_token_stream = type_variants_from_request_response_syn_variants
             .iter()
             .map(
                 |error_variant_attribute| {
-                    let fields_anonymous_types_mapped_into_token_stream = error_variant_attribute.error_variant.error_variant_fields.iter().map(|element| {
-                        let field_name_token_stream = &element.field_name;
-                        quote::quote! {#field_name_token_stream: _}
+                    let variant_ident = &error_variant_attribute.ident;
+                    let fields_named = if let syn::Fields::Named(fields_named) = &error_variant_attribute.fields {
+                        fields_named
+                    }
+                    else {
+                        panic!("{proc_macro_name_ident_stringified} expected fields would be named");
+                    };
+                    let fields_anonymous_types_mapped_into_token_stream = fields_named.named.iter().map(|field|{
+                        let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
+                            "{proc_macro_name_ident_stringified} field.ident {}",
+                            proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+                        ));
+                        quote::quote! {#field_ident: _}
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                    let variant_ident = &error_variant_attribute.error_variant.error_variant_ident;
                     quote::quote! {
                         #try_operation_response_variants_camel_case_token_stream::#variant_ident {
                             #(#fields_anonymous_types_mapped_into_token_stream),*
