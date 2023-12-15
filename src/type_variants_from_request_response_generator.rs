@@ -292,7 +292,7 @@ pub fn type_variants_from_request_response_generator(
     let generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream = {
         let generated_status_code_enums_with_from_impls_logic_token_stream = {
             let status_code_enums_with_from_impls_logic_token_stream = type_variants_from_request_response_syn_variants.iter().fold(
-                std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<ErrorVariant>>::with_capacity(vec_status_codes_len),
+                std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<(&syn::Ident, std::vec::Vec<ErrorVariantField>)>>::with_capacity(vec_status_codes_len),
                 |mut acc, element| {
                     let variant_ident = &element.ident;
                     let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
@@ -421,16 +421,12 @@ pub fn type_variants_from_request_response_generator(
                             field_type_with_serialize_deserialize,
                         }
                     }).collect::<Vec<crate::type_variants_from_request_response_generator::ErrorVariantField>>();
-                    let error_variant = crate::type_variants_from_request_response_generator::ErrorVariant {
-                        error_variant_ident: quote::quote! {#variant_ident},
-                        error_variant_fields,
-                    };
                     match acc.get_mut(&error_variant_attribute) {
                         Some(value) => {
-                            value.push(error_variant);
+                            value.push((variant_ident, error_variant_fields));
                         },
                         None => {
-                            acc.insert(error_variant_attribute, vec![error_variant]);
+                            acc.insert(error_variant_attribute, vec![(variant_ident, error_variant_fields)]);
                         }
                     }
                     acc
@@ -444,8 +440,8 @@ pub fn type_variants_from_request_response_generator(
                     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {try_operation_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 let enum_variants_token_stream = value.iter().map(|element|{
-                    let error_variant_ident = &element.error_variant_ident;
-                    let fields_mapped_into_token_stream = element.error_variant_fields.iter().map(|element| {
+                    let error_variant_ident = &element.0;
+                    let fields_mapped_into_token_stream = element.1.iter().map(|element| {
                         let field_name_token_stream = &element.field_name;
                         let field_type_token_stream = &element.field_type_with_serialize_deserialize;
                         quote::quote! {#field_name_token_stream: #field_type_token_stream}
@@ -457,8 +453,8 @@ pub fn type_variants_from_request_response_generator(
                     }
                 });
                 let std_convert_from_match_variants_token_stream = value.iter().map(|element|{
-                    let error_variant_ident = &element.error_variant_ident;
-                    let fields_name_mapped_into_token_stream = element.error_variant_fields.iter().map(|element| {
+                    let error_variant_ident = &element.0;
+                    let fields_name_mapped_into_token_stream = element.1.iter().map(|element| {
                         let field_name_token_stream = &element.field_name;
                         quote::quote! {#field_name_token_stream}
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
