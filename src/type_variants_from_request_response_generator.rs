@@ -30,7 +30,6 @@ pub fn type_variants_from_request_response_generator(
     #[derive(Debug, Clone)]
     struct ErrorVariantField {
         field_name: syn::Ident,
-        error_occurence_attribute: proc_macro2::TokenStream,
         field_type_original: proc_macro2::TokenStream,
         field_type_with_serialize_deserialize: proc_macro2::TokenStream,
     }
@@ -409,7 +408,6 @@ pub fn type_variants_from_request_response_generator(
                         };
                         ErrorVariantField {
                             field_name: field_ident.clone(),
-                            error_occurence_attribute,
                             field_type_original: quote::quote! {#field_type_original},
                             field_type_with_serialize_deserialize,
                         }
@@ -627,7 +625,6 @@ pub fn type_variants_from_request_response_generator(
                         };
                         ErrorVariantField {
                             field_name: field_ident,
-                            error_occurence_attribute,
                             field_type_original: quote::quote! {#field_type_original},
                             field_type_with_serialize_deserialize,
                         }
