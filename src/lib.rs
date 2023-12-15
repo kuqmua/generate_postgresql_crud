@@ -3133,7 +3133,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                desirable_attribute,
+                &desirable_attribute,
                 &desirable_token_stream,
                 &quote::quote!{std::vec::Vec::<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>},
                 &try_operation_camel_case_token_stream,
@@ -3577,7 +3577,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                desirable_attribute,
+                &desirable_attribute,
                 &desirable_token_stream,
                 &crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                 &try_operation_camel_case_token_stream,
@@ -4037,7 +4037,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                desirable_attribute,
+                &desirable_attribute,
                 &desirable_token_stream,
                 &quote::quote!{#struct_options_ident_token_stream},
                 &try_operation_camel_case_token_stream,
@@ -4541,7 +4541,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                desirable_attribute,
+                &desirable_attribute,
                 &desirable_token_stream,
                 &quote::quote!{std::vec::Vec::<#struct_options_ident_token_stream>},
                 &try_operation_camel_case_token_stream,
@@ -5282,7 +5282,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                desirable_attribute,
+                &desirable_attribute,
                 &desirable_token_stream,
                 &quote::quote!{()},
                 &try_operation_camel_case_token_stream,
@@ -5833,7 +5833,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                desirable_attribute,
+                &desirable_attribute,
                 &desirable_token_stream,
                 &quote::quote!{()},
                 &try_operation_camel_case_token_stream,
@@ -6350,7 +6350,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                desirable_attribute,
+                &desirable_attribute,
                 &desirable_token_stream,
                 &quote::quote!{()},
                 &try_operation_camel_case_token_stream,
@@ -6825,7 +6825,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
-                desirable_attribute,
+                &desirable_attribute,
                 &desirable_token_stream,
                 &quote::quote!{()},
                 &try_operation_camel_case_token_stream,

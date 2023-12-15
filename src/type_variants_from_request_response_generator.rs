@@ -1,5 +1,5 @@
 pub fn type_variants_from_request_response_generator(
-    desirable_attribute: proc_macro_helpers::attribute::Attribute,
+    desirable_attribute: &proc_macro_helpers::attribute::Attribute,
     desirable_token_stream: &proc_macro2::TokenStream,
     desirable_type_token_stream: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
     try_operation_camel_case_token_stream: &proc_macro2::TokenStream,
@@ -724,7 +724,7 @@ pub fn type_variants_from_request_response_generator(
                         });
                     },
                     false => {
-                        if let false = desirable_attribute == status_code_attribute {
+                        if let false = *desirable_attribute == status_code_attribute {
                             status_code_enums_try_from_variants.push(quote::quote! {
                                 else if status_code == #http_status_code_token_stream {
                                     match response.text().await {
