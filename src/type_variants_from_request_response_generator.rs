@@ -292,33 +292,6 @@ pub fn type_variants_from_request_response_generator(
                             "{proc_macro_name_ident_stringified} field.ident {}",
                             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                         ));
-                        let error_occurence_attribute = match field_ident == code_occurence_lower_case {
-                            true => quote::quote! {},
-                            false => {
-                                let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
-                                for element in &field.attrs {
-                                    if let true = element.path.segments.len() == 1 {
-                                        let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
-                                        if let Ok(value) = {
-                                            use std::str::FromStr;
-                                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&segment.ident.to_string())
-                                        } {
-                                            match error_occurence_attribute {
-                                                Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
-                                                None => {
-                                                    error_occurence_attribute = Some(value);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                match error_occurence_attribute {
-                                    Some(value) => value.to_attribute_view_token_stream(),
-                                    None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
-                                }
-                            }
-                        };
-                        let field_type_original = &field.ty;
                         let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
                             true => {
                                 let code_occurence_type_token_stream = {
@@ -507,33 +480,6 @@ pub fn type_variants_from_request_response_generator(
                             "{proc_macro_name_ident_stringified} field.ident {}",
                             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                         ));
-                        let error_occurence_attribute = match field_ident == code_occurence_lower_case {
-                            true => quote::quote! {},
-                            false => {
-                                let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
-                                for element in &field.attrs {
-                                    if let true = element.path.segments.len() == 1 {
-                                        let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_ident_stringified} element.path.segments.get(0) is None")});
-                                        if let Ok(value) = {
-                                            use std::str::FromStr;
-                                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&segment.ident.to_string())
-                                        } {
-                                            match error_occurence_attribute {
-                                                Some(value) => panic!("{proc_macro_name_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
-                                                None => {
-                                                    error_occurence_attribute = Some(value);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                match error_occurence_attribute {
-                                    Some(value) => value.to_attribute_view_token_stream(),
-                                    None => panic!("{proc_macro_name_ident_stringified} {variant_ident} no supported attribute"),
-                                }
-                            }
-                        };
-                        let field_type_original = &field.ty;
                         let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
                             true => {
                                 let code_occurence_type_token_stream = {
