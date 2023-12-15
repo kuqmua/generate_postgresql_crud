@@ -1,22 +1,3 @@
-#[derive(Debug, Clone)]
-pub struct ErrorVariantAttribute<'a> {
-    pub error_variant_attribute: proc_macro_helpers::attribute::Attribute,
-    pub error_variant: ErrorVariant<'a>,
-}
-#[derive(Debug, Clone)]
-pub struct ErrorVariant<'a> {
-    pub error_variant_ident: &'a syn::Ident,
-    pub error_variant_fields: std::vec::Vec<ErrorVariantField>,
-}
-
-#[derive(Debug, Clone)]
-pub struct ErrorVariantField {
-    pub field_name: syn::Ident,
-    pub error_occurence_attribute: proc_macro2::TokenStream,
-    pub field_type_original: proc_macro2::TokenStream,
-    pub field_type_with_serialize_deserialize: proc_macro2::TokenStream,
-}
-
 pub fn type_variants_from_request_response_generator(
     desirable_attribute: proc_macro_helpers::attribute::Attribute,
     desirable_token_stream: &proc_macro2::TokenStream,
@@ -41,6 +22,23 @@ pub fn type_variants_from_request_response_generator(
     is_response_with_body: bool,
     proc_macro_name_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
+    #[derive(Debug, Clone)]
+    struct ErrorVariantAttribute<'a> {
+        pub error_variant_attribute: proc_macro_helpers::attribute::Attribute,
+        pub error_variant: ErrorVariant<'a>,
+    }
+    #[derive(Debug, Clone)]
+    struct ErrorVariant<'a> {
+        pub error_variant_ident: &'a syn::Ident,
+        pub error_variant_fields: std::vec::Vec<ErrorVariantField>,
+    }
+    #[derive(Debug, Clone)]
+    struct ErrorVariantField {
+        pub field_name: syn::Ident,
+        pub error_occurence_attribute: proc_macro2::TokenStream,
+        pub field_type_original: proc_macro2::TokenStream,
+        pub field_type_with_serialize_deserialize: proc_macro2::TokenStream,
+    }
     let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
     let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
@@ -414,14 +412,14 @@ pub fn type_variants_from_request_response_generator(
                                 field_type_with_serialize_deserialize
                             },
                         };
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
+                        ErrorVariantField {
                             field_name: field_ident.clone(),
                             error_occurence_attribute,
                             field_type_original: quote::quote! {#field_type_original},
                             field_type_with_serialize_deserialize,
                         }
-                    }).collect::<Vec<crate::type_variants_from_request_response_generator::ErrorVariantField>>();
-                    let error_variant = crate::type_variants_from_request_response_generator::ErrorVariant {
+                    }).collect::<Vec<ErrorVariantField>>();
+                    let error_variant = ErrorVariant {
                         error_variant_ident: &variant_ident,
                         error_variant_fields,
                     };
@@ -632,14 +630,14 @@ pub fn type_variants_from_request_response_generator(
                                 field_type_with_serialize_deserialize
                             },
                         };
-                        crate::type_variants_from_request_response_generator::ErrorVariantField {
+                        ErrorVariantField {
                             field_name: field_ident,
                             error_occurence_attribute,
                             field_type_original: quote::quote! {#field_type_original},
                             field_type_with_serialize_deserialize,
                         }
-                    }).collect::<Vec<crate::type_variants_from_request_response_generator::ErrorVariantField>>();
-                    let error_variant = crate::type_variants_from_request_response_generator::ErrorVariant {
+                    }).collect::<Vec<ErrorVariantField>>();
+                    let error_variant = ErrorVariant {
                         error_variant_ident: &variant_ident,
                         error_variant_fields,
                     };
