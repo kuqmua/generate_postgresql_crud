@@ -38,6 +38,7 @@ mod type_variants_from_request_response_generator;
 // PgLTree	LTREE
 // PgLQuery	LQUERY
 
+static PATH: &str = "generate_postgresql_crud";
 
 #[proc_macro_attribute]
 pub fn generate_postgresql_crud_additional_http_status_codes_error_variants(
@@ -149,6 +150,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //     ident_response_variants_stringified.parse::<proc_macro2::TokenStream>()
     //     .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {ident_response_variants_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     // };
+    let f = proc_macro_helpers::get_macro_attribute::get_macro_attribute(
+        &ast.attrs,
+        format!("{PATH}::generate_postgresql_crud_additional_http_status_codes_error_variants"),
+        &proc_macro_name_ident_stringified
+    );
+    println!("{f:#?}");
     let with_serialize_deserialize_camel_case_stringified = "WithSerializeDeserialize";
     let table_name_stringified = pluralizer::pluralize(&ident_lower_case_stringified, 2, false);
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
