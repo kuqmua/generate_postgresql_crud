@@ -30,7 +30,6 @@ pub fn type_variants_from_request_response_generator(
     #[derive(Debug, Clone)]
     struct ErrorVariantField {
         field_name: syn::Ident,
-        field_type_original: proc_macro2::TokenStream,
         field_type_with_serialize_deserialize: proc_macro2::TokenStream,
     }
     let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
@@ -408,7 +407,6 @@ pub fn type_variants_from_request_response_generator(
                         };
                         ErrorVariantField {
                             field_name: field_ident.clone(),
-                            field_type_original: quote::quote! {#field_type_original},
                             field_type_with_serialize_deserialize,
                         }
                     }).collect::<Vec<ErrorVariantField>>();
@@ -625,7 +623,6 @@ pub fn type_variants_from_request_response_generator(
                         };
                         ErrorVariantField {
                             field_name: field_ident,
-                            field_type_original: quote::quote! {#field_type_original},
                             field_type_with_serialize_deserialize,
                         }
                     }).collect::<Vec<ErrorVariantField>>();
