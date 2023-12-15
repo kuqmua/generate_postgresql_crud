@@ -23,21 +23,16 @@ pub fn type_variants_from_request_response_generator(
     proc_macro_name_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
     #[derive(Debug, Clone)]
-    struct ErrorVariantAttribute<'a> {
-        pub error_variant_attribute: proc_macro_helpers::attribute::Attribute,
-        pub error_variant: ErrorVariant<'a>,
-    }
-    #[derive(Debug, Clone)]
     struct ErrorVariant<'a> {
-        pub error_variant_ident: &'a syn::Ident,
-        pub error_variant_fields: std::vec::Vec<ErrorVariantField>,
+        error_variant_ident: &'a syn::Ident,
+        error_variant_fields: std::vec::Vec<ErrorVariantField>,
     }
     #[derive(Debug, Clone)]
     struct ErrorVariantField {
-        pub field_name: syn::Ident,
-        pub error_occurence_attribute: proc_macro2::TokenStream,
-        pub field_type_original: proc_macro2::TokenStream,
-        pub field_type_with_serialize_deserialize: proc_macro2::TokenStream,
+        field_name: syn::Ident,
+        error_occurence_attribute: proc_macro2::TokenStream,
+        field_type_original: proc_macro2::TokenStream,
+        field_type_with_serialize_deserialize: proc_macro2::TokenStream,
     }
     let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
     let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
