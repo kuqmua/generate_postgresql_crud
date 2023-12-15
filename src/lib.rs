@@ -39,7 +39,13 @@ mod type_variants_from_request_response_generator;
 // PgLQuery	LQUERY
 
 
-
+#[proc_macro_attribute]
+pub fn generate_postgresql_crud_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
 //todo potentially generate structs for all possible http status codes
 //todo fix bug with body { Desirable: null } if there is not body by idea in response
 //todo generate for each create update delete body length checked and for path query headers too
