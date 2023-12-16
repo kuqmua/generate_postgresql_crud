@@ -192,7 +192,7 @@ pub fn generate_postgresql_crud_additional_http_status_codes_error_variants(
 pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {//todo in few cases rows affected is usefull. (update delete for example). if 0 afftected -maybe its error? or maybe use select then update\delete?(rewrite query)
     proc_macro_helpers::panic_location::panic_location();
     let proc_macro_name_camel_case = "GeneratePostgresqlCrud";
-    // let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
+    let proc_macro_name_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&proc_macro_name_camel_case);
     let ast: syn::DeriveInput = syn::parse(input).unwrap_or_else(|e| {
         panic!(
             "{proc_macro_name_camel_case} {}: {e}",
@@ -211,20 +211,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     // };
     let with_serialize_deserialize_camel_case_stringified = "WithSerializeDeserialize";
     let table_name_stringified = pluralizer::pluralize(&ident_lower_case_stringified, 2, false);
-    let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
+    let data_struct = if let syn::Data::Struct(data_struct) = &ast.data {
         data_struct
     } else {
         panic!("{proc_macro_name_camel_case_ident_stringified} does work only on structs!");
     };
-    let fields_named = if let syn::Fields::Named(fields_named) = data_struct.fields {
-        fields_named.named
+    let fields_named = if let syn::Fields::Named(fields_named) = &data_struct.fields {
+        &fields_named.named
     } else {
         panic!("{proc_macro_name_camel_case_ident_stringified} supports only syn::Fields::Named");
     };
     let id_field = {
         let id_attr_name = "generate_postgresql_crud_primary_key";
         let mut id_field_option = None;
-        for field_named in &fields_named {
+        for field_named in fields_named {
             let attrs = &field_named.attrs;
             if let 1 = attrs.len() {
                 match attrs.get(0) {
@@ -2513,53 +2513,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";//
     let common_error_variant_attribute_vec_owned = {
-        let common_middlewares_error_variants_vec_handle_owned = {
-            let generate_postgresql_crud_additional_http_status_codes_error_variant_path = "generate_postgresql_crud::generate_postgresql_crud_additional_http_status_codes_error_variant";
-            let additional_http_status_codes_error_variants_attribute = proc_macro_helpers::get_macro_attribute::get_macro_attribute(
-                &ast.attrs,
-                &format!("{PATH}::generate_postgresql_crud_additional_http_status_codes_error_variants"),
-                &proc_macro_name_camel_case_ident_stringified
-            );
-            match additional_http_status_codes_error_variants_attribute.path.segments.len() == 2 {
-                true => {
-                    let first_ident = &additional_http_status_codes_error_variants_attribute.path.segments.first().unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} additional_http_status_codes_error_variants_attribute.path.segments.get(0) is None")
-                    }).ident;
-                    let second_ident = &additional_http_status_codes_error_variants_attribute.path.segments.last().unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} additional_http_status_codes_error_variants_attribute.path.segments.get(0) is None")
-                    }).ident;
-                    let additional_http_status_codes_error_variants_attribute_path = "generate_postgresql_crud::generate_postgresql_crud_additional_http_status_codes_error_variants";
-                    let possible_additional_http_status_codes_error_variants_attribute_path = &format!("{first_ident}::{second_ident}");
-                    if let false = additional_http_status_codes_error_variants_attribute_path == possible_additional_http_status_codes_error_variants_attribute_path {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} {possible_additional_http_status_codes_error_variants_attribute_path} is not {generate_postgresql_crud_additional_http_status_codes_error_variant_path}")
-                    }
-                },
-                false => panic!("{proc_macro_name_camel_case_ident_stringified} no {generate_postgresql_crud_additional_http_status_codes_error_variant_path} path")
-            }
-            let mut additional_http_status_codes_error_variants_attribute_tokens_stringified = additional_http_status_codes_error_variants_attribute.tokens.to_string();
-            let additional_http_status_codes_error_variants_attribute_tokens_stringified_len = additional_http_status_codes_error_variants_attribute_tokens_stringified.len();
-            let additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified = &additional_http_status_codes_error_variants_attribute_tokens_stringified[1..(additional_http_status_codes_error_variants_attribute_tokens_stringified_len - 1)];//todo maybe check
-            additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified.split(";").collect::<Vec<&str>>()
-                .iter().fold(std::vec::Vec::<syn::Variant>::new(), |mut acc, element| {
-                    let element_derive_input: syn::DeriveInput = syn::parse(
-                        element.parse::<proc_macro2::TokenStream>()
-                        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {element} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                        .into()
-                    ).unwrap_or_else(|e| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
-                    });
-                    // let element_ident = element_derive_input.ident;//todo check if error type even exists (with empty functions)
-                    let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
-                        data_enum
-                    } else {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} does not work on enums!");
-                    };
-                    for element in data_enum.variants {
-                        acc.push(element);
-                    }
-                    acc
-                })
-        };
+        let common_middlewares_error_variants_vec_handle_owned = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            &ast,
+            "generate_postgresql_crud_additional_http_status_codes_error_variants",
+            &proc_macro_name_lower_case,
+            &proc_macro_name_camel_case_ident_stringified
+        );
         let postgres_error_variants_vec_handle_owned = {
             let configuration_error_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,

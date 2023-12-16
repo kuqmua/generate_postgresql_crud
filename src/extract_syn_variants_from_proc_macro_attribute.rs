@@ -1,5 +1,5 @@
 pub fn extract_syn_variants_from_proc_macro_attribute(
-    ast: syn::DeriveInput,
+    ast: &syn::DeriveInput,
     proc_macro_attribute_name: &str,
     proc_macro_name_lower_case: &str,
     proc_macro_name_camel_case_ident_stringified: &std::string::String
