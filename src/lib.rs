@@ -2511,15 +2511,54 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";//
 
-    
-// pub fn generate_postgresql_crud_create_many_additional_http_status_codes_error_variants
-// pub fn generate_postgresql_crud_create_one_additional_http_status_codes_error_variants
-// pub fn generate_postgresql_crud_read_one_additional_http_status_codes_error_variants
-// pub fn generate_postgresql_crud_read_many_with_body_additional_http_status_codes_error_variants
-// pub fn generate_postgresql_crud_update_one_additional_http_status_codes_error_variants
-// pub fn generate_postgresql_crud_update_many_additional_http_status_codes_error_variants
-// pub fn generate_postgresql_crud_delete_one_additional_http_status_codes_error_variants
-// pub fn generate_postgresql_crud_delete_many_with_body_additional_http_status_codes_error_variants
+    // let create_many_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+    //     &ast,
+    //     "create_many_additional_http_status_codes_error_variants",
+    //     &proc_macro_name_lower_case,
+    //     &proc_macro_name_camel_case_ident_stringified
+    // );
+    // let create_one_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+    //     &ast,
+    //     "create_one_additional_http_status_codes_error_variants",
+    //     &proc_macro_name_lower_case,
+    //     &proc_macro_name_camel_case_ident_stringified
+    // );
+    // let read_one_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+    //     &ast,
+    //     "read_one_additional_http_status_codes_error_variants",
+    //     &proc_macro_name_lower_case,
+    //     &proc_macro_name_camel_case_ident_stringified
+    // );
+    // let read_many_with_body_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+    //     &ast,
+    //     "read_many_with_body_additional_http_status_codes_error_variants",
+    //     &proc_macro_name_lower_case,
+    //     &proc_macro_name_camel_case_ident_stringified
+    // );
+    // let update_one_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+    //     &ast,
+    //     "update_one_additional_http_status_codes_error_variants",
+    //     &proc_macro_name_lower_case,
+    //     &proc_macro_name_camel_case_ident_stringified
+    // );
+    // let update_many_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+    //     &ast,
+    //     "update_many_additional_http_status_codes_error_variants",
+    //     &proc_macro_name_lower_case,
+    //     &proc_macro_name_camel_case_ident_stringified
+    // );
+    // let _additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+    //     &ast,
+    //     "delete_one_additional_http_status_codes_error_variants",
+    //     &proc_macro_name_lower_case,
+    //     &proc_macro_name_camel_case_ident_stringified
+    // );
+    // let delete_many_with_body_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+    //     &ast,
+    //     "delete_many_with_body_additional_http_status_codes_error_variants",
+    //     &proc_macro_name_lower_case,
+    //     &proc_macro_name_camel_case_ident_stringified
+    // );
 
     let common_error_variant_attribute_vec_owned = {
         let common_middlewares_error_variants_vec_handle_owned = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
