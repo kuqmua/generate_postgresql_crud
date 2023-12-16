@@ -38,6 +38,33 @@ mod extract_syn_variants_from_proc_macro_attribute;
 // PgLTree	LTREE
 // PgLQuery	LQUERY
 
+//todo fix bug with body { Desirable: null } if there is not body by idea in response
+//todo generate for each create update delete body length checked and for path query headers too
+//todo how to write filter logic for sqlx rust postgresql types?
+//todo decide where to do error log (maybe add in some places)
+//todo rename ForUrlEncoding prefix
+//todo clear unnesesary generated returns.
+// unneeded `return` statement
+// for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
+// `#[warn(clippy::needless_return)]` 
+//todo validate uuid
+//todo add regex filter to query parameters - now supports only in body variants
+//todo regex filter support only for string-like types postgresql
+//todo generate route what will return columns of the table and their rust and postgersql types
+//todo - check if fields for filter are unique in the input array
+//todo created at and updated at fields
+//todo attributes for activation generation crud methods(like generate create, update_one, delete_one)
+//todo authorization for returning concrete error or just minimal info(user role)
+//todo generate rules and roles
+//todo unique(meaning not primary key unique column) and nullable support
+//todo add check on max postgresql bind elements
+//todo add route name as argument for macro - generation constant and add to generation logic
+//todo make sqlx macros instead of just queries?
+//todo support for arrays as column values
+//todo maybe add unnest sql types?
+//todo maybe add unnest to filter parameters if its array ?
+//todo swagger ui https://github.com/juhaku/utoipa/blob/master/examples/todo-axum/src/main.rs
+
 #[proc_macro_attribute]
 pub fn create_many_additional_http_status_codes_error_variants(
     _attr: proc_macro::TokenStream,
@@ -102,33 +129,7 @@ pub fn additional_http_status_codes_error_variants(
 ) -> proc_macro::TokenStream {
     item
 }
-//todo potentially generate structs for all possible http status codes
-//todo fix bug with body { Desirable: null } if there is not body by idea in response
-//todo generate for each create update delete body length checked and for path query headers too
-//todo how to write filter logic for sqlx rust postgresql types?
-//todo decide where to do error log (maybe add in some places)
-//todo rename ForUrlEncoding prefix
-//todo clear unnesesary generated returns.
-// unneeded `return` statement
-// for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
-// `#[warn(clippy::needless_return)]` 
-//todo validate uuid
-//todo add regex filter to query parameters - now supports only in body variants
-//todo regex filter support only for string-like types postgresql
-//todo generate route what will return columns of the table and their rust and postgersql types
-//todo - check if fields for filter are unique in the input array
-//todo created at and updated at fields
-//todo attributes for activation generation crud methods(like generate create, update_one, delete_one)
-//todo authorization for returning concrete error or just minimal info(user role)
-//todo generate rules and roles
-//todo unique(meaning not primary key unique column) and nullable support
-//todo add check on max postgresql bind elements
-//todo add route name as argument for macro - generation constant and add to generation logic
-//todo make sqlx macros instead of just queries?
-//todo support for arrays as column values
-//todo maybe add unnest sql types?
-//todo maybe add unnest to filter parameters if its array ?
-//todo swagger ui https://github.com/juhaku/utoipa/blob/master/examples/todo-axum/src/main.rs
+
 #[proc_macro_derive(
     GeneratePostgresqlCrud,
     attributes(
