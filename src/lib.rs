@@ -156,7 +156,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let data_struct = if let syn::Data::Struct(data_struct) = ast.data {
         data_struct
     } else {
-        panic!("{proc_macro_name_ident_stringified} does not work on structs!");
+        panic!("{proc_macro_name_ident_stringified} does work only on structs!");
     };
     let fields_named = if let syn::Fields::Named(fields_named) = data_struct.fields {
         fields_named.named
@@ -301,7 +301,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         ).unwrap_or_else(|e| {
             panic!("{proc_macro_name} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
         });
-        println!("{element_derive_input:#?}");
+        // println!("{element_derive_input:#?}");
+        let element_ident = element_derive_input.ident;
+        let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
+            data_enum
+        } else {
+            panic!("{proc_macro_name_ident_stringified} does not work on enums!");
+        };
+        let data_variants = data_enum.variants.into_iter().collect::<std::vec::Vec<syn::Variant>>();
+        println!("{data_variants:#?}");
     }
     //
     let id_field_ident_quotes_token_stream = {
