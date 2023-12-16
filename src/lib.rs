@@ -2832,7 +2832,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        vec![
+        [
             failed_to_deserialize_path_params_syn_variant,
             missing_path_params_syn_variant
         ]
@@ -2959,7 +2959,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             ]
         );
-        vec![
+        [
             json_data_error_syn_variant,
             json_syntax_error_syn_variant,
             missing_json_content_type_syn_variant,
