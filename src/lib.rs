@@ -2510,12 +2510,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let offset_name_stringified = "offset";
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";
-    let update_many_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-        &ast,
-        "update_many_additional_http_status_codes_error_variants",
-        &proc_macro_name_lower_case,
-        &proc_macro_name_camel_case_ident_stringified
-    );
     let _additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
         &ast,
         "delete_one_additional_http_status_codes_error_variants",
