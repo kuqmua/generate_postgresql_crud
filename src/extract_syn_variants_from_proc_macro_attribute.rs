@@ -40,6 +40,7 @@ pub fn extract_syn_variants_from_proc_macro_attribute(
                     let element_derive_input: syn::DeriveInput = syn::parse(element_token_stream).unwrap_or_else(|e| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} {additional_http_status_codes_error_variant_path} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
                     });
+                    println!("{element_derive_input:#?}");
                     // let element_ident = element_derive_input.ident;//todo check if error type even exists (with empty functions)
                     let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
                         data_enum
