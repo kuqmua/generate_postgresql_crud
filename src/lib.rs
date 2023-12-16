@@ -135,12 +135,13 @@ pub fn generate_postgresql_crud_additional_http_status_codes_error_variants(
 pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {//todo in few cases rows affected is usefull. (update delete for example). if 0 afftected -maybe its error? or maybe use select then update\delete?(rewrite query)
     proc_macro_helpers::panic_location::panic_location();
     let proc_macro_name = "GeneratePostgresqlCrud";
-    let ast: syn::DeriveInput = syn::parse(input).unwrap_or_else(|_| {
+    let ast: syn::DeriveInput = syn::parse(input).unwrap_or_else(|e| {
         panic!(
-            "{proc_macro_name} {}",
+            "{proc_macro_name} {}: {e}",
             proc_macro_helpers::global_variables::hardcode::AST_PARSE_FAILED
         )
     });
+    // println!("{:#?}", ast.data);
     let ident = &ast.ident;
     let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
     let proc_macro_name_ident_stringified = format!("{proc_macro_name} {ident}");
@@ -272,7 +273,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         format!("{PATH}::generate_postgresql_crud_additional_http_status_codes_error_variants"),
         &proc_macro_name_ident_stringified
     );
-    // println!("{additional_http_status_codes_error_variants_attribute:#?}");
     let additional_http_status_codes_error_variants_attribute_path = &additional_http_status_codes_error_variants_attribute.path;
     match additional_http_status_codes_error_variants_attribute.path.segments.len() == 2 {
         true => {
@@ -290,6 +290,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         },
         false => panic!("{proc_macro_name_ident_stringified} no {generate_postgresql_crud_additional_http_status_codes_error_variant_path} path")
     }
+    // println!("{additional_http_status_codes_error_variants_attribute:#?}");
+    // let additional_http_status_codes_error_variants_attribute_tokens = &;
+    // println!("{}", additional_http_status_codes_error_variants_attribute.tokens);
+    let mut tokens_stringified = additional_http_status_codes_error_variants_attribute.tokens.to_string();
+    let tokens_stringified_len = tokens_stringified.len();
+    let tokens_handle_stringified = &tokens_stringified[1..(tokens_stringified_len - 1)];
+    println!("{tokens_handle_stringified}");
+    let tokens_token_stream = tokens_handle_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {tokens_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+    //syn::TypeArray
+    let f: syn::DeriveInput = syn::parse(tokens_token_stream.into()).unwrap_or_else(|e| {
+        panic!("{proc_macro_name} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
+    });
+    println!("{f:#?}");
     //
     let id_field_ident_quotes_token_stream = {
         let id_field_ident_quotes_stringified = format!("\"{id_field_ident}\"");
