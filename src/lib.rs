@@ -40,7 +40,7 @@ mod type_variants_from_request_response_generator;
 
 
 
-
+//todo potentially generate structs for all possible http status codes
 //todo fix bug with body { Desirable: null } if there is not body by idea in response
 //todo generate for each create update delete body length checked and for path query headers too
 //todo how to write filter logic for sqlx rust postgresql types?
