@@ -40,7 +40,20 @@ pub fn extract_syn_variants_from_proc_macro_attribute(
                     let element_derive_input: syn::DeriveInput = syn::parse(element_token_stream).unwrap_or_else(|e| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} {additional_http_status_codes_error_variant_path} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
                     });
-                    println!("{element_derive_input:#?}");
+                    let option_path_sttribute = element_derive_input.attrs.iter().find(|element|{
+                        let element_path = &element.path;
+                        let element_path_token_stream = quote::quote!{#element_path};
+                        let element_path_stringified = element_path_token_stream.to_string();
+                        element_path_stringified == "path"
+                    });
+                    let path_attribute = match option_path_sttribute {
+                        Some(value) => value,
+                        None => panic!("{proc_macro_name_camel_case_ident_stringified} {additional_http_status_codes_error_variant_path} no path attribute"),
+                    };
+                    let path_to_additional_variant_enum_stringified = &path_attribute.tokens.to_string();
+                    let path_to_additional_variant_enum_without_brackets_stringified = &path_to_additional_variant_enum_stringified[1..(path_to_additional_variant_enum_stringified.len()- 1)];//todo maybe check
+                    let path_to_additional_variant_enum_without_brackets_token_stream = path_to_additional_variant_enum_without_brackets_stringified.parse::<proc_macro2::TokenStream>()
+                        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {path_to_additional_variant_enum_without_brackets_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
                     // let element_ident = element_derive_input.ident;//todo check if error type even exists (with empty functions)
                     let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
                         data_enum
