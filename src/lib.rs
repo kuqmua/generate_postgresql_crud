@@ -5,7 +5,7 @@ mod from_log_and_return_error;
 mod generate_postgres_transaction;
 mod generate_postgres_execute_query;
 mod type_variants_from_request_response_generator;
-//slavic
+mod extract_syn_variants_from_proc_macro_attribute;
 
 // trait Something {
 //     fn something();
@@ -39,6 +39,63 @@ mod type_variants_from_request_response_generator;
 // PgLQuery	LQUERY
 
 static PATH: &str = "generate_postgresql_crud";
+
+#[proc_macro_attribute]
+pub fn generate_postgresql_crud_create_many_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn generate_postgresql_crud_create_one_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn generate_postgresql_crud_read_one_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn generate_postgresql_crud_read_many_with_body_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn generate_postgresql_crud_update_one_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn generate_postgresql_crud_update_many_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn generate_postgresql_crud_delete_one_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn generate_postgresql_crud_delete_many_with_body_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
 
 #[proc_macro_attribute]
 pub fn generate_postgresql_crud_additional_http_status_codes_error_variants(
@@ -2459,7 +2516,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let generate_postgresql_crud_additional_http_status_codes_error_variant_path = "generate_postgresql_crud::generate_postgresql_crud_additional_http_status_codes_error_variant";
             let additional_http_status_codes_error_variants_attribute = proc_macro_helpers::get_macro_attribute::get_macro_attribute(
                 &ast.attrs,
-                format!("{PATH}::generate_postgresql_crud_additional_http_status_codes_error_variants"),
+                &format!("{PATH}::generate_postgresql_crud_additional_http_status_codes_error_variants"),
                 &proc_macro_name_ident_stringified
             );
             match additional_http_status_codes_error_variants_attribute.path.segments.len() == 2 {
