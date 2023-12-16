@@ -2511,12 +2511,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";//
 
-    // let create_many_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-    //     &ast,
-    //     "create_many_additional_http_status_codes_error_variants",
-    //     &proc_macro_name_lower_case,
-    //     &proc_macro_name_camel_case_ident_stringified
-    // );
+    let create_many_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        &ast,
+        "create_many_additional_http_status_codes_error_variants",
+        &proc_macro_name_lower_case,
+        &proc_macro_name_camel_case_ident_stringified
+    );
     // let create_one_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
     //     &ast,
     //     "create_one_additional_http_status_codes_error_variants",

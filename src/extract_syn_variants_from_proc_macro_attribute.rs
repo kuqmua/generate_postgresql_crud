@@ -30,22 +30,28 @@ pub fn extract_syn_variants_from_proc_macro_attribute(
     let additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified = &additional_http_status_codes_error_variants_attribute_tokens_stringified[1..(additional_http_status_codes_error_variants_attribute_tokens_stringified_len - 1)];//todo maybe check
     additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified.split(";").collect::<Vec<&str>>()
         .iter().fold(std::vec::Vec::<syn::Variant>::new(), |mut acc, element| {
-            let element_derive_input: syn::DeriveInput = syn::parse(
-                element.parse::<proc_macro2::TokenStream>()
+            let element_token_stream: proc_macro::TokenStream = element.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {additional_http_status_codes_error_variant_path} {element} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                .into()
-            ).unwrap_or_else(|e| {
-                panic!("{proc_macro_name_camel_case_ident_stringified} {additional_http_status_codes_error_variant_path} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
-            });
-            // let element_ident = element_derive_input.ident;//todo check if error type even exists (with empty functions)
-            let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
-        data_enum
-            } else {
-                panic!("{proc_macro_name_camel_case_ident_stringified} {additional_http_status_codes_error_variant_path} does not work on enums!");
-            };
-            for element in data_enum.variants {
-                acc.push(element);
+                .into();
+            let element_token_stream_stringified = element_token_stream.to_string();
+            println!("!!!{element_token_stream_stringified}!!!");
+            match element_token_stream_stringified.is_empty() {
+                true => acc,
+                false => {
+                    let element_derive_input: syn::DeriveInput = syn::parse(element_token_stream).unwrap_or_else(|e| {
+                        panic!("{proc_macro_name_camel_case_ident_stringified} {additional_http_status_codes_error_variant_path} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
+                    });
+                    // let element_ident = element_derive_input.ident;//todo check if error type even exists (with empty functions)
+                    let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
+                        data_enum
+                    } else {
+                        panic!("{proc_macro_name_camel_case_ident_stringified} {additional_http_status_codes_error_variant_path} does not work on enums!");
+                    };
+                    for element in data_enum.variants {
+                        acc.push(element);
+                    }
+                    acc
+                }
             }
-            acc
         })
 }
