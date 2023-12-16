@@ -5860,6 +5860,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
+            let update_many_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+                &ast,
+                "update_many_additional_http_status_codes_error_variants",
+                &proc_macro_name_lower_case,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let type_variants_from_request_response_vec = {
                 let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
                 for element in &common_error_syn_variants {
@@ -5878,6 +5884,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&non_existing_primary_keys_and_failed_rollback_syn_variant);
                 type_variants_from_request_response.push(&query_and_rollback_failed_syn_variant);
                 type_variants_from_request_response.push(&update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant);
+                for element in &update_many_additional_http_status_codes_error_variants {
+                    type_variants_from_request_response.push(element);
+                }
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
