@@ -2559,13 +2559,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         &proc_macro_name_camel_case_ident_stringified
     );
     let common_error_syn_variants = {
-        let common_middlewares_error_variants_vec_handle_owned = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        let common_middlewares_error_syn_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
             &ast,
             "additional_http_status_codes_error_variants",
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let postgres_error_variants_vec_handle_owned = {
+        let postgres_error_syn_variants = {
             let configuration_error_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "Configuration",
@@ -2847,11 +2847,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 migrate_syn_variant
             ]
         };
-        let mut common_error_variants_vec = std::vec::Vec::with_capacity(common_middlewares_error_variants_vec_handle_owned.len() + postgres_error_variants_vec_handle_owned.len() + 1);
-        for element in common_middlewares_error_variants_vec_handle_owned {
+        let mut common_error_variants_vec = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants.len() + postgres_error_syn_variants.len() + 1);
+        for element in common_middlewares_error_syn_variants {
             common_error_variants_vec.push(element);
         }
-        for element in postgres_error_variants_vec_handle_owned {
+        for element in postgres_error_syn_variants {
             common_error_variants_vec.push(element);
         }
         let unexpected_case_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
@@ -2869,7 +2869,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         common_error_variants_vec.push(unexpected_case_syn_variant);
         common_error_variants_vec
     };
-    // let common_error_variant_attribute_vec = common_error_syn_variants.iter().map(|element|element).collect::<std::vec::Vec<&syn::Variant>>();
     let path_error_syn_variants = {
         let failed_to_deserialize_path_params_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
@@ -2900,7 +2899,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             missing_path_params_syn_variant
         ]
     };
-    // let path_logic_error_variants_vec_handle = path_logic_error_variants_vec_handle_owned.iter().map(|element|element).collect::<std::vec::Vec<&syn::Variant>>();
     let json_body_error_syn_variants = {
         let json_data_error_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
@@ -3029,7 +3027,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             bytes_rejection_syn_variant
         ]
     };
-    // let json_body_logic_error_variants_vec_handle = json_body_logic_error_variants_vec_handle_owned.iter().map(|element|element).collect::<std::vec::Vec<&syn::Variant>>();
     let create_many_token_stream = {
         let operation_name_camel_case_stringified = format!("{create_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
