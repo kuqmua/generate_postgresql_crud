@@ -3111,7 +3111,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let create_many_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
                 &ast,
                 "create_many_additional_http_status_codes_error_variants",
                 &proc_macro_name_lower_case,
@@ -3127,7 +3127,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 type_variants_from_request_response.push(&bind_query_syn_variant);
                 type_variants_from_request_response.push(&created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
-                for element in &create_many_additional_http_status_codes_error_variants {
+                for element in &additional_http_status_codes_error_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response
@@ -3565,7 +3565,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let create_one_additional_http_status_codes_error_variants =        crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            let additional_http_status_codes_error_variants =        crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
                 &ast,
                 "create_one_additional_http_status_codes_error_variants",
                 &proc_macro_name_lower_case,
@@ -3580,7 +3580,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response.push(&created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
-                for element in &create_one_additional_http_status_codes_error_variants {
+                for element in &additional_http_status_codes_error_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response
@@ -4033,7 +4033,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let read_one_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
                 &ast,
                 "read_one_additional_http_status_codes_error_variants",
                 &proc_macro_name_lower_case,
@@ -4049,7 +4049,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 type_variants_from_request_response.push(&failed_to_deserialize_query_string_syn_variant);
                 type_variants_from_request_response.push(&read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant);
-                for element in &read_one_additional_http_status_codes_error_variants {
+                for element in &additional_http_status_codes_error_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response
@@ -4542,7 +4542,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let read_many_with_body_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
                 &ast,
                 "read_many_with_body_additional_http_status_codes_error_variants",
                 &proc_macro_name_lower_case,
@@ -4562,7 +4562,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&bind_query_syn_variant);
                 type_variants_from_request_response.push(&not_uuid_syn_variant);
                 type_variants_from_request_response.push(&read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant);
-                for element in &read_many_with_body_additional_http_status_codes_error_variants {
+                for element in &additional_http_status_codes_error_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response
@@ -5292,7 +5292,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let update_one_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
                 &ast,
                 "update_one_additional_http_status_codes_error_variants",
                 &proc_macro_name_lower_case,
@@ -5312,7 +5312,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&bind_query_syn_variant);
                 type_variants_from_request_response.push(&no_payload_fields_syn_variant);
                 type_variants_from_request_response.push(&update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant);
-                for element in &update_one_additional_http_status_codes_error_variants {
+                for element in &additional_http_status_codes_error_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response
@@ -5848,7 +5848,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let update_many_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
                 &ast,
                 "update_many_additional_http_status_codes_error_variants",
                 &proc_macro_name_lower_case,
@@ -5872,7 +5872,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&non_existing_primary_keys_and_failed_rollback_syn_variant);
                 type_variants_from_request_response.push(&query_and_rollback_failed_syn_variant);
                 type_variants_from_request_response.push(&update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant);
-                for element in &update_many_additional_http_status_codes_error_variants {
+                for element in &additional_http_status_codes_error_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response
@@ -6382,7 +6382,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let delete_one_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
                 &ast,
                 "delete_one_additional_http_status_codes_error_variants",
                 &proc_macro_name_lower_case,
@@ -6398,7 +6398,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 //todo why no bind query error here?
                 type_variants_from_request_response.push(&delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant);
-                for element in &delete_one_additional_http_status_codes_error_variants {
+                for element in &additional_http_status_codes_error_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response
@@ -6856,7 +6856,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let delete_many_with_body_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
                 &ast,
                 "delete_many_with_body_additional_http_status_codes_error_variants",
                 &proc_macro_name_lower_case,
@@ -6882,7 +6882,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&commit_failed_syn_variant);
                 type_variants_from_request_response.push(&query_and_rollback_failed_syn_variant);
                 type_variants_from_request_response.push(&delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant);
-                for element in &delete_many_with_body_additional_http_status_codes_error_variants {
+                for element in &additional_http_status_codes_error_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response
