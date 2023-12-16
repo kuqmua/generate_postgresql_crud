@@ -2455,7 +2455,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";//
     let common_error_variant_attribute_vec_owned = {
-        let mut common_error_variants_vec = std::vec::Vec::new();
         let common_middlewares_error_variants_vec_handle_owned = {
             let generate_postgresql_crud_additional_http_status_codes_error_variant_path = "generate_postgresql_crud::generate_postgresql_crud_additional_http_status_codes_error_variant";
             let additional_http_status_codes_error_variants_attribute = proc_macro_helpers::get_macro_attribute::get_macro_attribute(
@@ -2503,9 +2502,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     acc
                 })
         };
-        for element in common_middlewares_error_variants_vec_handle_owned {
-            common_error_variants_vec.push(element);
-        }
         let postgres_error_variants_vec_handle_owned = {
             let configuration_error_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
@@ -2770,7 +2766,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            vec![
+            [
                 configuration_error_syn_variant,
                 database_syn_variant,
                 io_syn_variant,
@@ -2788,6 +2784,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 migrate_syn_variant
             ]
         };
+        let mut common_error_variants_vec = std::vec::Vec::with_capacity(common_middlewares_error_variants_vec_handle_owned.len() + postgres_error_variants_vec_handle_owned.len() + 1);
+        for element in common_middlewares_error_variants_vec_handle_owned {
+            common_error_variants_vec.push(element);
+        }
         for element in postgres_error_variants_vec_handle_owned {
             common_error_variants_vec.push(element);
         }
