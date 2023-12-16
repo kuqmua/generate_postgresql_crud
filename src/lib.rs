@@ -191,17 +191,18 @@ pub fn generate_postgresql_crud_additional_http_status_codes_error_variants(
 )]//todo check on postgresql max length value of type
 pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::TokenStream {//todo in few cases rows affected is usefull. (update delete for example). if 0 afftected -maybe its error? or maybe use select then update\delete?(rewrite query)
     proc_macro_helpers::panic_location::panic_location();
-    let proc_macro_name = "GeneratePostgresqlCrud";
+    let proc_macro_name_camel_case = "GeneratePostgresqlCrud";
+    // let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
     let ast: syn::DeriveInput = syn::parse(input).unwrap_or_else(|e| {
         panic!(
-            "{proc_macro_name} {}: {e}",
+            "{proc_macro_name_camel_case} {}: {e}",
             proc_macro_helpers::global_variables::hardcode::AST_PARSE_FAILED
         )
     });
     // println!("{:#?}", ast.data);
     let ident = &ast.ident;
     let ident_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&ident.to_string());
-    let proc_macro_name_ident_stringified = format!("{proc_macro_name} {ident}");
+    let proc_macro_name_ident_stringified = format!("{proc_macro_name_camel_case} {ident}");
     let response_variants_camel_case_stringified = "ResponseVariants";
     // let ident_response_variants_stringified = format!("{ident}{response_variants_camel_case_stringified}");
     // let ident_response_variants_token_stream = {
@@ -2545,7 +2546,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {element} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         .into()
                     ).unwrap_or_else(|e| {
-                        panic!("{proc_macro_name} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
+                        panic!("{proc_macro_name_ident_stringified} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
                     });
                     // let element_ident = element_derive_input.ident;//todo check if error type even exists (with empty functions)
                     let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
