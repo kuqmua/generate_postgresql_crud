@@ -292,25 +292,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let mut additional_http_status_codes_error_variants_attribute_tokens_stringified = additional_http_status_codes_error_variants_attribute.tokens.to_string();
     let additional_http_status_codes_error_variants_attribute_tokens_stringified_len = additional_http_status_codes_error_variants_attribute_tokens_stringified.len();
     let additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified = &additional_http_status_codes_error_variants_attribute_tokens_stringified[1..(additional_http_status_codes_error_variants_attribute_tokens_stringified_len - 1)];//todo maybe check
-    let splitted = additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified.split(";").collect::<Vec<&str>>();
-    for element in splitted {
-        let element_derive_input: syn::DeriveInput = syn::parse(
-            element.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {element} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            .into()
-        ).unwrap_or_else(|e| {
-            panic!("{proc_macro_name} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
+    let additional_variants = additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified.split(";").collect::<Vec<&str>>()
+        .iter().fold(std::vec::Vec::<syn::Variant>::new(), |mut acc, element| {
+            let element_derive_input: syn::DeriveInput = syn::parse(
+                element.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {element} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                .into()
+            ).unwrap_or_else(|e| {
+                panic!("{proc_macro_name} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
+            });
+            let element_ident = element_derive_input.ident;
+            let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
+                data_enum
+            } else {
+                panic!("{proc_macro_name_ident_stringified} does not work on enums!");
+            };
+            for element in data_enum.variants {
+                acc.push(element);
+            }
+            acc
         });
-        // println!("{element_derive_input:#?}");
-        let element_ident = element_derive_input.ident;
-        let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
-            data_enum
-        } else {
-            panic!("{proc_macro_name_ident_stringified} does not work on enums!");
-        };
-        let data_variants = data_enum.variants.into_iter().collect::<std::vec::Vec<syn::Variant>>();
-        println!("{data_variants:#?}");
-    }
     //
     let id_field_ident_quotes_token_stream = {
         let id_field_ident_quotes_stringified = format!("\"{id_field_ident}\"");
