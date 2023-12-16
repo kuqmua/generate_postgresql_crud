@@ -2510,12 +2510,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let offset_name_stringified = "offset";
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";
-    let read_one_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-        &ast,
-        "read_one_additional_http_status_codes_error_variants",
-        &proc_macro_name_lower_case,
-        &proc_macro_name_camel_case_ident_stringified
-    );
     let read_many_with_body_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
         &ast,
         "read_many_with_body_additional_http_status_codes_error_variants",
@@ -4069,6 +4063,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
+            let read_one_additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+                &ast,
+                "read_one_additional_http_status_codes_error_variants",
+                &proc_macro_name_lower_case,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let type_variants_from_request_response_vec = {
                 let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
                 for element in &common_error_syn_variants {
@@ -4079,6 +4079,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 type_variants_from_request_response.push(&failed_to_deserialize_query_string_syn_variant);
                 type_variants_from_request_response.push(&read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant);
+                for element in &read_one_additional_http_status_codes_error_variants {
+                    type_variants_from_request_response.push(element);
+                }
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
