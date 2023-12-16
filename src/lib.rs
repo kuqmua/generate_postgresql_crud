@@ -266,51 +266,53 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let fields_named_len = fields_named.len();
     let fields_named_wrappers_excluding_primary_key_len = fields_named_wrappers_excluding_primary_key.len();
     //
-    let generate_postgresql_crud_additional_http_status_codes_error_variant_path = "generate_postgresql_crud::generate_postgresql_crud_additional_http_status_codes_error_variant";
-    let additional_http_status_codes_error_variants_attribute = proc_macro_helpers::get_macro_attribute::get_macro_attribute(
-        &ast.attrs,
-        format!("{PATH}::generate_postgresql_crud_additional_http_status_codes_error_variants"),
-        &proc_macro_name_ident_stringified
-    );
-    match additional_http_status_codes_error_variants_attribute.path.segments.len() == 2 {
-        true => {
-            let first_ident = &additional_http_status_codes_error_variants_attribute.path.segments.first().unwrap_or_else(|| {
-                panic!("{proc_macro_name_ident_stringified} additional_http_status_codes_error_variants_attribute.path.segments.get(0) is None")
-            }).ident;
-            let second_ident = &additional_http_status_codes_error_variants_attribute.path.segments.last().unwrap_or_else(|| {
-                panic!("{proc_macro_name_ident_stringified} additional_http_status_codes_error_variants_attribute.path.segments.get(0) is None")
-            }).ident;
-            let additional_http_status_codes_error_variants_attribute_path = "generate_postgresql_crud::generate_postgresql_crud_additional_http_status_codes_error_variants";
-            let possible_additional_http_status_codes_error_variants_attribute_path = &format!("{first_ident}::{second_ident}");
-            if let false = additional_http_status_codes_error_variants_attribute_path == possible_additional_http_status_codes_error_variants_attribute_path {
-                panic!("{proc_macro_name_ident_stringified} {possible_additional_http_status_codes_error_variants_attribute_path} is not {generate_postgresql_crud_additional_http_status_codes_error_variant_path}")
-            }
-        },
-        false => panic!("{proc_macro_name_ident_stringified} no {generate_postgresql_crud_additional_http_status_codes_error_variant_path} path")
-    }
-    let mut additional_http_status_codes_error_variants_attribute_tokens_stringified = additional_http_status_codes_error_variants_attribute.tokens.to_string();
-    let additional_http_status_codes_error_variants_attribute_tokens_stringified_len = additional_http_status_codes_error_variants_attribute_tokens_stringified.len();
-    let additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified = &additional_http_status_codes_error_variants_attribute_tokens_stringified[1..(additional_http_status_codes_error_variants_attribute_tokens_stringified_len - 1)];//todo maybe check
-    let common_middlewares_error_variants_vec_handle_owned = additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified.split(";").collect::<Vec<&str>>()
-        .iter().fold(std::vec::Vec::<syn::Variant>::new(), |mut acc, element| {
-            let element_derive_input: syn::DeriveInput = syn::parse(
-                element.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {element} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                .into()
-            ).unwrap_or_else(|e| {
-                panic!("{proc_macro_name} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
-            });
-            // let element_ident = element_derive_input.ident;//todo check if error type even exists (with empty functions)
-            let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
-                data_enum
-            } else {
-                panic!("{proc_macro_name_ident_stringified} does not work on enums!");
-            };
-            for element in data_enum.variants {
-                acc.push(element);
-            }
-            acc
-        });
+    let common_middlewares_error_variants_vec_handle_owned = {
+        let generate_postgresql_crud_additional_http_status_codes_error_variant_path = "generate_postgresql_crud::generate_postgresql_crud_additional_http_status_codes_error_variant";
+        let additional_http_status_codes_error_variants_attribute = proc_macro_helpers::get_macro_attribute::get_macro_attribute(
+            &ast.attrs,
+            format!("{PATH}::generate_postgresql_crud_additional_http_status_codes_error_variants"),
+            &proc_macro_name_ident_stringified
+        );
+        match additional_http_status_codes_error_variants_attribute.path.segments.len() == 2 {
+            true => {
+                let first_ident = &additional_http_status_codes_error_variants_attribute.path.segments.first().unwrap_or_else(|| {
+                    panic!("{proc_macro_name_ident_stringified} additional_http_status_codes_error_variants_attribute.path.segments.get(0) is None")
+                }).ident;
+                let second_ident = &additional_http_status_codes_error_variants_attribute.path.segments.last().unwrap_or_else(|| {
+                    panic!("{proc_macro_name_ident_stringified} additional_http_status_codes_error_variants_attribute.path.segments.get(0) is None")
+                }).ident;
+                let additional_http_status_codes_error_variants_attribute_path = "generate_postgresql_crud::generate_postgresql_crud_additional_http_status_codes_error_variants";
+                let possible_additional_http_status_codes_error_variants_attribute_path = &format!("{first_ident}::{second_ident}");
+                if let false = additional_http_status_codes_error_variants_attribute_path == possible_additional_http_status_codes_error_variants_attribute_path {
+                    panic!("{proc_macro_name_ident_stringified} {possible_additional_http_status_codes_error_variants_attribute_path} is not {generate_postgresql_crud_additional_http_status_codes_error_variant_path}")
+                }
+            },
+            false => panic!("{proc_macro_name_ident_stringified} no {generate_postgresql_crud_additional_http_status_codes_error_variant_path} path")
+        }
+        let mut additional_http_status_codes_error_variants_attribute_tokens_stringified = additional_http_status_codes_error_variants_attribute.tokens.to_string();
+        let additional_http_status_codes_error_variants_attribute_tokens_stringified_len = additional_http_status_codes_error_variants_attribute_tokens_stringified.len();
+        let additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified = &additional_http_status_codes_error_variants_attribute_tokens_stringified[1..(additional_http_status_codes_error_variants_attribute_tokens_stringified_len - 1)];//todo maybe check
+        additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified.split(";").collect::<Vec<&str>>()
+            .iter().fold(std::vec::Vec::<syn::Variant>::new(), |mut acc, element| {
+                let element_derive_input: syn::DeriveInput = syn::parse(
+                    element.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_ident_stringified} {element} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    .into()
+                ).unwrap_or_else(|e| {
+                    panic!("{proc_macro_name} parse additional_http_status_codes_error_variants_attribute_tokens failed {e}");
+                });
+                // let element_ident = element_derive_input.ident;//todo check if error type even exists (with empty functions)
+                let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
+                    data_enum
+                } else {
+                    panic!("{proc_macro_name_ident_stringified} does not work on enums!");
+                };
+                for element in data_enum.variants {
+                    acc.push(element);
+                }
+                acc
+            })
+    };
     //
     let id_field_ident_quotes_token_stream = {
         let id_field_ident_quotes_stringified = format!("\"{id_field_ident}\"");
