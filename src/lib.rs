@@ -38,67 +38,65 @@ mod extract_syn_variants_from_proc_macro_attribute;
 // PgLTree	LTREE
 // PgLQuery	LQUERY
 
-static PATH: &str = "generate_postgresql_crud";
+#[proc_macro_attribute]
+pub fn create_many_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn create_one_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn read_one_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn read_many_with_body_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn update_one_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn update_many_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn delete_one_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
+#[proc_macro_attribute]
+pub fn delete_many_with_body_additional_http_status_codes_error_variants(
+    _attr: proc_macro::TokenStream,
+    item: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    item
+}
 
 #[proc_macro_attribute]
-pub fn generate_postgresql_crud_create_many_additional_http_status_codes_error_variants(
-    _attr: proc_macro::TokenStream,
-    item: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    item
-}
-#[proc_macro_attribute]
-pub fn generate_postgresql_crud_create_one_additional_http_status_codes_error_variants(
-    _attr: proc_macro::TokenStream,
-    item: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    item
-}
-#[proc_macro_attribute]
-pub fn generate_postgresql_crud_read_one_additional_http_status_codes_error_variants(
-    _attr: proc_macro::TokenStream,
-    item: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    item
-}
-#[proc_macro_attribute]
-pub fn generate_postgresql_crud_read_many_with_body_additional_http_status_codes_error_variants(
-    _attr: proc_macro::TokenStream,
-    item: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    item
-}
-#[proc_macro_attribute]
-pub fn generate_postgresql_crud_update_one_additional_http_status_codes_error_variants(
-    _attr: proc_macro::TokenStream,
-    item: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    item
-}
-#[proc_macro_attribute]
-pub fn generate_postgresql_crud_update_many_additional_http_status_codes_error_variants(
-    _attr: proc_macro::TokenStream,
-    item: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    item
-}
-#[proc_macro_attribute]
-pub fn generate_postgresql_crud_delete_one_additional_http_status_codes_error_variants(
-    _attr: proc_macro::TokenStream,
-    item: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    item
-}
-#[proc_macro_attribute]
-pub fn generate_postgresql_crud_delete_many_with_body_additional_http_status_codes_error_variants(
-    _attr: proc_macro::TokenStream,
-    item: proc_macro::TokenStream,
-) -> proc_macro::TokenStream {
-    item
-}
-
-#[proc_macro_attribute]
-pub fn generate_postgresql_crud_additional_http_status_codes_error_variants(
+pub fn additional_http_status_codes_error_variants(
     _attr: proc_macro::TokenStream,
     item: proc_macro::TokenStream,
 ) -> proc_macro::TokenStream {
@@ -2512,10 +2510,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let offset_name_stringified = "offset";
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";//
+
+    
+// pub fn generate_postgresql_crud_create_many_additional_http_status_codes_error_variants
+// pub fn generate_postgresql_crud_create_one_additional_http_status_codes_error_variants
+// pub fn generate_postgresql_crud_read_one_additional_http_status_codes_error_variants
+// pub fn generate_postgresql_crud_read_many_with_body_additional_http_status_codes_error_variants
+// pub fn generate_postgresql_crud_update_one_additional_http_status_codes_error_variants
+// pub fn generate_postgresql_crud_update_many_additional_http_status_codes_error_variants
+// pub fn generate_postgresql_crud_delete_one_additional_http_status_codes_error_variants
+// pub fn generate_postgresql_crud_delete_many_with_body_additional_http_status_codes_error_variants
+
     let common_error_variant_attribute_vec_owned = {
         let common_middlewares_error_variants_vec_handle_owned = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
             &ast,
-            "generate_postgresql_crud_additional_http_status_codes_error_variants",
+            "additional_http_status_codes_error_variants",
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
