@@ -34,7 +34,6 @@ pub fn extract_syn_variants_from_proc_macro_attribute(
                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {additional_http_status_codes_error_variant_path} {element} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 .into();
             let element_token_stream_stringified = element_token_stream.to_string();
-            println!("!!!{element_token_stream_stringified}!!!");
             match element_token_stream_stringified.is_empty() {
                 true => acc,
                 false => {
