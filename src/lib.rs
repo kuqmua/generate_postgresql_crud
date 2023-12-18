@@ -3448,7 +3448,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
-    //     &proc_macro_name,
+    //     &proc_macro_name_camel_case,
     //     &create_many_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
@@ -3823,7 +3823,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
-    //     &proc_macro_name,
+    //     &proc_macro_name_camel_case,
     //     &create_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
@@ -4284,7 +4284,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
-    //     &proc_macro_name,
+    //     &proc_macro_name_camel_case,
     //     &read_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
@@ -5119,7 +5119,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
-    //     &proc_macro_name,
+    //     &proc_macro_name_camel_case,
     //     &read_many_with_body_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
@@ -5634,7 +5634,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
-    //     &proc_macro_name,
+    //     &proc_macro_name_camel_case,
     //     &update_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
@@ -6257,7 +6257,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
-    //     &proc_macro_name,
+    //     &proc_macro_name_camel_case,
     //     &update_many_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
@@ -6651,7 +6651,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
-    //     &proc_macro_name,
+    //     &proc_macro_name_camel_case,
     //     &delete_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
@@ -7470,10 +7470,42 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
-    //     &proc_macro_name,
+    //     &proc_macro_name_camel_case,
     //     &delete_many_with_body_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
+    let common_middlewares_error_syn_variants_from_impls = vec![quote::quote! {
+impl std::convert::From<crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed> for TryCreateMany
+{
+    fn from(val: crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed) -> Self {
+        match val {
+            crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::ProjectCommitExtractorNotEqual {
+                project_commit_not_equal,
+                project_commit_to_use,
+                code_occurence,
+            } => Self::ProjectCommitExtractorNotEqual {
+                project_commit_not_equal,
+                project_commit_to_use,
+                code_occurence,
+            },
+            crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::ProjectCommitExtractorToStrConversion {
+                project_commit_to_str_conversion,
+                code_occurence,
+            } => Self::ProjectCommitExtractorToStrConversion {
+                project_commit_to_str_conversion,
+                code_occurence,
+            },
+            crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::NoProjectCommitExtractorHeader {
+                no_project_commit_header,
+                code_occurence,
+            } => Self::NoProjectCommitExtractorHeader {
+                no_project_commit_header,
+                code_occurence,
+            },
+        }
+    }
+}
+    }];
     let common_token_stream = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
@@ -7487,6 +7519,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #order_by_wrapper_token_stream
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
+
+        #(#common_middlewares_error_syn_variants_from_impls)*
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name,
