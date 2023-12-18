@@ -3437,40 +3437,44 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{route_handler_token_stream}");
-        let common_middlewares_error_syn_variants_from_impls: Vec<proc_macro2::TokenStream> = vec![];
-        // common_middlewares_error_syn_variants.iter().map(|element|{
-        //     quote::quote! {
-        //         impl std::convert::From<crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed> for #try_operation_camel_case_token_stream {
-        //             fn from(val: crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed) -> Self {
-        //                 match val {
-        //                     crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::ProjectCommitExtractorNotEqual {
-        //                         project_commit_not_equal,
-        //                         project_commit_to_use,
-        //                         code_occurence,
-        //                     } => Self::ProjectCommitExtractorNotEqual {
-        //                         project_commit_not_equal,
-        //                         project_commit_to_use,
-        //                         code_occurence,
-        //                     },
-        //                     crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::ProjectCommitExtractorToStrConversion {
-        //                         project_commit_to_str_conversion,
-        //                         code_occurence,
-        //                     } => Self::ProjectCommitExtractorToStrConversion {
-        //                         project_commit_to_str_conversion,
-        //                         code_occurence,
-        //                     },
-        //                     crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::NoProjectCommitExtractorHeader {
-        //                         no_project_commit_header,
-        //                         code_occurence,
-        //                     } => Self::NoProjectCommitExtractorHeader {
-        //                         no_project_commit_header,
-        //                         code_occurence,
-        //                     },
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+        let common_middlewares_error_syn_variants_from_impls = {
+            let value = common_middlewares_error_syn_variants.iter().map(|element|{
+                let element_path_ident_token_stream = {
+                    let element_path_ident_stringified = format!("{}{}", element.1, element.0);
+                    element_path_ident_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {element_path_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                let variants = element.2.iter().map(|element|{
+                    let element_ident = &element.ident;
+                    let fields_named = if let syn::Fields::Named(fields_named) = &element.fields {
+                        &fields_named.named
+                    } else {
+                        panic!("{proc_macro_name_camel_case_ident_stringified} {element_ident} supports only syn::Fields::Named");
+                    };
+                    let fields_token_stream = fields_named.iter().map(|element|element.ident.clone().unwrap_or_else(|| {
+                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                    })).collect::<std::vec::Vec<syn::Ident>>();
+                    quote::quote! {
+                        #element_path_ident_token_stream::#element_ident {
+                            #(#fields_token_stream),*
+                        } => Self::#element_ident {
+                            #(#fields_token_stream),*
+                        }
+                    }
+                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                quote::quote! {
+                    impl std::convert::From<#element_path_ident_token_stream> for #try_operation_camel_case_token_stream {
+                        fn from(value: #element_path_ident_token_stream) -> Self {
+                            match value {
+                                #(#variants),*
+                            }
+                        }
+                    }
+                }
+            }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+            quote::quote!{#(#value)*}
+        };
+        // println!("{common_middlewares_error_syn_variants_from_impls}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
@@ -3479,7 +3483,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
-            #(#common_middlewares_error_syn_variants_from_impls)*
+            #common_middlewares_error_syn_variants_from_impls
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
