@@ -2511,13 +2511,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let offset_name_stringified = "offset";
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";
+    let common_middlewares_error_syn_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        &ast,
+        "additional_http_status_codes_error_variants",
+        &proc_macro_name_lower_case,
+        &proc_macro_name_camel_case_ident_stringified
+    );
     let common_error_syn_variants = {
-        let common_middlewares_error_syn_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-            &ast,
-            "additional_http_status_codes_error_variants",
-            &proc_macro_name_lower_case,
-            &proc_macro_name_camel_case_ident_stringified
-        );
         let postgres_error_syn_variants = {
             let configuration_error_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
@@ -2801,9 +2801,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ]
         };
         let mut common_error_variants_vec = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants.len() + postgres_error_syn_variants.len() + 1);
-        for element in common_middlewares_error_syn_variants {
-            common_error_variants_vec.push(element);
-        }
         for element in postgres_error_syn_variants {
             common_error_variants_vec.push(element);
         }
@@ -3114,10 +3111,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
                 &ast,
-                "create_many_additional_http_status_codes_error_variants",
+                "create_many_additional_http_status_codes_error_variants",//todo generate this name
                 &proc_macro_name_lower_case,
                 &proc_macro_name_camel_case_ident_stringified
             );
+            let full_additional_http_status_codes_error_variants =  {
+                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants.len() + additional_http_status_codes_error_variants.len());
+                for element in common_middlewares_error_syn_variants {
+                    handle.push(element);
+                }
+                for element in additional_http_status_codes_error_variants {
+                    handle.push(element);
+                }
+                handle
+            }; 
             let type_variants_from_request_response_vec = {
                 let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
                 for element in &common_error_syn_variants {
@@ -3128,9 +3135,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 type_variants_from_request_response.push(&bind_query_syn_variant);
                 type_variants_from_request_response.push(&created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
-                for element in &additional_http_status_codes_error_variants {
-                    type_variants_from_request_response.push(element);
-                }
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
@@ -3153,6 +3157,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
+                full_additional_http_status_codes_error_variants,
                 true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
