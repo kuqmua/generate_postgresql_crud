@@ -4,6 +4,7 @@ pub fn extract_syn_variants_from_proc_macro_attribute(
     proc_macro_name_lower_case: &str,
     proc_macro_name_camel_case_ident_stringified: &std::string::String
 ) -> std::vec::Vec::<(
+        syn::Ident,
         proc_macro2::TokenStream,
         std::vec::Vec::<syn::Variant>
     )> {
@@ -33,6 +34,7 @@ pub fn extract_syn_variants_from_proc_macro_attribute(
     let additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified = &additional_http_status_codes_error_variants_attribute_tokens_stringified[1..(additional_http_status_codes_error_variants_attribute_tokens_stringified_len - 1)];//todo maybe check
     additional_http_status_codes_error_variants_attribute_tokens_without_brackets_stringified.split(";").collect::<Vec<&str>>()
         .iter().fold(std::vec::Vec::<(
+            syn::Ident,
             proc_macro2::TokenStream,
             std::vec::Vec::<syn::Variant>
         )>::new(), |mut acc, element| {
@@ -60,13 +62,14 @@ pub fn extract_syn_variants_from_proc_macro_attribute(
                     let path_to_additional_variant_enum_without_brackets_stringified = &path_to_additional_variant_enum_stringified[1..(path_to_additional_variant_enum_stringified.len()- 1)];//todo maybe check
                     let path_to_additional_variant_enum_without_brackets_token_stream = path_to_additional_variant_enum_without_brackets_stringified.parse::<proc_macro2::TokenStream>()
                         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {path_to_additional_variant_enum_without_brackets_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-                    // let element_ident = element_derive_input.ident;//todo check if error type even exists (with empty functions)
+                    let element_ident = element_derive_input.ident;//todo check if error type even exists (with empty functions)
                     let data_enum = if let syn::Data::Enum(data_enum) = element_derive_input.data {
                         data_enum
                     } else {
                         panic!("{proc_macro_name_camel_case_ident_stringified} {additional_http_status_codes_error_variant_path} does not work on enums!");
                     };
                     acc.push((
+                        element_ident,
                         path_to_additional_variant_enum_without_brackets_token_stream,
                         data_enum.variants.into_iter().collect::<std::vec::Vec<syn::Variant>>()
                     ));

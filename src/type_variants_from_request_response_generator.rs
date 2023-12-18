@@ -19,6 +19,7 @@ pub fn type_variants_from_request_response_generator(
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response_syn_variants_partial: std::vec::Vec<&syn::Variant>,
     full_additional_http_status_codes_error_variants: std::vec::Vec::<&(
+        syn::Ident,
         proc_macro2::TokenStream,
         std::vec::Vec::<syn::Variant>
     )>,
@@ -34,7 +35,7 @@ pub fn type_variants_from_request_response_generator(
             handle.push(*element);
         }
         for element in &full_additional_http_status_codes_error_variants {
-            for element in &element.1 {
+            for element in &element.2 {
                 handle.push(element);
             }
         }
