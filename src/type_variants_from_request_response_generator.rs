@@ -18,6 +18,10 @@ pub fn type_variants_from_request_response_generator(
     eo_display_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response_syn_variants: std::vec::Vec<&syn::Variant>,
+    full_additional_http_status_codes_error_variants: std::vec::Vec::<&(
+        proc_macro2::TokenStream,
+        std::vec::Vec::<syn::Variant>
+    )>,
     // ident_response_variants_token_stream: &proc_macro2::TokenStream,
     is_response_with_body: bool,
     proc_macro_name_camel_case_ident_stringified: &std::string::String,
