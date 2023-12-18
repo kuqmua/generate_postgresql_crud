@@ -1561,6 +1561,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    let common_middlewares_error_syn_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        &ast,
+        "additional_http_status_codes_error_variants",
+        &proc_macro_name_lower_case,
+        &proc_macro_name_camel_case_ident_stringified
+    );
+    let common_middlewares_error_syn_variants_len = common_middlewares_error_syn_variants.len();
     let extraction_result_lower_case_stringified = "extraction_result";
     let parameters_camel_case_stringified = "Parameters";
     // let parameters_camel_case_token_stream = parameters_camel_case_stringified.parse::<proc_macro2::TokenStream>()
@@ -2511,13 +2518,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let offset_name_stringified = "offset";
     let in_name_stringified = "in";
     let unnest_name_stringified = "unnest";
-    let common_middlewares_error_syn_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-        &ast,
-        "additional_http_status_codes_error_variants",
-        &proc_macro_name_lower_case,
-        &proc_macro_name_camel_case_ident_stringified
-    );
-    let common_middlewares_error_syn_variants_len = common_middlewares_error_syn_variants.len();
     let common_error_syn_variants = {
         let postgres_error_syn_variants = {
             let configuration_error_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
@@ -3437,6 +3437,40 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{route_handler_token_stream}");
+        let common_middlewares_error_syn_variants_from_impls: Vec<proc_macro2::TokenStream> = vec![];
+        // common_middlewares_error_syn_variants.iter().map(|element|{
+        //     quote::quote! {
+        //         impl std::convert::From<crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed> for #try_operation_camel_case_token_stream {
+        //             fn from(val: crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed) -> Self {
+        //                 match val {
+        //                     crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::ProjectCommitExtractorNotEqual {
+        //                         project_commit_not_equal,
+        //                         project_commit_to_use,
+        //                         code_occurence,
+        //                     } => Self::ProjectCommitExtractorNotEqual {
+        //                         project_commit_not_equal,
+        //                         project_commit_to_use,
+        //                         code_occurence,
+        //                     },
+        //                     crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::ProjectCommitExtractorToStrConversion {
+        //                         project_commit_to_str_conversion,
+        //                         code_occurence,
+        //                     } => Self::ProjectCommitExtractorToStrConversion {
+        //                         project_commit_to_str_conversion,
+        //                         code_occurence,
+        //                     },
+        //                     crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::NoProjectCommitExtractorHeader {
+        //                         no_project_commit_header,
+        //                         code_occurence,
+        //                     } => Self::NoProjectCommitExtractorHeader {
+        //                         no_project_commit_header,
+        //                         code_occurence,
+        //                     },
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
@@ -3445,6 +3479,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
+            #(#common_middlewares_error_syn_variants_from_impls)*
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
@@ -7474,38 +7509,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //     &delete_many_with_body_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
-    let common_middlewares_error_syn_variants_from_impls = vec![quote::quote! {
-impl std::convert::From<crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed> for TryCreateMany
-{
-    fn from(val: crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed) -> Self {
-        match val {
-            crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::ProjectCommitExtractorNotEqual {
-                project_commit_not_equal,
-                project_commit_to_use,
-                code_occurence,
-            } => Self::ProjectCommitExtractorNotEqual {
-                project_commit_not_equal,
-                project_commit_to_use,
-                code_occurence,
-            },
-            crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::ProjectCommitExtractorToStrConversion {
-                project_commit_to_str_conversion,
-                code_occurence,
-            } => Self::ProjectCommitExtractorToStrConversion {
-                project_commit_to_str_conversion,
-                code_occurence,
-            },
-            crate::server::extractors::project_commit_extractor::ProjectCommitExtractorCheckErrorNamed::NoProjectCommitExtractorHeader {
-                no_project_commit_header,
-                code_occurence,
-            } => Self::NoProjectCommitExtractorHeader {
-                no_project_commit_header,
-                code_occurence,
-            },
-        }
-    }
-}
-    }];
     let common_token_stream = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
@@ -7519,11 +7522,9 @@ impl std::convert::From<crate::server::extractors::project_commit_extractor::Pro
         #order_by_wrapper_token_stream
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
-
-        #(#common_middlewares_error_syn_variants_from_impls)*
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
-    //     &proc_macro_name,
+    //     &proc_macro_name_camel_case,
     //     &common_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
