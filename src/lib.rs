@@ -3437,53 +3437,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{route_handler_token_stream}");
-        let common_middlewares_error_syn_variants_from_impls = {
-            let error_syn_variants = {
-                let mut error_syn_variants = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants.len() + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    error_syn_variants.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    error_syn_variants.push(element);
-                }
-                error_syn_variants
-            };
-            let value = error_syn_variants.iter().map(|element|{
-                let element_path_ident_token_stream = {
-                    let element_path_ident_stringified = format!("{}{}", element.1, element.0);
-                    element_path_ident_stringified.parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {element_path_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                };
-                let variants = element.2.iter().map(|element|{
-                    let element_ident = &element.ident;
-                    let fields_named = if let syn::Fields::Named(fields_named) = &element.fields {
-                        &fields_named.named
-                    } else {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} {element_ident} supports only syn::Fields::Named");
-                    };
-                    let fields_token_stream = fields_named.iter().map(|element|element.ident.clone().unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    })).collect::<std::vec::Vec<syn::Ident>>();
-                    quote::quote! {
-                        #element_path_ident_token_stream::#element_ident {
-                            #(#fields_token_stream),*
-                        } => Self::#element_ident {
-                            #(#fields_token_stream),*
-                        }
-                    }
-                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                quote::quote! {
-                    impl std::convert::From<#element_path_ident_token_stream> for #try_operation_camel_case_token_stream {
-                        fn from(value: #element_path_ident_token_stream) -> Self {
-                            match value {
-                                #(#variants),*
-                            }
-                        }
-                    }
-                }
-            }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-            quote::quote!{#(#value)*}
-        };
+        let common_middlewares_error_syn_variants_from_impls = generate_common_middlewares_error_syn_variants_from_impls(
+            common_middlewares_error_syn_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            additional_http_status_codes_error_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            &try_operation_camel_case_token_stream,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         // println!("{common_middlewares_error_syn_variants_from_impls}");
         quote::quote!{
             #parameters_token_stream
@@ -8676,4 +8643,65 @@ struct FieldNamedWrapperExcludingPrimaryKey {
     field: syn::Field,
     supported_attribute_type: SupportedAttributeType,
     supported_field_type: SupportedFieldType
+}
+
+fn generate_common_middlewares_error_syn_variants_from_impls(
+    common_middlewares_error_syn_variants: std::vec::Vec::<&(
+        syn::Ident,
+        proc_macro2::TokenStream,
+        std::vec::Vec::<syn::Variant>
+    )>,
+    additional_http_status_codes_error_variants: std::vec::Vec::<&(
+        syn::Ident,
+        proc_macro2::TokenStream,
+        std::vec::Vec::<syn::Variant>
+    )>,
+    try_operation_camel_case_token_stream: &proc_macro2::TokenStream,
+    proc_macro_name_camel_case_ident_stringified: &str,
+) -> proc_macro2::TokenStream {
+    let error_syn_variants = {
+        let mut error_syn_variants = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants.len() + additional_http_status_codes_error_variants.len());
+        for element in &common_middlewares_error_syn_variants {
+            error_syn_variants.push(element);
+        }
+        for element in &additional_http_status_codes_error_variants {
+            error_syn_variants.push(element);
+        }
+        error_syn_variants
+    };
+    let value = error_syn_variants.iter().map(|element|{
+        let element_path_ident_token_stream = {
+            let element_path_ident_stringified = format!("{}{}", element.1, element.0);
+            element_path_ident_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {element_path_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let variants = element.2.iter().map(|element|{
+            let element_ident = &element.ident;
+            let fields_named = if let syn::Fields::Named(fields_named) = &element.fields {
+                &fields_named.named
+            } else {
+                panic!("{proc_macro_name_camel_case_ident_stringified} {element_ident} supports only syn::Fields::Named");
+            };
+            let fields_token_stream = fields_named.iter().map(|element|element.ident.clone().unwrap_or_else(|| {
+                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+            })).collect::<std::vec::Vec<syn::Ident>>();
+            quote::quote! {
+                #element_path_ident_token_stream::#element_ident {
+                    #(#fields_token_stream),*
+                } => Self::#element_ident {
+                    #(#fields_token_stream),*
+                }
+            }
+        }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+        quote::quote! {
+            impl std::convert::From<#element_path_ident_token_stream> for #try_operation_camel_case_token_stream {
+                fn from(value: #element_path_ident_token_stream) -> Self {
+                    match value {
+                        #(#variants),*
+                    }
+                }
+            }
+        }
+    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    quote::quote!{#(#value)*}
 }
