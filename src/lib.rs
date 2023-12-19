@@ -3012,6 +3012,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_operation_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            &ast,
+            "create_many_additional_http_status_codes_error_variants",//todo generate this name
+            &proc_macro_name_lower_case,
+            &proc_macro_name_camel_case_ident_stringified
+        );
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
@@ -3108,12 +3114,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
                 &try_operation_camel_case_stringified,
                 &with_serialize_deserialize_camel_case_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
-            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-                &ast,
-                "create_many_additional_http_status_codes_error_variants",//todo generate this name
-                &proc_macro_name_lower_case,
                 &proc_macro_name_camel_case_ident_stringified
             );
             let full_additional_http_status_codes_error_variants =  {
@@ -3438,7 +3438,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{route_handler_token_stream}");
         let common_middlewares_error_syn_variants_from_impls = {
-            let value = common_middlewares_error_syn_variants.iter().map(|element|{
+            let error_syn_variants = {
+                let mut error_syn_variants = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants.len() + additional_http_status_codes_error_variants.len());
+                for element in &common_middlewares_error_syn_variants {
+                    error_syn_variants.push(element);
+                }
+                for element in &additional_http_status_codes_error_variants {
+                    error_syn_variants.push(element);
+                }
+                error_syn_variants
+            };
+            let value = error_syn_variants.iter().map(|element|{
                 let element_path_ident_token_stream = {
                     let element_path_ident_stringified = format!("{}{}", element.1, element.0);
                     element_path_ident_stringified.parse::<proc_macro2::TokenStream>()
