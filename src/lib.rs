@@ -219,7 +219,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     } else {
         panic!("{proc_macro_name_camel_case_ident_stringified} supports only syn::Fields::Named");
     };
-    let id_field = {
+    let primary_key_field = {
         let id_attr_name = "generate_postgresql_crud_primary_key";
         let mut id_field_option = None;
         for field_named in fields_named {
@@ -244,7 +244,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             None => panic!("{proc_macro_name_camel_case_ident_stringified} no {id_attr_name} attribute"),
         }
     };
-    let id_field_type = &id_field.ty;
+    let id_field_type = &primary_key_field.ty;
     // println!("{id_field:#?}");
     let sqlx_types_uuid_stringified = "sqlx::types::Uuid";
     let sqlx_types_uuid_token_stream = {
@@ -257,12 +257,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             panic!("{proc_macro_name_camel_case_ident_stringified} primary_key is not type {sqlx_types_uuid_stringified}");
         }
     }
-    let id_field_ident = id_field.ident.clone()
+    let id_field_ident = primary_key_field.ident.clone()
         .unwrap_or_else(|| {
-            panic!("{proc_macro_name_camel_case_ident_stringified} id_field.ident is None")
+            panic!("{proc_macro_name_camel_case_ident_stringified} primary_key_field.ident is None")
         });
     let std_string_string_token_stream = quote::quote!{std::string::String};
-    let fields_named_wrappers_excluding_primary_key = fields_named.clone().into_iter().filter(|field|*field != id_field).map(|element|{
+    let fields_named_wrappers_excluding_primary_key = fields_named.clone().into_iter().filter(|field|*field != primary_key_field).map(|element|{
         let field_ident = element.ident
             .clone()
             .unwrap_or_else(|| {
@@ -1017,7 +1017,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                     }
                 };
-                let write_ident_token_stream = column_variant.iter().filter_map(|field|match field == &id_field {
+                let write_ident_token_stream = column_variant.iter().filter_map(|field|match field == &primary_key_field {
                     true => None,
                     false => {
                         let field_ident = field.ident.clone()
@@ -5513,7 +5513,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let try_operation_token_stream = {
                 let check_for_none_token_stream_excluding_primary_key = crate::check_for_none::check_for_none(
                     &fields_named,
-                    &id_field,
+                    &primary_key_field,
                     &proc_macro_name_camel_case_ident_stringified,
                     dot_space,
                     &try_operation_response_variants_token_stream,
@@ -7174,7 +7174,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 );
                 let check_for_none_token_stream = crate::check_for_none::check_for_none(
                     &fields_named,
-                    &id_field,
+                    &primary_key_field,
                     &proc_macro_name_camel_case_ident_stringified,
                     dot_space,
                     &try_operation_response_variants_token_stream,
