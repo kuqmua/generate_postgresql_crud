@@ -42,7 +42,6 @@ mod extract_syn_variants_from_proc_macro_attribute;
 //todo generate for each create update delete body length checked and for path query headers too
 //todo how to write filter logic for sqlx rust postgresql types?
 //todo decide where to do error log (maybe add in some places)
-//todo rename ForUrlEncoding prefix
 //todo clear unnesesary generated returns.
 // unneeded `return` statement
 // for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#needless_return
@@ -321,6 +320,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     }).collect::<std::vec::Vec<FieldNamedWrapperExcludingPrimaryKey>>();
     let fields_named_len = fields_named.len();
+    if let false = fields_named_len > 1 {
+        panic!("{proc_macro_name_camel_case_ident_stringified} false = fields_named.len() > 1" );
+    }
     let fields_named_wrappers_excluding_primary_key_len = fields_named_wrappers_excluding_primary_key.len();
     let id_field_ident_quotes_token_stream = {
         let id_field_ident_quotes_stringified = format!("\"{id_field_ident}\"");
@@ -2321,6 +2323,36 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
+    println!("{fields_named:#?}");
+    // let not_unique_vec_syn_variants: std::vec::Vec<syn::Variant> = fields_named.iter().fold(std::vec::Vec::with_capacity(fields_named_len - 1), |mut acc, element| {
+
+    //     // let field_ident_camel_case_stringified = {
+    //     //     let field_ident = element.ident.clone()
+    //     //         .unwrap_or_else(|| {
+    //     //             panic!("{proc_macro_name_camel_case_ident_stringified} element.ident is None")
+    //     //         });
+            
+    //     // };
+    //     let field_type = &element.ty;
+    //     // acc.push_str(&format!("${}, ", index.checked_add(1).unwrap_or_else(|| panic!("{proc_macro_name_camel_case_ident_stringified} {index} {}", proc_macro_helpers::global_variables::hardcode::CHECKED_ADD_NONE_OVERFLOW_MESSAGE))));
+    //     // acc
+
+    //     // generate_not_unique_field_vec_pascal_stringified
+
+    //     // crate::type_variants_from_request_response_generator::construct_syn_variant(
+    //     //     proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+    //     //     "NotUniqueNameVec",//todo reuse generation naming 
+    //     //     &code_occurence_field,
+    //     //     vec![
+    //     //         (
+    //     //             proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplayWithSerializeDeserialize, 
+    //     //             "not_unique_name_vec",//todo reuse generation naming 
+    //     //             std_vec_vec_crate_server_postgres_regex_filter_regex_filter_syn_punctuated_punctuated.clone()
+    //     //         )
+    //     //     ]
+    //     // )
+    //     todo!()
+    // });
     let not_unique_name_vec_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "NotUniqueNameVec",//todo reuse generation naming 
@@ -3131,7 +3163,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     common_error_syn_variants.len() +
                     json_body_error_syn_variants.len() +
                     2
-                );//todo calculate capacity
+                );
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -4105,7 +4137,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     common_error_syn_variants.len() +
                     path_error_syn_variants.len() +
                     2
-                );//todo calculate capacity
+                );
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -4642,7 +4674,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     common_error_syn_variants.len() +
                     json_body_error_syn_variants.len() +
                     6
-                );//todo calculate capacity
+                );
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -4789,13 +4821,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {not_unique_field_vec_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
                         let not_unique_field_vec_vec_pascal_token_stream = {
-                            let not_unique_field_vec_pascal_stringified = format!(
-                                "NotUnique{}Vec",
-                                {
-                                    use convert_case::Casing;
-                                    field_ident.to_string().to_case(convert_case::Case::Pascal)
-                                }
-                            );
+                            let not_unique_field_vec_pascal_stringified = generate_not_unique_field_vec_pascal_stringified(&field_ident);
                             not_unique_field_vec_pascal_stringified.parse::<proc_macro2::TokenStream>()
                             .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {not_unique_field_vec_pascal_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
@@ -5421,7 +5447,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     path_error_syn_variants.len() +
                     json_body_error_syn_variants.len() +
                     3
-                );//todo calculate capacity
+                );
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -6005,7 +6031,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     common_error_syn_variants.len() +
                     json_body_error_syn_variants.len() +
                     10
-                );//todo calculate capacity
+                );
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -6567,7 +6593,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     common_error_syn_variants.len() +
                     path_error_syn_variants.len() + 
                     1
-                );//todo calculate capacity
+                );
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -7336,13 +7362,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {not_unique_field_vec_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                             };
                             let not_unique_field_vec_vec_pascal_token_stream = {
-                                let not_unique_field_vec_pascal_stringified = format!(
-                                    "NotUnique{}Vec",
-                                    {
-                                        use convert_case::Casing;
-                                        field_ident.to_string().to_case(convert_case::Case::Pascal)
-                                    }
-                                );
+                                let not_unique_field_vec_pascal_stringified = generate_not_unique_field_vec_pascal_stringified(&field_ident);
                                 not_unique_field_vec_pascal_stringified.parse::<proc_macro2::TokenStream>()
                                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {not_unique_field_vec_pascal_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                             };
@@ -8845,4 +8865,13 @@ fn generate_common_middlewares_error_syn_variants_from_impls(
         }
     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     quote::quote!{#(#value)*}
+}
+
+fn generate_not_unique_field_vec_pascal_stringified(field_ident: &syn::Ident) -> std::string::String {
+    format!("NotUnique{}Vec",
+        {
+            use convert_case::Casing;
+            field_ident.to_string().to_case(convert_case::Case::Pascal)
+        }
+    )
 }
