@@ -3127,7 +3127,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 handle
             }; 
             let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    json_body_error_syn_variants.len() +
+                    2
+                );//todo calculate capacity
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -4097,7 +4101,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 handle
             };
             let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    path_error_syn_variants.len() +
+                    2
+                );//todo calculate capacity
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -4630,7 +4638,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 handle
             };
             let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    json_body_error_syn_variants.len() +
+                    6
+                );//todo calculate capacity
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -5404,7 +5416,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 handle
             };
             let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    path_error_syn_variants.len() +
+                    json_body_error_syn_variants.len() +
+                    3
+                );//todo calculate capacity
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -5984,7 +6001,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 handle
             };
             let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    json_body_error_syn_variants.len() +
+                    10
+                );//todo calculate capacity
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -6542,7 +6563,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 handle
             };
             let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    path_error_syn_variants.len() + 
+                    1
+                );//todo calculate capacity
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
@@ -7040,7 +7065,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 handle
             };
             let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::new();//todo calculate capacity
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    json_body_error_syn_variants.len() + 
+                    12
+                );
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
