@@ -3501,6 +3501,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_operation_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            &ast,
+            "create_one_additional_http_status_codes_error_variants",
+            &proc_macro_name_lower_case,
+            &proc_macro_name_camel_case_ident_stringified
+        );
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
@@ -3586,12 +3592,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
                 &try_operation_camel_case_stringified,
                 &with_serialize_deserialize_camel_case_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
-            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-                &ast,
-                "create_one_additional_http_status_codes_error_variants",
-                &proc_macro_name_lower_case,
                 &proc_macro_name_camel_case_ident_stringified
             );
             let full_additional_http_status_codes_error_variants =  {
@@ -3829,6 +3829,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{route_handler_token_stream}");
+        let common_middlewares_error_syn_variants_from_impls = generate_common_middlewares_error_syn_variants_from_impls(
+            common_middlewares_error_syn_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            additional_http_status_codes_error_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            &try_operation_camel_case_token_stream,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
+        // println!("{common_middlewares_error_syn_variants_from_impls}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
@@ -3836,6 +3851,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
+            #common_middlewares_error_syn_variants_from_impls
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
@@ -3910,6 +3926,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             &try_operation_camel_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified
+        );
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            &ast,
+            "read_one_additional_http_status_codes_error_variants",
+            &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
         let parameters_token_stream = {
@@ -4062,12 +4084,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
                 &try_operation_camel_case_stringified,
                 &with_serialize_deserialize_camel_case_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
-            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-                &ast,
-                "read_one_additional_http_status_codes_error_variants",
-                &proc_macro_name_lower_case,
                 &proc_macro_name_camel_case_ident_stringified
             );
             let full_additional_http_status_codes_error_variants =  {
@@ -4284,6 +4300,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{route_handler_token_stream}");
+        let common_middlewares_error_syn_variants_from_impls = generate_common_middlewares_error_syn_variants_from_impls(
+            common_middlewares_error_syn_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            additional_http_status_codes_error_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            &try_operation_camel_case_token_stream,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
+        // println!("{common_middlewares_error_syn_variants_from_impls}");
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
@@ -4297,6 +4328,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
+            #common_middlewares_error_syn_variants_from_impls
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
@@ -4360,6 +4392,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             &try_operation_camel_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified
+        );
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            &ast,
+            "read_many_with_body_additional_http_status_codes_error_variants",
+            &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
         let parameters_token_stream = {
@@ -4579,12 +4617,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
                 &try_operation_camel_case_stringified,
                 &with_serialize_deserialize_camel_case_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
-            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-                &ast,
-                "read_many_with_body_additional_http_status_codes_error_variants",
-                &proc_macro_name_lower_case,
                 &proc_macro_name_camel_case_ident_stringified
             );
             let full_additional_http_status_codes_error_variants =  {
@@ -5121,6 +5153,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{route_handler_token_stream}");
+        let common_middlewares_error_syn_variants_from_impls = generate_common_middlewares_error_syn_variants_from_impls(
+            common_middlewares_error_syn_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            additional_http_status_codes_error_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            &try_operation_camel_case_token_stream,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
+        // println!("{common_middlewares_error_syn_variants_from_impls}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
@@ -5132,6 +5179,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
+            #common_middlewares_error_syn_variants_from_impls
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
@@ -5201,6 +5249,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             &try_operation_camel_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified
+        );
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            &ast,
+            "update_one_additional_http_status_codes_error_variants",
+            &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
         let parameters_token_stream = {
@@ -5337,12 +5391,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
                 &try_operation_camel_case_stringified,
                 &with_serialize_deserialize_camel_case_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
-            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-                &ast,
-                "update_one_additional_http_status_codes_error_variants",
-                &proc_macro_name_lower_case,
                 &proc_macro_name_camel_case_ident_stringified
             );
             let full_additional_http_status_codes_error_variants =  {
@@ -5636,6 +5684,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{route_handler_token_stream}");
+        let common_middlewares_error_syn_variants_from_impls = generate_common_middlewares_error_syn_variants_from_impls(
+            common_middlewares_error_syn_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            additional_http_status_codes_error_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            &try_operation_camel_case_token_stream,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
+        // println!("{common_middlewares_error_syn_variants_from_impls}");
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
@@ -5647,6 +5710,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
+            #common_middlewares_error_syn_variants_from_impls
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
@@ -5711,6 +5775,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             &try_operation_camel_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified
+        );
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            &ast,
+            "update_many_additional_http_status_codes_error_variants",
+            &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
         let parameters_token_stream = {
@@ -5901,12 +5971,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
                 &try_operation_camel_case_stringified,
                 &with_serialize_deserialize_camel_case_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
-            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-                &ast,
-                "update_many_additional_http_status_codes_error_variants",
-                &proc_macro_name_lower_case,
                 &proc_macro_name_camel_case_ident_stringified
             );
             let full_additional_http_status_codes_error_variants =  {
@@ -6259,6 +6323,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{route_handler_token_stream}");
+        let common_middlewares_error_syn_variants_from_impls = generate_common_middlewares_error_syn_variants_from_impls(
+            common_middlewares_error_syn_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            additional_http_status_codes_error_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            &try_operation_camel_case_token_stream,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
+        // println!("{common_middlewares_error_syn_variants_from_impls}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
@@ -6270,6 +6349,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
+            #common_middlewares_error_syn_variants_from_impls
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
@@ -6333,6 +6413,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             &try_operation_camel_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified
+        );
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            &ast,
+            "delete_one_additional_http_status_codes_error_variants",
+            &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
         let parameters_token_stream = {
@@ -6443,12 +6529,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
                 &try_operation_camel_case_stringified,
                 &with_serialize_deserialize_camel_case_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
-            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-                &ast,
-                "delete_one_additional_http_status_codes_error_variants",
-                &proc_macro_name_lower_case,
                 &proc_macro_name_camel_case_ident_stringified
             );
             let full_additional_http_status_codes_error_variants =  {
@@ -6654,6 +6734,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{route_handler_token_stream}");
+        let common_middlewares_error_syn_variants_from_impls = generate_common_middlewares_error_syn_variants_from_impls(
+            common_middlewares_error_syn_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            additional_http_status_codes_error_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            &try_operation_camel_case_token_stream,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
+        // println!("{common_middlewares_error_syn_variants_from_impls}");
         quote::quote!{
             #parameters_token_stream
             #path_token_stream
@@ -6664,6 +6759,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
+            #common_middlewares_error_syn_variants_from_impls
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
@@ -6727,6 +6823,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         let try_operation_camel_case_token_stream = generate_try_operation_camel_case_token_stream(
             &try_operation_camel_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified
+        );
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+            &ast,
+            "delete_many_with_body_additional_http_status_codes_error_variants",
+            &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
         let parameters_token_stream = {
@@ -6925,12 +7027,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let try_operation_with_serialize_deserialize_token_stream = generate_try_operation_with_serialize_deserialize_token_stream(
                 &try_operation_camel_case_stringified,
                 &with_serialize_deserialize_camel_case_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
-            let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
-                &ast,
-                "delete_many_with_body_additional_http_status_codes_error_variants",
-                &proc_macro_name_lower_case,
                 &proc_macro_name_camel_case_ident_stringified
             );
             let full_additional_http_status_codes_error_variants =  {
@@ -7472,6 +7568,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{route_handler_token_stream}");
+        let common_middlewares_error_syn_variants_from_impls = generate_common_middlewares_error_syn_variants_from_impls(
+            common_middlewares_error_syn_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            additional_http_status_codes_error_variants.iter().collect::<std::vec::Vec<&(
+                syn::Ident,
+                proc_macro2::TokenStream,
+                std::vec::Vec::<syn::Variant>
+            )>>(),
+            &try_operation_camel_case_token_stream,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
+        // println!("{common_middlewares_error_syn_variants_from_impls}");
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
@@ -7483,6 +7594,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
+            #common_middlewares_error_syn_variants_from_impls
         }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
