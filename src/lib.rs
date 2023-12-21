@@ -1563,18 +1563,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
-    let operation_status_wrapper_camel_case_token_stream = quote::quote!{OperationStatusWrapper};
-    let operation_status_camel_case_token_stream = quote::quote!{OperationStatus};
-    let operation_status_token_stream = quote::quote!{
-        #derive_debug_serialize_deserialize_token_stream
-        struct #operation_status_wrapper_camel_case_token_stream {
-            status: #operation_status_camel_case_token_stream
-        }
-        #derive_debug_serialize_deserialize_token_stream
-        enum #operation_status_camel_case_token_stream {
-            Ok
-        }
-    };
+    // let operation_status_wrapper_camel_case_token_stream = quote::quote!{OperationStatusWrapper};
+    // let operation_status_camel_case_token_stream = quote::quote!{OperationStatus};
+    // let operation_status_token_stream = quote::quote!{
+    //     #derive_debug_serialize_deserialize_token_stream
+    //     struct #operation_status_wrapper_camel_case_token_stream {
+    //         status: #operation_status_camel_case_token_stream
+    //     }
+    //     #derive_debug_serialize_deserialize_token_stream
+    //     enum #operation_status_camel_case_token_stream {
+    //         Ok
+    //     }
+    // };
     let common_middlewares_error_syn_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
         &ast,
         "additional_http_status_codes_error_variants",
@@ -2185,8 +2185,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,//todo - is it right status code for this case?
         "CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer",
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                "uuid_wrapper_try_from_possible_uuid_wrapper_in_server", 
+                sqlx_error_syn_punctuated_punctuated.clone()
+            )
+        ]
+    );
+    let updated_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        "UpdatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer",
         &code_occurence_field,
         vec![
             (
@@ -5426,7 +5438,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     common_error_syn_variants.len() +
                     path_error_syn_variants.len() +
                     json_body_error_syn_variants.len() +
-                    3
+                    4
                 );
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
@@ -5440,12 +5452,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&bind_query_syn_variant);
                 type_variants_from_request_response.push(&no_payload_fields_syn_variant);
                 type_variants_from_request_response.push(&update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response.push(&updated_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
                 type_variants_from_request_response
             };
+            //
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
-                &quote::quote!{()},
+                // &quote::quote!{()},
+                &crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
+                //
                 &try_operation_camel_case_token_stream,
                 &try_operation_response_variants_camel_case_stringified,
                 &try_operation_response_variants_camel_case_token_stream,
@@ -5463,7 +5479,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                false,
+                true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -7645,7 +7661,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #order_by_wrapper_token_stream
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
-        #operation_status_token_stream
+        // #operation_status_token_stream
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
@@ -7659,7 +7675,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #create_one_token_stream
         #read_one_token_stream
         #read_many_with_body_token_stream
-        #update_one_token_stream
+        // #update_one_token_stream
         #update_many_token_stream
         #delete_one_token_stream
         #delete_many_with_body_token_stream
