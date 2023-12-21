@@ -1563,6 +1563,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    let operation_status_wrapper_camel_case_token_stream = quote::quote!{OperationStatusWrapper};
+    let operation_status_camel_case_token_stream = quote::quote!{OperationStatus};
+    let operation_status_token_stream = quote::quote!{
+        #derive_debug_serialize_deserialize_token_stream
+        struct #operation_status_wrapper_camel_case_token_stream {
+            status: #operation_status_camel_case_token_stream
+        }
+        #derive_debug_serialize_deserialize_token_stream
+        enum #operation_status_camel_case_token_stream {
+            Ok
+        }
+    };
     let common_middlewares_error_syn_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
         &ast,
         "additional_http_status_codes_error_variants",
@@ -7633,6 +7645,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #order_by_wrapper_token_stream
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
+        #operation_status_token_stream
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
