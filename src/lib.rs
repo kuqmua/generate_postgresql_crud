@@ -1655,10 +1655,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {request_error_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_camel_case_stringified = "OperationDoneButCannotConvertUuidWrapperFromPossibleUuidWrapper";
-    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified = format!("{operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_camel_case_stringified}InServer");
+    let operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified = format!("{operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_camel_case_stringified}InServer");
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream = {
-        created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_stringified = format!("{operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_camel_case_stringified}InClient");//todo reuse it
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream = {
@@ -2187,7 +2187,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //todo rename it to operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,//todo - is it right status code for this case?
-        &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified,
+        &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified,
         &code_occurence_field,
         vec![
             (
