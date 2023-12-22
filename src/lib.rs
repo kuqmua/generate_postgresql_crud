@@ -1654,13 +1654,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         request_error_lower_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {request_error_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_camel_case_stringified = "CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapper";//todo rename created to operation done
-    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified = format!("{created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_camel_case_stringified}InServer");
+    let operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_camel_case_stringified = "OperationDoneButCannotConvertUuidWrapperFromPossibleUuidWrapper";
+    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified = format!("{operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_camel_case_stringified}InServer");
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream = {
         created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_stringified = format!("{created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_camel_case_stringified}InClient");//todo reuse it
+    let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_stringified = format!("{operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_camel_case_stringified}InClient");//todo reuse it
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream = {
         created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -2187,7 +2187,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //todo rename it to operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,//todo - is it right status code for this case?
-        "CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer",
+        &created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified,
         &code_occurence_field,
         vec![
             (
@@ -5652,27 +5652,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .fetch_one(#pg_connection_token_stream.as_mut())
                         .await
                     {
-                        // Ok(_) => #try_operation_response_variants_token_stream::#desirable_token_stream(()),//todo () type token_stream
-                        //
-                        // Ok(value) => match {
-                        //     use sqlx::Row;
-                        //     value.try_get::<sqlx::types::Uuid, &str>("id")
-                        // } {
-                        //     Ok(value) => TryUpdateOneResponseVariants::Desirable(
-                        //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(value),
-                        //     ),
-                        //     Err(e) => {
-                        //         let error = TryUpdateOne::UpdatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer {
-                        //             uuid_wrapper_try_from_possible_uuid_wrapper_in_server: e,
-                        //             code_occurence: crate::code_occurence_tufa_common!(),
-                        //         };
-                        //         crate::common::error_logs_logic::error_log::ErrorLog::error_log(
-                        //             &error,
-                        //             app_info_state.as_ref(),
-                        //         );
-                        //         return TryUpdateOneResponseVariants::from(error);
-                        //     }
-                        // },
                         Ok(value) => match {
                             use #sqlx_row_token_stream;
                             value.try_get::<#sqlx_types_uuid_token_stream, &str>(#primary_key_field_ident_quotes_token_stream)
@@ -5680,14 +5659,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(value) => #try_operation_response_variants_token_stream::#desirable_token_stream(#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from(value)),
                             Err(e) => {
                                 let error = #try_operation_camel_case_token_stream::#created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream {
-                                    uuid_wrapper_try_from_possible_uuid_wrapper_in_server: e,
+                                    uuid_wrapper_try_from_possible_uuid_wrapper_in_server: e,//todo reuse name
                                     #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                                 };
                                 #error_log_call_token_stream
                                 return #try_operation_response_variants_token_stream::from(error);
                             }
                         },
-                        //
                         Err(e) => {
                             #from_log_and_return_error_token_stream;
                         }
