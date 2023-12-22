@@ -2184,21 +2184,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
+    //todo rename it to operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant
     let created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,//todo - is it right status code for this case?
         "CreatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer",
-        &code_occurence_field,
-        vec![
-            (
-                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                "uuid_wrapper_try_from_possible_uuid_wrapper_in_server", 
-                sqlx_error_syn_punctuated_punctuated.clone()
-            )
-        ]
-    );
-    let updated_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-        "UpdatedButCannotConvertUuidWrapperFromPossibleUuidWrapperInServer",
         &code_occurence_field,
         vec![
             (
@@ -5452,7 +5441,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&bind_query_syn_variant);
                 type_variants_from_request_response.push(&no_payload_fields_syn_variant);
                 type_variants_from_request_response.push(&update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant);
-                type_variants_from_request_response.push(&updated_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
+                type_variants_from_request_response.push(&created_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
                 type_variants_from_request_response
             };
             //
@@ -7710,7 +7699,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #create_one_token_stream
         #read_one_token_stream
         #read_many_with_body_token_stream
-        // #update_one_token_stream
+        #update_one_token_stream
         #update_many_token_stream
         #delete_one_token_stream
         #delete_many_with_body_token_stream
