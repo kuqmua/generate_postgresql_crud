@@ -3073,7 +3073,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
-                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
+                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {//todo reuse variant declaration
                         #eo_vec_error_occurence_token_stream
                         #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_token_stream: std::vec::Vec<#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream>,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
@@ -5513,7 +5513,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                     .await
                     {
-                        Ok(_) => Ok(()),
+                        Ok(_) => Ok(()),//todo return uuid?
                         Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
                     }
                 }
@@ -6534,6 +6534,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #request_error_lower_case_token_stream: #try_operation_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
+                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
+                        #eo_error_occurence_attribute_token_stream
+                        uuid_wrapper_try_from_possible_uuid_wrapper_in_client: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                    },
                 }
             }
         };
@@ -6643,42 +6648,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
-                //
-                // pub async fn #try_operation_lower_case_token_stream<'a>(
-                //     #server_location_name_token_stream: #server_location_type_token_stream,
-                //     #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
-                // ) -> Result<(), #try_operation_error_named_camel_case_token_stream> {
-                //     let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
-                //         Ok(value) => value,
-                //         Err(e) => {
-                //             return Err(#try_operation_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
-                //         }
-                //     };
-                //     let url = format!(
-                //         #url_handle_token_stream,
-                //         #server_location_name_token_stream,
-                //         #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident.to_inner()
-                //     );
-                //     // println!("{}", url);
-                //     match #tvfrr_extraction_logic_token_stream(
-                //         #reqwest_client_new_token_stream
-                //         .patch(&url)
-                //         #project_commit_header_addition_token_stream
-                //         #content_type_application_json_header_addition_token_stream
-                //         .body(#payload_lower_case_token_stream)
-                //         .send(),
-                //     )
-                //     .await
-                //     {
-                //         Ok(_) => Ok(()),
-                //         Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
-                //     }
-                // }
-                //
                 pub async fn #try_operation_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
-                ) -> Result<(), #try_operation_error_named_camel_case_token_stream> {
+                ) -> Result<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream, #try_operation_error_named_camel_case_token_stream> {
                     let url = format!(
                         #url_handle_token_stream,
                         #server_location_name_token_stream,
@@ -6693,7 +6666,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                     .await
                     {
-                        Ok(_) => Ok(()),//todo PossibleUuidWrapper - return Uuid ? update_one too
+                        Ok(value) => match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
+                            Ok(value) => Ok(value),
+                            Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
+                                uuid_wrapper_try_from_possible_uuid_wrapper_in_client: e,
+                                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+                            })
+                        },
                         Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
                     }
                 }
