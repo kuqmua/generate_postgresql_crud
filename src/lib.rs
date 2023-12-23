@@ -5443,13 +5443,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
                 type_variants_from_request_response
             };
-            //
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
-                // &quote::quote!{()},
                 &crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
-                //
                 &try_operation_camel_case_token_stream,
                 &try_operation_response_variants_camel_case_stringified,
                 &try_operation_response_variants_camel_case_token_stream,
@@ -6589,7 +6586,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
                     path_error_syn_variants.len() + 
-                    1
+                    2
                 );
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
@@ -6599,12 +6596,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
                 //todo why no bind query error here?
                 type_variants_from_request_response.push(&delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
-                &quote::quote!{()},
+                &crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                 &try_operation_camel_case_token_stream,
                 &try_operation_response_variants_camel_case_stringified,
                 &try_operation_response_variants_camel_case_token_stream,
@@ -6622,7 +6620,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                false,
+                true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -6645,6 +6643,38 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote!{
+                //
+                // pub async fn #try_operation_lower_case_token_stream<'a>(
+                //     #server_location_name_token_stream: #server_location_type_token_stream,
+                //     #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
+                // ) -> Result<(), #try_operation_error_named_camel_case_token_stream> {
+                //     let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
+                //         Ok(value) => value,
+                //         Err(e) => {
+                //             return Err(#try_operation_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
+                //         }
+                //     };
+                //     let url = format!(
+                //         #url_handle_token_stream,
+                //         #server_location_name_token_stream,
+                //         #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident.to_inner()
+                //     );
+                //     // println!("{}", url);
+                //     match #tvfrr_extraction_logic_token_stream(
+                //         #reqwest_client_new_token_stream
+                //         .patch(&url)
+                //         #project_commit_header_addition_token_stream
+                //         #content_type_application_json_header_addition_token_stream
+                //         .body(#payload_lower_case_token_stream)
+                //         .send(),
+                //     )
+                //     .await
+                //     {
+                //         Ok(_) => Ok(()),
+                //         Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
+                //     }
+                // }
+                //
                 pub async fn #try_operation_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
@@ -6663,7 +6693,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                     .await
                     {
-                        Ok(value) => Ok(value),
+                        Ok(_) => Ok(()),//todo PossibleUuidWrapper - return Uuid ? update_one too
                         Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
                     }
                 }
@@ -6729,7 +6759,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .fetch_one(#pg_connection_token_stream.as_mut())
                         .await
                     {
-                        Ok(row) => #try_operation_response_variants_token_stream::#desirable_token_stream(()),//todo - () as variable token stream
+                        // Ok(row) => #try_operation_response_variants_token_stream::#desirable_token_stream(()),//todo - () as variable token stream
+                        Ok(value) => match {
+                            use #sqlx_row_token_stream;
+                            value.try_get::<#sqlx_types_uuid_token_stream, &str>(#primary_key_field_ident_quotes_token_stream)
+                        } {
+                            Ok(value) => #try_operation_response_variants_token_stream::#desirable_token_stream(#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from(value)),
+                            Err(e) => {
+                                let error = #try_operation_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream {
+                                    uuid_wrapper_try_from_possible_uuid_wrapper_in_server: e,//todo reuse name
+                                    #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+                                };
+                                #error_log_call_token_stream
+                                return #try_operation_response_variants_token_stream::from(error);
+                            }
+                        },
                         Err(e) => {
                             #from_log_and_return_error_token_stream;
                         }
