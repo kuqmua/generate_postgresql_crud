@@ -21,7 +21,7 @@ pub fn generate_postgres_execute_query(
         #acquire_pool_and_connection_token_stream
         match #binded_query_name_token_stream.execute(#pg_connection_token_stream.as_mut()).await {
             //todo - is need to return rows affected?
-            Ok(_) => #response_variants_token_stream::#desirable_token_stream(()),
+            Ok(_) => #response_variants_token_stream::#desirable_token_stream(vec![]),//todo desirable value
             Err(e) => {
                  #from_log_and_return_error_token_stream
             }
