@@ -4175,7 +4175,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
                 ) -> Result<
-                    #struct_options_ident_token_stream,
+                    #struct_options_ident_token_stream,//todo make it generic instead of options
                     #try_operation_error_named_camel_case_token_stream,
                 > {
                     let encoded_query = match #serde_urlencoded_to_string_token_stream(#parameters_lower_case_token_stream.#query_lower_case_token_stream.#into_url_encoding_version_name_token_stream()) {
