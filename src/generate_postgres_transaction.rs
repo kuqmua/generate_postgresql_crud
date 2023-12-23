@@ -137,7 +137,7 @@ pub fn generate_postgres_transaction(
             }
         }
         match #postgres_transaction_token_stream.#commit_token_stream().await {
-            Ok(_) => #response_variants_token_stream::#desirable_token_stream(()),
+            Ok(_) => #response_variants_token_stream::#desirable_token_stream(vec![]),//todo value inside desirable
             Err(e) => {
                 let error = #try_ident_camel_case_token_stream::#commit_failed_token_stream;
                 #error_log_call_token_stream

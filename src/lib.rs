@@ -4130,7 +4130,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
-                &quote::quote!{#struct_options_ident_token_stream},
+                &struct_options_ident_token_stream,
                 &try_operation_camel_case_token_stream,
                 &try_operation_response_variants_camel_case_stringified,
                 &try_operation_response_variants_camel_case_token_stream,
@@ -5983,6 +5983,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
+                    //
+                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {//todo reuse variant declaration
+                        #eo_vec_error_occurence_token_stream
+                        #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_token_stream: std::vec::Vec<#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream>,
+                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                    //
                 }
             }
         };
@@ -6058,7 +6065,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
-                &quote::quote!{()},
+                &quote::quote!{std::vec::Vec::<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>},
                 &try_operation_camel_case_token_stream,
                 &try_operation_response_variants_camel_case_stringified,
                 &try_operation_response_variants_camel_case_token_stream,
@@ -6076,7 +6083,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                false,
+                true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -6102,7 +6109,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub async fn #try_operation_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
                     #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
-                ) -> Result<(), #try_operation_error_named_camel_case_token_stream> {
+                ) -> Result<std::vec::Vec<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>, #try_operation_error_named_camel_case_token_stream> {//todo type Result reusage
                     let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&
                         #parameters_lower_case_token_stream.#payload_lower_case_token_stream
                         .into_iter()
@@ -6132,7 +6139,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                     .await
                     {
-                        Ok(_) => Ok(()),
+                        // Ok(_) => Ok(()),
+                        Ok(value) => {
+                            let mut vec_values = std::vec::Vec::with_capacity(value.len());
+                            let mut vec_errors = std::vec::Vec::with_capacity(value.len());
+                            for element in value {
+                                match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(element) {
+                                    Ok(value) => {
+                                        vec_values.push(value);
+                                    }
+                                    Err(e) => {
+                                        vec_errors.push(
+                                            #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream(e)
+                                        );
+                                    }
+                                }
+                            }
+                            if let false = vec_errors.is_empty() {
+                                return Err(#try_operation_error_named_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
+                                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_token_stream: vec_errors,
+                                    #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
+                                });
+                            }
+                            Ok(vec_values)
+                        },
                         Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
                     }
                 }
@@ -7713,7 +7743,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #update_one_token_stream
         #update_many_token_stream
         #delete_one_token_stream
-        #delete_many_with_body_token_stream
+        // #delete_many_with_body_token_stream
     };
     // if ident == "" {
     //    println!("{gen}");
