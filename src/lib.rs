@@ -2127,18 +2127,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let commit_failed_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-        "CommitFailed",
-        &code_occurence_field,
-        vec![
-            (
-                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                "commit_failed", 
-                sqlx_error_syn_punctuated_punctuated.clone()
-            )
-        ]
-    );
+    let commit_failed_syn_variant = {
+        let variant_name_camel_case_stringified = "CommitFailed";
+        let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+        crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+            &variant_name_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                    &variant_name_lower_case_stringified, 
+                    sqlx_error_syn_punctuated_punctuated.clone()
+                )
+            ]
+        )
+    };
     let commit_failed_variant_initialization_token_stream = quote::quote!{
         CommitFailed {
             commit_failed: e,
@@ -2146,20 +2150,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     let not_unique_primary_keys_name_token_stream = quote::quote!{not_unique_primary_keys};
-    let not_unique_primary_key_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        "NotUniquePrimaryKey",
-        &code_occurence_field,
-        vec![
-            (
-                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplay, 
-                "not_unique_primary_keys",
-                std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_syn_punctuated_punctuated.clone() 
-            )
-        ]
-    );
+    let not_unique_primary_keys_syn_variant = {
+        let variant_name_camel_case_stringified = "NotUniquePrimaryKeys";
+        let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+        crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &variant_name_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplay, 
+                    &variant_name_lower_case_stringified,
+                    std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_syn_punctuated_punctuated.clone() 
+                )
+            ]
+        )
+    };
     let not_unique_primary_key_variant_initialization_token_stream = quote::quote!{
-        NotUniquePrimaryKey {
+        NotUniquePrimaryKeys {
             not_unique_primary_keys,
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
@@ -4595,7 +4603,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 for element in &not_unique_vec_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
-                type_variants_from_request_response.push(&not_unique_primary_key_syn_variant);
+                type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
                 type_variants_from_request_response.push(&bind_query_syn_variant);
                 type_variants_from_request_response.push(&not_uuid_syn_variant);
                 type_variants_from_request_response.push(&read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant);
@@ -6025,7 +6033,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 for element in &json_body_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
-                type_variants_from_request_response.push(&not_unique_primary_key_syn_variant);
+                type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
                 type_variants_from_request_response.push(&bind_query_syn_variant);
                 type_variants_from_request_response.push(&checked_add_syn_variant);
                 type_variants_from_request_response.push(&no_payload_fields_syn_variant);
@@ -7188,7 +7196,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 for element in &not_unique_vec_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
-                type_variants_from_request_response.push(&not_unique_primary_key_syn_variant);
+                type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
                 type_variants_from_request_response.push(&bind_query_syn_variant);
                 type_variants_from_request_response.push(&no_payload_fields_syn_variant);
                 type_variants_from_request_response.push(&no_payload_parameters_syn_variant);
