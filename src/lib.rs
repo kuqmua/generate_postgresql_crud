@@ -3,7 +3,6 @@ mod check_for_none;
 mod acquire_pool_and_connection;
 mod from_log_and_return_error;
 mod generate_postgres_transaction;
-mod generate_postgres_execute_query;
 mod type_variants_from_request_response_generator;
 mod extract_syn_variants_from_proc_macro_attribute;
 
@@ -3774,17 +3773,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &from_log_and_return_error_token_stream,
                     &pg_connection_token_stream
                 );
-                // crate::generate_postgres_execute_query::generate_postgres_execute_query(
-                //     &query_string_name_token_stream,
-                //     &query_string_token_stream,
-                //     &binded_query_name_token_stream,
-                //     &binded_query_token_stream,
-                //     &acquire_pool_and_connection_token_stream,
-                //     &pg_connection_token_stream,
-                //     &try_operation_response_variants_token_stream,
-                //     &desirable_token_stream,
-                //     &from_log_and_return_error_token_stream,
-                // )
                 quote::quote! {
                     let #query_string_name_token_stream = {
                         #query_string_token_stream
@@ -7160,7 +7148,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
                     json_body_error_syn_variants.len() + 
-                    12
+                    13
                 );
                 for element in &common_error_syn_variants {
                     type_variants_from_request_response.push(element);
@@ -7181,6 +7169,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&commit_failed_syn_variant);
                 type_variants_from_request_response.push(&query_and_rollback_failed_syn_variant);
                 type_variants_from_request_response.push(&delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
                 type_variants_from_request_response
             };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
@@ -7640,20 +7629,53 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             query
                         }
                     };
-                    let generate_postgres_execute_query_token_stream = crate::generate_postgres_execute_query::generate_postgres_execute_query(
-                        &query_string_name_token_stream,
-                        &query_string_token_stream,
-                        &binded_query_name_token_stream,
-                        &binded_query_token_stream,
-                        &acquire_pool_and_connection_token_stream,
-                        &pg_connection_token_stream,
-                        &try_operation_response_variants_token_stream,
-                        &desirable_token_stream,
-                        &from_log_and_return_error_token_stream,
-                    );
-                    quote::quote!{
+                    quote::quote! {
                         #filter_unique_parameters_token_stream
-                        #generate_postgres_execute_query_token_stream
+                        let #query_string_name_token_stream = {
+                            #query_string_token_stream
+                        };
+                        println!("{}", #query_string_name_token_stream);
+                        let #binded_query_name_token_stream = {
+                            #binded_query_token_stream
+                        };
+                        #acquire_pool_and_connection_token_stream
+                        let mut rows = #binded_query_name_token_stream.fetch(#pg_connection_token_stream.as_mut());
+                        let mut vec_values = std::vec::Vec::new();
+                        while let Some(row) = {
+                            match {
+                                use futures::TryStreamExt;
+                                rows.try_next()
+                            }
+                            .await
+                            {
+                                Ok(value) => value,
+                                Err(e) => {
+                                    let error = #try_operation_camel_case_token_stream::from(e);
+                                    #error_log_call_token_stream
+                                    return #try_operation_response_variants_token_stream::from(error);
+                                }
+                            }
+                        } {
+                            match {
+                                use #sqlx_row_token_stream;
+                                row.try_get::<#sqlx_types_uuid_token_stream, &str>(#primary_key_field_ident_quotes_token_stream)
+                            } {
+                                Ok(value) => {
+                                    vec_values.push(
+                                        #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from(value),
+                                    );
+                                }
+                                Err(e) => {
+                                    let error = #try_operation_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream {
+                                        uuid_wrapper_try_from_possible_uuid_wrapper_in_server: e,
+                                        #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+                                    };
+                                    #error_log_call_token_stream
+                                    return #try_operation_response_variants_token_stream::from(error);
+                                }
+                            }
+                        }
+                        #try_operation_response_variants_token_stream::#desirable_token_stream(vec_values)
                     }
                 };
                 quote::quote!{
@@ -7769,7 +7791,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #read_one_token_stream
         #read_many_with_body_token_stream
         #update_one_token_stream
-        // #update_many_token_stream
+        #update_many_token_stream
         #delete_one_token_stream
         #delete_many_with_body_token_stream
     };
