@@ -2501,7 +2501,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 vec![
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                        "io_error", 
+                        "io", 
                         {
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
@@ -2540,7 +2540,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 vec![
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "box_dyn_error", 
+                        "tls", 
                         std_string_string_syn_punctuated_punctuated.clone()
                     )
                 ]
