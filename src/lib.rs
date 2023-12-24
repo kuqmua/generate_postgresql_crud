@@ -7398,7 +7398,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #generate_postgres_transaction_token_stream
                     }
                 };
-                let generate_postgres_execute_query_token_stream = {
+                let generate_postgres_execute_query_token_stream = {//todo rename execute into something else
                     let filter_unique_parameters_token_stream = {
                         let filter_unique_parameters_primary_key_token_stream = quote::quote!{
                             if let Some(#primary_key_field_ident) = &#parameters_lower_case_token_stream.#payload_lower_case_token_stream.#primary_key_field_ident {
@@ -7581,7 +7581,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         };
                         let handle_token_stream = {
-                            let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {table_name_stringified} {where_name_stringified} {{}}\"");
+                            let handle_stringified = format!("\"{delete_name_stringified} {from_name_stringified} {table_name_stringified} {where_name_stringified} {{}}{returning_id_stringified}\"");
                             handle_stringified.parse::<proc_macro2::TokenStream>()
                             .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                         };
