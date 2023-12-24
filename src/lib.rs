@@ -3979,7 +3979,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 vec![
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        "read_one_path_try_from_read_one_path_with_serialize_deserialize",//todo reuse generation naming 
+                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
                         {
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
@@ -4537,7 +4537,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 vec![
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        "read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize", //todo reuse generation naming 
+                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified),
                         {
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
@@ -5336,7 +5336,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 vec![
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        "update_one_path_try_from_update_one_path_with_serialize_deserialize", //todo reuse generation naming 
+                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
                         {
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
@@ -5967,7 +5967,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 vec![
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        "update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize", //todo reuse generation naming 
+                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified),
                         {
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
@@ -6578,7 +6578,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 vec![
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        "delete_one_path_try_from_delete_one_path_with_serialize_deserialize",//todo reuse generation naming 
+                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
                         {
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
@@ -7127,7 +7127,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 vec![
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        "delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize", 
+                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified),
                         {
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
