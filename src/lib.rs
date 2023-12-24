@@ -2193,21 +2193,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    let operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,//todo - is it right status code for this case?
-        &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified,
-        &code_occurence_field,
-        vec![
-            (
-                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                "uuid_wrapper_try_from_possible_uuid_wrapper_in_server", 
-                sqlx_error_syn_punctuated_punctuated.clone()
-            )
-        ]
-    );
+    let operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant = {
+        let variant_name_camel_case_stringified = operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_stringified;
+        let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+        crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,//todo - is it right status code for this case?
+            &variant_name_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                    &variant_name_lower_case_stringified, 
+                    sqlx_error_syn_punctuated_punctuated.clone()
+                )
+            ]
+        )
+    };
     let operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_initialization_token_stream = quote::quote!{
         #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_camel_case_token_stream {
-            uuid_wrapper_try_from_possible_uuid_wrapper_in_server: e,
+            operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server: e,
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
@@ -2237,18 +2241,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    let failed_to_deserialize_query_string_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        "FailedToDeserializeQueryString",
-        &code_occurence_field,
-        vec![
-            (
-                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                "failed_to_deserialize_query_string", 
-                std_string_string_syn_punctuated_punctuated.clone()
-            )
-        ]
-    );
+    let failed_to_deserialize_query_string_syn_variant = {
+        let variant_name_camel_case_stringified = "FailedToDeserializeQueryString";
+        let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+        crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &variant_name_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                    &variant_name_lower_case_stringified, 
+                    std_string_string_syn_punctuated_punctuated.clone()
+                )
+            ]
+        )
+    };
     let not_unique_vec_syn_variants: std::vec::Vec<syn::Variant> = fields_named.iter().fold(std::vec::Vec::with_capacity(fields_named_len - 1), |mut acc, element| {
         let field_ident = element.ident.clone()
             .unwrap_or_else(|| {
