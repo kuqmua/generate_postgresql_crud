@@ -2482,152 +2482,184 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 )
             };
             //todo move it into custom macro attribute
-            let database_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                "Database",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "database", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
-            let io_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                "Io",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                        "io", 
-                        {
-                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle.push_punct(syn::token::Colon2{
-                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                            });
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("io", proc_macro2::Span::call_site()),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle.push_punct(syn::token::Colon2{
-                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                            });
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("Error", proc_macro2::Span::call_site()),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        }
-                    )
-                ]
-            );
-            let tls_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                "Tls",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "tls", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
-            let protocol_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                "Protocol",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "protocol", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
-            let row_not_found_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr404NotFound,
-                "RowNotFound",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "row_not_found", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
-            let type_not_found_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                "TypeNotFound",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "type_not_found", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
-            let column_index_out_of_bounds_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                "ColumnIndexOutOfBounds",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "column_index_out_of_bounds", 
-                        {
-                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("usize", proc_macro2::Span::call_site()),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        }
-                    ),
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "len", 
-                        {
-                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("usize", proc_macro2::Span::call_site()),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        }
-                    )
-                ]
-            );
-            let column_not_found_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                "ColumnNotFound",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "column_not_found", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
+            let database_syn_variant = {
+                let variant_name_camel_case_stringified = "Database";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
+            let io_syn_variant = {
+                let variant_name_camel_case_stringified = "Io";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                            &variant_name_lower_case_stringified, 
+                            {
+                                let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                handle.push_value(
+                                    syn::PathSegment {
+                                        ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    }
+                                );
+                                handle.push_punct(syn::token::Colon2{
+                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                });
+                                handle.push_value(
+                                    syn::PathSegment {
+                                        ident: proc_macro2::Ident::new("io", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    }
+                                );
+                                handle.push_punct(syn::token::Colon2{
+                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                });
+                                handle.push_value(
+                                    syn::PathSegment {
+                                        ident: proc_macro2::Ident::new("Error", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    }
+                                );
+                                handle
+                            }
+                        )
+                    ]
+                )
+            };
+            let tls_syn_variant = {
+                let variant_name_camel_case_stringified = "Tls";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
+            let protocol_syn_variant = {
+                let variant_name_camel_case_stringified = "Protocol";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
+            let row_not_found_syn_variant = {
+                let variant_name_camel_case_stringified = "RowNotFound";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr404NotFound,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
+            let type_not_found_syn_variant = {
+                let variant_name_camel_case_stringified = "TypeNotFound";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
+            let column_index_out_of_bounds_syn_variant = {
+                let variant_name_camel_case_stringified = "ColumnIndexOutOfBounds";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            {
+                                let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                handle.push_value(
+                                    syn::PathSegment {
+                                        ident: proc_macro2::Ident::new("usize", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    }
+                                );
+                                handle
+                            }
+                        ),
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            "len", 
+                            {
+                                let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                handle.push_value(
+                                    syn::PathSegment {
+                                        ident: proc_macro2::Ident::new("usize", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    }
+                                );
+                                handle
+                            }
+                        )
+                    ]
+                )
+            };
+            let column_not_found_syn_variant = {
+                let variant_name_camel_case_stringified = "ColumnNotFound";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
             let column_decode_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
                 "ColumnDecode",
