@@ -6331,6 +6331,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &try_operation_camel_case_token_stream,
                     &commit_failed_variant_initialization_token_stream,
                     &error_log_call_token_stream,
+                    &crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                 );
                 quote::quote!{
                     {
@@ -7401,6 +7402,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &try_operation_camel_case_token_stream,
                         &commit_failed_variant_initialization_token_stream,
                         &error_log_call_token_stream,
+                        &crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                     );
                     quote::quote!{
                         #filter_unique_parameters_token_stream
@@ -7767,7 +7769,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #read_one_token_stream
         #read_many_with_body_token_stream
         #update_one_token_stream
-        #update_many_token_stream
+        // #update_many_token_stream
         #delete_one_token_stream
         #delete_many_with_body_token_stream
     };

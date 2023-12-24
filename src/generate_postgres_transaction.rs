@@ -28,6 +28,7 @@ pub fn generate_postgres_transaction(
     try_ident_camel_case_token_stream: &proc_macro2::TokenStream,
     commit_failed_token_stream: &proc_macro2::TokenStream,
     error_log_call_token_stream: &proc_macro2::TokenStream,
+    crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
     quote::quote! {
         let #expected_updated_primary_keys_name_token_stream = {
@@ -137,7 +138,9 @@ pub fn generate_postgres_transaction(
             }
         }
         match #postgres_transaction_token_stream.#commit_token_stream().await {
-            Ok(_) => #response_variants_token_stream::#desirable_token_stream(vec![]),//todo value inside desirable
+            Ok(_) => #response_variants_token_stream::#desirable_token_stream(#primary_key_vec_name_token_stream.into_iter().map(
+                |element|#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from(element)
+            ).collect()),
             Err(e) => {
                 let error = #try_ident_camel_case_token_stream::#commit_failed_token_stream;
                 #error_log_call_token_stream
