@@ -2884,12 +2884,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_operation_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
-            &generate_operation_additional_http_status_codes_error_variants_stringified(
-                &operation_name_lower_case_stringified,
-                &additional_http_status_codes_error_variants_lower_case_stringified
-            ),
+            &operation_name_lower_case_stringified,
+            &additional_http_status_codes_error_variants_lower_case_stringified,
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
@@ -3380,12 +3378,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_operation_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
-            &generate_operation_additional_http_status_codes_error_variants_stringified(
-                &operation_name_lower_case_stringified,
-                &additional_http_status_codes_error_variants_lower_case_stringified
-            ),
+            &operation_name_lower_case_stringified,
+            &additional_http_status_codes_error_variants_lower_case_stringified,
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
@@ -3799,12 +3795,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_operation_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
-            &generate_operation_additional_http_status_codes_error_variants_stringified(
-                &operation_name_lower_case_stringified,
-                &additional_http_status_codes_error_variants_lower_case_stringified
-            ),
+            &operation_name_lower_case_stringified,
+            &additional_http_status_codes_error_variants_lower_case_stringified,
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
@@ -4299,12 +4293,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_operation_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
-            &generate_operation_additional_http_status_codes_error_variants_stringified(
-                &operation_name_lower_case_stringified,
-                &additional_http_status_codes_error_variants_lower_case_stringified
-            ),
+            &operation_name_lower_case_stringified,
+            &additional_http_status_codes_error_variants_lower_case_stringified,
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
@@ -5184,12 +5176,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_operation_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
-            &generate_operation_additional_http_status_codes_error_variants_stringified(
-                &operation_name_lower_case_stringified,
-                &additional_http_status_codes_error_variants_lower_case_stringified
-            ),
+            &operation_name_lower_case_stringified,
+            &additional_http_status_codes_error_variants_lower_case_stringified,
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
@@ -5770,12 +5760,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_operation_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
-            &generate_operation_additional_http_status_codes_error_variants_stringified(
-                &operation_name_lower_case_stringified,
-                &additional_http_status_codes_error_variants_lower_case_stringified
-            ),
+            &operation_name_lower_case_stringified,
+            &additional_http_status_codes_error_variants_lower_case_stringified,
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
@@ -6470,12 +6458,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_operation_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
-            &generate_operation_additional_http_status_codes_error_variants_stringified(
-                &operation_name_lower_case_stringified,
-                &additional_http_status_codes_error_variants_lower_case_stringified
-            ),
+            &operation_name_lower_case_stringified,
+            &additional_http_status_codes_error_variants_lower_case_stringified,
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
@@ -6940,12 +6926,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &try_operation_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
-            &generate_operation_additional_http_status_codes_error_variants_stringified(
-                &operation_name_lower_case_stringified,
-                &additional_http_status_codes_error_variants_lower_case_stringified
-            ),
+            &operation_name_lower_case_stringified,
+            &additional_http_status_codes_error_variants_lower_case_stringified,
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
@@ -8171,13 +8155,6 @@ fn generate_try_operation_with_serialize_deserialize_token_stream(
     try_operation_with_serialize_deserialize_stringified
     .parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_with_serialize_deserialize_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-}
-
-fn generate_operation_additional_http_status_codes_error_variants_stringified(
-    operation_name_lower_case_stringified: &str,
-    additional_http_status_codes_error_variants_lower_case_stringified: &str
-) -> std::string::String {
-    format!("{operation_name_lower_case_stringified}_{additional_http_status_codes_error_variants_lower_case_stringified}")
 }
 
 #[derive(

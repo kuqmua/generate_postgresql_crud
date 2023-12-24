@@ -7,7 +7,7 @@ pub fn extract_syn_variants_from_proc_macro_attribute(
         syn::Ident,
         proc_macro2::TokenStream,
         std::vec::Vec::<syn::Variant>
-    )> {
+)> {
     let additional_http_status_codes_error_variant_path = format!("{proc_macro_name_lower_case}::{proc_macro_attribute_name}");
     let additional_http_status_codes_error_variants_attribute = proc_macro_helpers::get_macro_attribute::get_macro_attribute(
         &ast.attrs,
@@ -77,4 +77,23 @@ pub fn extract_syn_variants_from_proc_macro_attribute(
                 }
             }
         })
+}
+
+pub fn extract_syn_variants_from_method_proc_macro_attribute(
+    ast: &syn::DeriveInput,
+    operation_name_lower_case_stringified: &str,
+    additional_http_status_codes_error_variants_lower_case_stringified: &str,
+    proc_macro_name_lower_case: &str,
+    proc_macro_name_camel_case_ident_stringified: &std::string::String
+) -> std::vec::Vec::<(
+    syn::Ident,
+    proc_macro2::TokenStream,
+    std::vec::Vec::<syn::Variant>
+)> {
+    crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
+        &ast,
+        &format!("{operation_name_lower_case_stringified}_{additional_http_status_codes_error_variants_lower_case_stringified}"),
+        &proc_macro_name_lower_case,
+        &proc_macro_name_camel_case_ident_stringified
+    )
 }
