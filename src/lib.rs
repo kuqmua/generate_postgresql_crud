@@ -2185,6 +2185,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         ]
     );
+    //
+    let operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_declaration_token_stream = quote::quote!{
+        #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
+            #eo_vec_error_occurence_token_stream
+            #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_token_stream: std::vec::Vec<#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream>,
+            #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
+    let operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_one_declaration_token_stream = quote::quote!{
+        #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
+            #eo_error_occurence_attribute_token_stream
+            uuid_wrapper_try_from_possible_uuid_wrapper_in_client: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+        }
+    };
+    //
     let failed_to_deserialize_query_string_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
         "FailedToDeserializeQueryString",
@@ -2211,7 +2227,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             vec![
                 (
                     proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoVecDisplayWithSerializeDeserialize, 
-                    &not_unique_field_vec_lower_case_stringified,//todo reuse generation naming 
+                    &not_unique_field_vec_lower_case_stringified,
                     std_vec_vec_crate_server_postgres_regex_filter_regex_filter_syn_punctuated_punctuated.clone()
                 )
             ]
@@ -2936,11 +2952,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
-                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {//todo reuse variant declaration
-                        #eo_vec_error_occurence_token_stream
-                        #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_token_stream: std::vec::Vec<#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream>,
-                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_declaration_token_stream,
                 }
             }
         };
@@ -3430,11 +3442,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
-                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
-                        #eo_error_occurence_attribute_token_stream
-                        uuid_wrapper_try_from_possible_uuid_wrapper_in_client: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_one_declaration_token_stream,
                 }
             }
         };
@@ -5282,11 +5290,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
-                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
-                        #eo_error_occurence_attribute_token_stream
-                        uuid_wrapper_try_from_possible_uuid_wrapper_in_client: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_one_declaration_token_stream,
                 }
             }
         };
@@ -5920,11 +5924,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
-                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {//todo reuse variant declaration
-                        #eo_vec_error_occurence_token_stream
-                        #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_token_stream: std::vec::Vec<#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream>,
-                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_declaration_token_stream,
                 }
             }
         };
@@ -6538,11 +6538,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #request_error_lower_case_token_stream: #try_operation_request_error_camel_case_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {
-                        #eo_error_occurence_attribute_token_stream
-                        uuid_wrapper_try_from_possible_uuid_wrapper_in_client: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_one_declaration_token_stream,
                 }
             }
         };
@@ -7094,11 +7090,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
-                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {//todo reuse variant declaration
-                        #eo_vec_error_occurence_token_stream
-                        #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_token_stream: std::vec::Vec<#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream>,
-                        #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_declaration_token_stream,
                 }
             }
         };
