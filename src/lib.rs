@@ -2652,7 +2652,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 vec![
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "decode_box_dyn_error", 
+                        "decode", 
                         std_string_string_syn_punctuated_punctuated.clone()
                     )
                 ]
