@@ -3984,7 +3984,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
                                 syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("ReadOnePathTryFromReadOnePathWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),//todo reuse generation naming 
+                                    ident: proc_macro2::Ident::new(
+                                        &generate_with_error_named_postfix_stringified(
+                                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+                                            &error_named_camel_case_stringified,
+                                        ), 
+                                        proc_macro2::Span::call_site()
+                                    ),
                                     arguments: syn::PathArguments::None,
                                 }
                             );
@@ -4542,7 +4548,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
                                 syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),//todo reuse generation naming 
+                                    ident: proc_macro2::Ident::new(
+                                        &generate_with_error_named_postfix_stringified(
+                                            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
+                                            &error_named_camel_case_stringified,
+                                        ),
+                                        proc_macro2::Span::call_site()),//todo reuse generation naming 
                                     arguments: syn::PathArguments::None,
                                 }
                             );
@@ -5341,7 +5352,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
                                 syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("UpdateOnePathTryFromUpdateOnePathWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),//todo reuse generation naming 
+                                    ident: proc_macro2::Ident::new(
+                                        &generate_with_error_named_postfix_stringified(
+                                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+                                            &error_named_camel_case_stringified,
+                                        ),
+                                        proc_macro2::Span::call_site()
+                                    ),//todo reuse generation naming 
                                     arguments: syn::PathArguments::None,
                                 }
                             );
@@ -5972,7 +5989,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
                                 syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),//todo reuse generation naming 
+                                    ident: proc_macro2::Ident::new(
+                                        &generate_with_error_named_postfix_stringified(
+                                            &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified,
+                                            &error_named_camel_case_stringified,
+                                        ),
+                                        proc_macro2::Span::call_site()
+                                    ),
                                     arguments: syn::PathArguments::None,
                                 }
                             );
@@ -6583,7 +6606,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
                                 syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("DeleteOnePathTryFromDeleteOnePathWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),//todo reuse generation naming 
+                                    ident: proc_macro2::Ident::new(
+                                        &generate_with_error_named_postfix_stringified(
+                                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+                                            &error_named_camel_case_stringified,
+                                        ),
+                                        proc_macro2::Span::call_site()
+                                    ),//todo reuse generation naming 
                                     arguments: syn::PathArguments::None,
                                 }
                             );
@@ -7132,7 +7161,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
                             handle.push_value(
                                 syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserializeErrorNamed", proc_macro2::Span::call_site()),
+                                    ident: proc_macro2::Ident::new(
+                                        &generate_with_error_named_postfix_stringified(
+                                            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
+                                            &error_named_camel_case_stringified,
+                                        ),
+                                        proc_macro2::Span::call_site()
+                                    ),
                                     arguments: syn::PathArguments::None,
                                 }
                             );
@@ -7873,6 +7908,13 @@ fn generate_path_try_from_path_with_serialize_deserialize_stringified(
     with_serialize_deserialize_camel_case_stringified: &str,
 ) -> std::string::String {
     format!("{original_name_camel_case_stringified}{path_camel_case_stringified}{try_from_camel_case_stringified}{original_name_camel_case_stringified}{path_camel_case_stringified}{with_serialize_deserialize_camel_case_stringified}")
+}
+
+fn generate_with_error_named_postfix_stringified(
+    value: &str,
+    error_named_camel_case_stringified: &str,
+) -> std::string::String {
+    format!("{value}{error_named_camel_case_stringified}")
 }
 
 fn generate_path_try_from_path_with_serialize_deserialize_error_named_token_stream(
