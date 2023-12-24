@@ -2677,18 +2677,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let decode_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                "Decode",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "decode", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
+            let decode_syn_variant = {
+                let variant_name_camel_case_stringified = "Decode";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
             let pool_timed_out_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr408RequestTimeout,
                 "PoolTimedOut",
@@ -2701,69 +2705,81 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                 ]
             );
-            let pool_closed_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                "PoolClosed",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "pool_closed", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
-            let worker_crashed_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                "WorkerCrashed",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "worker_crashed", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
-            let migrate_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                "Migrate",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                        "migrate", 
-                        {
-                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle.push_punct(syn::token::Colon2{
-                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                            });
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("migrate", proc_macro2::Span::call_site()),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle.push_punct(syn::token::Colon2{
-                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                            });
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new("MigrateError", proc_macro2::Span::call_site()),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        }
-                    )
-                ]
-            );
+            let pool_closed_syn_variant = {
+                let variant_name_camel_case_stringified = "PoolClosed";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
+            let worker_crashed_syn_variant = {
+                let variant_name_camel_case_stringified = "WorkerCrashed";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
+            let migrate_syn_variant = {
+                let variant_name_camel_case_stringified = "Migrate";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                            &variant_name_lower_case_stringified, 
+                            {
+                                let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                handle.push_value(
+                                    syn::PathSegment {
+                                        ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    }
+                                );
+                                handle.push_punct(syn::token::Colon2{
+                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                });
+                                handle.push_value(
+                                    syn::PathSegment {
+                                        ident: proc_macro2::Ident::new("migrate", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    }
+                                );
+                                handle.push_punct(syn::token::Colon2{
+                                    spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                });
+                                handle.push_value(
+                                    syn::PathSegment {
+                                        ident: proc_macro2::Ident::new("MigrateError", proc_macro2::Span::call_site()),
+                                        arguments: syn::PathArguments::None,
+                                    }
+                                );
+                                handle
+                            }
+                        )
+                    ]
+                )
+            };
             [
                 configuration_error_syn_variant,
                 database_syn_variant,
