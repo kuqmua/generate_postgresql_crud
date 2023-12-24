@@ -3806,7 +3806,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
             &ast,
-            "read_one_additional_http_status_codes_error_variants",
+            "read_one_additional_http_status_codes_error_variants",//todo reuse or geenrate
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
@@ -3974,7 +3974,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                "ReadOnePathTryFromReadOnePathWithSerializeDeserialize",//todo reuse generation naming 
+                &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
                 &code_occurence_field,
                 vec![
                     (
@@ -4532,7 +4532,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                "ReadManyWithBodyPayloadTryFromReadManyWithBodyPayloadWithSerializeDeserialize",//todo reuse generation naming 
+                &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
                 &code_occurence_field,
                 vec![
                     (
@@ -5331,7 +5331,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                "UpdateOnePathTryFromUpdateOnePathWithSerializeDeserialize",//todo reuse generation naming 
+                &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
                 &code_occurence_field,
                 vec![
                     (
@@ -5907,13 +5907,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                     #http_request_error_named_serde_json_to_string_variant_token_stream,
-                    //
                     #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream {//todo reuse variant declaration
                         #eo_vec_error_occurence_token_stream
                         #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_lower_case_token_stream: std::vec::Vec<#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream>,
                         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream,
                     },
-                    //
                 }
             }
         };
@@ -5964,7 +5962,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                "UpdateManyPayloadElementTryFromUpdateManyPayloadElementWithSerializeDeserialize",//todo reuse generation naming 
+                &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified,
                 &code_occurence_field,
                 vec![
                     (
@@ -6575,7 +6573,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                "DeleteOnePathTryFromDeleteOnePathWithSerializeDeserialize",//todo reuse generation naming 
+                &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
                 &code_occurence_field,
                 vec![
                     (
@@ -7124,7 +7122,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                "DeleteManyWithBodyPayloadTryFromDeleteManyWithBodyPayloadWithSerializeDeserialize",
+                &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
                 &code_occurence_field,
                 vec![
                     (
