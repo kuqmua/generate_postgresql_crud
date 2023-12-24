@@ -2278,78 +2278,90 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         ));
         acc
     });
-    let not_uuid_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        "NotUuid",
-        &code_occurence_field,
-        vec![
-            (
-                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                "not_uuid", 
-                {
-                    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::None,
-                        }
-                    );
-                    handle.push_punct(syn::token::Colon2{
-                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                    });
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("types", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::None,
-                        }
-                    );
-                    handle.push_punct(syn::token::Colon2{
-                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                    });
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("uuid", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::None,
-                        }
-                    );
-                    handle.push_punct(syn::token::Colon2{
-                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                    });
-                    handle.push_value(
-                        syn::PathSegment {
-                            ident: proc_macro2::Ident::new("Error", proc_macro2::Span::call_site()),
-                            arguments: syn::PathArguments::None,
-                        }
-                    );
-                    handle
-                }
-            )
-        ]
-    );
-    let no_payload_fields_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        "NoPayloadFields",
-        &code_occurence_field,
-        vec![
-            (
-                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                "no_payload_fields",
-                std_string_string_syn_punctuated_punctuated.clone()
-            )
-        ]
-    );
-    let no_payload_parameters_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-        proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-        "NoPayloadParameters",
-        &code_occurence_field,
-        vec![
-            (
-                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                "no_payload_parameters", 
-                std_string_string_syn_punctuated_punctuated.clone()
-            )
-        ]
-    );
+    let not_uuid_syn_variant = {
+        let variant_name_camel_case_stringified = "NotUuid";
+        let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+        crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &variant_name_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                    &variant_name_lower_case_stringified, 
+                    {
+                        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("sqlx", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("types", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("uuid", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                        handle.push_value(
+                            syn::PathSegment {
+                                ident: proc_macro2::Ident::new("Error", proc_macro2::Span::call_site()),
+                                arguments: syn::PathArguments::None,
+                            }
+                        );
+                        handle
+                    }
+                )
+            ]
+        )
+    };
+    let no_payload_fields_syn_variant = {
+        let variant_name_camel_case_stringified = "NoPayloadFields";
+        let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+        crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &variant_name_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                    &variant_name_lower_case_stringified,
+                    std_string_string_syn_punctuated_punctuated.clone()
+                )
+            ]
+        )
+    };
+    let no_payload_parameters_syn_variant = {
+        let variant_name_camel_case_stringified = "NoPayloadParameters";
+        let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+        crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &variant_name_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                    &variant_name_lower_case_stringified, 
+                    std_string_string_syn_punctuated_punctuated.clone()
+                )
+            ]
+        )
+    };
     let query_encode_variant_token_stream = quote::quote!{
         #query_encode_token_stream {
             #eo_display_token_stream
@@ -2453,18 +2465,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let unnest_name_stringified = "unnest";
     let common_error_syn_variants = {
         let postgres_error_syn_variants = {
-            let configuration_error_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                "Configuration",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "configuration_box_dyn_error", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
+            let configuration_error_syn_variant = {
+                let variant_name_camel_case_stringified = "Configuration";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
             //todo move it into custom macro attribute
             let database_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
                 proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
