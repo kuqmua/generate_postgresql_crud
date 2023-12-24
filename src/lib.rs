@@ -2802,172 +2802,200 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         for element in postgres_error_syn_variants {
             common_error_variants_vec.push(element);
         }
-        let unexpected_case_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-            proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-            "UnexpectedCase",
-            &code_occurence_field,
-            vec![
-                (
-                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                    "unexpected_case", 
-                    std_string_string_syn_punctuated_punctuated.clone()
-                )
-            ]
-        );
+        let unexpected_case_syn_variant = {
+            let variant_name_camel_case_stringified = "UnexpectedCase";
+            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+            crate::type_variants_from_request_response_generator::construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                &variant_name_camel_case_stringified,
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        &variant_name_lower_case_stringified, 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            )
+        };
         common_error_variants_vec.push(unexpected_case_syn_variant);
         common_error_variants_vec
     };
     let path_error_syn_variants = {
-        let failed_to_deserialize_path_params_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            "FailedToDeserializePathParams",
-            &code_occurence_field,
-            vec![
-                (
-                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                    "failed_to_deserialize_path_params", 
-                    std_string_string_syn_punctuated_punctuated.clone()
-                )
-            ]
-        );
-        let missing_path_params_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            "MissingPathParams",
-            &code_occurence_field,
-            vec![
-                (
-                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                    "missing_path_params", 
-                    std_string_string_syn_punctuated_punctuated.clone()
-                )
-            ]
-        );
+        let failed_to_deserialize_path_params_syn_variant = {
+            let variant_name_camel_case_stringified = "FailedToDeserializePathParams";
+            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+            crate::type_variants_from_request_response_generator::construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                &variant_name_camel_case_stringified,
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        &variant_name_lower_case_stringified, 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            )
+        };
+        let missing_path_params_syn_variant = {
+            let variant_name_camel_case_stringified = "MissingPathParams";
+            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+            crate::type_variants_from_request_response_generator::construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                &variant_name_camel_case_stringified,
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        &variant_name_lower_case_stringified, 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            )
+        };
         [
             failed_to_deserialize_path_params_syn_variant,
             missing_path_params_syn_variant
         ]
     };
     let json_body_error_syn_variants = {
-        let json_data_error_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            "JsonDataError",
-            &code_occurence_field,
-            vec![
-                (
-                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                    "json_data_error", 
-                    {
-                        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                        handle.push_value(
-                            syn::PathSegment {
-                                ident: proc_macro2::Ident::new("axum", proc_macro2::Span::call_site()),
-                                arguments: syn::PathArguments::None,
-                            }
-                        );
-                        handle.push_punct(syn::token::Colon2{
-                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                        });
-                        handle.push_value(
-                            syn::PathSegment {
-                                ident: proc_macro2::Ident::new("extract", proc_macro2::Span::call_site()),
-                                arguments: syn::PathArguments::None,
-                            }
-                        );
-                        handle.push_punct(syn::token::Colon2{
-                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                        });
-                        handle.push_value(
-                            syn::PathSegment {
-                                ident: proc_macro2::Ident::new("rejection", proc_macro2::Span::call_site()),
-                                arguments: syn::PathArguments::None,
-                            }
-                        );
-                        handle.push_punct(syn::token::Colon2{
-                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                        });
-                        handle.push_value(
-                            syn::PathSegment {
-                                ident: proc_macro2::Ident::new("JsonDataError", proc_macro2::Span::call_site()),
-                                arguments: syn::PathArguments::None,
-                            }
-                        );
-                        handle
-                    }
-                )
-            ]
-        );
-        let json_syntax_error_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            "JsonSyntaxError",
-            &code_occurence_field,
-            vec![
-                (
-                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                    "json_syntax_error", 
-                    {
-                        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                        handle.push_value(
-                            syn::PathSegment {
-                                ident: proc_macro2::Ident::new("axum", proc_macro2::Span::call_site()),
-                                arguments: syn::PathArguments::None,
-                            }
-                        );
-                        handle.push_punct(syn::token::Colon2{
-                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                        });
-                        handle.push_value(
-                            syn::PathSegment {
-                                ident: proc_macro2::Ident::new("extract", proc_macro2::Span::call_site()),
-                                arguments: syn::PathArguments::None,
-                            }
-                        );
-                        handle.push_punct(syn::token::Colon2{
-                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                        });
-                        handle.push_value(
-                            syn::PathSegment {
-                                ident: proc_macro2::Ident::new("rejection", proc_macro2::Span::call_site()),
-                                arguments: syn::PathArguments::None,
-                            }
-                        );
-                        handle.push_punct(syn::token::Colon2{
-                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-                        });
-                        handle.push_value(
-                            syn::PathSegment {
-                                ident: proc_macro2::Ident::new("JsonSyntaxError", proc_macro2::Span::call_site()),
-                                arguments: syn::PathArguments::None,
-                            }
-                        );
-                        handle
-                    }
-                )
-            ]
-        );
-        let missing_json_content_type_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-            "MissingJsonContentType",
-            &code_occurence_field,
-            vec![
-                (
-                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                    "json_syntax_error", 
-                    std_string_string_syn_punctuated_punctuated.clone()
-                )
-            ]
-        );
-        let bytes_rejection_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-            proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-            "BytesRejection",
-            &code_occurence_field,
-            vec![
-                (
-                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                    "bytes_rejection", 
-                    std_string_string_syn_punctuated_punctuated.clone()
-                )
-            ]
-        );
+        let json_data_error_syn_variant = {
+            let variant_name_camel_case_stringified = "JsonDataError";
+            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+            crate::type_variants_from_request_response_generator::construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                &variant_name_camel_case_stringified,
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                        &variant_name_lower_case_stringified, 
+                        {
+                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("axum", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle.push_punct(syn::token::Colon2{
+                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                            });
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("extract", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle.push_punct(syn::token::Colon2{
+                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                            });
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("rejection", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle.push_punct(syn::token::Colon2{
+                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                            });
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("JsonDataError", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle
+                        }
+                    )
+                ]
+            )
+        };
+        let json_syntax_error_syn_variant = {
+            let variant_name_camel_case_stringified = "JsonSyntaxError";
+            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+            crate::type_variants_from_request_response_generator::construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                &variant_name_camel_case_stringified,
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                        &variant_name_lower_case_stringified, 
+                        {
+                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("axum", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle.push_punct(syn::token::Colon2{
+                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                            });
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("extract", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle.push_punct(syn::token::Colon2{
+                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                            });
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("rejection", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle.push_punct(syn::token::Colon2{
+                                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                            });
+                            handle.push_value(
+                                syn::PathSegment {
+                                    ident: proc_macro2::Ident::new("JsonSyntaxError", proc_macro2::Span::call_site()),
+                                    arguments: syn::PathArguments::None,
+                                }
+                            );
+                            handle
+                        }
+                    )
+                ]
+            )
+        };
+        let missing_json_content_type_syn_variant = {
+            let variant_name_camel_case_stringified = "MissingJsonContentType";
+            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+            crate::type_variants_from_request_response_generator::construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                &variant_name_camel_case_stringified,
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        &variant_name_lower_case_stringified, 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            )
+        };
+        let bytes_rejection_syn_variant = {
+            let variant_name_camel_case_stringified = "BytesRejection";
+            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+            crate::type_variants_from_request_response_generator::construct_syn_variant(
+                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                &variant_name_camel_case_stringified,
+                &code_occurence_field,
+                vec![
+                    (
+                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                        &variant_name_lower_case_stringified, 
+                        std_string_string_syn_punctuated_punctuated.clone()
+                    )
+                ]
+            )
+        };
         [
             json_data_error_syn_variant,
             json_syntax_error_syn_variant,
