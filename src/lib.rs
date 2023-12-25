@@ -3190,11 +3190,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let try_operation_lower_case_token_stream = {
-                let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+            );
             let tvfrr_extraction_logic_token_stream = {
                 let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
@@ -3216,7 +3216,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_error_named_camel_case_token_stream,
                 &payload_lower_case_token_stream,
                 &serde_json_to_string_token_stream,
-                &quote::quote!{&#parameters_lower_case_token_stream.#payload_lower_case_token_stream},
+                &quote::quote!{&#parameters_lower_case_token_stream.#payload_lower_case_token_stream},//todo implementation from for serialize_deserialize
                 &serde_json_to_string_variant_initialization_token_stream,
                 &url_handle_token_stream,
                 &tvfrr_extraction_logic_token_stream,
@@ -3631,11 +3631,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let try_operation_lower_case_token_stream = {
-                let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+            );
             let tvfrr_extraction_logic_token_stream = {
                 let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
@@ -4138,11 +4138,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let try_operation_lower_case_token_stream = {
-                let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+            );
             let tvfrr_extraction_logic_token_stream = {
                 let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
@@ -4706,11 +4706,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let try_operation_lower_case_token_stream = {
-                let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+            );
             let tvfrr_extraction_logic_token_stream = {
                 let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
@@ -5508,11 +5508,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let try_operation_lower_case_token_stream = {
-                let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+            );
             let tvfrr_extraction_logic_token_stream = {
                 let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
@@ -6137,11 +6137,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let try_operation_lower_case_token_stream = {
-                let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+            );
             let tvfrr_extraction_logic_token_stream = {
                 let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
@@ -6172,7 +6172,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         )
                         .collect::<std::vec::Vec<#operation_payload_element_with_serialize_deserialize_camel_case_token_stream>>()
                     )
-                },
+                },//todo implementation from for serialize_deserialize
                 &serde_json_to_string_variant_initialization_token_stream,
                 &url_handle_token_stream,
                 &tvfrr_extraction_logic_token_stream,
@@ -6715,11 +6715,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let try_operation_lower_case_token_stream = {
-                let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+            );
             let tvfrr_extraction_logic_token_stream = {
                 let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
@@ -7270,11 +7270,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let try_operation_lower_case_token_stream = {
-                let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+            );
             let tvfrr_extraction_logic_token_stream = {
                 let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
                 tvfrr_extraction_logic_stringified
@@ -7296,7 +7296,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_error_named_camel_case_token_stream,
                 &payload_lower_case_token_stream,
                 &serde_json_to_string_token_stream,
-                &quote::quote!{&#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)},
+                &quote::quote!{&#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)},//todo implementation from for serialize_deserialize
                 &serde_json_to_string_variant_initialization_token_stream,
                 &url_handle_token_stream,
                 &tvfrr_extraction_logic_token_stream,
@@ -8163,6 +8163,16 @@ fn generate_try_operation_with_serialize_deserialize_token_stream(
     try_operation_with_serialize_deserialize_stringified
     .parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_with_serialize_deserialize_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+}
+
+fn generate_try_operation_lower_case_token_stream(
+    try_lower_case_stringified: &str,
+    operation_name_lower_case_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str,
+) -> proc_macro2::TokenStream {
+    let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
+    try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
 #[derive(
