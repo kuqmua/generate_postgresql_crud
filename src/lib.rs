@@ -3185,7 +3185,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -3653,7 +3652,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                true,//todo remove logic without body
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -4161,7 +4159,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -4730,7 +4727,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -5533,7 +5529,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -6163,7 +6158,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -6767,7 +6761,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -7324,7 +7317,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
-                true,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };

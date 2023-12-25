@@ -23,7 +23,6 @@ pub fn type_variants_from_request_response_generator(
         proc_macro2::TokenStream,
         std::vec::Vec::<syn::Variant>
     )>,
-    is_response_with_body: bool,
     proc_macro_name_camel_case_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
     let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
@@ -620,31 +619,26 @@ pub fn type_variants_from_request_response_generator(
         };
         let status_code_enums_try_from = {
             let mut is_last_element_found = false;
-            let desirable_status_code_case_token_stream = match is_response_with_body {
-                true => quote::quote! {
-                    match response.text().await {
-                        Ok(response_text) => match serde_json::from_str::<#desirable_enum_name>(&response_text){
-                            Ok(value) => Ok(#try_operation_response_variants_camel_case_token_stream::from(value)), 
-                            Err(e) => Err(
-                                #api_request_unexpected_error_path_token_stream::DeserializeBody{ 
-                                    serde: e,
-                                    status_code,
-                                    headers,response_text
-                                }
-                            ),
-                        },
+            let desirable_status_code_case_token_stream = quote::quote! {
+                match response.text().await {
+                    Ok(response_text) => match serde_json::from_str::<#desirable_enum_name>(&response_text){
+                        Ok(value) => Ok(#try_operation_response_variants_camel_case_token_stream::from(value)), 
                         Err(e) => Err(
-                            #api_request_unexpected_error_path_token_stream::FailedToGetResponseText {
-                                reqwest: e,
+                            #api_request_unexpected_error_path_token_stream::DeserializeBody{ 
+                                serde: e,
                                 status_code,
-                                headers,
+                                headers,response_text
                             }
                         ),
-                    }
-                },
-                false => quote::quote! {//#ident_response_variants_token_stream
-                    Ok(#try_operation_response_variants_camel_case_token_stream::#desirable_token_stream(()))
-                },
+                    },
+                    Err(e) => Err(
+                        #api_request_unexpected_error_path_token_stream::FailedToGetResponseText {
+                            reqwest: e,
+                            status_code,
+                            headers,
+                        }
+                    ),
+                }
             };
             let mut status_code_enums_try_from_variants = Vec::with_capacity(unique_status_codes_len + 1);
             status_code_enums_try_from_variants.push(quote::quote! {
@@ -816,8 +810,7 @@ pub fn type_variants_from_request_response_generator(
     };
     let extraction_logic_token_stream_handle_token_stream = {
         let tvfrr_extraction_logic_try_operation_lower_case_token_stream = {
-            let tvfrr_extraction_logic_try_operation_lower_case_stringified =
-                format!("tvfrr_extraction_logic_try_{operation_lower_case_stringified}");
+            let tvfrr_extraction_logic_try_operation_lower_case_stringified = format!("tvfrr_extraction_logic_try_{operation_lower_case_stringified}");
             tvfrr_extraction_logic_try_operation_lower_case_stringified
             .parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -829,19 +822,14 @@ pub fn type_variants_from_request_response_generator(
             .parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_from_response_try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let try_from_response_try_operation_lower_case_token_stream_result_ok_token_stream = match is_response_with_body {
-            true => quote::quote!{
-                match #desirable_type_token_stream::try_from(variants){
-                    Ok(value) => Ok(value),
-                    Err(e) => Err(#try_operation_request_error_token_stream::ExpectedType {
-                        expected_type: e,
-                        #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
-                    }),
-                }
-            },
-            false => quote::quote!{
-                Ok(#desirable_type_token_stream)
-            },
+        let try_from_response_try_operation_lower_case_token_stream_result_ok_token_stream = quote::quote!{
+            match #desirable_type_token_stream::try_from(variants){
+                Ok(value) => Ok(value),
+                Err(e) => Err(#try_operation_request_error_token_stream::ExpectedType {
+                    expected_type: e,
+                    #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+                }),
+            }
         };
         quote::quote! {
             async fn #tvfrr_extraction_logic_try_operation_lower_case_token_stream<'a>(
