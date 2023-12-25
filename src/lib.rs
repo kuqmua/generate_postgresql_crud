@@ -3195,12 +3195,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified,
             );
-            let tvfrr_extraction_logic_token_stream = {
-                let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                tvfrr_extraction_logic_stringified
-                .parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
+                &tvfrr_extraction_logic_lower_case_stringified,
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let url_handle_token_stream = {
                 let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/{batch_stringified}\"");//todo reuse
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -3636,12 +3636,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified,
             );
-            let tvfrr_extraction_logic_token_stream = {
-                let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                tvfrr_extraction_logic_stringified
-                .parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
+                &tvfrr_extraction_logic_lower_case_stringified,
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let url_handle_token_stream = {
                 let url_handle_stringified = format!("\"{{}}/{table_name_stringified}\"");
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -4143,12 +4143,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified,
             );
-            let tvfrr_extraction_logic_token_stream = {
-                let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                tvfrr_extraction_logic_stringified
-                .parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
+                &tvfrr_extraction_logic_lower_case_stringified,
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let url_handle_token_stream = {
                 let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/{{}}?{{}}\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -4711,12 +4711,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified,
             );
-            let tvfrr_extraction_logic_token_stream = {
-                let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                tvfrr_extraction_logic_stringified
-                .parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
+                &tvfrr_extraction_logic_lower_case_stringified,
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let url_handle_token_stream = {
                 let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/search\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -5513,12 +5513,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified,
             );
-            let tvfrr_extraction_logic_token_stream = {
-                let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                tvfrr_extraction_logic_stringified
-                .parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
+                &tvfrr_extraction_logic_lower_case_stringified,
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let url_handle_token_stream = {
                 let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/{{}}\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -6142,12 +6142,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified,
             );
-            let tvfrr_extraction_logic_token_stream = {
-                let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                tvfrr_extraction_logic_stringified
-                .parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
+                &tvfrr_extraction_logic_lower_case_stringified,
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let url_handle_token_stream = {
                 let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/{batch_stringified}\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -6720,12 +6720,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified,
             );
-            let tvfrr_extraction_logic_token_stream = {
-                let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                tvfrr_extraction_logic_stringified
-                .parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
+                &tvfrr_extraction_logic_lower_case_stringified,
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let url_handle_token_stream = {
                 let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/{{}}\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -7275,12 +7275,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified,
             );
-            let tvfrr_extraction_logic_token_stream = {
-                let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
-                tvfrr_extraction_logic_stringified
-                .parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
+                &tvfrr_extraction_logic_lower_case_stringified,
+                &try_lower_case_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let url_handle_token_stream = {
                 let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/search\"");//todo where
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -8173,6 +8173,18 @@ fn generate_try_operation_lower_case_token_stream(
     let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
     try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+}
+
+fn generate_tvfrr_extraction_logic_token_stream(
+    tvfrr_extraction_logic_lower_case_stringified: &str,
+    try_lower_case_stringified: &str,
+    operation_name_lower_case_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str
+) -> proc_macro2::TokenStream {
+    let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_lower_case_stringified}_{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
+    tvfrr_extraction_logic_stringified
+    .parse::<proc_macro2::TokenStream>()
+    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
 #[derive(
