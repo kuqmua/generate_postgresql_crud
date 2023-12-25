@@ -3206,56 +3206,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            quote::quote!{
-                pub async fn #try_operation_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: #server_location_type_token_stream,
-                    #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
-                ) -> Result<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream, #try_operation_error_named_camel_case_token_stream> {
-                    let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
-                        Ok(value) => value,
-                        Err(e) => {
-                            return Err(#try_operation_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
-                        }
-                    };
-                    let url = format!(
-                        #url_handle_token_stream,
-                        #server_location_name_token_stream,
-                    );
-                    // println!("{}", url);
-                    match #tvfrr_extraction_logic_token_stream(
-                        #reqwest_client_new_token_stream
-                        .post(&url)
-                        #project_commit_header_addition_token_stream
-                        #content_type_application_json_header_addition_token_stream
-                        .body(#payload_lower_case_token_stream)
-                        .send(),
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            let mut vec_values = std::vec::Vec::with_capacity(value.len());
-                            let mut vec_errors = std::vec::Vec::with_capacity(value.len());
-                            for element in value {
-                                match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(element) {
-                                    Ok(value) => {
-                                        vec_values.push(value);
-                                    }
-                                    Err(e) => {
-                                        vec_errors.push(
-                                            #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream(e)
-                                        );
-                                    }
-                                }
-                            }
-                            if let false = vec_errors.is_empty() {
-                                return Err(#try_operation_error_named_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream);
-                            }
-                            Ok(vec_values)
-                        },
-                        Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
-                    }
-                }
-            }
+            generate_http_request_many_token_stream(
+                &try_operation_lower_case_token_stream,
+                &server_location_name_token_stream,
+                &server_location_type_token_stream,
+                &parameters_lower_case_token_stream,
+                &operation_parameters_camel_case_token_stream,
+                &std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
+                &try_operation_error_named_camel_case_token_stream,
+                &payload_lower_case_token_stream,
+                &serde_json_to_string_token_stream,
+                &quote::quote!{&#parameters_lower_case_token_stream.#payload_lower_case_token_stream},
+                &serde_json_to_string_variant_initialization_token_stream,
+                &url_handle_token_stream,
+                &tvfrr_extraction_logic_token_stream,
+                &reqwest_client_new_token_stream,
+                &quote::quote!{post},
+                &project_commit_header_addition_token_stream,
+                &content_type_application_json_header_addition_token_stream,
+                &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
+                &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream,
+                &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream,
+                &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream,
+                &request_error_variant_initialization_token_stream,
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -5838,7 +5812,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &payload_element_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let operation_payload_with_serialize_deserialize_camel_case_token_stream = quote::quote!{std::vec::Vec<#operation_payload_element_with_serialize_deserialize_camel_case_token_stream>};
+        let operation_payload_with_serialize_deserialize_camel_case_token_stream = quote::quote!{std::vec::Vec::<#operation_payload_element_with_serialize_deserialize_camel_case_token_stream>};
         let operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified = generate_payload_element_try_from_payload_element_with_serialize_deserialize_camel_case_stringified(
             &operation_name_camel_case_stringified,
             &payload_element_camel_case_stringified,
@@ -6179,64 +6153,39 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            quote::quote!{
-                pub async fn #try_operation_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: #server_location_type_token_stream,
-                    #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
-                ) -> Result<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream, #try_operation_error_named_camel_case_token_stream> {//todo type Result reusage
-                    let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&
-                        #parameters_lower_case_token_stream.#payload_lower_case_token_stream
+            generate_http_request_many_token_stream(
+                &try_operation_lower_case_token_stream,
+                &server_location_name_token_stream,
+                &server_location_type_token_stream,
+                &parameters_lower_case_token_stream,
+                &operation_parameters_camel_case_token_stream,
+                &std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
+                &try_operation_error_named_camel_case_token_stream,
+                &payload_lower_case_token_stream,
+                &serde_json_to_string_token_stream,
+                &quote::quote!{
+                    (&#parameters_lower_case_token_stream.#payload_lower_case_token_stream
                         .into_iter()
                         .map(
                             |element|
                             #operation_payload_element_with_serialize_deserialize_camel_case_token_stream::from(element)
                         )
                         .collect::<std::vec::Vec<#operation_payload_element_with_serialize_deserialize_camel_case_token_stream>>()
-                    ) {
-                        Ok(value) => value,
-                        Err(e) => {
-                            return Err(#try_operation_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
-                        }
-                    };
-                    let url = format!(
-                        #url_handle_token_stream,
-                        #server_location_name_token_stream
-                    );
-                    // println!("{}", url);
-                    match #tvfrr_extraction_logic_token_stream(
-                        #reqwest_client_new_token_stream
-                        .patch(&url)
-                        #project_commit_header_addition_token_stream
-                        #content_type_application_json_header_addition_token_stream
-                        .body(#payload_lower_case_token_stream)
-                        .send(),
                     )
-                    .await
-                    {
-                        Ok(value) => {
-                            let mut vec_values = std::vec::Vec::with_capacity(value.len());
-                            let mut vec_errors = std::vec::Vec::with_capacity(value.len());
-                            for element in value {
-                                match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(element) {
-                                    Ok(value) => {
-                                        vec_values.push(value);
-                                    }
-                                    Err(e) => {
-                                        vec_errors.push(
-                                            #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream(e)
-                                        );
-                                    }
-                                }
-                            }
-                            if let false = vec_errors.is_empty() {
-                                return Err(#try_operation_error_named_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream);
-                            }
-                            Ok(vec_values)
-                        },
-                        Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
-                    }
-                }
-            }
+                },
+                &serde_json_to_string_variant_initialization_token_stream,
+                &url_handle_token_stream,
+                &tvfrr_extraction_logic_token_stream,
+                &reqwest_client_new_token_stream,
+                &quote::quote!{patch},
+                &project_commit_header_addition_token_stream,
+                &content_type_application_json_header_addition_token_stream,
+                &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
+                &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream,
+                &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream,
+                &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream,
+                &request_error_variant_initialization_token_stream,
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -7337,7 +7286,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 url_handle_stringified.parse::<proc_macro2::TokenStream>()
                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
-            let one = generate_http_request_many_token_stream(
+            generate_http_request_many_token_stream(
                 &try_operation_lower_case_token_stream,
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
@@ -7347,7 +7296,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_error_named_camel_case_token_stream,
                 &payload_lower_case_token_stream,
                 &serde_json_to_string_token_stream,
-                &operation_payload_with_serialize_deserialize_camel_case_token_stream,
+                &quote::quote!{&#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)},
                 &serde_json_to_string_variant_initialization_token_stream,
                 &url_handle_token_stream,
                 &tvfrr_extraction_logic_token_stream,
@@ -7360,63 +7309,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream,
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream,
                 &request_error_variant_initialization_token_stream,
-            );
-            // println!("{one}");
-            one
-            // let two = quote::quote!{
-            //     pub async fn #try_operation_lower_case_token_stream<'a>(
-            //         #server_location_name_token_stream: #server_location_type_token_stream,
-            //         #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
-            //     ) -> Result<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream, #try_operation_error_named_camel_case_token_stream> {
-            //         let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(
-            //             &#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)
-            //         ) {
-            //             Ok(value) => value,
-            //             Err(e) => {
-            //                 return Err(#try_operation_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
-            //             }
-            //         };
-            //         let url = format!(
-            //             #url_handle_token_stream,
-            //             #server_location_name_token_stream,
-            //         );
-            //         // println!("{}", url);
-            //         match #tvfrr_extraction_logic_token_stream(
-            //             #reqwest_client_new_token_stream
-            //             .delete(&url)
-            //             #project_commit_header_addition_token_stream
-            //             #content_type_application_json_header_addition_token_stream
-            //             .body(#payload_lower_case_token_stream)
-            //             .send(),
-            //         )
-            //         .await
-            //         {
-            //             Ok(value) => {
-            //                 let mut vec_values = std::vec::Vec::with_capacity(value.len());
-            //                 let mut vec_errors = std::vec::Vec::with_capacity(value.len());
-            //                 for element in value {
-            //                     match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(element) {
-            //                         Ok(value) => {
-            //                             vec_values.push(value);
-            //                         }
-            //                         Err(e) => {
-            //                             vec_errors.push(
-            //                                 #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_camel_case_token_stream(e)
-            //                             );
-            //                         }
-            //                     }
-            //                 }
-            //                 if let false = vec_errors.is_empty() {
-            //                     return Err(#try_operation_error_named_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream);
-            //                 }
-            //                 Ok(vec_values)
-            //             },
-            //             Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
-            //         }
-            //     }
-            // };
-            // println!("{two}");
-            // two
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -7897,7 +7790,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #impl_std_convert_from_operation_payload_for_operation_payload_with_serialize_deserialize_token_stream
             #try_operation_error_named_token_stream
             #try_operation_error_with_middleware_error_variants_token_stream
-            // #http_request_token_stream
+            #http_request_token_stream
             #route_handler_token_stream
             #common_middlewares_error_syn_variants_from_impls
         }
@@ -9153,7 +9046,10 @@ fn generate_http_request_many_token_stream(
     try_operation_error_named_camel_case_token_stream: &proc_macro2::TokenStream,
     payload_lower_case_token_stream: &proc_macro2::TokenStream,
     serde_json_to_string_token_stream: &proc_macro2::TokenStream,
-    operation_payload_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
+    // operation_payload_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
+
+    serde_json_to_string_value_token_stream: &proc_macro2::TokenStream,
+
     serde_json_to_string_variant_initialization_token_stream: &proc_macro2::TokenStream,
     url_handle_token_stream: &proc_macro2::TokenStream,
     tvfrr_extraction_logic_token_stream: &proc_macro2::TokenStream,
@@ -9174,7 +9070,11 @@ fn generate_http_request_many_token_stream(
         ) -> Result<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream, #try_operation_error_named_camel_case_token_stream> {
             let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(
                 // &#parameters_lower_case_token_stream.#payload_lower_case_token_stream
-                &#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)
+
+
+                // &#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)
+
+                #serde_json_to_string_value_token_stream
             ) {
                 Ok(value) => value,
                 Err(e) => {
