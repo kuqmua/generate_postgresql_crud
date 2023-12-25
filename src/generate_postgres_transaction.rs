@@ -54,7 +54,7 @@ pub fn generate_postgres_transaction(
             }
         };
         let results_vec = {
-            let mut results_vec = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
+            let mut results_vec = std::vec::Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
             let mut option_error: Option<sqlx::Error> = None;
             {
                 let mut rows = #binded_query_name_token_stream.fetch(#postgres_transaction_token_stream.as_mut());
@@ -92,7 +92,7 @@ pub fn generate_postgres_transaction(
             results_vec
         };
         let #primary_key_vec_name_token_stream = {
-            let mut #primary_key_vec_name_token_stream = Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
+            let mut #primary_key_vec_name_token_stream = std::vec::Vec::with_capacity(#expected_updated_primary_keys_name_token_stream.len());
             for element in results_vec {
                 match #primary_key_try_from_sqlx_row_name_token_stream(&element) {
                     Ok(primary_key) => {
@@ -115,7 +115,7 @@ pub fn generate_postgres_transaction(
         {
             let #non_existing_primary_keys_name_token_stream = {
                 let len = #expected_updated_primary_keys_name_token_stream.len();
-                #expected_updated_primary_keys_name_token_stream.into_iter().fold(Vec::with_capacity(len), |mut acc, element| {
+                #expected_updated_primary_keys_name_token_stream.into_iter().fold(std::vec::Vec::with_capacity(len), |mut acc, element| {
                     if let false = #primary_key_vec_name_token_stream.contains(&element) {
                         acc.push(element);
                     }

@@ -11,7 +11,7 @@ pub fn column_names_factorial(
                 let output_len = output.len();
                 output
                     .iter_mut()
-                    .fold(Vec::with_capacity(output_len), |mut acc, element| {
+                    .fold(std::vec::Vec::with_capacity(output_len), |mut acc, element| {
                         element.sort_by(|a, b| {
                             let (index_a, _) = original_input
                                 .iter()
@@ -146,7 +146,7 @@ pub fn column_names_factorial(
                     panic!("{proc_macro_name_camel_case_ident_stringified} input.get(0) is None")
                 });
                 let output_len = output.len();
-                output.iter_mut().fold(Vec::with_capacity(output_len * 2), |mut acc, out| {
+                output.iter_mut().fold(std::vec::Vec::with_capacity(output_len * 2), |mut acc, out| {
                     if !acc.contains(out) {
                         out.sort_by(|a,b|{
                             let (index_a, _) = original_input.iter().find(|(_, field)|{a.ident
@@ -213,7 +213,7 @@ pub fn column_names_factorial(
             let new_input_vec = {
                 let input_len = input.len();
                 input.into_iter().enumerate().fold(
-                    Vec::with_capacity(input_len),
+                    std::vec::Vec::with_capacity(input_len),
                     |mut acc, (index, value)| {
                         if let true = index != 0 {
                             acc.push(value);

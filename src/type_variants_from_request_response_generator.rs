@@ -640,7 +640,7 @@ pub fn type_variants_from_request_response_generator(
                     ),
                 }
             };
-            let mut status_code_enums_try_from_variants = Vec::with_capacity(unique_status_codes_len + 1);
+            let mut status_code_enums_try_from_variants = std::vec::Vec::with_capacity(unique_status_codes_len + 1);
             status_code_enums_try_from_variants.push(quote::quote! {
                 if status_code == #http_status_code_quote_token_stream {
                     #desirable_status_code_case_token_stream

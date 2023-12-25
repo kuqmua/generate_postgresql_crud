@@ -6870,7 +6870,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .fetch_one(#pg_connection_token_stream.as_mut())
                         .await
                     {
-                        // Ok(row) => #try_operation_response_variants_token_stream::#desirable_token_stream(()),//todo - () as variable token stream
                         Ok(value) => match {
                             use #sqlx_row_token_stream;
                             value.try_get::<#sqlx_types_uuid_token_stream, &str>(#primary_key_field_ident_quotes_token_stream)
