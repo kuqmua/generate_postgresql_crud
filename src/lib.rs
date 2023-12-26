@@ -4169,7 +4169,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let url = format!(
                         #url_handle_token_stream,
                         #server_location_name_token_stream,
-                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.id,//todo generate id - reuse it? primary_key_ident?
+                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident,
                         encoded_query
                     );
                     // println!("{}", url);
