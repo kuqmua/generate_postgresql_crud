@@ -8184,7 +8184,8 @@ fn generate_url_handle_search_token_stream(
     table_name_stringified: &str,
     proc_macro_name_camel_case_ident_stringified: &str
 ) -> proc_macro2::TokenStream {
-    let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/search\"");//todo where
+    let url_path = generate_url_path(&table_name_stringified);
+    let url_handle_stringified = format!("\"{url_path}search\"");//todo where
     url_handle_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
@@ -8194,7 +8195,8 @@ fn generate_url_handle_batch_token_stream(
     batch_stringified: &str,
     proc_macro_name_camel_case_ident_stringified: &str
 ) -> proc_macro2::TokenStream {
-    let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/{batch_stringified}\"");//todo where
+    let url_path = generate_url_path(&table_name_stringified);
+    let url_handle_stringified = format!("\"{url_path}{batch_stringified}\"");//todo where
     url_handle_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
@@ -8203,9 +8205,14 @@ fn generate_url_handle_one(
     table_name_stringified: &str,
     proc_macro_name_camel_case_ident_stringified: &str
 ) -> proc_macro2::TokenStream {
-    let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/{{}}\"");//todo where
+    let url_path = generate_url_path(&table_name_stringified);
+    let url_handle_stringified = format!("\"{url_path}{{}}\"");//todo where
     url_handle_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+}
+
+fn generate_url_path(table_name_stringified: &str) -> std::string::String {
+    format!("{{}}/{table_name_stringified}/")
 }
 
 #[derive(
