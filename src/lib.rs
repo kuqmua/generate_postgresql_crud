@@ -3642,11 +3642,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/{table_name_stringified}\"");
-                url_handle_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let url_handle_token_stream = generate_url_path_token_stream(
+                &table_name_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             quote::quote!{
                 pub async fn #try_operation_lower_case_token_stream<'a>(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -4149,11 +4148,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let url_handle_token_stream = {
-                let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/{{}}?{{}}\"");//todo where
-                url_handle_stringified.parse::<proc_macro2::TokenStream>()
-                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-            };
+            let url_handle_token_stream = generate_url_handle_with_path_and_parameters(
+                &table_name_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             quote::quote!{
                 pub async fn #try_operation_lower_case_token_stream(
                     #server_location_name_token_stream: #server_location_type_token_stream,
@@ -4171,7 +4169,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let url = format!(
                         #url_handle_token_stream,
                         #server_location_name_token_stream,
-                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.id,
+                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.id,//todo generate id - reuse it? primary_key_ident?
                         encoded_query
                     );
                     // println!("{}", url);
@@ -8207,6 +8205,26 @@ fn generate_url_handle_one(
 ) -> proc_macro2::TokenStream {
     let url_path = generate_url_path(&table_name_stringified);
     let url_handle_stringified = format!("\"{url_path}{{}}\"");//todo where
+    url_handle_stringified.parse::<proc_macro2::TokenStream>()
+    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+}
+
+fn generate_url_path_token_stream(
+    table_name_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str
+) -> proc_macro2::TokenStream {
+    let url_path = generate_url_path(&table_name_stringified);
+    let url_handle_stringified = format!("\"{url_path}\"");
+    url_handle_stringified.parse::<proc_macro2::TokenStream>()
+    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+}
+
+fn generate_url_handle_with_path_and_parameters(
+    table_name_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str
+) -> proc_macro2::TokenStream {
+    let url_path = generate_url_path(&table_name_stringified);
+    let url_handle_stringified = format!("\"{url_path}{{}}?{{}}\"");//todo where
     url_handle_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
