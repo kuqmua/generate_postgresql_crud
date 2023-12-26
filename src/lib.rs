@@ -1631,10 +1631,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let serde_urlencoded_to_string_token_stream = quote::quote!{serde_urlencoded::to_string};
     let primary_key_vec_name_token_stream = quote::quote!{primary_key_vec};
     let rollback_error_name_token_stream = quote::quote!{rollback_error};
-    let returning_id_quotes_token_stream = {
-        let returning_id_quotes_stringified = format!("\"{returning_primary_key_stringified}\"");
-        returning_id_quotes_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {returning_id_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    let returning_primary_key_quotes_token_stream = {
+        let returning_primary_key_quotes_stringified = format!("\"{returning_primary_key_stringified}\"");
+        returning_primary_key_quotes_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {returning_primary_key_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let request_error_camel_case_token_stream = request_error_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {request_error_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
@@ -3054,7 +3054,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{parameters_token_stream}");
         let payload_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
+            let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
                 let field_ident = element.field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -3067,7 +3067,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #operation_payload_element_camel_case_token_stream {
-                    #(#fields_with_excluded_id_token_stream),*
+                    #(#fields_with_excluded_primary_key_token_stream),*
                 }
             }
         };
@@ -3511,7 +3511,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{parameters_token_stream}");
         let payload_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
+            let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
                 let field_ident = element.field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -3524,7 +3524,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #operation_payload_camel_case_token_stream {
-                    #(#fields_with_excluded_id_token_stream),*
+                    #(#fields_with_excluded_primary_key_token_stream),*
                 }
             }
         };
@@ -4412,7 +4412,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{parameters_token_stream}");
         let payload_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+            let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -4426,7 +4426,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub struct #operation_payload_camel_case_token_stream {
                     pub #select_token_stream: #column_select_ident_token_stream,
                     pub #primary_key_field_ident: std::option::Option<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
-                    #(#fields_with_excluded_id_token_stream)*
+                    #(#fields_with_excluded_primary_key_token_stream)*
                     pub #order_by_token_stream: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
                     pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
                     pub offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
@@ -4435,7 +4435,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{payload_token_stream}");
         let payload_with_serialize_deserialize_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+            let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -4449,7 +4449,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream {
                     pub select: #column_select_ident_token_stream,
                     pub #primary_key_field_ident: std::option::Option<std::vec::Vec<#std_string_string_token_stream>>,
-                    #(#fields_with_excluded_id_token_stream)*
+                    #(#fields_with_excluded_primary_key_token_stream)*
                     pub order_by: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
                     pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
                     pub offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
@@ -4868,7 +4868,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let query_string_token_stream = {
-                    let additional_parameters_id_modification_token_stream = {
+                    let additional_parameters_primary_key_modification_token_stream = {
                         let prefix_false_handle_token_stream = {
                             let prefix_false_handle_stringified = format!("\" {and_name_stringified}\"");
                             prefix_false_handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -4990,7 +4990,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             {
                                 #increment_initialization_token_stream
                                 let mut additional_parameters = #std_string_string_token_stream::default();
-                                #additional_parameters_id_modification_token_stream
+                                #additional_parameters_primary_key_modification_token_stream
                                 #(#additional_parameters_modification_token_stream)*
                                 {
                                     let prefix = match additional_parameters.is_empty() {
@@ -5055,7 +5055,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 let binded_query_token_stream = {
-                    let binded_query_id_modification_token_stream = quote::quote!{
+                    let binded_query_primary_key_modification_token_stream = quote::quote!{
                         if let Some(value) = #parameters_lower_case_token_stream.#payload_lower_case_token_stream.#primary_key_field_ident {
                             query = query.bind(value.into_iter().map(|element|element.into_inner().clone()).collect::<std::vec::Vec<#sqlx_types_uuid_token_stream>>());
                         }
@@ -5082,7 +5082,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }); 
                     quote::quote!{
                         let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
-                        #binded_query_id_modification_token_stream
+                        #binded_query_primary_key_modification_token_stream
                         #(#binded_query_modifications_token_stream)*
                         query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                             #parameters_lower_case_token_stream.#payload_lower_case_token_stream.limit,
@@ -5347,7 +5347,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{impl_std_convert_try_from_operation_path_with_serialize_deserialize_for_operation_path_token_stream}");
         let payload_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+            let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -5360,7 +5360,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #operation_payload_camel_case_token_stream {
-                    #(#fields_with_excluded_id_token_stream),*
+                    #(#fields_with_excluded_primary_key_token_stream),*
                 }
             }
         };
@@ -5607,7 +5607,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         }).collect::<std::vec::Vec<proc_macro2::TokenStream>>()
                     };
-                    let additional_parameters_id_modification_token_stream = {
+                    let additional_parameters_primary_key_modification_token_stream = {
                         let query_part_token_stream = {
                             let query_part_stringified = format!("\" where {primary_key_field_ident} = ${{increment}}\"");//todo where
                             query_part_stringified.parse::<proc_macro2::TokenStream>()
@@ -5633,8 +5633,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #increment_initialization_token_stream
                         let mut query = #std_string_string_token_stream::from(#handle_token_stream);
                         #(#additional_parameters_modification_token_stream)*
-                        #additional_parameters_id_modification_token_stream
-                        query.push_str(&format!(#returning_id_quotes_token_stream));
+                        #additional_parameters_primary_key_modification_token_stream
+                        query.push_str(&format!(#returning_primary_key_quotes_token_stream));
                         query
                     }
                 };
@@ -5654,7 +5654,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             }
                         }
                     });
-                    let binded_query_id_modification_token_stream = quote::quote!{
+                    let binded_query_primary_key_modification_token_stream = quote::quote!{
                         query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(
                             #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident,
                             query,
@@ -5663,7 +5663,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     quote::quote!{
                         let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                         #(#binded_query_modifications_token_stream)*
-                        #binded_query_id_modification_token_stream
+                        #binded_query_primary_key_modification_token_stream
                         query
                     }
                 };
@@ -5865,7 +5865,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{parameters_token_stream}");
         let payload_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+            let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -5880,13 +5880,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #derive_debug_token_stream
                 pub struct #operation_payload_element_camel_case_token_stream {
                     pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
-                    #(#fields_with_excluded_id_token_stream),*
+                    #(#fields_with_excluded_primary_key_token_stream),*
                 }
             }
         };
         // println!("{payload_token_stream}");
         let payload_with_serialize_deserialize_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+            let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -5900,7 +5900,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #operation_payload_element_with_serialize_deserialize_camel_case_token_stream {
                     pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
-                    #(#fields_with_excluded_id_token_stream),*
+                    #(#fields_with_excluded_primary_key_token_stream),*
                 }
             }
         };
@@ -6269,7 +6269,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         quote::quote!{#acc_name_token_stream.#index_token_stream.push(#element_name_token_stream.#field_ident);}
                     });
-                    let column_query_bind_id_vec_token_stream = {
+                    let column_query_bind_primary_key_vec_token_stream = {
                         let field_ident_underscore_vec_token_stream = {
                             let field_ident_underscore_vec_stringified = format!("{primary_key_field_ident}{underscore_vec_name_stringified}");
                             field_ident_underscore_vec_stringified.parse::<proc_macro2::TokenStream>()
@@ -6309,7 +6309,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #(#columns_acc_push_elements_token_stream)*
                             #acc_name_token_stream
                         });
-                        #column_query_bind_id_vec_token_stream
+                        #column_query_bind_primary_key_vec_token_stream
                         #(#column_query_bind_vecs_token_stream)*
                         #query_name_token_stream
                     }
@@ -6765,7 +6765,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &try_operation_response_variants_token_stream,
                 );
                 let query_string_token_stream = {
-                    let additional_parameters_id_modification_token_stream = {
+                    let additional_parameters_primary_key_modification_token_stream = {
                         let query_part_token_stream = {
                             let query_part_stringified = format!("\" {primary_key_field_ident} = $1\"");//todo where
                             query_part_stringified.parse::<proc_macro2::TokenStream>()
@@ -6782,8 +6782,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                     quote::quote!{
                         let mut query = format!(#handle_token_stream);
-                        #additional_parameters_id_modification_token_stream
-                        query.push_str(&format!(#returning_id_quotes_token_stream));
+                        #additional_parameters_primary_key_modification_token_stream
+                        query.push_str(&format!(#returning_primary_key_quotes_token_stream));
                         query
                     }
                 };
@@ -6985,7 +6985,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{parameters_token_stream}");
         let payload_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+            let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -6998,13 +6998,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #derive_debug_token_stream
                 pub struct #operation_payload_camel_case_token_stream {
                     pub #primary_key_field_ident: std::option::Option<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
-                    #(#fields_with_excluded_id_token_stream),*
+                    #(#fields_with_excluded_primary_key_token_stream),*
                 }
             }
         };
         // println!("{payload_token_stream}");
         let operation_payload_with_serialize_deserialize_token_stream = {
-            let fields_with_excluded_id_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+            let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident.clone()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -7017,7 +7017,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream {
                     pub #primary_key_field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>>,
-                    #(#fields_with_excluded_id_token_stream),*
+                    #(#fields_with_excluded_primary_key_token_stream),*
                 }
             }
         };
@@ -7574,7 +7574,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 }
                             }
                         });
-                        let additional_parameters_id_modification_token_stream = {
+                        let additional_parameters_primary_key_modification_token_stream = {
                             let handle_token_stream = {
                                 let handle_stringified = format!("\" {primary_key_field_ident} {in_name_stringified} ({{}})\"");
                                 handle_stringified.parse::<proc_macro2::TokenStream>()
@@ -7626,7 +7626,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     #increment_initialization_token_stream
                                     let mut additional_parameters = #std_string_string_token_stream::default();
                                     #(#additional_parameters_modification_token_stream)*
-                                    #additional_parameters_id_modification_token_stream
+                                    #additional_parameters_primary_key_modification_token_stream
                                     additional_parameters
                                 }
                             )
@@ -7649,7 +7649,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 }
                             }
                         });
-                        let binded_query_id_modifications_token_stream = quote::quote!{
+                        let binded_query_primary_key_modifications_token_stream = quote::quote!{
                             if let Some(#primary_key_field_ident) = #parameters_lower_case_token_stream.#payload_lower_case_token_stream.#primary_key_field_ident {
                                 for element in #primary_key_field_ident {
                                     query = #crate_server_postgres_bind_query_bind_query_bind_value_to_query_token_stream(element, query);
@@ -7659,7 +7659,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         quote::quote!{
                             let mut query = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
                             #(#binded_query_modifications_token_stream)*
-                            #binded_query_id_modifications_token_stream
+                            #binded_query_primary_key_modifications_token_stream
                             query
                         }
                     };
