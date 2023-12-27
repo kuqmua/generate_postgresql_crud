@@ -3646,40 +3646,45 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            quote::quote!{
-                pub async fn #try_operation_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: #server_location_type_token_stream,
-                    #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
-                ) -> Result<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream, #try_operation_error_named_camel_case_token_stream> {
+            generate_try_operation_token_stream(
+                &try_operation_lower_case_token_stream,
+                &server_location_name_token_stream,
+                &server_location_type_token_stream,
+                &parameters_lower_case_token_stream,
+                &operation_parameters_camel_case_token_stream,
+                &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
+                &try_operation_error_named_camel_case_token_stream,
+                &quote::quote!{
                     let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(&#parameters_lower_case_token_stream.#payload_lower_case_token_stream) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_operation_error_named_camel_case_token_stream::#serde_json_to_string_variant_initialization_token_stream);
                         }
                     };
+                },
+                &quote::quote!{
                     let url = format!(
                         #url_handle_token_stream,
                         #server_location_name_token_stream
                     );
-                    // println!("{}", url);
-                    match #tvfrr_extraction_logic_token_stream(
-                        #reqwest_client_new_token_stream
-                        .post(&url)
-                        #project_commit_header_addition_token_stream
-                        #content_type_application_json_header_addition_token_stream
-                        .body(#payload_lower_case_token_stream)
-                        .send(),
-                    )
-                    .await
-                    {
-                        Ok(value) => match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
-                            Ok(value) => Ok(value),
-                            Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_one_initialization_token_stream )
-                        },
-                        Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
+                },
+                &tvfrr_extraction_logic_token_stream,
+                &quote::quote!{
+                    #reqwest_client_new_token_stream
+                    .post(&url)
+                    #project_commit_header_addition_token_stream
+                    #content_type_application_json_header_addition_token_stream
+                    .body(#payload_lower_case_token_stream)
+                    .send()
+                },
+                &quote::quote!{
+                    match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
+                        Ok(value) => Ok(value),
+                        Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_one_initialization_token_stream )
                     }
-                }
-            }
+                },
+                &request_error_variant_initialization_token_stream,
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -6726,64 +6731,37 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            // generate_try_operation_token_stream(
-            //     &try_operation_lower_case_token_stream,
-            //     &server_location_name_token_stream,
-            //     &server_location_type_token_stream,
-            //     &parameters_lower_case_token_stream,
-            //     &operation_parameters_camel_case_token_stream,
-            //     &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
-            //     &try_operation_error_named_camel_case_token_stream,
-            //     &quote::quote!{},
-            //     &quote::quote!{
-            //         let url = format!(
-            //             #url_handle_token_stream,
-            //             #server_location_name_token_stream,
-            //             #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident
-            //         );
-            //     },
-            //     &tvfrr_extraction_logic_token_stream,
-            //     &quote::quote!{
-            //         #reqwest_client_new_token_stream
-            //         .delete(&url)
-            //         #project_commit_header_addition_token_stream
-            //         .send()
-            //     },
-            //     &quote::quote!{
-            //         match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
-            //             Ok(value) => Ok(value),
-            //             Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_one_initialization_token_stream )
-            //         }
-            //     },
-            //     &request_error_variant_initialization_token_stream,
-            // )
-            quote::quote!{
-                pub async fn #try_operation_lower_case_token_stream<'a>(
-                    #server_location_name_token_stream: #server_location_type_token_stream,
-                    #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
-                ) -> Result<#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream, #try_operation_error_named_camel_case_token_stream> {
+            generate_try_operation_token_stream(
+                &try_operation_lower_case_token_stream,
+                &server_location_name_token_stream,
+                &server_location_type_token_stream,
+                &parameters_lower_case_token_stream,
+                &operation_parameters_camel_case_token_stream,
+                &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
+                &try_operation_error_named_camel_case_token_stream,
+                &quote::quote!{},
+                &quote::quote!{
                     let url = format!(
                         #url_handle_token_stream,
                         #server_location_name_token_stream,
                         #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident
                     );
-                    // println!("{}", url);
-                    match #tvfrr_extraction_logic_token_stream(
-                        #reqwest_client_new_token_stream
-                        .delete(&url)
-                        #project_commit_header_addition_token_stream
-                        .send(),
-                    )
-                    .await
-                    {
-                        Ok(value) => match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
-                            Ok(value) => Ok(value),
-                            Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_one_initialization_token_stream )
-                        },
-                        Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
+                },
+                &tvfrr_extraction_logic_token_stream,
+                &quote::quote!{
+                    #reqwest_client_new_token_stream
+                    .delete(&url)
+                    #project_commit_header_addition_token_stream
+                    .send()
+                },
+                &quote::quote!{
+                    match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
+                        Ok(value) => Ok(value),
+                        Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_one_initialization_token_stream )
                     }
-                }
-            }
+                },
+                &request_error_variant_initialization_token_stream,
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
