@@ -3667,13 +3667,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream
                 },
                 &tvfrr_extraction_logic_token_stream,
+                &reqwest_client_new_token_stream,
                 &quote::quote!{
-                    #reqwest_client_new_token_stream
                     .post(&url)
                     #project_commit_header_addition_token_stream
                     #content_type_application_json_header_addition_token_stream
                     .body(#payload_lower_case_token_stream)
-                    .send()
                 },
                 &quote::quote!{
                     match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
@@ -4178,11 +4177,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     encoded_query
                 },
                 &tvfrr_extraction_logic_token_stream,
+                &reqwest_client_new_token_stream,
                 &quote::quote!{
-                    #reqwest_client_new_token_stream
                     .get(&url)
                     #project_commit_header_addition_token_stream
-                    .send(),
                 },
                 &quote::quote!{
                     Ok(value)
@@ -4745,13 +4743,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #server_location_name_token_stream
                 },
                 &tvfrr_extraction_logic_token_stream,
+                &reqwest_client_new_token_stream,
                 &quote::quote!{
-                    #reqwest_client_new_token_stream
                     .post(&url)
                     #project_commit_header_addition_token_stream
                     #content_type_application_json_header_addition_token_stream
                     .body(#payload_lower_case_token_stream)
-                    .send()
                 },
                 &quote::quote!{
                     Ok(value)
@@ -5545,13 +5542,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident.to_inner()
                 },
                 &tvfrr_extraction_logic_token_stream,
+                &reqwest_client_new_token_stream,
                 &quote::quote!{
-                    #reqwest_client_new_token_stream
                     .patch(&url)
                     #project_commit_header_addition_token_stream
                     #content_type_application_json_header_addition_token_stream
                     .body(#payload_lower_case_token_stream)
-                    .send()
                 },
                 &quote::quote!{
                     match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
@@ -6747,11 +6743,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident
                 },
                 &tvfrr_extraction_logic_token_stream,
+                &reqwest_client_new_token_stream,
                 &quote::quote!{
-                    #reqwest_client_new_token_stream
                     .delete(&url)
                     #project_commit_header_addition_token_stream
-                    .send()
                 },
                 &quote::quote!{
                     match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
@@ -9209,6 +9204,7 @@ fn generate_try_operation_token_stream(
     payload_variable_initialization_token_stream: &proc_macro2::TokenStream,
     url_variable_initialization_token_stream: &proc_macro2::TokenStream,
     tvfrr_extraction_logic_token_stream: &proc_macro2::TokenStream,
+    reqwest_client_new_token_stream: &proc_macro2::TokenStream,
     request_variable_initialization_token_stream: &proc_macro2::TokenStream,
     ok_value_handle_token_stream: &proc_macro2::TokenStream,
     request_error_variant_initialization_token_stream: &proc_macro2::TokenStream,
@@ -9224,7 +9220,9 @@ fn generate_try_operation_token_stream(
             );
             // println!("{}", url);
             match #tvfrr_extraction_logic_token_stream(
+                #reqwest_client_new_token_stream
                 #request_variable_initialization_token_stream
+                .send()
             )
             .await
             {
