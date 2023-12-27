@@ -1687,107 +1687,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         &["sqlx","Error"],
         &proc_macro_name_camel_case_ident_stringified
     );
-    let std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_syn_punctuated_punctuated = {
-        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-        handle.push_value(
-            syn::PathSegment {
-                ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
-                arguments: syn::PathArguments::None,
-            }
-        );
-        handle.push_punct(syn::token::Colon2{
-            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-        });
-        handle.push_value(
-            syn::PathSegment {
-                ident: proc_macro2::Ident::new("vec", proc_macro2::Span::call_site()),
-                arguments: syn::PathArguments::None,
-            }
-        );
-        handle.push_punct(syn::token::Colon2{
-            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-        });
-        handle.push_value(
-            syn::PathSegment {
-                ident: proc_macro2::Ident::new("Vec", proc_macro2::Span::call_site()),
-                arguments: syn::PathArguments::AngleBracketed(syn::AngleBracketedGenericArguments{
-                    colon2_token: None,
-                    lt_token: syn::token::Lt{
-                        spans: [proc_macro2::Span::call_site()],
-                    },
-                    args: {
-                        let mut handle = syn::punctuated::Punctuated::<syn::GenericArgument, syn::token::Comma>::new();
-                        handle.push(syn::GenericArgument::Type(syn::Type::Path(syn::TypePath{
-                            qself: None,
-                            path: syn::Path {
-                                leading_colon: None,
-                                segments: generate_simple_syn_punctuated_punctuated(
-                                    &["crate","server","postgres","uuid_wrapper","UuidWrapper"],
-                                    &proc_macro_name_camel_case_ident_stringified
-                                ),
-                            },
-                        })));
-                        handle
-                    },
-                    gt_token: syn::token::Gt {
-                        spans: [proc_macro2::Span::call_site()],
-                    },
-                }),
-            }
-        );
-        handle
-    };
-    let std_vec_vec_crate_server_postgres_regex_filter_regex_filter_syn_punctuated_punctuated = {
-        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-        handle.push_value(
-            syn::PathSegment {
-                ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
-                arguments: syn::PathArguments::None,
-            }
-        );
-        handle.push_punct(syn::token::Colon2{
-            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-        });
-        handle.push_value(
-            syn::PathSegment {
-                ident: proc_macro2::Ident::new("vec", proc_macro2::Span::call_site()),
-                arguments: syn::PathArguments::None,
-            }
-        );
-        handle.push_punct(syn::token::Colon2{
-            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-        });
-        handle.push_value(
-            syn::PathSegment {
-                ident: proc_macro2::Ident::new("Vec", proc_macro2::Span::call_site()),
-                arguments: syn::PathArguments::AngleBracketed(syn::AngleBracketedGenericArguments{
-                    colon2_token: None,
-                    lt_token: syn::token::Lt{
-                        spans: [proc_macro2::Span::call_site()],
-                    },
-                    args: {
-                        let mut handle = syn::punctuated::Punctuated::<syn::GenericArgument, syn::token::Comma>::new();
-                        handle.push(syn::GenericArgument::Type(syn::Type::Path(syn::TypePath{
-                            qself: None,
-                            path: syn::Path {
-                                leading_colon: None,
-                                segments: generate_simple_syn_punctuated_punctuated(
-                                    &["crate","server","postgres","regex_filter","RegexFilter"],
-                                    &proc_macro_name_camel_case_ident_stringified
-                                ),
-                            },
-                        })));
-                        handle
-                    },
-                    gt_token: syn::token::Gt {
-                        spans: [proc_macro2::Span::call_site()],
-                    },
-                }),
-            }
-        );
-        handle
-    };
-    //
+    let std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_syn_punctuated_punctuated = generate_std_vec_vec_syn_punctuated_punctuated(
+        &["crate","server","postgres","uuid_wrapper","UuidWrapper"],
+        &proc_macro_name_camel_case_ident_stringified
+    );
+    let std_vec_vec_crate_server_postgres_regex_filter_regex_filter_syn_punctuated_punctuated = generate_std_vec_vec_syn_punctuated_punctuated(
+        &["crate","server","postgres","regex_filter","RegexFilter"],
+        &proc_macro_name_camel_case_ident_stringified
+    );
     let code_occurence_field = syn::Field {
         attrs: vec![],
         vis: syn::Visibility::Inherited,
@@ -7873,6 +7780,83 @@ fn generate_simple_syn_punctuated_punctuated(
                     false => ()
                 }
             }
+            handle
+        },
+        false => panic!("{proc_macro_name_camel_case_ident_stringified} generate_simple_syn_punctuated_punctuated parts_vec_len.len() > 1 == false for {parts_vec:?}")
+    }
+}
+
+fn generate_std_vec_vec_syn_punctuated_punctuated(
+    parts_vec: &[&str],
+    proc_macro_name_camel_case_ident_stringified: &str
+) -> syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2> {
+    let parts_vec_len = parts_vec.len();
+    match parts_vec_len >= 1 {
+        true => {
+            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+            handle.push_value(
+                syn::PathSegment {
+                    ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
+                    arguments: syn::PathArguments::None,
+                }
+            );
+            handle.push_punct(syn::token::Colon2{
+                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+            });
+            handle.push_value(
+                syn::PathSegment {
+                    ident: proc_macro2::Ident::new("vec", proc_macro2::Span::call_site()),
+                    arguments: syn::PathArguments::None,
+                }
+            );
+            handle.push_punct(syn::token::Colon2{
+                spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+            });
+            handle.push_value(
+                syn::PathSegment {
+                    ident: proc_macro2::Ident::new("Vec", proc_macro2::Span::call_site()),
+                    arguments: syn::PathArguments::AngleBracketed(syn::AngleBracketedGenericArguments{
+                        colon2_token: None,
+                        lt_token: syn::token::Lt{
+                            spans: [proc_macro2::Span::call_site()],
+                        },
+                        args: {
+                            let mut handle = syn::punctuated::Punctuated::<syn::GenericArgument, syn::token::Comma>::new();
+                            handle.push(syn::GenericArgument::Type(syn::Type::Path(syn::TypePath{
+                                qself: None,
+                                path: syn::Path {
+                                    leading_colon: None,
+                                    segments: {
+                                        let parts_vec_len_minus_one = parts_vec_len - 1;
+                                        let mut std_vec_vec_generic_type = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+                                        for (index, element) in parts_vec.iter().enumerate() {
+                                            std_vec_vec_generic_type.push_value(
+                                                syn::PathSegment {
+                                                    ident: proc_macro2::Ident::new(element, proc_macro2::Span::call_site()),
+                                                    arguments: syn::PathArguments::None,
+                                                }
+                                            );
+                                            match index < parts_vec_len_minus_one {
+                                                true => {
+                                                    std_vec_vec_generic_type.push_punct(syn::token::Colon2{
+                                                        spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                                                    });
+                                                }
+                                                false => ()
+                                            }
+                                        }
+                                        std_vec_vec_generic_type
+                                    },
+                                },
+                            })));
+                            handle
+                        },
+                        gt_token: syn::token::Gt {
+                            spans: [proc_macro2::Span::call_site()],
+                        },
+                    }),
+                }
+            );
             handle
         },
         false => panic!("{proc_macro_name_camel_case_ident_stringified} generate_simple_syn_punctuated_punctuated parts_vec_len.len() > 1 == false for {parts_vec:?}")
