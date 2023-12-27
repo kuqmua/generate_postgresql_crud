@@ -3663,10 +3663,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 },
                 &quote::quote!{
-                    let url = format!(
-                        #url_handle_token_stream,
-                        #server_location_name_token_stream
-                    );
+                    #url_handle_token_stream,
+                    #server_location_name_token_stream
                 },
                 &tvfrr_extraction_logic_token_stream,
                 &quote::quote!{
@@ -4174,12 +4172,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 },
                 &quote::quote!{
-                    let url = format!(
-                        #url_handle_token_stream,
-                        #server_location_name_token_stream,
-                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident,
-                        encoded_query
-                    );
+                    #url_handle_token_stream,
+                    #server_location_name_token_stream,
+                    #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident,
+                    encoded_query
                 },
                 &tvfrr_extraction_logic_token_stream,
                 &quote::quote!{
@@ -4745,10 +4741,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 },
                 &quote::quote!{
-                    let url = format!(
-                        #url_handle_token_stream ,
-                        #server_location_name_token_stream
-                    );
+                    #url_handle_token_stream,
+                    #server_location_name_token_stream
                 },
                 &tvfrr_extraction_logic_token_stream,
                 &quote::quote!{
@@ -5546,11 +5540,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 },
                 &quote::quote!{
-                    let url = format!(
-                        #url_handle_token_stream,
-                        #server_location_name_token_stream,
-                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident.to_inner()
-                    );
+                    #url_handle_token_stream,
+                    #server_location_name_token_stream,
+                    #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident.to_inner()
                 },
                 &tvfrr_extraction_logic_token_stream,
                 &quote::quote!{
@@ -6750,11 +6742,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_error_named_camel_case_token_stream,
                 &quote::quote!{},
                 &quote::quote!{
-                    let url = format!(
-                        #url_handle_token_stream,
-                        #server_location_name_token_stream,
-                        #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident
-                    );
+                    #url_handle_token_stream,
+                    #server_location_name_token_stream,
+                    #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident
                 },
                 &tvfrr_extraction_logic_token_stream,
                 &quote::quote!{
@@ -9229,7 +9219,9 @@ fn generate_try_operation_token_stream(
             #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
         ) -> Result<#return_result_ok_type_token_stream, #try_operation_error_named_camel_case_token_stream> {
             #payload_variable_initialization_token_stream
-            #url_variable_initialization_token_stream
+            let url = format!(
+                #url_variable_initialization_token_stream
+            );
             // println!("{}", url);
             match #tvfrr_extraction_logic_token_stream(
                 #request_variable_initialization_token_stream
