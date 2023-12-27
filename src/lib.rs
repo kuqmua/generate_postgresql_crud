@@ -4157,40 +4157,42 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            quote::quote!{
-                pub async fn #try_operation_lower_case_token_stream(
-                    #server_location_name_token_stream: #server_location_type_token_stream,
-                    #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
-                ) -> Result<
-                    #struct_options_ident_token_stream,//todo make it generic instead of options
-                    #try_operation_error_named_camel_case_token_stream,
-                > {
+            generate_try_operation_token_stream(
+                &try_operation_lower_case_token_stream,
+                &server_location_name_token_stream,
+                &server_location_type_token_stream,
+                &parameters_lower_case_token_stream,
+                &operation_parameters_camel_case_token_stream,
+                &struct_options_ident_token_stream,
+                &try_operation_error_named_camel_case_token_stream,
+                &quote::quote!{
                     let encoded_query = match #serde_urlencoded_to_string_token_stream(#parameters_lower_case_token_stream.#query_lower_case_token_stream.#into_url_encoding_version_name_token_stream()) {
                         Ok(value) => value,
                         Err(e) => {
                             return Err(#try_operation_error_named_camel_case_token_stream::#query_encode_variant_initialization_token_stream);
                         }
                     };
+                },
+                &quote::quote!{
                     let url = format!(
                         #url_handle_token_stream,
                         #server_location_name_token_stream,
                         #parameters_lower_case_token_stream.#path_lower_case_token_stream.#primary_key_field_ident,
                         encoded_query
                     );
-                    // println!("{}", url);
-                    match #tvfrr_extraction_logic_token_stream(
-                        #reqwest_client_new_token_stream
-                        .get(&url)
-                        #project_commit_header_addition_token_stream
-                        .send(),
-                    )
-                    .await
-                    {
-                        Ok(value) => Ok(value),
-                        Err(e) => Err(#try_operation_error_named_camel_case_token_stream::#request_error_variant_initialization_token_stream),
-                    }
-                }
-            }
+                },
+                &tvfrr_extraction_logic_token_stream,
+                &quote::quote!{
+                    #reqwest_client_new_token_stream
+                    .get(&url)
+                    #project_commit_header_addition_token_stream
+                    .send(),
+                },
+                &quote::quote!{
+                    Ok(value)
+                },
+                &request_error_variant_initialization_token_stream,
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
