@@ -4078,22 +4078,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                         &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
-                        {
-                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new(
-                                        &generate_with_error_named_postfix_stringified(
-                                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
-                                            &error_named_camel_case_stringified,
-                                        ), 
-                                        proc_macro2::Span::call_site()
-                                    ),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        }
+                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+                            &error_named_camel_case_stringified
+                        )
                     )
                 ]
             );
@@ -4640,21 +4628,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                         &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified),
-                        {
-                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new(
-                                        &generate_with_error_named_postfix_stringified(
-                                            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
-                                            &error_named_camel_case_stringified,
-                                        ),
-                                        proc_macro2::Span::call_site()),//todo reuse generation naming 
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        }
+                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
+                            &error_named_camel_case_stringified
+                        )
                     )
                 ]
             );
@@ -5438,22 +5415,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                         &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
-                        {
-                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new(
-                                        &generate_with_error_named_postfix_stringified(
-                                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
-                                            &error_named_camel_case_stringified,
-                                        ),
-                                        proc_macro2::Span::call_site()
-                                    ),//todo reuse generation naming 
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        }
+                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+                            &error_named_camel_case_stringified
+                        )
                     )
                 ]
             );
@@ -6066,22 +6031,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                         &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified),
-                        {
-                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new(
-                                        &generate_with_error_named_postfix_stringified(
-                                            &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified,
-                                            &error_named_camel_case_stringified,
-                                        ),
-                                        proc_macro2::Span::call_site()
-                                    ),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        }
+                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                            &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified,
+                            &error_named_camel_case_stringified
+                        )
                     )
                 ]
             );
@@ -6651,22 +6604,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                         &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
-                        {
-                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new(
-                                        &generate_with_error_named_postfix_stringified(
-                                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
-                                            &error_named_camel_case_stringified,
-                                        ),
-                                        proc_macro2::Span::call_site()
-                                    ),//todo reuse generation naming 
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        }
+                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+                            &error_named_camel_case_stringified
+                        )
                     )
                 ]
             );
@@ -7195,22 +7136,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     (
                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                         &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified),
-                        {
-                            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-                            handle.push_value(
-                                syn::PathSegment {
-                                    ident: proc_macro2::Ident::new(
-                                        &generate_with_error_named_postfix_stringified(
-                                            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
-                                            &error_named_camel_case_stringified,
-                                        ),
-                                        proc_macro2::Span::call_site()
-                                    ),
-                                    arguments: syn::PathArguments::None,
-                                }
-                            );
-                            handle
-                        }
+                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
+                            &error_named_camel_case_stringified
+                        )
                     )
                 ]
             );
@@ -8234,6 +8163,26 @@ fn generate_url_handle_with_path_and_parameters(
 
 fn generate_url_path(table_name_stringified: &str) -> std::string::String {
     format!("{{}}/{table_name_stringified}")
+}
+
+fn generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+    operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case_stringified: &str,
+    error_named_camel_case_stringified: &str
+) -> syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2> {
+    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+    handle.push_value(
+        syn::PathSegment {
+            ident: proc_macro2::Ident::new(
+                &generate_with_error_named_postfix_stringified(
+                    &operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case_stringified,
+                    &error_named_camel_case_stringified,
+                ),
+                proc_macro2::Span::call_site()
+            ),
+            arguments: syn::PathArguments::None,
+        }
+    );
+    handle
 }
 
 #[derive(
