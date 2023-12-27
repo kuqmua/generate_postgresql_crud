@@ -1679,34 +1679,38 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
         }
     };
-    let std_string_string_syn_punctuated_punctuated = {
-        let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-        handle.push_value(
-            syn::PathSegment {
-                ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
-                arguments: syn::PathArguments::None,
-            }
-        );
-        handle.push_punct(syn::token::Colon2{
-            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-        });
-        handle.push_value(
-            syn::PathSegment {
-                ident: proc_macro2::Ident::new("string", proc_macro2::Span::call_site()),
-                arguments: syn::PathArguments::None,
-            }
-        );
-        handle.push_punct(syn::token::Colon2{
-            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
-        });
-        handle.push_value(
-            syn::PathSegment {
-                ident: proc_macro2::Ident::new("String", proc_macro2::Span::call_site()),
-                arguments: syn::PathArguments::None,
-            }
-        );
-        handle
-    };
+    let std_string_string_syn_punctuated_punctuated = generate_syn_punctuated_punctuated(
+        &["std","string","String"],
+        &proc_macro_name_camel_case_ident_stringified
+    );
+    // let std_string_string_syn_punctuated_punctuated = {
+    //     let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+    //     handle.push_value(
+    //         syn::PathSegment {
+    //             ident: proc_macro2::Ident::new("std", proc_macro2::Span::call_site()),
+    //             arguments: syn::PathArguments::None,
+    //         }
+    //     );
+    //     handle.push_punct(syn::token::Colon2{
+    //         spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+    //     });
+    //     handle.push_value(
+    //         syn::PathSegment {
+    //             ident: proc_macro2::Ident::new("string", proc_macro2::Span::call_site()),
+    //             arguments: syn::PathArguments::None,
+    //         }
+    //     );
+    //     handle.push_punct(syn::token::Colon2{
+    //         spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+    //     });
+    //     handle.push_value(
+    //         syn::PathSegment {
+    //             ident: proc_macro2::Ident::new("String", proc_macro2::Span::call_site()),
+    //             arguments: syn::PathArguments::None,
+    //         }
+    //     );
+    //     handle
+    // };
     let sqlx_error_syn_punctuated_punctuated = {
         let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
         handle.push_value(
@@ -8183,6 +8187,37 @@ fn generate_operation_handle_try_from_operation_handle_with_serialize_deserializ
         }
     );
     handle
+}
+
+fn generate_syn_punctuated_punctuated(
+    parts_vec: &[&str],
+    proc_macro_name_camel_case_ident_stringified: &str
+) -> syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2> {
+    let parts_vec_len = parts_vec.len();
+    match parts_vec_len > 1 {
+        true => {
+            let parts_vec_len_minus_one = parts_vec_len - 1;
+            let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
+            for (index, element) in parts_vec.iter().enumerate() {
+                handle.push_value(
+                    syn::PathSegment {
+                        ident: proc_macro2::Ident::new(element, proc_macro2::Span::call_site()),
+                        arguments: syn::PathArguments::None,
+                    }
+                );
+                match index < parts_vec_len_minus_one {
+                    true => {
+                        handle.push_punct(syn::token::Colon2{
+                            spans: [proc_macro2::Span::call_site(),proc_macro2::Span::call_site()],
+                        });
+                    }
+                    false => ()
+                }
+            }
+            handle
+        },
+        false => panic!("{proc_macro_name_camel_case_ident_stringified} generate_syn_punctuated_punctuated parts_vec_len.len() > 1 == false for {parts_vec:?}")
+    }
 }
 
 #[derive(
