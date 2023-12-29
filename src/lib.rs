@@ -1563,6 +1563,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    //todo
     let tests_token_stream = quote::quote!{
         #[cfg(test)]
         mod tests {
@@ -3379,7 +3380,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
+            let swagger_open_api_token_stream = {
+                quote::quote!{
+
+                }
+            };
             quote::quote!{
+                #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
@@ -3751,7 +3758,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
+            // println!("{try_operation_token_stream}");
+            let swagger_open_api_token_stream = {
+                quote::quote!{
+
+                }
+            };
             quote::quote!{
+                #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
@@ -4214,7 +4228,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
+            let swagger_open_api_token_stream = {
+                quote::quote!{
+
+                }
+            };
             quote::quote!{
+                #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream(
                     #path_extraction_result_lower_case_token_stream: Result<
                         #axum_extract_path_token_stream<#operation_path_with_serialize_deserialize_camel_case_token_stream>,
@@ -5094,7 +5114,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
+            let swagger_open_api_token_stream = {
+                quote::quote!{
+
+                }
+            };
             quote::quote!{
+                #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
@@ -5647,7 +5673,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
+            let swagger_open_api_token_stream = {
+                quote::quote!{
+
+                }
+            };
             quote::quote!{
+                #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream<'a>(
                     #path_extraction_result_lower_case_token_stream: Result<
                         #axum_extract_path_token_stream<#operation_path_with_serialize_deserialize_camel_case_token_stream>,
@@ -6309,7 +6341,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }  
             };
             // println!("{try_operation_token_stream}");
+            let swagger_open_api_token_stream = {
+                quote::quote!{
+
+                }
+            };
             quote::quote!{
+                #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream<'a>(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
@@ -6753,14 +6791,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
+            let swagger_open_api_token_stream = {
+                quote::quote!{
+
+                }
+            };
             quote::quote!{
-                #[utoipa::path(
-                    delete,
-                    path = "/api/cats",//todo
-                    responses(
-                        (status = 200, description = "delete by primary key", body = [#try_operation_camel_case_token_stream])
-                    )
-                )]
+                // #[utoipa::path(
+                //     delete,
+                //     path = "/api/cats",//todo
+                //     responses(
+                //         (status = 200, description = "delete by primary key", body = [#try_operation_camel_case_token_stream])
+                //     )
+                // )]
+                #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream<'a>(
                     #path_extraction_result_lower_case_token_stream: Result<
                         #axum_extract_path_token_stream<#operation_path_with_serialize_deserialize_camel_case_token_stream>,
@@ -7631,7 +7675,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
+            let swagger_open_api_token_stream = {
+                quote::quote!{
+
+                }
+            };
             quote::quote!{
+                #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream<'a>(
                     #app_info_state_name_token_stream: #axum_extract_state_token_stream<#app_info_state_path>,
                     #payload_extraction_result_lower_case_token_stream: Result<
