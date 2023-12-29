@@ -1563,6 +1563,413 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    let tests_token_stream = quote::quote!{
+        #[cfg(test)]
+        mod tests {
+            #[test]
+            fn it_works() {
+                async fn find_out_if_it_works() {
+                    //
+                    let api_location = std::string::String::from("http://127.0.0.1:8080/api");
+                    let limit = 1000;
+                    let offset = 0;
+                    println!("--------------try_create_one-----------------");//todo add try_create_many
+                    let id = match crate::repositories_types::tufa_server::routes::api::cats::try_create_one(
+                        &api_location,
+                        crate::repositories_types::tufa_server::routes::api::cats::CreateOneParameters { 
+                            payload: crate::repositories_types::tufa_server::routes::api::cats::CreateOnePayload {
+                                name: String::from("try_create_one_name"),
+                                color: String::from("try_create_one_color"),
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            value
+                        },
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    };
+                    println!("--------------try_read_one-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_one(
+                        &api_location,
+                        crate::repositories_types::tufa_server::routes::api::cats::ReadOneParameters { 
+                            path: crate::repositories_types::tufa_server::routes::api::cats::ReadOnePath { id: id.clone() }, 
+                            query: crate::repositories_types::tufa_server::routes::api::cats::ReadOneQuery {
+                                select: Some(crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor)    
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    }
+                    println!("--------------try_update_one------------------");//todo try_update_many
+                    let id = match crate::repositories_types::tufa_server::routes::api::cats::try_update_one(
+                        &api_location,
+                        crate::repositories_types::tufa_server::routes::api::cats::UpdateOneParameters { 
+                            path: crate::repositories_types::tufa_server::routes::api::cats::UpdateOnePath { id: id.clone() }, 
+                            payload: crate::repositories_types::tufa_server::routes::api::cats::UpdateOnePayload { 
+                                name: Some(std::string::String::from("name")), 
+                                color: Some(std::string::String::from("color")), 
+                            }
+                        }
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            value
+                        },
+                        Err(e) => panic!("{e}"),
+                    };
+                    println!("--------------try_read_one-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_one(
+                        &api_location,
+                        crate::repositories_types::tufa_server::routes::api::cats::ReadOneParameters { 
+                            path: crate::repositories_types::tufa_server::routes::api::cats::ReadOnePath { id: id.clone() }, 
+                            query: crate::repositories_types::tufa_server::routes::api::cats::ReadOneQuery {
+                                select: Some(crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor)    
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    }
+                    println!("--------------try_delete_one------------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_delete_one(
+                        &api_location,
+                        crate::repositories_types::tufa_server::routes::api::cats::DeleteOneParameters { 
+                            path: crate::repositories_types::tufa_server::routes::api::cats::DeleteOnePath { id: id.clone() }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => panic!("{e}"),
+                    }
+                    println!("--------------try_read_one-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_one(
+                        &api_location,
+                        crate::repositories_types::tufa_server::routes::api::cats::ReadOneParameters { 
+                            path: crate::repositories_types::tufa_server::routes::api::cats::ReadOnePath { id }, 
+                            query: crate::repositories_types::tufa_server::routes::api::cats::ReadOneQuery {
+                                select: Some(crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor)    
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => {
+                            println!("{e}");
+                        }
+                    }
+                    //
+                    println!("--------------try_create_many-----------------");//todo add try_create_many
+                    let ids = match crate::repositories_types::tufa_server::routes::api::cats::try_create_many(
+                        &api_location,
+                        crate::repositories_types::tufa_server::routes::api::cats::CreateManyParameters { 
+                            payload: vec![
+                                crate::repositories_types::tufa_server::routes::api::cats::CreateManyPayloadElement{
+                                    name: String::from("try_create_many_name1"),
+                                    color: String::from("try_create_many_color1"),
+                                },
+                                crate::repositories_types::tufa_server::routes::api::cats::CreateManyPayloadElement{
+                                    name: String::from("try_create_many_name2"),
+                                    color: String::from("try_create_many_color2"),
+                                },
+                            ]
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            value
+                        },
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    };
+                    println!("--------------try_read_many_with_body-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many_with_body(
+                        &api_location,
+                        //todo - builder pattern?
+                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyParameters{ 
+                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyPayload { 
+                                select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor,
+                                id: Some(
+                                    ids.clone()
+                                    // vec![
+                                    //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
+                                    //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
+                                    //     ).unwrap()
+                                    // ]
+                                ),
+                                name: None
+                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                                //     regex: std::string::String::from("test"),
+                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                                // }])
+                                ,//or and support
+                                color: None
+                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                                //     regex: std::string::String::from("test"),
+                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                                // }])
+                                ,
+                                order_by: crate::server::postgres::order_by::OrderBy {
+                                    column: crate::repositories_types::tufa_server::routes::api::cats::DogColumn::Name,
+                                    order: Some(crate::server::postgres::order::Order::Desc),
+                                },
+                                limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
+                                offset: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
+                            } 
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            // let vec_cat_id: Vec<
+                            //     crate::repositories_types::tufa_server::routes::api::cats::DogId,
+                            // > = value
+                            //     .into_iter()
+                            //     .filter_map(|value| match value.id {
+                            //         Some(id) => Some(
+                            //             crate::repositories_types::tufa_server::routes::api::cats::DogId {
+                            //                 id,
+                            //             },
+                            //         ),
+                            //         None => None,
+                            //     })
+                            //     .collect();
+                            // println!("{vec_cat_id:#?}");
+                        }
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    }
+                    println!("--------------try_update_many------------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_update_many(
+                        &api_location,
+                        crate::repositories_types::tufa_server::routes::api::cats::UpdateManyParameters { 
+                            payload: ids.clone().into_iter().map(|element| {
+                                crate::repositories_types::tufa_server::routes::api::cats::UpdateManyPayloadElement {
+                                    id: element,  
+                                    name: std::string::String::from("name"), //todo make sure name and color both are not None(make it option<value>, not just a value)
+                                    color: std::string::String::from("color"), 
+                                }
+                            }).collect()
+                        }
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => {
+                            panic!("{e}");
+                        },
+                    }
+                    println!("--------------try_read_many_with_body-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many_with_body(
+                        &api_location,
+                        //todo - builder pattern?
+                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyParameters{ 
+                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyPayload { 
+                                select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor,
+                                id: Some(
+                                    ids.clone()
+                                    // vec![
+                                    //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
+                                    //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
+                                    //     ).unwrap()
+                                    // ]
+                                ),
+                                name: None
+                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                                //     regex: std::string::String::from("test"),
+                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                                // }])
+                                ,//or and support
+                                color: None
+                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                                //     regex: std::string::String::from("test"),
+                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                                // }])
+                                ,
+                                order_by: crate::server::postgres::order_by::OrderBy {
+                                    column: crate::repositories_types::tufa_server::routes::api::cats::DogColumn::Name,
+                                    order: Some(crate::server::postgres::order::Order::Desc),
+                                },
+                                limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
+                                offset: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
+                            } 
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            // let vec_cat_id: Vec<
+                            //     crate::repositories_types::tufa_server::routes::api::cats::DogId,
+                            // > = value
+                            //     .into_iter()
+                            //     .filter_map(|value| match value.id {
+                            //         Some(id) => Some(
+                            //             crate::repositories_types::tufa_server::routes::api::cats::DogId {
+                            //                 id,
+                            //             },
+                            //         ),
+                            //         None => None,
+                            //     })
+                            //     .collect();
+                            // println!("{vec_cat_id:#?}");
+                        }
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    }
+                    println!("--------------try_delete_many_with_body-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_delete_many_with_body(
+                        &api_location,
+                        //todo - builder pattern?
+                        crate::repositories_types::tufa_server::routes::api::cats::DeleteManyWithBodyParameters{ 
+                            payload: crate::repositories_types::tufa_server::routes::api::cats::DeleteManyWithBodyPayload { 
+                                id: Some(
+                                    ids.clone()
+                                    // vec![
+                                    //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
+                                    //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
+                                    //     ).unwrap()
+                                    // ]
+                                ),
+                                name: None
+                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                                //     regex: std::string::String::from("test"),
+                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                                // }])
+                                ,//or and support
+                                color: None
+                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                                //     regex: std::string::String::from("test"),
+                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                                // }])
+                                ,
+                            } 
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            // let vec_cat_id: Vec<
+                            //     crate::repositories_types::tufa_server::routes::api::cats::DogId,
+                            // > = value
+                            //     .into_iter()
+                            //     .filter_map(|value| match value.id {
+                            //         Some(id) => Some(
+                            //             crate::repositories_types::tufa_server::routes::api::cats::DogId {
+                            //                 id,
+                            //             },
+                            //         ),
+                            //         None => None,
+                            //     })
+                            //     .collect();
+                            // println!("{vec_cat_id:#?}");
+                        }
+                        Err(e) => {
+                            println!("{e}");
+                        }
+                    }
+                    println!("--------------try_read_many_with_body-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many_with_body(
+                        &api_location,
+                        //todo - builder pattern?
+                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyParameters{ 
+                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyPayload { 
+                                select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor,
+                                id: Some(
+                                    ids.clone()
+                                    // vec![
+                                    //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
+                                    //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
+                                    //     ).unwrap()
+                                    // ]
+                                ),
+                                name: None
+                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                                //     regex: std::string::String::from("test"),
+                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                                // }])
+                                ,//or and support
+                                color: None
+                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                                //     regex: std::string::String::from("test"),
+                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                                // }])
+                                ,
+                                order_by: crate::server::postgres::order_by::OrderBy {
+                                    column: crate::repositories_types::tufa_server::routes::api::cats::DogColumn::Name,
+                                    order: Some(crate::server::postgres::order::Order::Desc),
+                                },
+                                limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
+                                offset: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
+                            } 
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            // let vec_cat_id: Vec<
+                            //     crate::repositories_types::tufa_server::routes::api::cats::DogId,
+                            // > = value
+                            //     .into_iter()
+                            //     .filter_map(|value| match value.id {
+                            //         Some(id) => Some(
+                            //             crate::repositories_types::tufa_server::routes::api::cats::DogId {
+                            //                 id,
+                            //             },
+                            //         ),
+                            //         None => None,
+                            //     })
+                            //     .collect();
+                            // println!("{vec_cat_id:#?}");
+                        }
+                        Err(e) => {
+                            println!("{e}");
+                        }
+                    }
+                    //
+                }
+                match tokio::runtime::Builder::new_multi_thread()
+                    .worker_threads(num_cpus::get())
+                    .enable_all()
+                    .build()
+                {
+                    Err(e) => {
+                        panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
+                    }
+                    Ok(runtime) => {
+                        runtime.block_on(find_out_if_it_works());
+                    }
+                }
+                let result = 2 + 2;
+                assert_eq!(result, 4);
+            }
+        }
+    };
     let additional_http_status_codes_error_variants_lower_case_stringified = "additional_http_status_codes_error_variants";
     let common_middlewares_error_syn_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
         &ast,
@@ -7309,7 +7716,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #order_by_wrapper_token_stream
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
-        // #operation_status_token_stream
+        #tests_token_stream
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
