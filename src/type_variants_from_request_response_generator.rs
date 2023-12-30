@@ -27,7 +27,12 @@ pub fn type_variants_from_request_response_generator(
 ) -> proc_macro2::TokenStream {
     let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
     let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
+    let axum_http_status_code_quote_token_stream = desirable_attribute.to_axum_http_status_code_quote();
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
+    let axum_http_status_code_token_stream = quote::quote!{axum::http::StatusCode};
+    let http_status_code_token_stream = quote::quote!{http::StatusCode};
+    let reqwest_header_header_map_token_stream = quote::quote!{reqwest::header::HeaderMap};
+    let reqwest_error_token_stream = quote::quote!{reqwest::Error};
     let type_variants_from_request_response_syn_variants = {
         let mut handle = std::vec::Vec::with_capacity(type_variants_from_request_response_syn_variants_partial.len() + full_additional_http_status_codes_error_variants.len());
         for element in &type_variants_from_request_response_syn_variants_partial {
@@ -271,14 +276,14 @@ pub fn type_variants_from_request_response_generator(
                 quote::quote! {
                     #try_operation_response_variants_camel_case_token_stream::#variant_ident {
                         #(#fields_anonymous_types_mapped_into_token_stream),*
-                    } => #http_status_code_quote_token_stream
+                    } => #axum_http_status_code_quote_token_stream
                 }
             }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            impl std::convert::From<&#try_operation_response_variants_camel_case_token_stream> for http::StatusCode {
+            impl std::convert::From<&#try_operation_response_variants_camel_case_token_stream> for #axum_http_status_code_token_stream {
                 fn from(value: &#try_operation_response_variants_camel_case_token_stream) -> Self {
                     match value {
-                        #try_operation_response_variants_camel_case_token_stream::#desirable_token_stream(_) => #http_status_code_quote_token_stream,
+                        #try_operation_response_variants_camel_case_token_stream::#desirable_token_stream(_) => #axum_http_status_code_quote_token_stream,
                         #(#impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_mapped_token_stream),*
                     }
                 }
@@ -773,36 +778,36 @@ pub fn type_variants_from_request_response_generator(
                 },
                 UnexpectedStatusCode {
                     #eo_display_token_stream
-                    status_code: http::StatusCode,
+                    status_code: #http_status_code_token_stream,
                     #eo_display_foreign_type_token_stream
-                    headers: reqwest::header::HeaderMap,
+                    headers: #reqwest_header_header_map_token_stream,
                     #eo_display_foreign_type_token_stream
                     response_text_result: #crate_common_api_request_unexpected_error_response_text_result_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 FailedToGetResponseText {
                     #eo_display_foreign_type_token_stream
-                    reqwest: reqwest::Error,
+                    reqwest: #reqwest_error_token_stream,
                     #eo_display_token_stream
-                    status_code: http::StatusCode,
+                    status_code: #http_status_code_token_stream,
                     #eo_display_foreign_type_token_stream
-                    headers: reqwest::header::HeaderMap,
+                    headers: #reqwest_header_header_map_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 DeserializeResponse {
                     #eo_display_token_stream
                     serde: serde_json::Error,
                     #eo_display_token_stream
-                    status_code: http::StatusCode,
+                    status_code: #http_status_code_token_stream,
                     #eo_display_foreign_type_token_stream
-                    headers: reqwest::header::HeaderMap,
+                    headers: #reqwest_header_header_map_token_stream,
                     #eo_display_with_serialize_deserialize_token_stream
                     response_text: std::string::String,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 Reqwest {
                     #eo_display_foreign_type_token_stream
-                    reqwest: reqwest::Error,
+                    reqwest: #reqwest_error_token_stream,
                     #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
             }
@@ -833,7 +838,7 @@ pub fn type_variants_from_request_response_generator(
         };
         quote::quote! {
             async fn #tvfrr_extraction_logic_try_operation_lower_case_token_stream<'a>(
-                future: impl std::future::Future<Output = Result<reqwest::Response, reqwest::Error>>,
+                future: impl std::future::Future<Output = Result<reqwest::Response, #reqwest_error_token_stream>>,
             ) -> Result<
                 #desirable_type_token_stream,
                 #try_operation_request_error_token_stream,
@@ -934,7 +939,7 @@ pub fn type_variants_from_request_response_generator(
                         #(#fields_anonymous_types_mapped_into_token_stream),*
                     } => {
                         let mut res = axum::Json(self).into_response();
-                        *res.status_mut() = #http_status_code_quote_token_stream;
+                        *res.status_mut() = #axum_http_status_code_quote_token_stream;
                         res
                     }
                 }
@@ -945,7 +950,7 @@ pub fn type_variants_from_request_response_generator(
                     match &self {
                         #try_operation_response_variants_camel_case_token_stream::#desirable_token_stream(_) => {
                             let mut res = axum::Json(self).into_response();
-                            *res.status_mut() = #http_status_code_quote_token_stream;//http::StatusCode::CREATED
+                            *res.status_mut() = #axum_http_status_code_quote_token_stream;
                             res
                         }
                         #(#axum_response_into_response_logic_token_stream_handle_mapped_token_stream),*
