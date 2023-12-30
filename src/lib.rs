@@ -3382,7 +3382,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // println!("{try_operation_token_stream}");
             let swagger_open_api_token_stream = {
                 quote::quote!{
-
+                    // TryCreateManyResponseVariants
+                    // #[utoipa::path(
+                    //     post,
+                    //     path = "/git_info",
+                    //     responses(
+                    //         (status = 200, description = "operation success", body = [GitInfo])
+                    //     )
+                    // )]
                 }
             };
             quote::quote!{
@@ -7776,7 +7783,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let gen = quote::quote! {
         #common_token_stream
 
-        #create_many_token_stream
+        // #create_many_token_stream
         #create_one_token_stream
         #read_one_token_stream
         #read_many_with_body_token_stream
