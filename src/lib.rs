@@ -340,6 +340,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let derive_debug_token_stream = quote::quote!{#[derive(Debug)]};
     // let derive_debug_deserialize_token_stream = quote::quote!{#[derive(Debug, serde::Deserialize)]};
     let derive_debug_serialize_deserialize_token_stream = quote::quote!{#[derive(Debug, serde::Serialize, serde::Deserialize)]};
+    let derive_debug_serialize_deserialize_to_schema_token_stream = quote::quote!{#[derive(Debug, serde::Serialize, serde::Deserialize, utoipa::ToSchema)]};
     let try_camel_case_stringified = "Try";
     let from_camel_case_stringified = "From";
     let try_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&try_camel_case_stringified.to_string());
@@ -3043,7 +3044,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_serialize_deserialize_to_schema_token_stream
                 pub struct #operation_payload_element_camel_case_token_stream {
                     #(#fields_with_excluded_primary_key_token_stream),*
                 }
@@ -3161,6 +3162,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_foreign_type_token_stream,
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
+                &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
                 &proc_macro_name_camel_case_ident_stringified,
@@ -3382,14 +3384,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // println!("{try_operation_token_stream}");
             let swagger_open_api_token_stream = {
                 quote::quote!{
-                    // TryCreateManyResponseVariants
-                    // #[utoipa::path(
-                    //     post,
-                    //     path = "/git_info",
-                    //     responses(
-                    //         (status = 200, description = "operation success", body = [GitInfo])
-                    //     )
-                    // )]
+                    #[utoipa::path(
+                        post,
+                        path = "api/dogs/create_many",
+                        operation_id = "api/dogs/create_many",
+                        tag = "dogs",
+                        responses(
+                            (status = 201, description = "Created", body = [TryCreateManyResponseVariantsTvfrr201Created], content_type = "application/json"),
+                            (status = 408, description = "RequestTimeout", body = [TryCreateManyResponseVariantsTvfrr408RequestTimeout], content_type = "application/json"),
+                            (status = 404, description = "NotFound", body = [TryCreateManyResponseVariantsTvfrr404NotFound], content_type = "application/json"),
+                            (status = 400, description = "BadRequest", body = [TryCreateManyResponseVariantsTvfrr400BadRequest], content_type = "application/json"),
+                            (status = 500, description = "InternalServerError", body = [TryCreateManyResponseVariantsTvfrr500InternalServerError], content_type = "application/json")
+                        ),
+                        request_body(content = [CreateManyPayloadElement], description = "Pet to store the database", content_type = "application/json"),
+                    )]
                 }
             };
             quote::quote!{
@@ -3615,6 +3623,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_foreign_type_token_stream,
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
+                &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
                 &proc_macro_name_camel_case_ident_stringified,
@@ -4118,6 +4127,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_foreign_type_token_stream,
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
+                &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
                 &proc_macro_name_camel_case_ident_stringified,
@@ -4679,6 +4689,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_foreign_type_token_stream,
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
+                &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
                 &proc_macro_name_camel_case_ident_stringified,
@@ -5473,6 +5484,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_foreign_type_token_stream,
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
+                &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
                 &proc_macro_name_camel_case_ident_stringified,
@@ -6097,6 +6109,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_foreign_type_token_stream,
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
+                &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
                 &proc_macro_name_camel_case_ident_stringified,
@@ -6669,6 +6682,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_foreign_type_token_stream,
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
+                &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
                 &proc_macro_name_camel_case_ident_stringified,
@@ -7218,6 +7232,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_foreign_type_token_stream,
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
+                &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_vec,
                 full_additional_http_status_codes_error_variants,
                 &proc_macro_name_camel_case_ident_stringified,
@@ -7783,7 +7798,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let gen = quote::quote! {
         #common_token_stream
 
-        // #create_many_token_stream
+        #create_many_token_stream
         #create_one_token_stream
         #read_one_token_stream
         #read_many_with_body_token_stream

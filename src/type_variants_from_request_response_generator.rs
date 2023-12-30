@@ -17,6 +17,7 @@ pub fn type_variants_from_request_response_generator(
     eo_display_foreign_type_token_stream: &proc_macro2::TokenStream,
     eo_display_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
+    derive_debug_serialize_deserialize_to_schema_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response_syn_variants_partial: std::vec::Vec<&syn::Variant>,
     full_additional_http_status_codes_error_variants: std::vec::Vec::<&(
         syn::Ident,
@@ -442,8 +443,8 @@ pub fn type_variants_from_request_response_generator(
                     }
                 });
                 quote::quote!{
-                    #derive_debug_serialize_deserialize_token_stream
-                    enum #try_operation_response_variants_attribute_token_stream {
+                    #derive_debug_serialize_deserialize_to_schema_token_stream
+                    pub enum #try_operation_response_variants_attribute_token_stream {
                         #(#enum_variants_token_stream),*
                     }
                     impl std::convert::From<#try_operation_response_variants_attribute_token_stream> for #try_operation_response_variants_camel_case_token_stream {
@@ -460,8 +461,8 @@ pub fn type_variants_from_request_response_generator(
             }
         };
         quote::quote! {
-            #derive_debug_serialize_deserialize_token_stream
-            enum #try_operation_response_variants_desirable_attribute_token_stream {
+            #derive_debug_serialize_deserialize_to_schema_token_stream
+            pub enum #try_operation_response_variants_desirable_attribute_token_stream {
                 #desirable_token_stream(#desirable_type_token_stream),
             }
             impl std::convert::From<#try_operation_response_variants_desirable_attribute_token_stream> for #try_operation_response_variants_camel_case_token_stream {
