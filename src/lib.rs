@@ -3187,6 +3187,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &code_occurence_camel_case_stringified,
                 &code_occurence_lower_case_stringified,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -3674,6 +3677,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &code_occurence_camel_case_stringified,
                 &code_occurence_lower_case_stringified,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -4185,6 +4191,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &code_occurence_camel_case_stringified,
                 &code_occurence_lower_case_stringified,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -4754,6 +4763,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &code_occurence_camel_case_stringified,
                 &code_occurence_lower_case_stringified,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -5556,6 +5568,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &code_occurence_camel_case_stringified,
                 &code_occurence_lower_case_stringified,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -6188,6 +6203,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &code_occurence_camel_case_stringified,
                 &code_occurence_lower_case_stringified,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -6768,6 +6786,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &code_occurence_camel_case_stringified,
                 &code_occurence_lower_case_stringified,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -7318,6 +7339,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &code_occurence_camel_case_stringified,
                 &code_occurence_lower_case_stringified,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");

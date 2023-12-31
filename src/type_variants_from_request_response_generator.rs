@@ -22,6 +22,9 @@ pub fn type_variants_from_request_response_generator(
     proc_macro_name_camel_case_ident_stringified: &std::string::String,
     code_occurence_camel_case_stringified: &std::string::String,
     code_occurence_lower_case_stringified: &std::string::String,
+    try_camel_case_stringified: &str,
+    operation_name_camel_case_stringified: &str,
+    response_variants_camel_case_stringified: &str,
 ) -> proc_macro2::TokenStream {
     let axum_http_status_code_quote_token_stream = desirable_attribute.to_axum_http_status_code_token_stream();
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_token_stream();
@@ -398,6 +401,13 @@ pub fn type_variants_from_request_response_generator(
                     .parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
+                let try_operation_response_variants_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
+                    &try_camel_case_stringified,
+                    &operation_name_camel_case_stringified,
+                    &response_variants_camel_case_stringified,
+                    &key,
+                    &proc_macro_name_camel_case_ident_stringified
+                );
                 let enum_variants_token_stream = value.iter().map(|element|{
                     let error_variant_ident = &element.0;
                     let fields_mapped_into_token_stream = element.1.iter().map(|element| {
@@ -443,6 +453,7 @@ pub fn type_variants_from_request_response_generator(
                 #(#status_code_enums_with_from_impls_logic_token_stream)*
             }
         };
+        //todo need to add table name prefix to enum names
         quote::quote! {
             #derive_debug_serialize_deserialize_to_schema_token_stream
             pub enum #try_operation_response_variants_desirable_attribute_token_stream {
