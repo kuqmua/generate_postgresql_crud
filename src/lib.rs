@@ -3423,17 +3423,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &operation_name_lower_case_stringified,
                     &proc_macro_name_camel_case_ident_stringified
                 );
-                println!("swagger_url_path_quotes_token_stream {swagger_url_path_quotes_token_stream}");
                 quote::quote!{
                     #[utoipa::path(
                         post,
-                        path = "/dogs/create_many",
-                        operation_id = "/dogs/create_many",
+                        path = #swagger_url_path_quotes_token_stream,
+                        operation_id = #swagger_url_path_quotes_token_stream,
                         tag = #table_name_quotes_token_stream,
                         responses(
                             #(#responses_token_stream),*
                         ),
-                        request_body(content = [#operation_payload_element_camel_case_token_stream], description = "Pet to store the database", content_type = #application_json_quotes_token_stream),
+                        request_body(
+                            content = [#operation_payload_element_camel_case_token_stream], 
+                            description = "Pet to store the database", 
+                            content_type = #application_json_quotes_token_stream
+                        ),
                     )]
                 }
             };
