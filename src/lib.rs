@@ -3418,6 +3418,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
             let swagger_open_api_token_stream = {
+                let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
+                    &table_name_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified
+                );
+                println!("swagger_url_path_quotes_token_stream {swagger_url_path_quotes_token_stream}");
                 quote::quote!{
                     #[utoipa::path(
                         post,
@@ -8289,6 +8295,16 @@ fn generate_url_handle_with_path_and_parameters(
 
 fn generate_url_path(table_name_stringified: &str) -> std::string::String {
     format!("{{}}/{table_name_stringified}")
+}
+
+fn generate_swagger_url_path_quotes_token_stream(
+    table_name_stringified: &str,
+    operation_name_lower_case_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str
+) -> proc_macro2::TokenStream {
+    let value = format!("\"/{table_name_stringified}/{operation_name_lower_case_stringified}\"");
+    value.parse::<proc_macro2::TokenStream>()
+    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {value} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
 fn generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
