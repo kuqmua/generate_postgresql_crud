@@ -3403,26 +3403,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
-            let responses_token_stream = unique_attributes.iter().map(|element|{
-                let status_token_stream = element.to_status_code_token_stream();
-                let description_token_stream = element.to_status_code_description_token_stream();
-                let body_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
-                    &try_camel_case_stringified,
-                    &operation_name_camel_case_stringified,
-                    &response_variants_camel_case_stringified,
-                    &element,
-                    &proc_macro_name_camel_case_ident_stringified
-                );
-                quote::quote!{
-                    (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = #application_json_quotes_token_stream)
-                }
-            }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
             let swagger_open_api_token_stream = {
                 let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
                     &table_name_stringified,
                     &operation_name_lower_case_stringified,
                     &proc_macro_name_camel_case_ident_stringified
                 );
+                let responses_token_stream = unique_attributes.iter().map(|element|{
+                    let status_token_stream = element.to_status_code_token_stream();
+                    let description_token_stream = element.to_status_code_description_token_stream();
+                    let body_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                        &try_camel_case_stringified,
+                        &operation_name_camel_case_stringified,
+                        &response_variants_camel_case_stringified,
+                        &element,
+                        &proc_macro_name_camel_case_ident_stringified
+                    );
+                    quote::quote!{
+                        (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = #application_json_quotes_token_stream)
+                    }
+                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                 quote::quote!{
                     #[utoipa::path(
                         post,
