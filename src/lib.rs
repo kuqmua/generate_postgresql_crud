@@ -208,6 +208,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     // };
     let with_serialize_deserialize_camel_case_stringified = "WithSerializeDeserialize";
     let table_name_stringified = pluralizer::pluralize(&ident_lower_case_stringified, 2, false);
+    let table_name_quotes_token_stream = {
+        let table_name_quotes_stringified = format!("\"{table_name_stringified}\"");
+        table_name_quotes_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {table_name_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
+    let table_name_declaration_token_stream = quote::quote! {pub const TABLE_NAME: &str = #table_name_quotes_token_stream;};
     let data_struct = if let syn::Data::Struct(data_struct) = &ast.data {
         data_struct
     } else {
@@ -327,14 +333,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let primary_key_field_ident_quotes_stringified = format!("\"{primary_key_field_ident}\"");
         primary_key_field_ident_quotes_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {primary_key_field_ident_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
-    let table_name_declaration_token_stream = {
-        let table_name_quotes_token_stream = {
-            let table_name_quotes_stringified = format!("\"{table_name_stringified}\"");
-            table_name_quotes_stringified.parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {table_name_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        };
-        quote::quote! {pub const TABLE_NAME: &str = #table_name_quotes_token_stream;}
     };
     let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
     let derive_debug_token_stream = quote::quote!{#[derive(Debug)]};
@@ -3424,7 +3422,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         post,
                         path = "api/dogs/create_many",
                         operation_id = "api/dogs/create_many",
-                        tag = "dogs",
+                        tag = #table_name_quotes_token_stream,
                         responses(
                             #(#responses_token_stream),*
                         ),
