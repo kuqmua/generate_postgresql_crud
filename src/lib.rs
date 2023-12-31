@@ -1569,7 +1569,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             fn it_works() {
                 async fn find_out_if_it_works() {
                     //
-                    let api_location = std::string::String::from("http://127.0.0.1:8080/api");
+                    let api_location = std::string::String::from("http://127.0.0.1:8080");
                     let limit = 1000;
                     let offset = 0;
                     println!("--------------try_create_one-----------------");//todo add try_create_many
@@ -3421,8 +3421,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     #[utoipa::path(
                         post,
-                        path = "api/dogs/create_many",
-                        operation_id = "api/dogs/create_many",
+                        path = "/dogs/create_many",
+                        operation_id = "/dogs/create_many",
                         tag = #table_name_quotes_token_stream,
                         responses(
                             #(#responses_token_stream),*
@@ -6891,13 +6891,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             quote::quote!{
-                // #[utoipa::path(
-                //     delete,
-                //     path = "/api/cats",//todo
-                //     responses(
-                //         (status = 200, description = "delete by primary key", body = [#try_operation_camel_case_token_stream])
-                //     )
-                // )]
                 #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream<'a>(
                     #path_extraction_result_lower_case_token_stream: Result<

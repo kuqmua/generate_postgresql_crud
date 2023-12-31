@@ -23,8 +23,8 @@ pub fn type_variants_from_request_response_generator(
     code_occurence_camel_case_stringified: &std::string::String,
     code_occurence_lower_case_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
-    let axum_http_status_code_quote_token_stream = desirable_attribute.to_axum_http_status_code_quote();
-    let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
+    let axum_http_status_code_quote_token_stream = desirable_attribute.to_axum_http_status_code_token_stream();
+    let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_token_stream();
     let axum_http_status_code_token_stream = quote::quote!{axum::http::StatusCode};
     let http_status_code_token_stream = quote::quote!{http::StatusCode};
     let reqwest_header_header_map_token_stream = quote::quote!{reqwest::header::HeaderMap};
@@ -643,7 +643,7 @@ pub fn type_variants_from_request_response_generator(
                 let status_code_enum_name_token_stream = status_code_enum_name_stringified
                     .parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {status_code_enum_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-                let http_status_code_token_stream = status_code_attribute.to_http_status_code_quote();
+                let http_status_code_token_stream = status_code_attribute.to_http_status_code_token_stream();
                 match index == unique_status_codes_len_minus_one{
                     true => {
                         is_last_element_found = true;
