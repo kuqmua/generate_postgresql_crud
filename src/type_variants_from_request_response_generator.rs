@@ -18,12 +18,7 @@ pub fn type_variants_from_request_response_generator(
     eo_display_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     derive_debug_serialize_deserialize_to_schema_token_stream: &proc_macro2::TokenStream,
-    type_variants_from_request_response_syn_variants_partial: std::vec::Vec<&syn::Variant>,
-    full_additional_http_status_codes_error_variants: std::vec::Vec::<&(
-        syn::Ident,
-        proc_macro2::TokenStream,
-        std::vec::Vec::<syn::Variant>
-    )>,
+    type_variants_from_request_response_syn_variants: std::vec::Vec<&syn::Variant>,
     proc_macro_name_camel_case_ident_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
     let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
@@ -34,18 +29,6 @@ pub fn type_variants_from_request_response_generator(
     let http_status_code_token_stream = quote::quote!{http::StatusCode};
     let reqwest_header_header_map_token_stream = quote::quote!{reqwest::header::HeaderMap};
     let reqwest_error_token_stream = quote::quote!{reqwest::Error};
-    let type_variants_from_request_response_syn_variants = {
-        let mut handle = std::vec::Vec::with_capacity(type_variants_from_request_response_syn_variants_partial.len() + full_additional_http_status_codes_error_variants.len());
-        for element in &type_variants_from_request_response_syn_variants_partial {
-            handle.push(*element);
-        }
-        for element in &full_additional_http_status_codes_error_variants {
-            for element in &element.2 {
-                handle.push(element);
-            }
-        }
-        handle
-    };
     let vec_status_codes_len = type_variants_from_request_response_syn_variants.len();
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream = quote::quote! {crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
     let crate_common_api_request_unexpected_error_response_text_result_token_stream = quote::quote! {crate::common::api_request_unexpected_error::ResponseTextResult};

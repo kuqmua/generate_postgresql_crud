@@ -3024,6 +3024,38 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let type_variants_from_request_response_syn_variants = {
+            let full_additional_http_status_codes_error_variants =  {
+                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
+                for element in &common_middlewares_error_syn_variants {
+                    handle.push(element);
+                }
+                for element in &additional_http_status_codes_error_variants {
+                    handle.push(element);
+                }
+                handle
+            }; 
+            let type_variants_from_request_response_syn_variants_partial = {
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    json_body_error_syn_variants.len() +
+                    2
+                );
+                for element in &common_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &json_body_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                type_variants_from_request_response.push(&bind_query_syn_variant);
+                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
+                type_variants_from_request_response
+            };
+            generate_type_variants_from_request_response_syn_variants(
+                type_variants_from_request_response_syn_variants_partial,
+                full_additional_http_status_codes_error_variants
+            )
+        };
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
@@ -3118,32 +3150,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            }; 
-            let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
-                    common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() +
-                    2
-                );
-                for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                type_variants_from_request_response.push(&bind_query_syn_variant);
-                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
-                type_variants_from_request_response
-            };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
@@ -3164,8 +3170,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
-                type_variants_from_request_response_vec,
-                full_additional_http_status_codes_error_variants,
+                type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -3405,7 +3410,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             (status = 400, description = "BadRequest", body = [TryCreateManyResponseVariantsTvfrr400BadRequest], content_type = "application/json"),
                             (status = 500, description = "InternalServerError", body = [TryCreateManyResponseVariantsTvfrr500InternalServerError], content_type = "application/json")
                         ),
-                        request_body(content = [CreateManyPayloadElement], description = "Pet to store the database", content_type = "application/json"),
+                        // request_body(content = [CreateManyPayloadElement], description = "Pet to store the database", content_type = "application/json"),
+                        request_body(content = [#operation_payload_element_camel_case_token_stream], description = "Pet to store the database", content_type = "application/json"),
                     )]
                 }
             };
@@ -3509,6 +3515,33 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let type_variants_from_request_response_syn_variants = {
+            let full_additional_http_status_codes_error_variants =  {
+                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
+                for element in &common_middlewares_error_syn_variants {
+                    handle.push(element);
+                }
+                for element in &additional_http_status_codes_error_variants {
+                    handle.push(element);
+                }
+                handle
+            };
+            let type_variants_from_request_response_syn_variants_partial = {
+                let mut type_variants_from_request_response = std::vec::Vec::new();
+                for element in &common_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &json_body_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
+                type_variants_from_request_response
+            };
+            generate_type_variants_from_request_response_syn_variants(
+                type_variants_from_request_response_syn_variants_partial,
+                full_additional_http_status_codes_error_variants
+            )
+        };
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
@@ -3592,27 +3625,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
-            let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::new();
-                for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
-                type_variants_from_request_response
-            };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
@@ -3633,8 +3645,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
-                type_variants_from_request_response_vec,
-                full_additional_http_status_codes_error_variants,
+                type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -3924,6 +3935,53 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                    &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
+                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                        &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+                        &error_named_camel_case_stringified
+                    )
+                )
+            ]
+        );
+        let type_variants_from_request_response_syn_variants = {
+            let full_additional_http_status_codes_error_variants =  {
+                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
+                for element in &common_middlewares_error_syn_variants {
+                    handle.push(element);
+                }
+                for element in &additional_http_status_codes_error_variants {
+                    handle.push(element);
+                }
+                handle
+            };
+            let type_variants_from_request_response_syn_variants_partial = {
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    path_error_syn_variants.len() +
+                    2
+                );
+                for element in &common_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &path_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                type_variants_from_request_response.push(&failed_to_deserialize_query_string_syn_variant);
+                type_variants_from_request_response.push(&read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response
+            };
+            generate_type_variants_from_request_response_syn_variants(
+                type_variants_from_request_response_syn_variants_partial,
+                full_additional_http_status_codes_error_variants
+            )
+        };
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_token_stream
@@ -4076,47 +4134,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
-            let read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
-                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
-                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
-                            &error_named_camel_case_stringified
-                        )
-                    )
-                ]
-            );
-            let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
-                    common_error_syn_variants.len() +
-                    path_error_syn_variants.len() +
-                    2
-                );
-                for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &path_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                type_variants_from_request_response.push(&failed_to_deserialize_query_string_syn_variant);
-                type_variants_from_request_response.push(&read_one_path_try_from_read_one_path_with_serialize_deserialize_syn_variant);
-                type_variants_from_request_response
-            };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
@@ -4137,8 +4154,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
-                type_variants_from_request_response_vec,
-                full_additional_http_status_codes_error_variants,
+                type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -4414,6 +4430,58 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                    &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified),
+                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                        &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
+                        &error_named_camel_case_stringified
+                    )
+                )
+            ]
+        );
+        let type_variants_from_request_response_syn_variants = {
+            let full_additional_http_status_codes_error_variants =  {
+                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
+                for element in &common_middlewares_error_syn_variants {
+                    handle.push(element);
+                }
+                for element in &additional_http_status_codes_error_variants {
+                    handle.push(element);
+                }
+                handle
+            };
+            let type_variants_from_request_response_syn_variants_partial = {
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    json_body_error_syn_variants.len() +
+                    6
+                );
+                for element in &common_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &json_body_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &not_unique_vec_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
+                type_variants_from_request_response.push(&bind_query_syn_variant);
+                type_variants_from_request_response.push(&not_uuid_syn_variant);
+                type_variants_from_request_response.push(&read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response
+            };
+            generate_type_variants_from_request_response_syn_variants(
+                type_variants_from_request_response_syn_variants_partial,
+                full_additional_http_status_codes_error_variants
+            )
+        };
         let parameters_token_stream = {
             quote::quote!{
                 #[derive(Debug)]
@@ -4633,52 +4701,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
-            let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified),
-                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
-                            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
-                            &error_named_camel_case_stringified
-                        )
-                    )
-                ]
-            );
-            let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
-                    common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() +
-                    6
-                );
-                for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &not_unique_vec_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
-                type_variants_from_request_response.push(&bind_query_syn_variant);
-                type_variants_from_request_response.push(&not_uuid_syn_variant);
-                type_variants_from_request_response.push(&read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant);
-                type_variants_from_request_response
-            };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
@@ -4699,8 +4721,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
-                type_variants_from_request_response_vec,
-                full_additional_http_status_codes_error_variants,
+                type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -5290,6 +5311,59 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                    &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
+                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                        &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+                        &error_named_camel_case_stringified
+                    )
+                )
+            ]
+        );
+        let type_variants_from_request_response_syn_variants = {
+            let full_additional_http_status_codes_error_variants =  {
+                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
+                for element in &common_middlewares_error_syn_variants {
+                    handle.push(element);
+                }
+                for element in &additional_http_status_codes_error_variants {
+                    handle.push(element);
+                }
+                handle
+            };
+            let type_variants_from_request_response_syn_variants_partial = {
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    path_error_syn_variants.len() +
+                    json_body_error_syn_variants.len() +
+                    4
+                );
+                for element in &common_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &path_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &json_body_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                type_variants_from_request_response.push(&bind_query_syn_variant);
+                type_variants_from_request_response.push(&no_payload_fields_syn_variant);
+                type_variants_from_request_response.push(&update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
+                type_variants_from_request_response
+            };
+            generate_type_variants_from_request_response_syn_variants(
+                type_variants_from_request_response_syn_variants_partial,
+                full_additional_http_status_codes_error_variants
+            )
+        };
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_token_stream
@@ -5427,53 +5501,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
-            let update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
-                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
-                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
-                            &error_named_camel_case_stringified
-                        )
-                    )
-                ]
-            );
-            let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
-                    common_error_syn_variants.len() +
-                    path_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() +
-                    4
-                );
-                for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &path_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                type_variants_from_request_response.push(&bind_query_syn_variant);
-                type_variants_from_request_response.push(&no_payload_fields_syn_variant);
-                type_variants_from_request_response.push(&update_one_path_try_from_update_one_path_with_serialize_deserialize_syn_variant);
-                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
-                type_variants_from_request_response
-            };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
@@ -5494,8 +5521,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
-                type_variants_from_request_response_vec,
-                full_additional_http_status_codes_error_variants,
+                type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -5859,6 +5885,61 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                    &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified),
+                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                        &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified,
+                        &error_named_camel_case_stringified
+                    )
+                )
+            ]
+        );
+        let type_variants_from_request_response_syn_variants = {
+            let full_additional_http_status_codes_error_variants =  {
+                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
+                for element in &common_middlewares_error_syn_variants {
+                    handle.push(element);
+                }
+                for element in &additional_http_status_codes_error_variants {
+                    handle.push(element);
+                }
+                handle
+            };
+            let type_variants_from_request_response_syn_variants_partial = {
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    json_body_error_syn_variants.len() +
+                    10
+                );
+                for element in &common_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &json_body_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
+                type_variants_from_request_response.push(&bind_query_syn_variant);
+                type_variants_from_request_response.push(&checked_add_syn_variant);
+                type_variants_from_request_response.push(&no_payload_fields_syn_variant);
+                type_variants_from_request_response.push(&commit_failed_syn_variant);
+                type_variants_from_request_response.push(&non_existing_primary_keys_syn_variant);
+                type_variants_from_request_response.push(&primary_key_from_row_and_failed_rollback_syn_variant);
+                type_variants_from_request_response.push(&non_existing_primary_keys_and_failed_rollback_syn_variant);
+                type_variants_from_request_response.push(&query_and_rollback_failed_syn_variant);
+                type_variants_from_request_response.push(&update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response
+            };
+            generate_type_variants_from_request_response_syn_variants(
+                type_variants_from_request_response_syn_variants_partial,
+                full_additional_http_status_codes_error_variants
+            )
+        };
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_token_stream
@@ -6050,55 +6131,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
-            let update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified,
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified),
-                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
-                            &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified,
-                            &error_named_camel_case_stringified
-                        )
-                    )
-                ]
-            );
-            let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
-                    common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() +
-                    10
-                );
-                for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
-                type_variants_from_request_response.push(&bind_query_syn_variant);
-                type_variants_from_request_response.push(&checked_add_syn_variant);
-                type_variants_from_request_response.push(&no_payload_fields_syn_variant);
-                type_variants_from_request_response.push(&commit_failed_syn_variant);
-                type_variants_from_request_response.push(&non_existing_primary_keys_syn_variant);
-                type_variants_from_request_response.push(&primary_key_from_row_and_failed_rollback_syn_variant);
-                type_variants_from_request_response.push(&non_existing_primary_keys_and_failed_rollback_syn_variant);
-                type_variants_from_request_response.push(&query_and_rollback_failed_syn_variant);
-                type_variants_from_request_response.push(&update_many_payload_element_try_from_update_many_payload_element_with_serialize_deserialize_syn_variant);
-                type_variants_from_request_response
-            };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
@@ -6119,8 +6151,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
-                type_variants_from_request_response_vec,
-                full_additional_http_status_codes_error_variants,
+                type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -6519,6 +6550,54 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                    &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
+                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                        &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
+                        &error_named_camel_case_stringified
+                    )
+                )
+            ]
+        );
+        let type_variants_from_request_response_syn_variants = {
+            let full_additional_http_status_codes_error_variants =  {
+                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
+                for element in &common_middlewares_error_syn_variants {
+                    handle.push(element);
+                }
+                for element in &additional_http_status_codes_error_variants {
+                    handle.push(element);
+                }
+                handle
+            };
+            let type_variants_from_request_response_syn_variants_partial = {
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    path_error_syn_variants.len() + 
+                    2
+                );
+                for element in &common_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &path_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                //todo why no bind query error here?
+                type_variants_from_request_response.push(&delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
+                type_variants_from_request_response
+            };
+            generate_type_variants_from_request_response_syn_variants(
+                type_variants_from_request_response_syn_variants_partial,
+                full_additional_http_status_codes_error_variants
+            )
+        };
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_token_stream
@@ -6630,48 +6709,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
-            let delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified),
-                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
-                            &operation_path_try_from_operation_path_with_serialize_deserialize_camel_case_stringified,
-                            &error_named_camel_case_stringified
-                        )
-                    )
-                ]
-            );
-            let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
-                    common_error_syn_variants.len() +
-                    path_error_syn_variants.len() + 
-                    2
-                );
-                for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &path_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                //todo why no bind query error here?
-                type_variants_from_request_response.push(&delete_one_path_try_from_delete_one_path_with_serialize_deserialize_syn_variant);
-                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
-                type_variants_from_request_response
-            };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
@@ -6692,8 +6729,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
-                type_variants_from_request_response_vec,
-                full_additional_http_status_codes_error_variants,
+                type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -6970,6 +7006,65 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
+            proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
+            &code_occurence_field,
+            vec![
+                (
+                    proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
+                    &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified),
+                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
+                        &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
+                        &error_named_camel_case_stringified
+                    )
+                )
+            ]
+        );
+        let type_variants_from_request_response_syn_variants = {
+            let full_additional_http_status_codes_error_variants =  {
+                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
+                for element in &common_middlewares_error_syn_variants {
+                    handle.push(element);
+                }
+                for element in &additional_http_status_codes_error_variants {
+                    handle.push(element);
+                }
+                handle
+            };
+            let type_variants_from_request_response_syn_variants_partial = {
+                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
+                    common_error_syn_variants.len() +
+                    json_body_error_syn_variants.len() + 
+                    13
+                );
+                for element in &common_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &json_body_error_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                for element in &not_unique_vec_syn_variants {
+                    type_variants_from_request_response.push(element);
+                }
+                type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
+                type_variants_from_request_response.push(&bind_query_syn_variant);
+                type_variants_from_request_response.push(&no_payload_fields_syn_variant);
+                type_variants_from_request_response.push(&no_payload_parameters_syn_variant);
+                type_variants_from_request_response.push(&non_existing_primary_keys_syn_variant);
+                type_variants_from_request_response.push(&non_existing_primary_keys_and_failed_rollback_syn_variant);
+                type_variants_from_request_response.push(&primary_key_from_row_and_failed_rollback_syn_variant);
+                type_variants_from_request_response.push(&commit_failed_syn_variant);
+                type_variants_from_request_response.push(&query_and_rollback_failed_syn_variant);
+                type_variants_from_request_response.push(&delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
+                type_variants_from_request_response
+            };
+            generate_type_variants_from_request_response_syn_variants(
+                type_variants_from_request_response_syn_variants_partial,
+                full_additional_http_status_codes_error_variants
+            )
+        };
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_token_stream
@@ -7169,59 +7264,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_camel_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
-            let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
-                        &proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified),
-                        generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_camel_case(
-                            &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
-                            &error_named_camel_case_stringified
-                        )
-                    )
-                ]
-            );
-            let type_variants_from_request_response_vec = {
-                let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
-                    common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() + 
-                    13
-                );
-                for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &not_unique_vec_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
-                type_variants_from_request_response.push(&bind_query_syn_variant);
-                type_variants_from_request_response.push(&no_payload_fields_syn_variant);
-                type_variants_from_request_response.push(&no_payload_parameters_syn_variant);
-                type_variants_from_request_response.push(&non_existing_primary_keys_syn_variant);
-                type_variants_from_request_response.push(&non_existing_primary_keys_and_failed_rollback_syn_variant);
-                type_variants_from_request_response.push(&primary_key_from_row_and_failed_rollback_syn_variant);
-                type_variants_from_request_response.push(&commit_failed_syn_variant);
-                type_variants_from_request_response.push(&query_and_rollback_failed_syn_variant);
-                type_variants_from_request_response.push(&delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant);
-                type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
-                type_variants_from_request_response
-            };
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
                 &desirable_token_stream,
@@ -7242,8 +7284,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &eo_display_with_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_token_stream,
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
-                type_variants_from_request_response_vec,
-                full_additional_http_status_codes_error_variants,
+                type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
             )
         };
@@ -9350,4 +9391,24 @@ fn generate_try_operation_token_stream(
             }
         }
     }
+}
+
+fn generate_type_variants_from_request_response_syn_variants<'a>(
+    type_variants_from_request_response_syn_variants_partial: std::vec::Vec<&'a syn::Variant>,
+    full_additional_http_status_codes_error_variants: std::vec::Vec::<&'a (
+        syn::Ident,
+        proc_macro2::TokenStream,
+        std::vec::Vec::<syn::Variant>
+    )>,
+) -> std::vec::Vec<&'a syn::Variant> {
+    let mut handle = std::vec::Vec::with_capacity(type_variants_from_request_response_syn_variants_partial.len() + full_additional_http_status_codes_error_variants.len());
+    for element in &type_variants_from_request_response_syn_variants_partial {
+        handle.push(*element);
+    }
+    for element in &full_additional_http_status_codes_error_variants {
+        for element in &element.2 {
+            handle.push(element);
+        }
+    }
+    handle
 }
