@@ -2486,8 +2486,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             crate::global_variables::compile_time::project_git_info::PROJECT_GIT_INFO.project_commit,
         )
     };
+    let application_json_token_stream = quote::quote!{"application/json"};
     let content_type_application_json_header_addition_token_stream = quote::quote!{
-        .header(reqwest::header::CONTENT_TYPE, "application/json")
+        .header(reqwest::header::CONTENT_TYPE, #application_json_token_stream)
     };
     let impl_axum_response_into_response_token_stream = quote::quote!{impl axum::response::IntoResponse};
     let crate_server_routes_helpers_path_extractor_error_path_value_result_extractor_token_stream = quote::quote!{crate::server::routes::helpers::path_extractor_error::PathValueResultExtractor};
@@ -3382,6 +3383,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
+            let responses_token_stream = ["f"].iter().map(|element|{
+                let status_token_stream = quote::quote!{};
+                let description_token_stream = quote::quote!{};
+                let body_token_stream = quote::quote!{};
+                quote::quote!{
+                    (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = &application_json_token_stream)
+                }
+            }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
             let swagger_open_api_token_stream = {
                 quote::quote!{
                     #[utoipa::path(
