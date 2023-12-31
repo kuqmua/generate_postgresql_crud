@@ -62,6 +62,7 @@ mod extract_syn_variants_from_proc_macro_attribute;
 //todo maybe add unnest sql types?
 //todo maybe add unnest to filter parameters if its array ?
 //todo swagger ui https://github.com/juhaku/utoipa/blob/master/examples/todo-axum/src/main.rs
+//todo test #[derive(generate_postgresql_crud::GeneratePostgresqlCrud)] for few structs in one module - will it work? fix if not will not work
 
 #[proc_macro_attribute]
 pub fn create_many_additional_http_status_codes_error_variants(
