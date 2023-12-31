@@ -29,7 +29,7 @@ pub fn type_variants_from_request_response_generator(
     let http_status_code_token_stream = quote::quote!{http::StatusCode};
     let reqwest_header_header_map_token_stream = quote::quote!{reqwest::header::HeaderMap};
     let reqwest_error_token_stream = quote::quote!{reqwest::Error};
-    let vec_status_codes_len = type_variants_from_request_response_syn_variants.len();
+    let type_variants_from_request_response_syn_variants_len = type_variants_from_request_response_syn_variants.len();
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream = quote::quote! {crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
     let crate_common_api_request_unexpected_error_response_text_result_token_stream = quote::quote! {crate::common::api_request_unexpected_error::ResponseTextResult};
     let try_operation_token_stream = {
@@ -280,7 +280,7 @@ pub fn type_variants_from_request_response_generator(
                 std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<(
                     &syn::Ident,
                     std::vec::Vec<(syn::Ident, proc_macro2::TokenStream)>,
-                )>>::with_capacity(vec_status_codes_len),
+                )>>::with_capacity(type_variants_from_request_response_syn_variants_len),
                 |mut acc, element| {
                     let variant_ident = &element.ident;
                     let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
@@ -468,7 +468,7 @@ pub fn type_variants_from_request_response_generator(
                 std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<(
                     &syn::Ident,
                     std::vec::Vec<(syn::Ident, proc_macro2::TokenStream)>,
-                )>>::with_capacity(vec_status_codes_len),
+                )>>::with_capacity(type_variants_from_request_response_syn_variants_len),
                 |mut acc, element| {
                     let variant_ident = &element.ident;
                     let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
