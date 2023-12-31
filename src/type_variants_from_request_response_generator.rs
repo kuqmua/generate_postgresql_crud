@@ -20,9 +20,9 @@ pub fn type_variants_from_request_response_generator(
     derive_debug_serialize_deserialize_to_schema_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response_syn_variants: std::vec::Vec<&syn::Variant>,
     proc_macro_name_camel_case_ident_stringified: &std::string::String,
+    code_occurence_camel_case_stringified: &std::string::String,
+    code_occurence_lower_case_stringified: &std::string::String,
 ) -> proc_macro2::TokenStream {
-    let code_occurence_camel_case = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
-    let code_occurence_lower_case = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case).to_lowercase();
     let axum_http_status_code_quote_token_stream = desirable_attribute.to_axum_http_status_code_quote();
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_quote();
     let axum_http_status_code_token_stream = quote::quote!{axum::http::StatusCode};
@@ -46,7 +46,7 @@ pub fn type_variants_from_request_response_generator(
                     "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
                     proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                 ));
-                let error_occurence_attribute = match field_ident == code_occurence_lower_case {
+                let error_occurence_attribute = match field_ident == code_occurence_lower_case_stringified {
                     true => quote::quote! {},
                     false => {
                         let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
@@ -110,7 +110,7 @@ pub fn type_variants_from_request_response_generator(
                     "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
                     proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                 ));
-                let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
+                let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case_stringified {
                     true => {
                         let code_occurence_type_token_stream = {
                             if let syn::Type::Path(type_path) = &field.ty {
@@ -118,10 +118,10 @@ pub fn type_variants_from_request_response_generator(
                                 let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
                                 .fold(String::from(""), |mut acc, path_segment| {
                                     let path_segment_ident = &path_segment.ident;
-                                    match *path_segment_ident == code_occurence_camel_case {
+                                    match *path_segment_ident == code_occurence_camel_case_stringified {
                                         true => {
                                             if code_occurence_type_repeat_checker {
-                                                panic!("{proc_macro_name_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case} inside type path");
+                                                panic!("{proc_macro_name_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case_stringified} inside type path");
                                             }
                                             acc.push_str(&path_segment_ident.to_string());
                                             code_occurence_type_repeat_checker = true;
@@ -131,7 +131,7 @@ pub fn type_variants_from_request_response_generator(
                                     acc
                                 });
                                 if !code_occurence_type_repeat_checker {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} no {code_occurence_camel_case} named field");
+                                    panic!("{proc_macro_name_camel_case_ident_stringified} no {code_occurence_camel_case_stringified} named field");
                                 }
                                 code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
                                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -139,7 +139,7 @@ pub fn type_variants_from_request_response_generator(
                             else {
                                 let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
                                 panic!(
-                                    "{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case} {} {syn_type_path_stringified}",
+                                    "{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
                                     proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
                                 );
                             }
@@ -296,7 +296,7 @@ pub fn type_variants_from_request_response_generator(
                             "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
                             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                         ));
-                        let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
+                        let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case_stringified {
                             true => {
                                 let code_occurence_type_token_stream = {
                                     if let syn::Type::Path(type_path) = &field.ty {
@@ -304,10 +304,10 @@ pub fn type_variants_from_request_response_generator(
                                         let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
                                         .fold(String::from(""), |mut acc, path_segment| {
                                             let path_segment_ident = &path_segment.ident;
-                                            match *path_segment_ident == code_occurence_camel_case {
+                                            match *path_segment_ident == code_occurence_camel_case_stringified {
                                                 true => {
                                                     if code_occurence_type_repeat_checker {
-                                                        panic!("{proc_macro_name_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case} inside type path");
+                                                        panic!("{proc_macro_name_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case_stringified} inside type path");
                                                     }
                                                     acc.push_str(&path_segment_ident.to_string());
                                                     code_occurence_type_repeat_checker = true;
@@ -317,7 +317,7 @@ pub fn type_variants_from_request_response_generator(
                                             acc
                                         });
                                         if !code_occurence_type_repeat_checker {
-                                            panic!("{proc_macro_name_camel_case_ident_stringified} no {code_occurence_camel_case} named field");
+                                            panic!("{proc_macro_name_camel_case_ident_stringified} no {code_occurence_camel_case_stringified} named field");
                                         }
                                         code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
                                         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -325,7 +325,7 @@ pub fn type_variants_from_request_response_generator(
                                     else {
                                         let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
                                         panic!(
-                                            "{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case} {} {syn_type_path_stringified}",
+                                            "{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
                                             proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
                                         );
                                     }
@@ -484,7 +484,7 @@ pub fn type_variants_from_request_response_generator(
                             "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
                             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                         ));
-                        let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
+                        let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case_stringified {
                             true => {
                                 let code_occurence_type_token_stream = {
                                     if let syn::Type::Path(type_path) = &field.ty {
@@ -492,10 +492,10 @@ pub fn type_variants_from_request_response_generator(
                                         let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
                                         .fold(String::from(""), |mut acc, path_segment| {
                                             let path_segment_ident = &path_segment.ident;
-                                            match *path_segment_ident == code_occurence_camel_case {
+                                            match *path_segment_ident == code_occurence_camel_case_stringified {
                                                 true => {
                                                     if code_occurence_type_repeat_checker {
-                                                        panic!("{proc_macro_name_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case} inside type path");
+                                                        panic!("{proc_macro_name_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case_stringified} inside type path");
                                                     }
                                                     acc.push_str(&path_segment_ident.to_string());
                                                     code_occurence_type_repeat_checker = true;
@@ -505,7 +505,7 @@ pub fn type_variants_from_request_response_generator(
                                             acc
                                         });
                                         if !code_occurence_type_repeat_checker {
-                                            panic!("{proc_macro_name_camel_case_ident_stringified} no {code_occurence_camel_case} named field");
+                                            panic!("{proc_macro_name_camel_case_ident_stringified} no {code_occurence_camel_case_stringified} named field");
                                         }
                                         code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
                                         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -513,7 +513,7 @@ pub fn type_variants_from_request_response_generator(
                                     else {
                                         let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
                                         panic!(
-                                            "{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case} {} {syn_type_path_stringified}",
+                                            "{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
                                             proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
                                         );
                                     }

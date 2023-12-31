@@ -493,14 +493,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             })
             .collect::<std::vec::Vec<proc_macro2::TokenStream>>()
     };
-    let code_occurence_camel_case_stringified = "CodeOccurence";
+    let code_occurence_camel_case_stringified = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_CAMEL_CASE);
     let code_occurence_camel_case_token_stream = code_occurence_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {code_occurence_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-    let code_occurence_lower_case_token_stream = {
-        let code_occurence_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case_stringified);
-        code_occurence_lower_case_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
+    let code_occurence_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&code_occurence_camel_case_stringified);
+    let code_occurence_lower_case_token_stream = code_occurence_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
     let crate_common_code_occurence_code_occurence_token_stream = quote::quote!{crate::common::#code_occurence_lower_case_token_stream::#code_occurence_camel_case_token_stream};
     let code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream = quote::quote!{
         #code_occurence_lower_case_token_stream: #crate_common_code_occurence_code_occurence_token_stream
@@ -3056,6 +3054,123 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 full_additional_http_status_codes_error_variants
             )
         };
+        println!("{:#?}", type_variants_from_request_response_syn_variants);
+        // let status_code_enums_with_from_impls_logic_token_stream = type_variants_from_request_response_syn_variants.iter().fold(
+        //         std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<(
+        //             &syn::Ident,
+        //             std::vec::Vec<(syn::Ident, proc_macro2::TokenStream)>,
+        //         )>>::with_capacity(vec_status_codes_len),
+        //         |mut acc, element| {
+        //             let variant_ident = &element.ident;
+        //             let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
+        //             .unwrap_or_else(|e| {panic!("{proc_macro_name_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
+        //             let fields_named = if let syn::Fields::Named(fields_named) = &element.fields {
+        //                 fields_named
+        //             }
+        //             else {
+        //                 panic!("{proc_macro_name_camel_case_ident_stringified} expected fields would be named");
+        //             };
+        //             let error_variant_fields = fields_named.named.iter().map(|field|{
+        //                 let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
+        //                     "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
+        //                     proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+        //                 ));
+        //                 let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case {
+        //                     true => {
+        //                         let code_occurence_type_token_stream = {
+        //                             if let syn::Type::Path(type_path) = &field.ty {
+        //                                 let mut code_occurence_type_repeat_checker = false;
+        //                                 let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
+        //                                 .fold(String::from(""), |mut acc, path_segment| {
+        //                                     let path_segment_ident = &path_segment.ident;
+        //                                     match *path_segment_ident == code_occurence_camel_case {
+        //                                         true => {
+        //                                             if code_occurence_type_repeat_checker {
+        //                                                 panic!("{proc_macro_name_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case} inside type path");
+        //                                             }
+        //                                             acc.push_str(&path_segment_ident.to_string());
+        //                                             code_occurence_type_repeat_checker = true;
+        //                                         },
+        //                                         false => acc.push_str(&format!("{path_segment_ident}::")),
+        //                                     }
+        //                                     acc
+        //                                 });
+        //                                 if !code_occurence_type_repeat_checker {
+        //                                     panic!("{proc_macro_name_camel_case_ident_stringified} no {code_occurence_camel_case} named field");
+        //                                 }
+        //                                 code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
+        //                                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        //                             }
+        //                             else {
+        //                                 let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
+        //                                 panic!(
+        //                                     "{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case} {} {syn_type_path_stringified}",
+        //                                     proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
+        //                                 );
+        //                             }
+        //                         };
+        //                         code_occurence_type_token_stream
+        //                     },
+        //                     false => {
+        //                         let attribute = {
+        //                             let mut option_attribute = None;
+        //                             field.attrs.iter().for_each(|attr|{
+        //                                 if let true = attr.path.segments.len() == 1 {
+        //                                     let error_message = format!("{proc_macro_name_camel_case_ident_stringified} two or more supported attributes!");
+        //                                     let attr_ident = match attr.path.segments.iter().next() {
+        //                                         Some(path_segment) => &path_segment.ident,
+        //                                         None => panic!("attr.path.segments.iter().next() is None"),
+        //                                     };
+        //                                     match {
+        //                                         use std::str::FromStr;
+        //                                         proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&attr_ident.to_string())
+        //                                     } {
+        //                                         Ok(value) => {
+        //                                             if let true = option_attribute.is_some() {
+        //                                                 panic!("{error_message}");
+        //                                             }
+        //                                             else {
+        //                                                 option_attribute = Some(value);
+        //                                             }
+        //                                         },
+        //                                         Err(_) => ()//other attributes are not for this proc_macro
+        //                                     }
+        //                                 }//other attributes are not for this proc_macro
+        //                             });
+        //                             option_attribute.unwrap_or_else(|| panic!(
+        //                                 "{proc_macro_name_camel_case_ident_stringified} option attribute {}",
+        //                                 proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
+        //                             ))
+        //                         };
+        //                         let supported_container = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_supported_container(
+        //                             &field,
+        //                             &proc_macro_name_camel_case_ident_stringified,
+        //                         );
+        //                         proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_field_type_with_serialize_deserialize_version(
+        //                             attribute,
+        //                             supported_container,
+        //                             &proc_macro_name_camel_case_ident_stringified,
+        //                         )
+        //                     },
+        //                 };
+        //                 (field_ident.clone(), field_type_with_serialize_deserialize)
+        //             }).collect::<Vec<(syn::Ident, proc_macro2::TokenStream)>>();
+        //             let error_variant = (
+        //                 variant_ident,
+        //                 error_variant_fields
+        //             );
+        //             match acc.get_mut(&error_variant_attribute) {
+        //                 Some(value) => {
+        //                     value.push(error_variant);
+        //                 },
+        //                 None => {
+        //                     acc.insert(error_variant_attribute, vec![error_variant]);
+        //                 }
+        //             }
+        //             acc
+        //         },
+        //     );
+        //     println!("{}", status_code_enums_with_from_impls_logic_token_stream.len());
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
@@ -3172,6 +3287,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
+                &code_occurence_camel_case_stringified,
+                &code_occurence_lower_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -3647,6 +3764,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
+                &code_occurence_camel_case_stringified,
+                &code_occurence_lower_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -4156,6 +4275,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
+                &code_occurence_camel_case_stringified,
+                &code_occurence_lower_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -4723,6 +4844,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
+                &code_occurence_camel_case_stringified,
+                &code_occurence_lower_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -5523,6 +5646,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
+                &code_occurence_camel_case_stringified,
+                &code_occurence_lower_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -6153,6 +6278,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
+                &code_occurence_camel_case_stringified,
+                &code_occurence_lower_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -6731,6 +6858,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
+                &code_occurence_camel_case_stringified,
+                &code_occurence_lower_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -7286,6 +7415,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &derive_debug_serialize_deserialize_to_schema_token_stream,
                 type_variants_from_request_response_syn_variants,
                 &proc_macro_name_camel_case_ident_stringified,
+                &code_occurence_camel_case_stringified,
+                &code_occurence_lower_case_stringified,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
