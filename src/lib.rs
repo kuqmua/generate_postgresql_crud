@@ -2997,12 +2997,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             parameters_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let operation_payload_element_camel_case_token_stream = generate_operation_payload_element_camel_case_token_stream(
+        let operation_payload_camel_case_token_stream = generate_operation_payload_camel_case_token_stream(
             &operation_name_camel_case_stringified,
-            &payload_element_camel_case_stringified,
+            payload_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let operation_payload_camel_case_token_stream = quote::quote!{std::vec::Vec<#operation_payload_element_camel_case_token_stream>};
         let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
@@ -3078,21 +3077,33 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{parameters_token_stream}");
         let payload_token_stream = {
-            let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
-                let field_ident = element.field.ident.clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    }); 
-                let field_type = &element.field.ty;
+            let operation_payload_element_camel_case_token_stream = generate_operation_payload_element_camel_case_token_stream(
+                &operation_name_camel_case_stringified,
+                &payload_element_camel_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
+            let operation_payload_element_token_stream = {
+                let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
+                    let field_ident = element.field.ident.clone()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                        }); 
+                    let field_type = &element.field.ty;
+                    quote::quote!{
+                        pub #field_ident: #field_type
+                    }
+                });
                 quote::quote!{
-                    pub #field_ident: #field_type
+                    #derive_debug_serialize_deserialize_to_schema_token_stream
+                    pub struct #operation_payload_element_camel_case_token_stream {
+                        #(#fields_with_excluded_primary_key_token_stream),*
+                    }
                 }
-            });
+            };
             quote::quote!{
+                #operation_payload_element_token_stream
                 #derive_debug_serialize_deserialize_to_schema_token_stream
-                pub struct #operation_payload_element_camel_case_token_stream {
-                    #(#fields_with_excluded_primary_key_token_stream),*
-                }
+                pub struct #operation_payload_camel_case_token_stream(pub std::vec::Vec<#operation_payload_element_camel_case_token_stream>);
             }
         };
         // println!("{payload_token_stream}");
@@ -3331,10 +3342,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     });
                     quote::quote!{
                         let mut #query_name_token_stream = #sqlx_query_sqlx_postgres_token_stream(&#query_string_name_token_stream);
-                        let #current_vec_len_name_token_stream = #parameters_lower_case_token_stream.#payload_lower_case_token_stream.len();
+                        let #current_vec_len_name_token_stream = #parameters_lower_case_token_stream.#payload_lower_case_token_stream.0.len();
                         let (
                             #(#column_vecs_token_stream),*
-                        ) = #parameters_lower_case_token_stream.#payload_lower_case_token_stream.into_iter().fold((
+                        ) = #parameters_lower_case_token_stream.#payload_lower_case_token_stream.0.into_iter().fold((
                             #(#column_vecs_with_capacity_token_stream),*
                         ), |mut #acc_name_token_stream, #element_name_token_stream| {
                             #(#columns_acc_push_elements_token_stream)*
@@ -3417,7 +3428,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                &operation_payload_element_camel_case_token_stream,//todo naming
+                &operation_payload_camel_case_token_stream,
                 &Method::Post,
             );
             quote::quote!{
@@ -9548,7 +9559,7 @@ fn generate_swagger_open_api_token_stream(
     response_variants_camel_case_stringified: &str,
     application_json_quotes_token_stream: &proc_macro2::TokenStream,
     table_name_quotes_token_stream: &proc_macro2::TokenStream,
-    operation_payload_element_camel_case_token_stream: &proc_macro2::TokenStream,
+    operation_payload_camel_case_token_stream: &proc_macro2::TokenStream,
     method: &Method,
 ) -> proc_macro2::TokenStream {
     let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
@@ -9582,7 +9593,7 @@ fn generate_swagger_open_api_token_stream(
                 #(#responses_token_stream),*
             ),
             request_body(
-                content = [#operation_payload_element_camel_case_token_stream], 
+                content = #operation_payload_camel_case_token_stream, 
                 description = "Pet to store the database", 
                 content_type = #application_json_quotes_token_stream
             ),
