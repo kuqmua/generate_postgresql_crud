@@ -7945,6 +7945,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //     &common_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
+    //todo pub and private impl quote group
     let gen = quote::quote! {
         #common_token_stream
 
