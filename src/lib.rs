@@ -3408,44 +3408,60 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
-            let swagger_open_api_token_stream = {
-                let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
-                    &table_name_stringified,
-                    &operation_name_lower_case_stringified,
-                    &proc_macro_name_camel_case_ident_stringified
-                );
-                let responses_token_stream = unique_attributes.iter().map(|element|{
-                    let status_token_stream = element.to_status_code_token_stream();
-                    let description_token_stream = element.to_status_code_description_token_stream();
-                    let body_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
-                        &ident,
-                        &try_camel_case_stringified,
-                        &operation_name_camel_case_stringified,
-                        &response_variants_camel_case_stringified,
-                        &element,
-                        &proc_macro_name_camel_case_ident_stringified
-                    );
-                    quote::quote!{
-                        (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = #application_json_quotes_token_stream)
-                    }
-                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                quote::quote!{
-                    #[utoipa::path(
-                        post,
-                        path = #swagger_url_path_quotes_token_stream,
-                        operation_id = #swagger_url_path_quotes_token_stream,
-                        tag = #table_name_quotes_token_stream,
-                        responses(
-                            #(#responses_token_stream),*
-                        ),
-                        request_body(
-                            content = [#operation_payload_element_camel_case_token_stream], 
-                            description = "Pet to store the database", 
-                            content_type = #application_json_quotes_token_stream
-                        ),
-                    )]
-                }
-            };
+            let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
+                &table_name_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+                &unique_attributes,
+                &ident,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
+                &application_json_quotes_token_stream,
+                &table_name_quotes_token_stream,
+                &operation_payload_element_camel_case_token_stream,
+                &Method::Post,
+            );
+            
+            
+            // {
+            //     let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
+            //         &table_name_stringified,
+            //         &operation_name_lower_case_stringified,
+            //         &proc_macro_name_camel_case_ident_stringified
+            //     );
+            //     let responses_token_stream = unique_attributes.iter().map(|element|{
+            //         let status_token_stream = element.to_status_code_token_stream();
+            //         let description_token_stream = element.to_status_code_description_token_stream();
+            //         let body_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+            //             &ident,
+            //             &try_camel_case_stringified,
+            //             &operation_name_camel_case_stringified,
+            //             &response_variants_camel_case_stringified,
+            //             &element,
+            //             &proc_macro_name_camel_case_ident_stringified
+            //         );
+            //         quote::quote!{
+            //             (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = #application_json_quotes_token_stream)
+            //         }
+            //     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+            //     quote::quote!{
+            //         #[utoipa::path(
+            //             post,
+            //             path = #swagger_url_path_quotes_token_stream,
+            //             operation_id = #swagger_url_path_quotes_token_stream,
+            //             tag = #table_name_quotes_token_stream,
+            //             responses(
+            //                 #(#responses_token_stream),*
+            //             ),
+            //             request_body(
+            //                 content = [#operation_payload_element_camel_case_token_stream], 
+            //                 description = "Pet to store the database", 
+            //                 content_type = #application_json_quotes_token_stream
+            //             ),
+            //         )]
+            //     }
+            // };
             quote::quote!{
                 #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream(
@@ -9504,7 +9520,7 @@ fn generate_swagger_open_api_token_stream(
     table_name_stringified: &str,
     operation_name_lower_case_stringified: &str,
     proc_macro_name_camel_case_ident_stringified: &str,
-    unique_attributes: &[&proc_macro_helpers::attribute::Attribute],
+    unique_attributes: &std::vec::Vec<proc_macro_helpers::attribute::Attribute>,
     ident: &syn::Ident,
     try_camel_case_stringified: &str,
     operation_name_camel_case_stringified: &str,
@@ -9512,6 +9528,7 @@ fn generate_swagger_open_api_token_stream(
     application_json_quotes_token_stream: &proc_macro2::TokenStream,
     table_name_quotes_token_stream: &proc_macro2::TokenStream,
     operation_payload_element_camel_case_token_stream: &proc_macro2::TokenStream,
+    method: &Method,
 ) -> proc_macro2::TokenStream {
     let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
         &table_name_stringified,
@@ -9533,9 +9550,10 @@ fn generate_swagger_open_api_token_stream(
             (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = #application_json_quotes_token_stream)
         }
     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    let method_token_stream = method.to_token_stream();
     quote::quote!{
         #[utoipa::path(
-            post,
+            #method_token_stream,
             path = #swagger_url_path_quotes_token_stream,
             operation_id = #swagger_url_path_quotes_token_stream,
             tag = #table_name_quotes_token_stream,
@@ -9548,5 +9566,23 @@ fn generate_swagger_open_api_token_stream(
                 content_type = #application_json_quotes_token_stream
             ),
         )]
+    }
+}
+
+enum Method {
+    Get,
+    Post,
+    Patch,
+    Delete
+}
+
+impl Method {
+    fn to_token_stream(&self) -> proc_macro2::TokenStream {
+        match self {
+            Self::Get => quote::quote!{get},
+            Self::Post => quote::quote!{post},
+            Self::Patch => quote::quote!{patch},
+            Self::Delete => quote::quote!{delete},
+        }
     }
 }
