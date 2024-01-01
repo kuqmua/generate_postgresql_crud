@@ -3054,22 +3054,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         };
         let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
-        let unique_attributes = {
-            let mut value = std::vec::Vec::with_capacity(type_variants_from_request_response_syn_variants.len());
-            value.push(desirable_attribute.clone());
-            type_variants_from_request_response_syn_variants.iter().for_each(|element|{
-                let variant_ident = &element.ident;
-                let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
-                .unwrap_or_else(|e| {panic!("{proc_macro_name_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
-                match value.contains(&error_variant_attribute) {
-                    true => (),
-                    false => {
-                        value.push(error_variant_attribute);
-                    }
-                }
-            });
-            value
-        };
+        let unique_attributes = generate_unique_attributes(
+            &desirable_attribute,
+            &type_variants_from_request_response_syn_variants,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
@@ -3422,46 +3411,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_payload_element_camel_case_token_stream,
                 &Method::Post,
             );
-            
-            
-            // {
-            //     let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
-            //         &table_name_stringified,
-            //         &operation_name_lower_case_stringified,
-            //         &proc_macro_name_camel_case_ident_stringified
-            //     );
-            //     let responses_token_stream = unique_attributes.iter().map(|element|{
-            //         let status_token_stream = element.to_status_code_token_stream();
-            //         let description_token_stream = element.to_status_code_description_token_stream();
-            //         let body_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
-            //             &ident,
-            //             &try_camel_case_stringified,
-            //             &operation_name_camel_case_stringified,
-            //             &response_variants_camel_case_stringified,
-            //             &element,
-            //             &proc_macro_name_camel_case_ident_stringified
-            //         );
-            //         quote::quote!{
-            //             (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = #application_json_quotes_token_stream)
-            //         }
-            //     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-            //     quote::quote!{
-            //         #[utoipa::path(
-            //             post,
-            //             path = #swagger_url_path_quotes_token_stream,
-            //             operation_id = #swagger_url_path_quotes_token_stream,
-            //             tag = #table_name_quotes_token_stream,
-            //             responses(
-            //                 #(#responses_token_stream),*
-            //             ),
-            //             request_body(
-            //                 content = [#operation_payload_element_camel_case_token_stream], 
-            //                 description = "Pet to store the database", 
-            //                 content_type = #application_json_quotes_token_stream
-            //             ),
-            //         )]
-            //     }
-            // };
             quote::quote!{
                 #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream(
@@ -9514,6 +9463,27 @@ fn generate_type_variants_from_request_response_syn_variants<'a>(
         }
     }
     handle
+}
+
+fn generate_unique_attributes(
+    desirable_attribute: &proc_macro_helpers::attribute::Attribute,
+    type_variants_from_request_response_syn_variants: &std::vec::Vec<&syn::Variant>,
+    proc_macro_name_camel_case_ident_stringified: &str,
+) -> std::vec::Vec<proc_macro_helpers::attribute::Attribute> {
+    let mut value = std::vec::Vec::with_capacity(type_variants_from_request_response_syn_variants.len());
+    value.push(desirable_attribute.clone());
+    type_variants_from_request_response_syn_variants.iter().for_each(|element|{
+        let variant_ident = &element.ident;
+        let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
+        .unwrap_or_else(|e| {panic!("{proc_macro_name_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
+        match value.contains(&error_variant_attribute) {
+            true => (),
+            false => {
+                value.push(error_variant_attribute);
+            }
+        }
+    });
+    value
 }
 
 fn generate_swagger_open_api_token_stream(
