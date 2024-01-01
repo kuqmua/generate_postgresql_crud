@@ -3408,7 +3408,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                &operation_payload_element_camel_case_token_stream,
+                &operation_payload_element_camel_case_token_stream,//todo naming
                 &Method::Post,
             );
             quote::quote!{
@@ -3565,7 +3565,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_serialize_deserialize_to_schema_token_stream
                 pub struct #operation_payload_camel_case_token_stream {
                     #(#fields_with_excluded_primary_key_token_stream),*
                 }
@@ -3803,11 +3803,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             // println!("{try_operation_token_stream}");
             // println!("{try_operation_token_stream}");
-            let swagger_open_api_token_stream = {
-                quote::quote!{
-
-                }
-            };
+            println!("{unique_attributes:#?}");
+            let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(//todo different parameters
+                &table_name_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+                &unique_attributes,
+                &ident,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
+                &application_json_quotes_token_stream,
+                &table_name_quotes_token_stream,
+                &operation_payload_camel_case_token_stream,//todo naming
+                &Method::Post,
+            );
             quote::quote!{
                 #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream(
