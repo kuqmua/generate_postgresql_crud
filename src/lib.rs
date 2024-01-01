@@ -63,6 +63,9 @@ mod extract_syn_variants_from_proc_macro_attribute;
 //todo maybe add unnest to filter parameters if its array ?
 //todo swagger ui https://github.com/juhaku/utoipa/blob/master/examples/todo-axum/src/main.rs
 //todo test #[derive(generate_postgresql_crud::GeneratePostgresqlCrud)] for few structs in one module - will it work? fix if not will not work
+//todo derive utoipa::ToSchema for what? original structs or with serialize deserialize?
+//todo need to add utoipa::ToSchema annotation #[schema(value_type = YourToSchemaTraitImplStruct)] for all fields
+//todo remove useless derives like useless serde::Serialize and Deserialize
 
 #[proc_macro_attribute]
 pub fn create_many_additional_http_status_codes_error_variants(
@@ -337,7 +340,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
     let derive_debug_token_stream = quote::quote!{#[derive(Debug)]};
-    // let derive_debug_deserialize_token_stream = quote::quote!{#[derive(Debug, serde::Deserialize)]};
+    let derive_debug_to_schema_token_stream = quote::quote!{#[derive(Debug, utoipa::ToSchema)]};
     let derive_debug_serialize_deserialize_token_stream = quote::quote!{#[derive(Debug, serde::Serialize, serde::Deserialize)]};
     let derive_debug_serialize_deserialize_to_schema_token_stream = quote::quote!{#[derive(Debug, serde::Serialize, serde::Deserialize, utoipa::ToSchema)]};
     let try_camel_case_stringified = "Try";
@@ -3801,9 +3804,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             };
-            // println!("{try_operation_token_stream}");
-            // println!("{try_operation_token_stream}");
-            println!("{unique_attributes:#?}");
             let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(//todo different parameters
                 &table_name_stringified,
                 &operation_name_lower_case_stringified,
@@ -4018,7 +4018,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let path_token_stream = {
             quote::quote!{
-                #derive_debug_token_stream
+                #derive_debug_to_schema_token_stream
                 pub struct #operation_path_camel_case_token_stream {
                     pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                 }
@@ -4027,7 +4027,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{path_token_stream}");
         let path_with_serialize_deserialize_token_stream = {
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_serialize_deserialize_to_schema_token_stream
                 pub struct #operation_path_with_serialize_deserialize_camel_case_token_stream {
                     #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                 }
@@ -4071,7 +4071,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{impl_std_convert_try_from_operation_path_with_serialize_deserialize_for_operation_path_token_stream}");
         let query_token_stream = {
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_serialize_deserialize_to_schema_token_stream
                 pub struct #operation_query_camel_case_token_stream {
                     pub #select_token_stream: std::option::Option<#column_select_ident_token_stream>,
                 }
@@ -4080,7 +4080,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{query_token_stream}");
         let query_with_serialize_deserialize_token_stream = {
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_serialize_deserialize_to_schema_token_stream
                 struct #operation_query_with_serialize_deserialize_camel_case_token_stream {
                     #select_token_stream: std::option::Option<#std_string_string_token_stream>,
                 } 
@@ -4520,7 +4520,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         );
         let parameters_token_stream = {
             quote::quote!{
-                #[derive(Debug)]
+                #derive_debug_token_stream
                 pub struct #operation_parameters_camel_case_token_stream {
                     pub #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream,
                 }
@@ -4538,7 +4538,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                #derive_debug_token_stream
+                #derive_debug_to_schema_token_stream
                 pub struct #operation_payload_camel_case_token_stream {
                     pub #select_token_stream: #column_select_ident_token_stream,
                     pub #primary_key_field_ident: std::option::Option<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
@@ -5424,7 +5424,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let path_token_stream = {
             quote::quote!{
-                #derive_debug_token_stream
+                #derive_debug_to_schema_token_stream
                 pub struct #operation_path_camel_case_token_stream {
                     pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                 }
@@ -5433,7 +5433,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{path_token_stream}");
         let path_with_serialize_deserialize_token_stream = {
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_serialize_deserialize_to_schema_token_stream
                 pub struct #operation_path_with_serialize_deserialize_camel_case_token_stream {
                     #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                 }
@@ -5487,7 +5487,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_serialize_deserialize_to_schema_token_stream
                 pub struct #operation_payload_camel_case_token_stream {
                     #(#fields_with_excluded_primary_key_token_stream),*
                 }
@@ -6022,7 +6022,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                #derive_debug_token_stream
+                #derive_debug_to_schema_token_stream
                 pub struct #operation_payload_element_camel_case_token_stream {
                     pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                     #(#fields_with_excluded_primary_key_token_stream),*
@@ -6042,7 +6042,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_serialize_deserialize_to_schema_token_stream
                 pub struct #operation_payload_element_with_serialize_deserialize_camel_case_token_stream {
                     pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                     #(#fields_with_excluded_primary_key_token_stream),*
@@ -6681,7 +6681,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{parameters_token_stream}");
         let path_token_stream = {
             quote::quote!{
-                #derive_debug_token_stream
+                #derive_debug_to_schema_token_stream
                 pub struct #operation_path_camel_case_token_stream {
                     pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                 }
@@ -6690,7 +6690,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{path_token_stream}");
         let path_with_serialize_deserialize_token_stream = {
             quote::quote!{
-                #derive_debug_serialize_deserialize_token_stream
+                #derive_debug_serialize_deserialize_to_schema_token_stream
                 pub struct #operation_path_with_serialize_deserialize_camel_case_token_stream {
                     pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                 }
@@ -7162,7 +7162,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                #derive_debug_token_stream
+                #derive_debug_to_schema_token_stream
                 pub struct #operation_payload_camel_case_token_stream {
                     pub #primary_key_field_ident: std::option::Option<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
                     #(#fields_with_excluded_primary_key_token_stream),*
