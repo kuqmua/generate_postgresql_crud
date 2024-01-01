@@ -338,11 +338,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         primary_key_field_ident_quotes_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {primary_key_field_ident_quotes_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    let error_named_derive_token_stream = quote::quote!{#[derive(Debug, thiserror::Error, error_occurence::ErrorOccurence)]};
-    let derive_debug_token_stream = quote::quote!{#[derive(Debug)]};
-    let derive_debug_to_schema_token_stream = quote::quote!{#[derive(Debug, utoipa::ToSchema)]};
-    let derive_debug_serialize_deserialize_token_stream = quote::quote!{#[derive(Debug, serde::Serialize, serde::Deserialize)]};
-    let derive_debug_serialize_deserialize_to_schema_token_stream = quote::quote!{#[derive(Debug, serde::Serialize, serde::Deserialize, utoipa::ToSchema)]};
+    let debug_token_stream = quote::quote!{Debug};
+    let thiserror_error_token_stream = quote::quote!{thiserror::Error};
+    let error_occurence_error_occurence_token_stream = quote::quote!{error_occurence::ErrorOccurence};
+    let utoipa_to_schema_token_stream = quote::quote!{utoipa::ToSchema};
+    let serde_serialize_token_stream = quote::quote!{serde::Serialize};
+    let serde_deserialize_token_stream = quote::quote!{serde::Deserialize};
+    let derive_debug_token_stream = quote::quote!{#[derive(#debug_token_stream)]};
+    let error_named_derive_token_stream = quote::quote!{#[derive(#debug_token_stream, thiserror::Error, error_occurence::ErrorOccurence)]};
+    let derive_debug_to_schema_token_stream = quote::quote!{#[derive(#debug_token_stream, utoipa::ToSchema)]};
+    let derive_debug_serialize_deserialize_token_stream = quote::quote!{#[derive(#debug_token_stream, serde::Serialize, serde::Deserialize)]};
+    let derive_debug_serialize_deserialize_to_schema_token_stream = quote::quote!{#[derive(#debug_token_stream, serde::Serialize, serde::Deserialize, utoipa::ToSchema)]};
     let try_camel_case_stringified = "Try";
     let from_camel_case_stringified = "From";
     let try_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&try_camel_case_stringified.to_string());
@@ -487,7 +493,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 });
                 quote::quote! {
-                    #[derive(Debug)]
+                    #derive_debug_token_stream
                     pub struct #struct_name_token_stream {
                         #(#genereted_fields)*
                     }
@@ -743,7 +749,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             #[derive(
-                Debug,
+                #debug_token_stream,
                 serde::Serialize,
                 serde::Deserialize,
                 enum_extension::EnumExtension,
@@ -803,7 +809,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote! {
-                #[derive(Debug, serde::Serialize, serde::Deserialize, Clone, strum_macros::Display)]
+                #[derive(#debug_token_stream, serde::Serialize, serde::Deserialize, Clone, strum_macros::Display)]
                 pub enum #column_select_ident_token_stream {
                     #(#column_select_variants_token_stream),*
                 }
