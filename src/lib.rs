@@ -9499,3 +9499,54 @@ fn generate_type_variants_from_request_response_syn_variants<'a>(
     }
     handle
 }
+
+fn generate_swagger_open_api_token_stream(
+    table_name_stringified: &str,
+    operation_name_lower_case_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str,
+    unique_attributes: &[&proc_macro_helpers::attribute::Attribute],
+    ident: &syn::Ident,
+    try_camel_case_stringified: &str,
+    operation_name_camel_case_stringified: &str,
+    response_variants_camel_case_stringified: &str,
+    application_json_quotes_token_stream: &proc_macro2::TokenStream,
+    table_name_quotes_token_stream: &proc_macro2::TokenStream,
+    operation_payload_element_camel_case_token_stream: &proc_macro2::TokenStream,
+) -> proc_macro2::TokenStream {
+    let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
+        &table_name_stringified,
+        &operation_name_lower_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified
+    );
+    let responses_token_stream = unique_attributes.iter().map(|element|{
+        let status_token_stream = element.to_status_code_token_stream();
+        let description_token_stream = element.to_status_code_description_token_stream();
+        let body_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+            &ident,
+            &try_camel_case_stringified,
+            &operation_name_camel_case_stringified,
+            &response_variants_camel_case_stringified,
+            &element,
+            &proc_macro_name_camel_case_ident_stringified
+        );
+        quote::quote!{
+            (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = #application_json_quotes_token_stream)
+        }
+    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    quote::quote!{
+        #[utoipa::path(
+            post,
+            path = #swagger_url_path_quotes_token_stream,
+            operation_id = #swagger_url_path_quotes_token_stream,
+            tag = #table_name_quotes_token_stream,
+            responses(
+                #(#responses_token_stream),*
+            ),
+            request_body(
+                content = [#operation_payload_element_camel_case_token_stream], 
+                description = "Pet to store the database", 
+                content_type = #application_json_quotes_token_stream
+            ),
+        )]
+    }
+}
