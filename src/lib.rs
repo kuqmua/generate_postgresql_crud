@@ -3538,6 +3538,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 full_additional_http_status_codes_error_variants
             )
         };
+        let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
+        let unique_attributes = generate_unique_attributes(
+            &desirable_attribute,
+            &type_variants_from_request_response_syn_variants,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
@@ -3588,7 +3594,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
-            let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr201Created;
             let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -3985,6 +3990,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 full_additional_http_status_codes_error_variants
             )
         };
+        let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
+        let unique_attributes = generate_unique_attributes(
+            &desirable_attribute,
+            &type_variants_from_request_response_syn_variants,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_token_stream
@@ -4104,7 +4115,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
-            let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
             let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -4492,6 +4502,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 full_additional_http_status_codes_error_variants
             )
         };
+        let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
+        let unique_attributes = generate_unique_attributes(
+            &desirable_attribute,
+            &type_variants_from_request_response_syn_variants,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let parameters_token_stream = {
             quote::quote!{
                 #[derive(Debug)]
@@ -4678,7 +4694,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
-            let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
             let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -5381,6 +5396,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 full_additional_http_status_codes_error_variants
             )
         };
+        let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
+        let unique_attributes = generate_unique_attributes(
+            &desirable_attribute,
+            &type_variants_from_request_response_syn_variants,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_token_stream
@@ -5485,7 +5506,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
-            let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
             let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -5964,6 +5984,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 full_additional_http_status_codes_error_variants
             )
         };
+        let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
+        let unique_attributes = generate_unique_attributes(
+            &desirable_attribute,
+            &type_variants_from_request_response_syn_variants,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_token_stream
@@ -6122,7 +6148,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
-            let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
             let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -6629,6 +6654,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 full_additional_http_status_codes_error_variants
             )
         };
+        let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
+        let unique_attributes = generate_unique_attributes(
+            &desirable_attribute,
+            &type_variants_from_request_response_syn_variants,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_token_stream
@@ -6707,7 +6738,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
-            let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
             let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -7096,6 +7126,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 full_additional_http_status_codes_error_variants
             )
         };
+        let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
+        let unique_attributes = generate_unique_attributes(
+            &desirable_attribute,
+            &type_variants_from_request_response_syn_variants,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let parameters_token_stream = {
             quote::quote!{
                 #derive_debug_token_stream
@@ -7262,7 +7298,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
-            let desirable_attribute = proc_macro_helpers::attribute::Attribute::Tvfrr200Ok;
             let try_operation_response_variants_camel_case_stringified = generate_try_operation_response_variants_camel_case_stringified(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
