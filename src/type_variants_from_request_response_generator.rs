@@ -25,6 +25,7 @@ pub fn type_variants_from_request_response_generator(
     try_camel_case_stringified: &str,
     operation_name_camel_case_stringified: &str,
     response_variants_camel_case_stringified: &str,
+    ident: &syn::Ident,
 ) -> proc_macro2::TokenStream {
     let axum_http_status_code_quote_token_stream = desirable_attribute.to_axum_http_status_code_token_stream();
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_token_stream();
@@ -401,13 +402,14 @@ pub fn type_variants_from_request_response_generator(
                     .parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
-                let try_operation_response_variants_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
-                    &try_camel_case_stringified,
-                    &operation_name_camel_case_stringified,
-                    &response_variants_camel_case_stringified,
-                    &key,
-                    &proc_macro_name_camel_case_ident_stringified
-                );
+                // let try_operation_response_variants_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
+                //     &ident,
+                //     &try_camel_case_stringified,
+                //     &operation_name_camel_case_stringified,
+                //     &response_variants_camel_case_stringified,
+                //     &key,
+                //     &proc_macro_name_camel_case_ident_stringified
+                // );
                 let enum_variants_token_stream = value.iter().map(|element|{
                     let error_variant_ident = &element.0;
                     let fields_mapped_into_token_stream = element.1.iter().map(|element| {
@@ -650,10 +652,18 @@ pub fn type_variants_from_request_response_generator(
             .into_iter()
             .enumerate()
             .for_each(|(index, status_code_attribute)|{
-                let status_code_enum_name_stringified = format!("{try_operation_response_variants_camel_case_token_stream}{status_code_attribute}");
-                let status_code_enum_name_token_stream = status_code_enum_name_stringified
-                    .parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {status_code_enum_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+                // let status_code_enum_name_stringified = format!("{try_operation_response_variants_camel_case_token_stream}{status_code_attribute}");
+                // let status_code_enum_name_token_stream = status_code_enum_name_stringified
+                //     .parse::<proc_macro2::TokenStream>()
+                //     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {status_code_enum_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+                let try_operation_response_variants_desirable_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
+                    &ident,
+                    &try_camel_case_stringified,
+                    &operation_name_camel_case_stringified,
+                    &response_variants_camel_case_stringified,
+                    &status_code_attribute,
+                    &proc_macro_name_camel_case_ident_stringified
+                );
                 let http_status_code_token_stream = status_code_attribute.to_http_status_code_token_stream();
                 match index == unique_status_codes_len_minus_one{
                     true => {
@@ -684,7 +694,7 @@ pub fn type_variants_from_request_response_generator(
                             status_code_enums_try_from_variants.push(quote::quote! {
                                 else if status_code == #http_status_code_token_stream {
                                     match response.text().await {
-                                        Ok(response_text) => match serde_json::from_str::<#status_code_enum_name_token_stream>(&response_text){
+                                        Ok(response_text) => match serde_json::from_str::<#try_operation_response_variants_desirable_attribute_token_stream>(&response_text){
                                             Ok(value) => Ok(#try_operation_response_variants_camel_case_token_stream::from(value)), 
                                             Err(e) => Err(
                                                 #api_request_unexpected_error_path_token_stream::DeserializeBody{ 

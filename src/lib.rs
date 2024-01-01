@@ -3147,6 +3147,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified
             );
             let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                &ident,
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
@@ -3190,6 +3191,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
+                &ident,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -3416,6 +3418,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let status_token_stream = element.to_status_code_token_stream();
                     let description_token_stream = element.to_status_code_description_token_stream();
                     let body_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                        &ident,
                         &try_camel_case_stringified,
                         &operation_name_camel_case_stringified,
                         &response_variants_camel_case_stringified,
@@ -3637,6 +3640,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified
             );
             let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                &ident,
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
@@ -3680,6 +3684,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
+                &ident,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -4151,6 +4156,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified
             );
             let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                &ident,
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
@@ -4194,6 +4200,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
+                &ident,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -4723,6 +4730,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified
             );
             let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                &ident,
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
@@ -4766,6 +4774,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
+                &ident,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -5528,6 +5537,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified
             );
             let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                &ident,
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
@@ -5571,6 +5581,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
+                &ident,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -6163,6 +6174,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified
             );
             let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                &ident,
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
@@ -6206,6 +6218,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
+                &ident,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -6746,6 +6759,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified
             );
             let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                &ident,
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
@@ -6789,6 +6803,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
+                &ident,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -7299,6 +7314,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified
             );
             let try_operation_response_variants_desirable_attribute_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
+                &ident,
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
@@ -7342,6 +7358,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
                 &response_variants_camel_case_stringified,
+                &ident,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -8211,6 +8228,7 @@ fn generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
 }
 
 fn generate_try_operation_response_variants_desirable_attribute_token_stream(
+    _ident: &syn::Ident,//todo add prefix - but need to modify TypeVariantsFromReqwestResponseFromChecker or do something else
     try_camel_case_stringified: &str,
     operation_name_camel_case_stringified: &str,
     response_variants_camel_case_stringified: &str,
@@ -8219,6 +8237,9 @@ fn generate_try_operation_response_variants_desirable_attribute_token_stream(
 ) -> proc_macro2::TokenStream {
     let try_operation_response_variants_desirable_attribute_stringified =
         format!("{try_camel_case_stringified}{operation_name_camel_case_stringified}{response_variants_camel_case_stringified}{desirable_attribute}");
+    //todo add ident prefix
+    // let try_operation_response_variants_desirable_attribute_stringified =
+    //     format!("{ident}{try_camel_case_stringified}{operation_name_camel_case_stringified}{response_variants_camel_case_stringified}{desirable_attribute}");
     try_operation_response_variants_desirable_attribute_stringified
     .parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_response_variants_desirable_attribute_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
