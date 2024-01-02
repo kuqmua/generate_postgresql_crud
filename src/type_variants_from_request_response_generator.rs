@@ -272,7 +272,7 @@ pub fn type_variants_from_request_response_generator(
                 fn from(value: &#try_operation_response_variants_camel_case_token_stream) -> Self {
                     match value {
                         #try_operation_response_variants_camel_case_token_stream::#desirable_token_stream(_) => #axum_http_status_code_quote_token_stream,
-                        #(#impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_mapped_token_stream),*
+                        #(#impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_mapped_token_stream),*//todo maybe something wrong with status codes? check it later (for all variants was axum::http::StatusCode::OK)
                     }
                 }
             }

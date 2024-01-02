@@ -1324,7 +1324,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #ident_order_by_wrapper_name_token_stream {
                     fn serde_urlencoded_parameter(self) -> #std_string_string_token_stream {
                         let column = &self.0.column;
-                        let order = self.0.order.unwrap_or_default();
+                        let order = self.0.order.unwrap_or_default();//todo remove this. must be no default 
                         format!("column={column},order={order}")
                     }
                 }
@@ -4301,7 +4301,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &pg_connection_token_stream
                 );
                 quote::quote!{
-                    let #select_token_stream = #parameters_lower_case_token_stream.#query_lower_case_token_stream.#select_token_stream.unwrap_or_default();
+                    let #select_token_stream = #parameters_lower_case_token_stream.#query_lower_case_token_stream.#select_token_stream.unwrap_or_default();//todo remove this. must be no default 
                     let #query_string_name_token_stream = {
                         #query_string_token_stream
                     };
@@ -8084,7 +8084,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 
         #create_many_token_stream
         #create_one_token_stream
-        #read_one_token_stream
+        // #read_one_token_stream
         #read_many_with_body_token_stream
         #update_one_token_stream
         #update_many_token_stream
