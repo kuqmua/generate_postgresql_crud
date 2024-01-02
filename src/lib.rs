@@ -3430,7 +3430,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_quotes_token_stream,
                 Some(quote::quote!{
                     params(
-                        ("id" = u64, Path, description = "todo"),
+                        (#primary_key_field_ident_quotes_token_stream = u64, Path, description = "todo"),
                     ),
                 }),
                 Some(quote::quote!{
@@ -3845,7 +3845,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_quotes_token_stream,
                 Some(quote::quote!{
                     params(
-                        ("id" = u64, Path, description = "todo"),
+                        (#primary_key_field_ident_quotes_token_stream = u64, Path, description = "todo"),
                     ),
                 }),
                 Some(quote::quote!{
@@ -4352,7 +4352,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_quotes_token_stream,
                 Some(quote::quote!{
                     params(
-                        ("id" = u64, Path, description = "todo"),
+                        (#primary_key_field_ident_quotes_token_stream = u64, Path, description = "todo"),
                     ),
                 }),
                 // Some(quote::quote!{
@@ -5277,7 +5277,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_quotes_token_stream,
                 Some(quote::quote!{
                     params(
-                        ("id" = u64, Path, description = "todo"),
+                        (#primary_key_field_ident_quotes_token_stream = u64, Path, description = "todo"),
                     ),
                 }),
                 Some(quote::quote!{
@@ -5874,7 +5874,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_quotes_token_stream,
                 Some(quote::quote!{
                     params(
-                        ("id" = u64, Path, description = "todo"),
+                        (#primary_key_field_ident_quotes_token_stream = u64, Path, description = "todo"),
                     ),
                 }),
                 Some(quote::quote!{
@@ -6605,7 +6605,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_quotes_token_stream,
                 Some(quote::quote!{
                     params(
-                        ("id" = u64, Path, description = "todo"),
+                        (#primary_key_field_ident_quotes_token_stream = u64, Path, description = "todo"),
                     ),
                 }),
                 Some(quote::quote!{
@@ -7093,7 +7093,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_quotes_token_stream,
                 Some(quote::quote!{
                     params(
-                        ("id" = u64, Path, description = "todo"),
+                        (#primary_key_field_ident_quotes_token_stream = u64, Path, description = "todo"),
                     ),
                 }),
                 // Some(quote::quote!{
@@ -8007,7 +8007,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_quotes_token_stream,
                 Some(quote::quote!{
                     params(
-                        ("id" = u64, Path, description = "todo"),
+                        (#primary_key_field_ident_quotes_token_stream = u64, Path, description = "todo"),
                     ),
                 }),
                 Some(quote::quote!{
