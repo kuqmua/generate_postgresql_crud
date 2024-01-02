@@ -3428,7 +3428,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                &operation_payload_camel_case_token_stream,
+                Some(quote::quote!{
+                    params(
+                        ("id" = u64, Path, description = "todo"),
+                    ),
+                }),
+                Some(quote::quote!{
+                    request_body(
+                        content = #operation_payload_camel_case_token_stream, 
+                        description = "todo", 
+                        content_type = #application_json_quotes_token_stream
+                    ),
+                }),
                 &Method::Post,
             );
             quote::quote!{
@@ -3832,7 +3843,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                &operation_payload_camel_case_token_stream,//todo naming
+                Some(quote::quote!{
+                    params(
+                        ("id" = u64, Path, description = "todo"),
+                    ),
+                }),
+                Some(quote::quote!{
+                    request_body(
+                        content = #operation_payload_camel_case_token_stream, 
+                        description = "todo", 
+                        content_type = #application_json_quotes_token_stream
+                    ),
+                }),
                 &Method::Post,
             );
             quote::quote!{
@@ -4317,11 +4339,32 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
-            let swagger_open_api_token_stream = {
-                quote::quote!{
-
-                }
-            };
+            let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
+                &table_name_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+                &unique_attributes,
+                &ident,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
+                &application_json_quotes_token_stream,
+                &table_name_quotes_token_stream,
+                Some(quote::quote!{
+                    params(
+                        ("id" = u64, Path, description = "todo"),
+                    ),
+                }),
+                // Some(quote::quote!{
+                //     request_body(
+                //         content = #operation_payload_camel_case_token_stream, 
+                //         description = "todo", 
+                //         content_type = #application_json_quotes_token_stream
+                //     ),
+                // }),
+                None,
+                &Method::Post,
+            );
             quote::quote!{
                 #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream(
@@ -5221,11 +5264,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
-            let swagger_open_api_token_stream = {
-                quote::quote!{
-
-                }
-            };
+            let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
+                &table_name_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+                &unique_attributes,
+                &ident,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
+                &application_json_quotes_token_stream,
+                &table_name_quotes_token_stream,
+                Some(quote::quote!{
+                    params(
+                        ("id" = u64, Path, description = "todo"),
+                    ),
+                }),
+                Some(quote::quote!{
+                    request_body(
+                        content = #operation_payload_camel_case_token_stream, 
+                        description = "todo", 
+                        content_type = #application_json_quotes_token_stream
+                    ),
+                }),
+                &Method::Post,
+            );
             quote::quote!{
                 #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream(
@@ -5798,11 +5861,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
-            let swagger_open_api_token_stream = {
-                quote::quote!{
-
-                }
-            };
+            let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
+                &table_name_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+                &unique_attributes,
+                &ident,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
+                &application_json_quotes_token_stream,
+                &table_name_quotes_token_stream,
+                Some(quote::quote!{
+                    params(
+                        ("id" = u64, Path, description = "todo"),
+                    ),
+                }),
+                Some(quote::quote!{
+                    request_body(
+                        content = #operation_payload_camel_case_token_stream, 
+                        description = "todo", 
+                        content_type = #application_json_quotes_token_stream
+                    ),
+                }),
+                &Method::Post,
+            );
             quote::quote!{
                 #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream<'a>(
@@ -6509,11 +6592,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }  
             };
             // println!("{try_operation_token_stream}");
-            let swagger_open_api_token_stream = {
-                quote::quote!{
-
-                }
-            };
+            let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
+                &table_name_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+                &unique_attributes,
+                &ident,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
+                &application_json_quotes_token_stream,
+                &table_name_quotes_token_stream,
+                Some(quote::quote!{
+                    params(
+                        ("id" = u64, Path, description = "todo"),
+                    ),
+                }),
+                Some(quote::quote!{
+                    request_body(
+                        content = #operation_payload_camel_case_token_stream, 
+                        description = "todo", 
+                        content_type = #application_json_quotes_token_stream
+                    ),
+                }),
+                &Method::Post,
+            );
             quote::quote!{
                 #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream<'a>(
@@ -6977,11 +7080,32 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
-            let swagger_open_api_token_stream = {
-                quote::quote!{
-
-                }
-            };
+            let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
+                &table_name_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+                &unique_attributes,
+                &ident,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
+                &application_json_quotes_token_stream,
+                &table_name_quotes_token_stream,
+                Some(quote::quote!{
+                    params(
+                        ("id" = u64, Path, description = "todo"),
+                    ),
+                }),
+                // Some(quote::quote!{
+                //     request_body(
+                //         content = #operation_payload_camel_case_token_stream, 
+                //         description = "todo", 
+                //         content_type = #application_json_quotes_token_stream
+                //     ),
+                // }),
+                None,
+                &Method::Post,
+            );
             quote::quote!{
                 #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream<'a>(
@@ -7290,7 +7414,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        //
         let impl_std_convert_from_operation_payload_for_operation_payload_with_serialize_deserialize_token_stream = {
             let fields_assignments_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident.clone()
@@ -7327,7 +7450,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        //
         let try_operation_error_named_token_stream = {
             let try_operation_request_error_camel_case_token_stream = generate_try_operation_request_error_camel_case_token_stream(
                 &try_camel_case_stringified,
@@ -7872,11 +7994,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{try_operation_token_stream}");
-            let swagger_open_api_token_stream = {
-                quote::quote!{
-
-                }
-            };
+            let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
+                &table_name_stringified,
+                &operation_name_lower_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified,
+                &unique_attributes,
+                &ident,
+                &try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                &response_variants_camel_case_stringified,
+                &application_json_quotes_token_stream,
+                &table_name_quotes_token_stream,
+                Some(quote::quote!{
+                    params(
+                        ("id" = u64, Path, description = "todo"),
+                    ),
+                }),
+                Some(quote::quote!{
+                    request_body(
+                        content = #operation_payload_camel_case_token_stream, 
+                        description = "todo", 
+                        content_type = #application_json_quotes_token_stream
+                    ),
+                }),
+                &Method::Post,
+            );
             quote::quote!{
                 #swagger_open_api_token_stream
                 pub async fn #operation_lower_case_token_stream<'a>(
@@ -9585,7 +9727,8 @@ fn generate_swagger_open_api_token_stream(
     response_variants_camel_case_stringified: &str,
     application_json_quotes_token_stream: &proc_macro2::TokenStream,
     table_name_quotes_token_stream: &proc_macro2::TokenStream,
-    operation_payload_camel_case_token_stream: &proc_macro2::TokenStream,
+    params_option_token_stream: std::option::Option<proc_macro2::TokenStream>,
+    request_body_option_token_stream: std::option::Option<proc_macro2::TokenStream>,
     method: &Method,
 ) -> proc_macro2::TokenStream {
     let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
@@ -9609,19 +9752,24 @@ fn generate_swagger_open_api_token_stream(
         }
     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let method_token_stream = method.to_token_stream();
+    let params_option_token_stream = match params_option_token_stream {
+        Some(value) => value,
+        None => proc_macro2::TokenStream::new()
+    };
+    let request_body_token_stream = match request_body_option_token_stream {
+        Some(value) => value,
+        None => proc_macro2::TokenStream::new()
+    };
     quote::quote!{
         #[utoipa::path(
             #method_token_stream,
             path = #swagger_url_path_quotes_token_stream,
             operation_id = #swagger_url_path_quotes_token_stream,
             tag = #table_name_quotes_token_stream,
+            #params_option_token_stream
+            #request_body_token_stream
             responses(
                 #(#responses_token_stream),*
-            ),
-            request_body(
-                content = #operation_payload_camel_case_token_stream, 
-                description = "Pet to store the database", 
-                content_type = #application_json_quotes_token_stream
             ),
         )]
     }
