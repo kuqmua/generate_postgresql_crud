@@ -3832,11 +3832,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                Some(quote::quote!{
-                    params(
-                        (#primary_key_field_ident_quotes_token_stream = #std_string_string_token_stream, Path, description = "todo"),
-                    ),
-                }),
+                None,
                 Some(quote::quote!{
                     request_body(
                         content = #operation_payload_camel_case_token_stream, 
