@@ -67,6 +67,7 @@ mod extract_syn_variants_from_proc_macro_attribute;
 //todo derive utoipa::ToSchema for what? original structs or with serialize deserialize?
 //todo need to add utoipa::ToSchema annotation #[schema(value_type = YourToSchemaTraitImplStruct)] for all fields
 //todo remove useless derives like useless serde::Serialize and Deserialize
+//todo maybe add private generated code in specific mod in case of some compilation error - to show info like "no struct BlaBla found in mod ..." ?
 
 #[proc_macro_attribute]
 pub fn create_many_additional_http_status_codes_error_variants(
