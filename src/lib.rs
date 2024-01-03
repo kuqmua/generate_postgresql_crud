@@ -3067,7 +3067,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &batch_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let operation_http_method_token_stream = operation_http_method.to_token_stream();
             generate_http_request_many_token_stream(
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
@@ -3081,7 +3080,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &serde_json_to_string_variant_initialization_token_stream,
                 &url_handle_token_stream,
                 &reqwest_client_new_token_stream,
-                &operation_http_method_token_stream,
+                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
@@ -5979,7 +5978,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &batch_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let operation_http_method_token_stream = operation_http_method.to_token_stream();
             generate_http_request_many_token_stream(
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
@@ -6003,7 +6001,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &serde_json_to_string_variant_initialization_token_stream,
                 &url_handle_token_stream,
                 &reqwest_client_new_token_stream,
-                &operation_http_method_token_stream,
+                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
@@ -7106,7 +7104,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
                 &proc_macro_name_camel_case_ident_stringified
             );
-            let operation_http_method_token_stream = operation_http_method.to_token_stream();
             generate_http_request_many_token_stream(
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
@@ -7120,7 +7117,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &serde_json_to_string_variant_initialization_token_stream,
                 &url_handle_token_stream,
                 &reqwest_client_new_token_stream,
-                &operation_http_method_token_stream,
+                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
@@ -9016,7 +9013,7 @@ fn generate_http_request_many_token_stream(
     serde_json_to_string_variant_initialization_token_stream: &proc_macro2::TokenStream,
     url_handle_token_stream: &proc_macro2::TokenStream,
     reqwest_client_new_token_stream: &proc_macro2::TokenStream,
-    http_method: &proc_macro2::TokenStream,
+    operation_http_method: &OperationHttpMethod,
     project_commit_header_addition_token_stream: &proc_macro2::TokenStream,
     content_type_application_json_header_addition_token_stream: &proc_macro2::TokenStream,
     crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream: &proc_macro2::TokenStream,
@@ -9040,6 +9037,7 @@ fn generate_http_request_many_token_stream(
         &operation_name_lower_case_stringified,
         &proc_macro_name_camel_case_ident_stringified
     );
+    let operation_http_method_token_stream = operation_http_method.to_token_stream();
     quote::quote!{
         pub async fn #try_operation_lower_case_token_stream<'a>(
             #server_location_name_token_stream: #server_location_type_token_stream,
@@ -9062,7 +9060,7 @@ fn generate_http_request_many_token_stream(
             // println!("{}", url);
             match #tvfrr_extraction_logic_token_stream(
                 #reqwest_client_new_token_stream
-                .#http_method(&url)
+                .#operation_http_method_token_stream(&url)
                 #project_commit_header_addition_token_stream
                 #content_type_application_json_header_addition_token_stream
                 .body(#payload_lower_case_token_stream)
