@@ -3062,11 +3062,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let url_handle_token_stream = generate_url_handle_batch_token_stream(
-                &table_name_stringified,
-                &batch_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
+            let url_handle_token_stream = {
+                let url_path = generate_url_path(&table_name_stringified);
+                let url_handle_stringified = format!("\"{url_path}/{batch_stringified}\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             generate_http_request_many_token_stream(
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
@@ -3488,10 +3489,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let url_handle_token_stream = generate_url_path_token_stream(
-                &table_name_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
+            let url_handle_token_stream = {
+                let url_path = generate_url_path(&table_name_stringified);
+                let url_handle_stringified = format!("\"{url_path}\"");
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             generate_try_operation_token_stream(
                 &try_lower_case_stringified,
                 &operation_name_lower_case_stringified,
@@ -4482,10 +4485,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let url_handle_token_stream = generate_url_handle_search_token_stream(
-                &table_name_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
+            let url_handle_token_stream = {
+                let url_path = generate_url_path(&table_name_stringified);
+                let url_handle_stringified = format!("\"{url_path}/search\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             generate_try_operation_token_stream(
                 &try_lower_case_stringified,
                 &operation_name_lower_case_stringified,
@@ -5925,11 +5930,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let url_handle_token_stream = generate_url_handle_batch_token_stream(
-                &table_name_stringified,
-                &batch_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
+            let url_handle_token_stream = {
+                let url_path = generate_url_path(&table_name_stringified);
+                let url_handle_stringified = format!("\"{url_path}/{batch_stringified}\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             generate_http_request_many_token_stream(
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
@@ -7040,10 +7046,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            let url_handle_token_stream = generate_url_handle_search_token_stream(
-                &table_name_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
+            let url_handle_token_stream = {
+                let url_path = generate_url_path(&table_name_stringified);
+                let url_handle_stringified = format!("\"{url_path}/search\"");//todo where
+                url_handle_stringified.parse::<proc_macro2::TokenStream>()
+                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            };
             generate_http_request_many_token_stream(
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
@@ -7894,37 +7902,6 @@ fn generate_tvfrr_extraction_logic_token_stream(
     tvfrr_extraction_logic_stringified
     .parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-}
-
-fn generate_url_handle_search_token_stream(
-    table_name_stringified: &str,
-    proc_macro_name_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    let url_path = generate_url_path(&table_name_stringified);
-    let url_handle_stringified = format!("\"{url_path}/search\"");//todo where
-    url_handle_stringified.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-}
-
-fn generate_url_handle_batch_token_stream(
-    table_name_stringified: &str,
-    batch_stringified: &str,
-    proc_macro_name_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    let url_path = generate_url_path(&table_name_stringified);
-    let url_handle_stringified = format!("\"{url_path}/{batch_stringified}\"");//todo where
-    url_handle_stringified.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-}
-
-fn generate_url_path_token_stream(
-    table_name_stringified: &str,
-    proc_macro_name_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    let url_path = generate_url_path(&table_name_stringified);
-    let url_handle_stringified = format!("\"{url_path}\"");
-    url_handle_stringified.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
 fn generate_url_path(table_name_stringified: &str) -> std::string::String {
