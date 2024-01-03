@@ -37,6 +37,7 @@ mod extract_syn_variants_from_proc_macro_attribute;
 // PgLTree	LTREE
 // PgLQuery	LQUERY
 
+// todo check on not generated name and color fields
 //todo fix bug with body { Desirable: null } if there is not body by idea in response
 //todo generate for each create update delete body length checked and for path query headers too
 //todo how to write filter logic for sqlx rust postgresql types?
