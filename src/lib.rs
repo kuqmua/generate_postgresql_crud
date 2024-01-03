@@ -2884,7 +2884,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let create_many_token_stream = {
         let operation_name_camel_case_stringified = format!("{create_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
-        let operation_method = Method::Post;
+        let operation_method = OperationMethod::Post;
         let operation_parameters_camel_case_token_stream = generate_operation_parameters_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
@@ -3338,7 +3338,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let create_one_token_stream = {
         let operation_name_camel_case_stringified = format!("{create_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
-        let operation_method = Method::Post;
+        let operation_method = OperationMethod::Post;
         let operation_parameters_camel_case_token_stream = generate_operation_parameters_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
@@ -3714,7 +3714,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let read_one_token_stream = {
         let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
-        let operation_method = Method::Post;
+        let operation_method = OperationMethod::Post;
         let operation_parameters_camel_case_token_stream = generate_operation_parameters_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
@@ -4169,7 +4169,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let read_many_with_body_token_stream = {
         let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{many_camel_case_stringified}{with_body_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
-        let operation_method = Method::Post;
+        let operation_method = OperationMethod::Post;
         let operation_parameters_camel_case_token_stream = generate_operation_parameters_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
@@ -5040,7 +5040,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let update_one_token_stream = {
         let operation_name_camel_case_stringified = format!("{update_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
-        let operation_method = Method::Patch;
+        let operation_method = OperationMethod::Patch;
         let operation_parameters_camel_case_token_stream = generate_operation_parameters_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
@@ -5639,7 +5639,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let update_many_token_stream = {
         let operation_name_camel_case_stringified = format!("{update_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
-        let operation_method = Method::Patch;
+        let operation_method = OperationMethod::Patch;
         let operation_parameters_camel_case_token_stream = generate_operation_parameters_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
@@ -6314,7 +6314,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let delete_one_token_stream = {
         let operation_name_camel_case_stringified = format!("{delete_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
-        let operation_method = Method::Delete;
+        let operation_method = OperationMethod::Delete;
         let operation_parameters_camel_case_token_stream = generate_operation_parameters_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
@@ -6781,7 +6781,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let delete_many_with_body_token_stream = {
         let operation_name_camel_case_stringified = format!("{delete_camel_case_stringified}{many_camel_case_stringified}{with_body_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
-        let operation_method = Method::Delete;
+        let operation_method = OperationMethod::Delete;
         let operation_parameters_camel_case_token_stream = generate_operation_parameters_camel_case_token_stream(
             &operation_name_camel_case_stringified,
             parameters_camel_case_stringified,
@@ -9189,7 +9189,7 @@ fn generate_swagger_open_api_token_stream(
     application_json_quotes_token_stream: &proc_macro2::TokenStream,
     table_name_quotes_token_stream: &proc_macro2::TokenStream,
     request_body_option_token_stream: std::option::Option<proc_macro2::TokenStream>,
-    method: &Method,
+    method: &OperationMethod,
 ) -> proc_macro2::TokenStream {
     let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
         &table_name_stringified,
@@ -9230,13 +9230,13 @@ fn generate_swagger_open_api_token_stream(
     }
 }
 
-enum Method {
+enum OperationMethod {
     Post,
     Patch,
     Delete
 }
 
-impl Method {
+impl OperationMethod {
     fn to_token_stream(&self) -> proc_macro2::TokenStream {
         match self {
             Self::Post => quote::quote!{post},
