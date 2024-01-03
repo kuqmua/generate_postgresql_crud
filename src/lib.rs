@@ -9189,7 +9189,7 @@ fn generate_swagger_open_api_token_stream(
     application_json_quotes_token_stream: &proc_macro2::TokenStream,
     table_name_quotes_token_stream: &proc_macro2::TokenStream,
     request_body_option_token_stream: std::option::Option<proc_macro2::TokenStream>,
-    method: &OperationMethod,
+    operation_method: &OperationMethod,
 ) -> proc_macro2::TokenStream {
     let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
         &table_name_stringified,
@@ -9211,7 +9211,7 @@ fn generate_swagger_open_api_token_stream(
             (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = #application_json_quotes_token_stream)
         }
     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-    let method_token_stream = method.to_token_stream();
+    let method_token_stream = operation_method.to_token_stream();
     let request_body_token_stream = match request_body_option_token_stream {
         Some(value) => value,
         None => proc_macro2::TokenStream::new()
