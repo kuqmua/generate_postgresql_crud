@@ -2347,22 +2347,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
         }
     };
-    // let failed_to_deserialize_query_string_syn_variant = {
-    //     let variant_name_camel_case_stringified = "FailedToDeserializeQueryString";
-    //     let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
-    //     crate::type_variants_from_request_response_generator::construct_syn_variant(
-    //         proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-    //         &variant_name_camel_case_stringified,
-    //         &code_occurence_field,
-    //         vec![
-    //             (
-    //                 proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-    //                 &variant_name_lower_case_stringified, 
-    //                 std_string_string_syn_punctuated_punctuated.clone()
-    //             )
-    //         ]
-    //     )
-    // };
     let not_unique_vec_syn_variants: std::vec::Vec<syn::Variant> = fields_named.iter().fold(std::vec::Vec::with_capacity(fields_named_len - 1), |mut acc, element| {
         let field_ident = element.ident.clone()
             .unwrap_or_else(|| {
@@ -3335,7 +3319,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                None,
                 Some(quote::quote!{
                     request_body(
                         content = #operation_payload_camel_case_token_stream, 
@@ -3747,7 +3730,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                None,
                 Some(quote::quote!{
                     request_body(
                         content = #operation_payload_camel_case_token_stream, 
@@ -3919,7 +3901,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 for element in &json_body_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
-                // type_variants_from_request_response.push(&failed_to_deserialize_query_string_syn_variant);//todo maybe remove this variant?
                 type_variants_from_request_response.push(&read_one_payload_try_from_read_one_payload_with_serialize_deserialize_syn_variant);
                 type_variants_from_request_response
             };
@@ -4224,7 +4205,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                None,
                 Some(quote::quote!{
                     request_body(
                         content = #operation_payload_camel_case_token_stream, 
@@ -5129,7 +5109,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                None,
                 Some(quote::quote!{
                     request_body(
                         content = #operation_payload_camel_case_token_stream, 
@@ -5764,7 +5743,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                None,
                 Some(quote::quote!{
                     request_body(
                         content = #operation_payload_camel_case_token_stream, 
@@ -6477,7 +6455,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                None,
                 Some(quote::quote!{
                     request_body(
                         content = #operation_payload_camel_case_token_stream, 
@@ -6985,7 +6962,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                None,
                 Some(quote::quote!{
                     request_body(
                         content = #operation_payload_camel_case_token_stream, 
@@ -7895,7 +7871,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &response_variants_camel_case_stringified,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
-                None,
                 Some(quote::quote!{
                     request_body(
                         content = #operation_payload_camel_case_token_stream, 
@@ -9515,7 +9490,6 @@ fn generate_swagger_open_api_token_stream(
     response_variants_camel_case_stringified: &str,
     application_json_quotes_token_stream: &proc_macro2::TokenStream,
     table_name_quotes_token_stream: &proc_macro2::TokenStream,
-    params_option_token_stream: std::option::Option<proc_macro2::TokenStream>,
     request_body_option_token_stream: std::option::Option<proc_macro2::TokenStream>,
     method: &Method,
 ) -> proc_macro2::TokenStream {
@@ -9540,10 +9514,6 @@ fn generate_swagger_open_api_token_stream(
         }
     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let method_token_stream = method.to_token_stream();
-    let params_option_token_stream = match params_option_token_stream {
-        Some(value) => value,
-        None => proc_macro2::TokenStream::new()
-    };
     let request_body_token_stream = match request_body_option_token_stream {
         Some(value) => value,
         None => proc_macro2::TokenStream::new()
@@ -9554,7 +9524,6 @@ fn generate_swagger_open_api_token_stream(
             path = #swagger_url_path_quotes_token_stream,
             operation_id = #swagger_url_path_quotes_token_stream,
             tag = #table_name_quotes_token_stream,
-            #params_option_token_stream
             #request_body_token_stream
             responses(
                 #(#responses_token_stream),*
