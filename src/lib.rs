@@ -3069,76 +3069,50 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream(std::vec::Vec<#operation_payload_element_with_serialize_deserialize_camel_case_token_stream>)  
             }
         };
-        // let operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream = {
-        //     quote::quote!{
-        //         #derive_debug_thiserror_error_occurence_token_stream
-        //         pub enum #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream {
-        //             #not_uuid_token_camel_case_stream {
-        //                 #eo_error_occurence_attribute_token_stream
-        //                 #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
-        //                 #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-        //             },
-        //         }
-        //     }
-        // };
-        // // println!("{operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream}");
-        // let impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream = {
-        //     let primary_key_field_assignment_token_stream = {
-        //         quote::quote!{
-        //             let #primary_key_field_ident = match value.#primary_key_field_ident {
-        //                 Some(value) => match value.into_iter()
-        //                     .map(|element|#crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from(element)))
-        //                     .collect::<Result<
-        //                         #std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
-        //                         #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream
-        //                     >>() 
-        //                 {
-        //                     Ok(value) => Some(value),
-        //                     Err(e) => {
-        //                         return Err(Self::Error::#not_uuid_token_camel_case_stream {
-        //                             #not_uuid_token_lower_case_stream: e,
-        //                             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
-        //                         });
-        //                     }
-        //                 },
-        //                 None => None
-        //             };
-        //         }
-        //     };
-        //     let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-        //         let field_ident = element.field.ident.clone()
-        //             .unwrap_or_else(|| {
-        //                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-        //             });
-        //         quote::quote!{
-        //             let #field_ident = value.#field_ident;
-        //         }
-        //     });
-        //     quote::quote!{
-        //         impl std::convert::TryFrom<#operation_payload_with_serialize_deserialize_camel_case_token_stream> for #operation_payload_camel_case_token_stream {
-        //             type Error = #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream;
-        //             fn try_from(value: #operation_payload_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
-        //                 let select = value.select;
-        //                 #primary_key_field_assignment_token_stream
-        //                 #(#fields_assignment_excluding_primary_key_token_stream)*
-        //                 let order_by = value.order_by;
-        //                 let limit = value.limit;
-        //                 let offset = value.offset;
-        //                 Ok(Self {
-        //                     select,
-        //                     id,
-        //                     //todo generate it
-        //                     name,
-        //                     color,
-        //                     order_by,
-        //                     limit,
-        //                     offset,
-        //                 })
-        //             }
-        //         }
-        //     }
-        // };
-        // // println!("{impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream}");
+        // println!("{payload_with_serialize_deserialize_token_stream}");
+        let operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream = {
+            quote::quote!{
+                #derive_debug_thiserror_error_occurence_token_stream
+                pub enum #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream {
+                    //todo remove useless variant and add later protentian errors from conversion from with serialize_deserialize
+                    #not_uuid_token_camel_case_stream {
+                        #eo_error_occurence_attribute_token_stream
+                        #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                    },
+                }
+            }
+        };
+        // println!("{operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream}");
+        let impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream = {
+            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+                let field_ident = element.field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                    });
+                quote::quote!{
+                    let #field_ident = value.#field_ident;
+                }
+            });
+            let fields_idents_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
+                element.field.ident.clone()
+                    .unwrap_or_else(|| {
+                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                    })
+            });
+            quote::quote!{
+                impl std::convert::TryFrom<#operation_payload_with_serialize_deserialize_camel_case_token_stream> for #operation_payload_camel_case_token_stream {
+                    type Error = #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream;
+                    fn try_from(value: #operation_payload_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
+                        #(#fields_assignment_excluding_primary_key_token_stream)*
+                        Ok(Self {
+                            #(#fields_idents_excluding_primary_key_token_stream),*
+                        })
+                    }
+                }
+            }
+        };
+        // println!("{impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream}");
         // let impl_std_convert_from_operation_payload_for_operation_payload_with_serialize_deserialize_token_stream = {
         //     let primary_key_field_assignment_token_stream = {
         //         quote::quote!{
