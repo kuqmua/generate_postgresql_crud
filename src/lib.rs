@@ -91,7 +91,7 @@ pub fn read_one_additional_http_status_codes_error_variants(
     item
 }
 #[proc_macro_attribute]
-pub fn read_many_with_body_additional_http_status_codes_error_variants(
+pub fn read_many_additional_http_status_codes_error_variants(
     _attr: proc_macro::TokenStream,
     item: proc_macro::TokenStream,
 ) -> proc_macro::TokenStream {
@@ -119,7 +119,7 @@ pub fn delete_one_additional_http_status_codes_error_variants(
     item
 }
 #[proc_macro_attribute]
-pub fn delete_many_with_body_additional_http_status_codes_error_variants(
+pub fn delete_many_additional_http_status_codes_error_variants(
     _attr: proc_macro::TokenStream,
     item: proc_macro::TokenStream,
 ) -> proc_macro::TokenStream {
@@ -1703,12 +1703,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             panic!("{e}");
                         }
                     };
-                    println!("--------------try_read_many_with_body-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many_with_body(
+                    println!("--------------try_read_many-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many(
                         &api_location,
                         //todo - builder pattern?
-                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyParameters{ 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyPayload { 
+                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyParameters{ 
+                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyPayload { 
                                 select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor,
                                 id: Some(
                                     ids.clone()
@@ -1782,12 +1782,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             panic!("{e}");
                         },
                     }
-                    println!("--------------try_read_many_with_body-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many_with_body(
+                    println!("--------------try_read_many-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many(
                         &api_location,
                         //todo - builder pattern?
-                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyParameters{ 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyPayload { 
+                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyParameters{ 
+                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyPayload { 
                                 select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor,
                                 id: Some(
                                     ids.clone()
@@ -1841,12 +1841,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             panic!("{e}");
                         }
                     }
-                    println!("--------------try_delete_many_with_body-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_delete_many_with_body(
+                    println!("--------------try_delete_many-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_delete_many(
                         &api_location,
                         //todo - builder pattern?
-                        crate::repositories_types::tufa_server::routes::api::cats::DeleteManyWithBodyParameters{ 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::DeleteManyWithBodyPayload { 
+                        crate::repositories_types::tufa_server::routes::api::cats::DeleteManyParameters{ 
+                            payload: crate::repositories_types::tufa_server::routes::api::cats::DeleteManyPayload { 
                                 id: Some(
                                     ids.clone()
                                     // vec![
@@ -1893,12 +1893,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             println!("{e}");
                         }
                     }
-                    println!("--------------try_read_many_with_body-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many_with_body(
+                    println!("--------------try_read_many-----------------");
+                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many(
                         &api_location,
                         //todo - builder pattern?
-                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyParameters{ 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyWithBodyPayload { 
+                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyParameters{ 
+                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyPayload { 
                                 select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor,
                                 id: Some(
                                     ids.clone()
@@ -2474,7 +2474,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {not_uuid_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let one_camel_case_stringified = "One";
-    let with_body_camel_case_stringified = "WithBody";
     let many_camel_case_stringified = "Many";
     let create_camel_case_stringified = "Create";
     let read_camel_case_stringified = "Read";
@@ -4143,8 +4142,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //     &read_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
-    let read_many_with_body_token_stream = {
-        let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{many_camel_case_stringified}{with_body_camel_case_stringified}");
+    let read_many_token_stream = {
+        let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let operation_http_method = OperationHttpMethod::Post;
         let operation_parameters_camel_case_token_stream = generate_operation_parameters_camel_case_token_stream(
@@ -4209,7 +4208,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
+        let read_many_payload_try_from_read_many_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &code_occurence_field,
@@ -4253,7 +4252,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
                 type_variants_from_request_response.push(&bind_query_syn_variant);
                 type_variants_from_request_response.push(&not_uuid_syn_variant);
-                type_variants_from_request_response.push(&read_many_with_body_payload_try_from_read_many_with_body_payload_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response.push(&read_many_payload_try_from_read_many_payload_with_serialize_deserialize_syn_variant);
                 type_variants_from_request_response
             };
             generate_type_variants_from_request_response_syn_variants(
@@ -5000,7 +4999,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
-    //     &read_many_with_body_token_stream,
+    //     &read_many_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
     //todo WHY ITS RETURN SUCCESS EVEN IF ROW DOES NOT EXISTS?
@@ -6721,8 +6720,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //     &delete_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
-    let delete_many_with_body_token_stream = {
-        let operation_name_camel_case_stringified = format!("{delete_camel_case_stringified}{many_camel_case_stringified}{with_body_camel_case_stringified}");
+    let delete_many_token_stream = {
+        let operation_name_camel_case_stringified = format!("{delete_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let operation_http_method = OperationHttpMethod::Delete;
         let operation_parameters_camel_case_token_stream = generate_operation_parameters_camel_case_token_stream(
@@ -6787,7 +6786,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_lower_case,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
+        let delete_many_payload_try_from_delete_many_payload_with_serialize_deserialize_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
             proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &code_occurence_field,
@@ -6837,7 +6836,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 type_variants_from_request_response.push(&primary_key_from_row_and_failed_rollback_syn_variant);
                 type_variants_from_request_response.push(&commit_failed_syn_variant);
                 type_variants_from_request_response.push(&query_and_rollback_failed_syn_variant);
-                type_variants_from_request_response.push(&delete_many_with_body_payload_try_from_delete_many_with_body_payload_with_serialize_deserialize_syn_variant);
+                type_variants_from_request_response.push(&delete_many_payload_try_from_delete_many_payload_with_serialize_deserialize_syn_variant);
                 type_variants_from_request_response.push(&operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_server_syn_variant);
                 type_variants_from_request_response
             };
@@ -7585,7 +7584,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
-    //     &delete_many_with_body_token_stream,
+    //     &delete_many_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
     let common_token_stream = quote::quote! {
@@ -7615,11 +7614,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #create_many_token_stream
         #create_one_token_stream
         #read_one_token_stream
-        #read_many_with_body_token_stream
+        #read_many_token_stream
         #update_one_token_stream
         #update_many_token_stream
         #delete_one_token_stream
-        #delete_many_with_body_token_stream
+        #delete_many_token_stream
     };
     // if ident == "" {
         // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
