@@ -1,14 +1,8 @@
 pub fn type_variants_from_request_response_generator(
     desirable_attribute: &proc_macro_helpers::attribute::Attribute,
     desirable_token_stream: &proc_macro2::TokenStream,
-    desirable_type_token_stream: &proc_macro2::TokenStream, //std::vec::Vec<crate::server::postgres::uuid_wrapper::PossibleUuidWrapper>
+    desirable_type_token_stream: &proc_macro2::TokenStream,
     try_operation_camel_case_token_stream: &proc_macro2::TokenStream,
-    try_operation_response_variants_camel_case_stringified: &std::string::String,
-    try_operation_response_variants_camel_case_token_stream: &proc_macro2::TokenStream, //KekwResponseVariants
-    try_operation_response_variants_desirable_attribute_token_stream: &proc_macro2::TokenStream,
-    operation_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
-    try_operation_request_error_token_stream: &proc_macro2::TokenStream,
-    try_operation_with_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     operation_lower_case_stringified: &std::string::String,
     code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
     code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
@@ -26,7 +20,43 @@ pub fn type_variants_from_request_response_generator(
     operation_name_camel_case_stringified: &str,
     response_variants_camel_case_stringified: &str,
     ident: &syn::Ident,
+    with_serialize_deserialize_camel_case_stringified: &str,
+    try_operation_camel_case_stringified: &str,
+    request_error_camel_case_stringified: &str,
 ) -> proc_macro2::TokenStream {
+    let try_operation_response_variants_camel_case_stringified = crate::generate_try_operation_response_variants_camel_case_stringified(
+        &try_camel_case_stringified,
+        &operation_name_camel_case_stringified,
+        &response_variants_camel_case_stringified
+    );
+    let try_operation_response_variants_camel_case_token_stream = crate::generate_try_operation_response_variants_camel_case_token_stream(
+        &try_operation_response_variants_camel_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified
+    );
+    let try_operation_with_serialize_deserialize_camel_case_token_stream = crate::generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
+        &try_camel_case_stringified,
+        &operation_name_camel_case_stringified,
+        &with_serialize_deserialize_camel_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified
+    );
+    let try_operation_response_variants_desirable_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
+        &ident,
+        &try_camel_case_stringified,
+        &operation_name_camel_case_stringified,
+        &response_variants_camel_case_stringified,
+        &desirable_attribute,
+        &proc_macro_name_camel_case_ident_stringified
+    );
+    let try_operation_request_error_token_stream = crate::generate_try_operation_request_error_token_stream(
+        &try_operation_camel_case_stringified,
+        &request_error_camel_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified
+    );
+    let try_operation_with_serialize_deserialize_token_stream = crate::generate_try_operation_with_serialize_deserialize_token_stream(
+        &try_operation_camel_case_stringified,
+        &with_serialize_deserialize_camel_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified
+    );
     let axum_http_status_code_quote_token_stream = desirable_attribute.to_axum_http_status_code_token_stream();
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_token_stream();
     let axum_http_status_code_token_stream = quote::quote!{axum::http::StatusCode};
@@ -226,7 +256,7 @@ pub fn type_variants_from_request_response_generator(
                 quote::quote! {#field_ident}
             }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
             quote::quote! {
-                #operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+                #try_operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
                 } => Self::#variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
@@ -753,7 +783,7 @@ pub fn type_variants_from_request_response_generator(
                     quote::quote! {
                         #try_operation_response_variants_camel_case_token_stream::#variant_ident {
                             #(#fields_name_mapped_into_token_stream),*
-                        } => Err(#operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+                        } => Err(#try_operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
                             #(#fields_name_mapped_into_token_stream),*
                         })
                     }
@@ -762,7 +792,7 @@ pub fn type_variants_from_request_response_generator(
             .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
             impl TryFrom<#try_operation_response_variants_camel_case_token_stream> for #desirable_type_token_stream {
-                type Error = #operation_with_serialize_deserialize_camel_case_token_stream;
+                type Error = #try_operation_with_serialize_deserialize_camel_case_token_stream;
                 fn try_from(value: #try_operation_response_variants_camel_case_token_stream) -> Result<Self, Self::Error> {
                     match value {
                         #try_operation_response_variants_camel_case_token_stream::#desirable_token_stream(i) => Ok(i),
