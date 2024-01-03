@@ -7553,7 +7553,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         content_type = #application_json_quotes_token_stream
                     ),
                 }),
-                &Method::Post,
+                &Method::Delete,
             );
             quote::quote!{
                 #swagger_open_api_token_stream
