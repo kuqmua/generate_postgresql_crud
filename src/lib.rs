@@ -4167,18 +4167,18 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
+                    #field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>,
                 }
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream {
-                    pub select: #column_select_ident_token_stream,
-                    pub #primary_key_field_ident: std::option::Option<std::vec::Vec<#std_string_string_token_stream>>,//todo maybe possible uuid wrapper
+                    select: #column_select_ident_token_stream,
+                    #primary_key_field_ident: std::option::Option<std::vec::Vec<#std_string_string_token_stream>>,//todo maybe possible uuid wrapper
                     #(#fields_with_excluded_primary_key_token_stream)*
-                    pub order_by: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
-                    pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
-                    pub offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
+                    order_by: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
+                    limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
+                    offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
                 }    
             }
         };
@@ -5461,7 +5461,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     #derive_debug_serialize_deserialize_to_schema_token_stream
                     pub struct #operation_payload_element_with_serialize_deserialize_camel_case_token_stream {
-                        pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
+                        #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                         #(#fields_with_excluded_primary_key_token_stream),*
                     }
                 }
@@ -5469,7 +5469,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #operation_payload_element_with_serialize_deserialize_token_stream
                 #derive_debug_serialize_deserialize_to_schema_token_stream
-                pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream(pub std::vec::Vec<#operation_payload_element_with_serialize_deserialize_camel_case_token_stream>);
+                pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream(std::vec::Vec<#operation_payload_element_with_serialize_deserialize_camel_case_token_stream>);
             }
         };
         // println!("{payload_with_serialize_deserialize_token_stream}");
@@ -6150,7 +6150,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     });
                 let field_type = &element.field.ty;
                 quote::quote!{
-                    pub #field_ident: std::option::Option<#field_type>//todo with serialize deserialize conversion variants
+                    #field_ident: std::option::Option<#field_type>//todo with serialize deserialize conversion variants
                 }
             });
             quote::quote!{
@@ -6737,13 +6737,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                     });
                 quote::quote!{
-                    pub #field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>
+                    #field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_regex_filter_regex_filter_token_stream>>
                 }
             });
             quote::quote!{
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream {
-                    pub #primary_key_field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>>,
+                    #primary_key_field_ident: std::option::Option<std::vec::Vec<#crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream>>,
                     #(#fields_with_excluded_primary_key_token_stream),*
                 }
             }
@@ -7564,7 +7564,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #derive_debug_serialize_deserialize_to_schema_token_stream
                 pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream {
-                    pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
+                    #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
                 }
             }
         };
