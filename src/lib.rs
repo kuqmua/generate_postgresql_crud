@@ -267,7 +267,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             panic!("{proc_macro_name_camel_case_ident_stringified} primary_key is not type {sqlx_types_uuid_stringified}");
         }
     }
-    let primary_key_field_ident = primary_key_field.ident.clone()
+    let primary_key_field_ident = primary_key_field.ident.as_ref()
         .unwrap_or_else(|| {
             panic!("{proc_macro_name_camel_case_ident_stringified} primary_key_field.ident is None")
         });
@@ -567,13 +567,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             })
-                            == primary_key_field_ident
+                            == *primary_key_field_ident
                     }) {
                         Some(value) => {
                             let column_variant_ident_stringified = value.ident.clone().unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             });
-                            match column_variant_ident_stringified == primary_key_field_ident {
+                            match column_variant_ident_stringified == *primary_key_field_ident {
                                 true => quote::quote!{
                                     #uuid_wrapper_try_from_possible_uuid_wrapper_camel_case_token_stream {
                                         #eo_error_occurence_attribute_token_stream
@@ -627,13 +627,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             })
-                            == primary_key_field_ident
+                            == *primary_key_field_ident
                     }) {
                         Some(value) => {
                             let column_variant_ident_stringified = value.ident.clone().unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             });
-                            match column_variant_ident_stringified == primary_key_field_ident {
+                            match column_variant_ident_stringified == *primary_key_field_ident {
                                 true => quote::quote!{
                                     let #primary_key_field_ident = match value.#primary_key_field_ident {
                                         Some(value) => match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
@@ -662,7 +662,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         element.ident.clone().unwrap_or_else(|| {
                             panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                         })
-                         != primary_key_field_ident
+                         != *primary_key_field_ident
                     }).map(|element|{
                         let field_ident = element.ident.clone().unwrap_or_else(|| {
                             panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -4197,7 +4197,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #derive_debug_serialize_deserialize_token_stream
                 pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream {
                     pub select: #column_select_ident_token_stream,
-                    pub #primary_key_field_ident: std::option::Option<std::vec::Vec<#std_string_string_token_stream>>,
+                    pub #primary_key_field_ident: std::option::Option<std::vec::Vec<#std_string_string_token_stream>>,//todo maybe possible uuid wrapper
                     #(#fields_with_excluded_primary_key_token_stream)*
                     pub order_by: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
                     pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
@@ -7000,7 +7000,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|| {
                             panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                         });
-                    match field_ident == primary_key_field_ident {
+                    match field_ident == *primary_key_field_ident {
                         true => quote::quote!{Some(#primary_key_field_ident)},
                         false => quote::quote!{None}
                     }
@@ -9258,6 +9258,18 @@ fn generate_not_unique_field_vec_pascal_stringified(field_ident: &syn::Ident) ->
 fn generate_not_unique_field_vec_lower_case_stringified(field_ident: &syn::Ident) -> std::string::String {
     format!("not_unique_{field_ident}_vec")
 }
+
+fn generate_self_fields_token_stream<'a>(
+    fields: std::vec::Vec<&'a syn::Field>,
+    proc_macro_name_camel_case_ident_stringified: &'a str,
+) -> std::vec::Vec<&'a syn::Ident> {
+    fields.iter().map(|field|{//todo remove all option ident.clone with this pattern
+        field.ident.as_ref().unwrap_or_else(|| {
+            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+        })
+    }).collect()   
+}
+
 fn generate_http_request_many_token_stream(
     server_location_name_token_stream: &proc_macro2::TokenStream,
     server_location_type_token_stream: &proc_macro2::TokenStream,
