@@ -9356,12 +9356,11 @@ fn generate_try_operation_token_stream(
         &proc_macro_name_camel_case_ident_stringified
     );
     let operation_http_method_token_stream = operation_http_method.to_token_stream();
-    let url_handle_token_stream = {
-        let url_path = generate_url_path(&table_name_stringified);
-        let url_handle_stringified = format!("\"{url_path}/{operation_name_lower_case_stringified}\"");
-        url_handle_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    };
+    let url_handle_token_stream = generate_url_handle_token_stream(
+        &table_name_stringified,
+        &operation_name_lower_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified,
+    );
     quote::quote!{
         pub async fn #try_operation_lower_case_token_stream<'a>(
             #server_location_name_token_stream: #server_location_type_token_stream,
@@ -9388,6 +9387,17 @@ fn generate_try_operation_token_stream(
             }
         }
     }
+}
+
+fn generate_url_handle_token_stream(
+    table_name_stringified: &str,
+    operation_name_lower_case_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str,
+) -> proc_macro2::TokenStream {
+    let url_path = generate_url_path(&table_name_stringified);
+    let url_handle_stringified = format!("\"{url_path}/{operation_name_lower_case_stringified}\"");
+    url_handle_stringified.parse::<proc_macro2::TokenStream>()
+    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
 fn generate_type_variants_from_request_response_syn_variants<'a>(
