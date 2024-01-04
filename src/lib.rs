@@ -2872,6 +2872,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             bytes_rejection_syn_variant
         ]
     };
+    let fields_named_idents_comma_excluding_primary_key_token_stream = generate_self_fields_token_stream(
+        &fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect(),
+        &proc_macro_name_camel_case_ident_stringified,
+    ).iter().map(|element|quote::quote!{#element,}).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    let fields_named_idents_comma_token_stream = generate_self_fields_token_stream(
+        &fields_named.iter().collect(),
+        &proc_macro_name_camel_case_ident_stringified,
+    ).iter().map(|element|quote::quote!{#element,}).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let create_many_token_stream = {
         let operation_name_camel_case_stringified = format!("{create_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
@@ -4256,10 +4264,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let offset = value.offset;
                         Ok(Self {
                             select,
-                            id,
-                            //todo generate it
-                            name,
-                            color,
+                            #(#fields_named_idents_comma_token_stream)*
                             order_by,
                             limit,
                             offset,
@@ -4298,10 +4303,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         let offset = value.offset;
                         Self{
                             select,
-                            id,
-                            //todo generate it
-                            name,
-                            color,
+                            #(#fields_named_idents_comma_token_stream)*
                             order_by,
                             limit,
                             offset,
