@@ -3260,7 +3260,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_error_named_camel_case_token_stream,
                 &payload_lower_case_token_stream,
                 &serde_json_to_string_token_stream,
-                &quote::quote!{&#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)},
                 &serde_json_to_string_variant_initialization_token_stream,
                 &reqwest_client_new_token_stream,
                 &operation_http_method,
@@ -3276,6 +3275,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &tvfrr_extraction_logic_lower_case_stringified,
                 &table_name_stringified,
+                &operation_payload_with_serialize_deserialize_camel_case_token_stream,
             )
         };
         // println!("{http_request_token_stream}");
@@ -5730,7 +5730,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_error_named_camel_case_token_stream,
                 &payload_lower_case_token_stream,
                 &serde_json_to_string_token_stream,
-                &quote::quote!{&#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)},
                 &serde_json_to_string_variant_initialization_token_stream,
                 &reqwest_client_new_token_stream,
                 &operation_http_method,
@@ -5746,6 +5745,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &tvfrr_extraction_logic_lower_case_stringified,
                 &table_name_stringified,
+                &operation_payload_with_serialize_deserialize_camel_case_token_stream,
             )
         };
         // println!("{http_request_token_stream}");
@@ -6955,7 +6955,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_error_named_camel_case_token_stream,
                 &payload_lower_case_token_stream,
                 &serde_json_to_string_token_stream,
-                &quote::quote!{&#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)},
                 &serde_json_to_string_variant_initialization_token_stream,
                 &reqwest_client_new_token_stream,
                 &operation_http_method,
@@ -6971,6 +6970,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_camel_case_ident_stringified,
                 &tvfrr_extraction_logic_lower_case_stringified,
                 &table_name_stringified,
+                &operation_payload_with_serialize_deserialize_camel_case_token_stream,
             )
         };
         // println!("{http_request_token_stream}");
@@ -9267,7 +9267,6 @@ fn generate_http_request_many_token_stream(
     try_operation_error_named_camel_case_token_stream: &proc_macro2::TokenStream,
     payload_lower_case_token_stream: &proc_macro2::TokenStream,
     serde_json_to_string_token_stream: &proc_macro2::TokenStream,
-    serde_json_to_string_value_token_stream: &proc_macro2::TokenStream,
     serde_json_to_string_variant_initialization_token_stream: &proc_macro2::TokenStream,
     reqwest_client_new_token_stream: &proc_macro2::TokenStream,
     operation_http_method: &OperationHttpMethod,
@@ -9283,6 +9282,7 @@ fn generate_http_request_many_token_stream(
     proc_macro_name_camel_case_ident_stringified: &str,
     tvfrr_extraction_logic_lower_case_stringified: &str,
     table_name_stringified: &str,
+    operation_payload_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
     let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
         &try_lower_case_stringified,
@@ -9307,9 +9307,7 @@ fn generate_http_request_many_token_stream(
             #parameters_lower_case_token_stream: #operation_parameters_camel_case_token_stream,
         ) -> Result<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream, #try_operation_error_named_camel_case_token_stream> {
             let #payload_lower_case_token_stream = match #serde_json_to_string_token_stream(
-                // &#parameters_lower_case_token_stream.#payload_lower_case_token_stream
-                // &#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)
-                #serde_json_to_string_value_token_stream
+                &#operation_payload_with_serialize_deserialize_camel_case_token_stream::from(#parameters_lower_case_token_stream.#payload_lower_case_token_stream)
             ) {
                 Ok(value) => value,
                 Err(e) => {
