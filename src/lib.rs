@@ -543,14 +543,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     struct_name_stringified.parse::<proc_macro2::TokenStream>()
                     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {struct_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
-                let self_fields_token_stream = variant_columns.iter().map(|field|{
-                    let field_ident = field.ident.clone().unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    });
-                    quote::quote! {
-                        #field_ident
-                    }   
-                });
+                let self_fields_token_stream = generate_self_fields_token_stream(
+                    &variant_columns.iter().collect(),
+                    &proc_macro_name_camel_case_ident_stringified,
+                );
                 let ident_try_from_ident_options_error_named_camel_case_token_stream = {
                     let ident_try_from_ident_options_error_named_camel_case_stringified = format!(
                         "{struct_name_stringified}{try_from_camel_case_stringified}{struct_options_ident_stringified}{error_named_camel_case_stringified}"
@@ -9260,7 +9256,7 @@ fn generate_not_unique_field_vec_lower_case_stringified(field_ident: &syn::Ident
 }
 
 fn generate_self_fields_token_stream<'a>(
-    fields: std::vec::Vec<&'a syn::Field>,
+    fields: &std::vec::Vec<&'a syn::Field>,
     proc_macro_name_camel_case_ident_stringified: &'a str,
 ) -> std::vec::Vec<&'a syn::Ident> {
     fields.iter().map(|field|{//todo remove all option ident.clone with this pattern
