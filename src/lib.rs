@@ -3074,15 +3074,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }
                 };
-                let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                    let field_ident = element.field.ident.as_ref()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                        });
-                    quote::quote!{
-                        let #field_ident = value.#field_ident;//todo with serialize deserialize conversion
-                    }
-                });
+                let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_try_from_token_stream(
+                    &element,
+                    &proc_macro_name_camel_case_ident_stringified
+                ));
                 let fields_idents_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                     element.field.ident.as_ref()
                         .unwrap_or_else(|| {
@@ -3138,15 +3133,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream}");
         let impl_std_convert_from_operation_payload_for_operation_payload_with_serialize_deserialize_token_stream = {
             let impl_std_convert_from_operation_payload_element_for_operation_payload_element_with_serialize_deserialize_token_stream = {
-                let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                    let field_ident = element.field.ident.as_ref()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                        });
-                    quote::quote!{
-                        let #field_ident = value.#field_ident;
-                    }
-                });
+                let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_from_token_stream(
+                    &element,
+                    &proc_macro_name_camel_case_ident_stringified
+                ));
                 let fields_idents_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                     element.field.ident.as_ref()
                         .unwrap_or_else(|| {
@@ -3679,15 +3669,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream}");
         let impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream = {
-            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                let field_ident = element.field.ident.as_ref()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    });
-                quote::quote!{
-                    let #field_ident = value.#field_ident;//todo with_serialize_deserialize
-                }
-            });
+            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_try_from_token_stream(
+                &element,
+                &proc_macro_name_camel_case_ident_stringified
+            ));
             let fields_idents_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 element.field.ident.as_ref()
                     .unwrap_or_else(|| {
@@ -3708,15 +3693,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream}");
         let impl_std_convert_from_operation_payload_for_operation_payload_with_serialize_deserialize_token_stream = {
-            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                let field_ident = element.field.ident.as_ref()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    });
-                quote::quote!{
-                    let #field_ident = value.#field_ident;//todo with_serialize_deserialize
-                }
-            });
+            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_from_token_stream(
+                &element,
+                &proc_macro_name_camel_case_ident_stringified
+            ));
             let fields_idents_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 element.field.ident.as_ref()
                     .unwrap_or_else(|| {
@@ -4219,15 +4199,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 }
             };
-            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                let field_ident = element.field.ident.as_ref()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    });
-                quote::quote!{
-                    let #field_ident = value.#field_ident;
-                }
-            });
+            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_try_from_token_stream(
+                &element,
+                &proc_macro_name_camel_case_ident_stringified
+            ));
             quote::quote!{
                 impl std::convert::TryFrom<#operation_payload_with_serialize_deserialize_camel_case_token_stream> for #operation_payload_camel_case_token_stream {
                     type Error = #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream;
@@ -4259,15 +4234,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 }
             };
-            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                let field_ident = element.field.ident.as_ref()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    });
-                quote::quote!{
-                    let #field_ident = value.#field_ident;
-                }
-            });
+            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_from_token_stream(
+                &element,
+                &proc_macro_name_camel_case_ident_stringified
+            ));
             quote::quote!{
                 impl std::convert::From<#operation_payload_camel_case_token_stream> for #operation_payload_with_serialize_deserialize_camel_case_token_stream {
                     fn from(value: #operation_payload_camel_case_token_stream) -> Self {
@@ -5523,15 +5493,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 };
                 // println!("{operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_error_named_token_stream}");
-                let fields_assignments_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                    let field_ident = element.field.ident.as_ref()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                        });
-                    quote::quote!{
-                        let #field_ident = value.#field_ident;
-                    }
-                });
+                let fields_assignments_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_try_from_token_stream(
+                    &element,
+                    &proc_macro_name_camel_case_ident_stringified
+                ));
                 let self_init_fields_token_stream = generate_self_fields_token_stream(
                     &fields_named.iter().collect(),
                     &proc_macro_name_camel_case_ident_stringified,
@@ -5580,15 +5545,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let impl_std_convert_from_operation_payload_for_operation_payload_with_serialize_deserialize_token_stream = {
             let impl_std_convert_from_operation_payload_element_for_operation_payload_element_with_serialize_deserialize_token_stream = {
-                let fields_assignments_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                    let field_ident = element.field.ident.as_ref()
-                        .unwrap_or_else(|| {
-                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                        });
-                    quote::quote!{
-                        let #field_ident = value.#field_ident;
-                    }
-                });
+                let fields_assignments_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_from_token_stream(
+                    &element,
+                    &proc_macro_name_camel_case_ident_stringified
+                ));
                 let self_init_fields_token_stream = generate_self_fields_token_stream(
                     &fields_named.iter().collect(),
                     &proc_macro_name_camel_case_ident_stringified,
@@ -6176,15 +6136,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream}");
         let impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream = {
-            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                let field_ident = element.field.ident.as_ref()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    });
-                quote::quote!{
-                    let #field_ident = value.#field_ident;
-                }
-            });
+            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_try_from_token_stream(
+                &element,
+                &proc_macro_name_camel_case_ident_stringified
+            ));
             let fields_idents_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 element.field.ident.as_ref()
                     .unwrap_or_else(|| {
@@ -6216,15 +6171,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream}");
         let impl_std_convert_from_operation_payload_for_operation_payload_with_serialize_deserialize_token_stream = {
-            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                let field_ident = element.field.ident.as_ref()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    });
-                quote::quote!{
-                    let #field_ident = value.#field_ident;
-                }
-            });
+            let fields_assignment_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_from_token_stream(
+                &element,
+                &proc_macro_name_camel_case_ident_stringified
+            ));
             let fields_idents_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 element.field.ident.as_ref()
                     .unwrap_or_else(|| {
@@ -6763,15 +6713,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream}");
         let impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream = {
-            let fields_assignments_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                let field_ident = element.field.ident.as_ref()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    });
-                quote::quote!{
-                    let #field_ident = value.#field_ident;
-                }
-            });
+            let fields_assignments_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_try_from_token_stream(
+                &element,
+                &proc_macro_name_camel_case_ident_stringified
+            ));
             let self_init_fields_token_stream = generate_self_fields_token_stream(
                 &fields_named.iter().collect(),
                 &proc_macro_name_camel_case_ident_stringified,
@@ -6804,15 +6749,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         let impl_std_convert_from_operation_payload_for_operation_payload_with_serialize_deserialize_token_stream = {
-            let fields_assignments_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
-                let field_ident = element.field.ident.as_ref()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    });
-                quote::quote!{
-                    let #field_ident = value.#field_ident;
-                }
-            });
+            let fields_assignments_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|generate_let_field_ident_value_field_ident_from_token_stream(
+                &element,
+                &proc_macro_name_camel_case_ident_stringified
+            ));
             let self_init_fields_token_stream = generate_self_fields_token_stream(
                 &fields_named.iter().collect(),
                 &proc_macro_name_camel_case_ident_stringified,
@@ -9237,6 +9177,33 @@ fn generate_field_ident_field_type_with_serialize_deserialize_token_stream(
         pub #field_ident: #field_type //todo with serialize deserialize conversion
     }
 }
+
+fn generate_let_field_ident_value_field_ident_try_from_token_stream(
+    element: &FieldNamedWrapperExcludingPrimaryKey,
+    proc_macro_name_camel_case_ident_stringified: &str
+) -> proc_macro2::TokenStream {
+    let field_ident = element.field.ident.as_ref()
+        .unwrap_or_else(|| {
+            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+        });
+    quote::quote!{
+        let #field_ident = value.#field_ident;//todo with serialize deserialize
+    }
+}
+
+fn generate_let_field_ident_value_field_ident_from_token_stream(
+    element: &FieldNamedWrapperExcludingPrimaryKey,
+    proc_macro_name_camel_case_ident_stringified: &str
+) -> proc_macro2::TokenStream {
+    let field_ident = element.field.ident.as_ref()
+        .unwrap_or_else(|| {
+            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+        });
+    quote::quote!{
+        let #field_ident = value.#field_ident;
+    }
+}
+
 
 fn generate_http_request_many_token_stream(
     server_location_name_token_stream: &proc_macro2::TokenStream,
