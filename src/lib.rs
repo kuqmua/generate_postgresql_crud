@@ -6730,7 +6730,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{payload_token_stream}");
-        let operation_payload_with_serialize_deserialize_token_stream = {
+        let payload_with_serialize_deserialize_token_stream = {
             let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident.as_ref()
                     .unwrap_or_else(|| {
@@ -6748,7 +6748,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             }
         };
-        // println!("{operation_payload_with_serialize_deserialize_token_stream}");
+        // println!("{payload_with_serialize_deserialize_token_stream}");
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream = {
             quote::quote!{
                 #derive_debug_thiserror_error_occurence_token_stream
@@ -7406,7 +7406,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         quote::quote!{
             #parameters_token_stream
             #payload_token_stream
-            #operation_payload_with_serialize_deserialize_token_stream
+            #payload_with_serialize_deserialize_token_stream
             #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream
             #impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream
             #impl_std_convert_from_operation_payload_for_operation_payload_with_serialize_deserialize_token_stream
