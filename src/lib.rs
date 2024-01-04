@@ -1018,7 +1018,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let write_ident_token_stream = column_variant.iter().filter_map(|field|match field == &primary_key_field {
                     true => None,
                     false => {
-                        let field_ident = field.ident.clone()
+                        let field_ident = field.ident.as_ref()
                         .unwrap_or_else(|| {
                             panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                         });
@@ -1545,7 +1545,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {ident_column_read_permission_name} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         let fields_permission_token_stream = fields_named.iter().map(|field| {
-            let field_ident = field.ident.clone()
+            let field_ident = field.ident.as_ref()
                 .unwrap_or_else(|| {
                     panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                 });
