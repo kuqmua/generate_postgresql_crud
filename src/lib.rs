@@ -274,7 +274,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let std_string_string_token_stream = quote::quote!{std::string::String};
     let fields_named_wrappers_excluding_primary_key = fields_named.clone().into_iter().filter(|field|*field != primary_key_field).map(|element|{
         let field_ident = element.ident
-            .clone()
+            .as_ref()
             .unwrap_or_else(|| {
                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
             });
@@ -425,7 +425,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         let ident_option_variants_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| {
             let field_ident = element.field.ident
-                .clone()
+                .as_ref()
                 .unwrap_or_else(|| {
                     panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                 });
@@ -472,7 +472,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     variant_columns.iter().for_each(|variant_column| {
                         use convert_case::Casing;
                         let column_title_cased = variant_column.ident
-                            .clone()
+                            .as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             })
@@ -483,7 +483,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {struct_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 let genereted_fields = variant_columns.iter().map(|variant_column|{
-                    let variant_column_ident = variant_column.ident.clone()
+                    let variant_column_ident = variant_column.ident.as_ref()
                         .unwrap_or_else(|| {
                             panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                         });
@@ -529,7 +529,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let variant_columns_merged_camel_case_stringified = variant_columns.iter().fold(std::string::String::from(""), |mut acc, element| {
                         use convert_case::Casing;
                         let column_title_cased = element.ident
-                            .clone()
+                            .as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             })
@@ -559,17 +559,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let ident_try_from_ident_options_error_named_token_stream = {
                     let uuid_wrapper_try_from_possible_uuid_wrapper_primary_key_variant_token_stream = match variant_columns.iter().find(|element| {
                         element.ident
-                            .clone()
+                            .as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             })
-                            == *primary_key_field_ident
+                            == primary_key_field_ident
                     }) {
                         Some(value) => {
-                            let column_variant_ident_stringified = value.ident.clone().unwrap_or_else(|| {
+                            let column_variant_ident_stringified = value.ident.as_ref().unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             });
-                            match column_variant_ident_stringified == *primary_key_field_ident {
+                            match column_variant_ident_stringified == primary_key_field_ident {
                                 true => quote::quote!{
                                     #uuid_wrapper_try_from_possible_uuid_wrapper_camel_case_token_stream {
                                         #eo_error_occurence_attribute_token_stream
@@ -583,7 +583,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         None => proc_macro2::TokenStream::new()  
                     };
                     let is_none_variant_columns_token_stream = variant_columns.iter().map(|element|{
-                        let field_ident = element.ident.clone().unwrap_or_else(|| {
+                        let field_ident = element.ident.as_ref().unwrap_or_else(|| {
                             panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                         });
                         let field_ident_title_case_stringified = {
@@ -619,17 +619,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 let impl_std_convert_try_from_ident_options_ident_token_stream = {
                     let primary_key_field_assignment_token_stream = match variant_columns.iter().find(|element| {
                         element.ident
-                            .clone()
+                            .as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             })
-                            == *primary_key_field_ident
+                            == primary_key_field_ident
                     }) {
                         Some(value) => {
-                            let column_variant_ident_stringified = value.ident.clone().unwrap_or_else(|| {
+                            let column_variant_ident_stringified = value.ident.as_ref().unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             });
-                            match column_variant_ident_stringified == *primary_key_field_ident {
+                            match column_variant_ident_stringified == primary_key_field_ident {
                                 true => quote::quote!{
                                     let #primary_key_field_ident = match value.#primary_key_field_ident {
                                         Some(value) => match #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(value) {
@@ -655,12 +655,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         None => proc_macro2::TokenStream::new()  
                     };
                     let variant_columns_assignment_token_stream = variant_columns.iter().filter(|element|{
-                        element.ident.clone().unwrap_or_else(|| {
+                        element.ident.as_ref().unwrap_or_else(|| {
                             panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                         })
-                         != *primary_key_field_ident
+                         != primary_key_field_ident
                     }).map(|element|{
-                        let field_ident = element.ident.clone().unwrap_or_else(|| {
+                        let field_ident = element.ident.as_ref().unwrap_or_else(|| {
                             panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                         });
                         let field_ident_title_case_stringified = {
@@ -724,7 +724,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             .iter()
             .map(|field| {
                 let field_ident_stringified = field.ident
-                    .clone()
+                    .as_ref()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                     })
@@ -790,7 +790,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .fold(std::string::String::default(), |mut acc, field| {
                             use convert_case::Casing;
                             let field_ident_stringified = field.ident
-                                .clone()
+                                .as_ref()
                                 .unwrap_or_else(|| {
                                     panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                                 }).to_string().to_case(convert_case::Case::Title);
@@ -818,7 +818,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let mut write_ident_stringified_handle = column_variant.iter()
                         .fold(std::string::String::default(), |mut acc, field| {
                             let field_ident_stringified = field.ident
-                                .clone()
+                                .as_ref()
                                 .unwrap_or_else(|| {
                                     panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                                 });
@@ -834,7 +834,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .fold(std::string::String::default(), |mut acc, field| {
                             use convert_case::Casing;
                             let field_ident_stringified = field.ident
-                                .clone()
+                                .as_ref()
                                 .unwrap_or_else(|| {
                                     panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                                 }).to_string().to_case(convert_case::Case::Title);
@@ -865,7 +865,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .fold(std::string::String::default(), |mut acc, field| {
                     use convert_case::Casing;
                     let field_ident_stringified = field.ident
-                        .clone()
+                        .as_ref()
                         .unwrap_or_else(|| {
                             panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                         }).to_string().to_case(convert_case::Case::Title);
@@ -918,7 +918,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .fold(std::string::String::default(), |mut acc, field| {
                     use convert_case::Casing;
                     let field_ident_stringified = field.ident
-                        .clone()
+                        .as_ref()
                         .unwrap_or_else(|| {
                             panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                         }).to_string().to_case(convert_case::Case::Title);
@@ -944,7 +944,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .fold(std::string::String::default(), |mut acc, field| {
                             use convert_case::Casing;
                             let field_ident_stringified = field.ident
-                                .clone()
+                                .as_ref()
                                 .unwrap_or_else(|| {
                                     panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                                 }).to_string().to_case(convert_case::Case::Title);
@@ -994,7 +994,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let declaration_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                 let field_ident = element.field.ident
-                    .clone()
+                    .as_ref()
                     .unwrap_or_else(|| {
                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                     });
@@ -1036,7 +1036,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .fold(std::string::String::default(), |mut acc, field| {
                             use convert_case::Casing;
                             let field_ident_stringified = field.ident
-                                .clone()
+                                .as_ref()
                                 .unwrap_or_else(|| {
                                     panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                                 }).to_string().to_case(convert_case::Case::Title);
@@ -1053,13 +1053,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             });
-            let option_fields_initiation_token_stream = fields_named.iter().map(|field|{
-                field.ident
-                    .clone()
-                    .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                    })
-            });
+            let option_fields_initiation_token_stream = generate_self_fields_token_stream(
+                &fields_named.iter().collect(),
+                &proc_macro_name_camel_case_ident_stringified,
+            );
             let sqlx_decode_decode_and_sqlx_types_type_primary_key_token_stream = quote::quote!{
                 std::option::Option<#sqlx_types_uuid_token_stream>: #sqlx_decode_decode_database_token_stream,
                 std::option::Option<#sqlx_types_uuid_token_stream>: #sqlx_types_type_database_token_stream,
@@ -3352,7 +3349,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let column_query_bind_vecs_token_stream = handle_fields_named_wrappers_excluding_primary_key.iter().map(|element|{
                         let field_ident_underscore_vec_token_stream = {
                             let field_ident_underscore_vec_stringified = {
-                                let field_ident = element.ident.clone()
+                                let field_ident = element.ident.as_ref()
                                     .unwrap_or_else(|| {
                                         panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                                     });
@@ -9198,9 +9195,10 @@ fn generate_common_middlewares_error_syn_variants_from_impls(
             } else {
                 panic!("{proc_macro_name_camel_case_ident_stringified} {element_ident} supports only syn::Fields::Named");
             };
-            let fields_token_stream = fields_named.iter().map(|element|element.ident.clone().unwrap_or_else(|| {
-                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-            })).collect::<std::vec::Vec<syn::Ident>>();
+            let fields_token_stream = generate_self_fields_token_stream(
+                &fields_named.iter().collect(),
+                &proc_macro_name_camel_case_ident_stringified,
+            );
             quote::quote! {
                 #element_path_ident_token_stream::#element_ident {
                     #(#fields_token_stream),*
