@@ -3084,43 +3084,48 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }
                 };
-                let operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_error_named_camel_case_token_stream(
-                    &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
-                    error_named_camel_case_stringified,
-                    &proc_macro_name_camel_case_ident_stringified
-                );
-                let operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream = {
+                let impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream = {
+                    let operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_error_named_camel_case_token_stream(
+                        &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
+                        error_named_camel_case_stringified,
+                        &proc_macro_name_camel_case_ident_stringified
+                    );
+                    let operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream = {
+                        quote::quote!{
+                            #derive_debug_thiserror_error_occurence_token_stream
+                            pub enum #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream {
+                                //todo remove useless variant and add later protentian errors from conversion from with serialize_deserialize
+                                #not_uuid_token_camel_case_stream {
+                                    #eo_error_occurence_attribute_token_stream
+                                    #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
+                                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                                },
+                            }
+                        }
+                    };
                     quote::quote!{
-                        #derive_debug_thiserror_error_occurence_token_stream
-                        pub enum #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream {
-                            //todo remove useless variant and add later protentian errors from conversion from with serialize_deserialize
-                            #not_uuid_token_camel_case_stream {
-                                #eo_error_occurence_attribute_token_stream
-                                #not_uuid_token_lower_case_stream: #crate_server_postgres_uuid_wrapper_uuid_wrapper_try_from_possible_uuid_wrapper_error_named_token_stream,
-                                #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                            },
+                        #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream
+
+                        impl std::convert::TryFrom<#operation_payload_with_serialize_deserialize_camel_case_token_stream> for #operation_payload_camel_case_token_stream {
+                            type Error = #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream;
+                            fn try_from(value: #operation_payload_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
+                                let mut elements = std::vec::Vec::with_capacity(value.0.len());
+                                for element in value.0 {
+                                    match #operation_payload_element_camel_case_token_stream::try_from(element) {
+                                        Ok(value) => {
+                                            elements.push(value);
+                                        }
+                                        Err(e) => todo!()
+                                    }
+                                }
+                                Ok(Self(elements))
+                            }
                         }
                     }
                 };
                 quote::quote!{
                     #impl_std_convert_try_from_operation_payload_element_with_serialize_deserialize_for_operation_payload_element_token_stream
-                    #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_token_stream
-
-                    impl std::convert::TryFrom<#operation_payload_with_serialize_deserialize_camel_case_token_stream> for #operation_payload_camel_case_token_stream {
-                        type Error = #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream;
-                        fn try_from(value: #operation_payload_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
-                            let mut elements = std::vec::Vec::with_capacity(value.0.len());
-                            for element in value.0 {
-                                match #operation_payload_element_camel_case_token_stream::try_from(element) {
-                                    Ok(value) => {
-                                        elements.push(value);
-                                    }
-                                    Err(e) => todo!()
-                                }
-                            }
-                            Ok(Self(elements))
-                        }
-                    }
+                    #impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream
                 }
             };
             // println!("{impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream}");
@@ -3166,6 +3171,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #payload_with_serialize_deserialize_token_stream
                 #impl_std_convert_try_from_operation_payload_with_serialize_deserialize_for_operation_payload_token_stream
                 #impl_std_convert_from_operation_payload_for_operation_payload_with_serialize_deserialize_token_stream
+                
                 #derive_debug_token_stream
                 pub struct #operation_parameters_camel_case_token_stream {
                     pub #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream,
