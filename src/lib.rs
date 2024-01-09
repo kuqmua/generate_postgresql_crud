@@ -2900,17 +2900,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let operation_payload_element_camel_case_token_stream = generate_operation_payload_element_camel_case_token_stream(
-            &operation_name_camel_case_stringified,
-            &payload_element_camel_case_stringified,
-            &proc_macro_name_camel_case_ident_stringified
-        );
-        let operation_payload_element_with_serialize_deserialize_camel_case_token_stream = generate_operation_payload_element_with_serialize_deserialize_camel_case_token_stream(
-            &operation_name_camel_case_stringified,
-            &payload_element_camel_case_stringified,
-            &with_serialize_deserialize_camel_case_stringified,
-            &proc_macro_name_camel_case_ident_stringified
-        );
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified = generate_operation_payload_try_from_payload_with_serialize_deserialize_stringified(
             &operation_name_camel_case_stringified,
             payload_camel_case_stringified,
@@ -2999,6 +2988,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_camel_case_ident_stringified,
         );
         let parameters_token_stream = {
+            let operation_payload_element_camel_case_token_stream = generate_operation_payload_element_camel_case_token_stream(
+                &operation_name_camel_case_stringified,
+                &payload_element_camel_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let payload_token_stream = {
                 let operation_payload_element_token_stream = {
                     let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| generate_pub_field_ident_field_type_token_stream(
@@ -3019,6 +3013,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             };
             // println!("{payload_token_stream}");
+            let operation_payload_element_with_serialize_deserialize_camel_case_token_stream = generate_operation_payload_element_with_serialize_deserialize_camel_case_token_stream(
+                &operation_name_camel_case_stringified,
+                &payload_element_camel_case_stringified,
+                &with_serialize_deserialize_camel_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
             let payload_with_serialize_deserialize_token_stream = {
                 let operation_payload_element_with_serialize_deserialize_token_stream = {
                     let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| generate_field_ident_field_type_with_serialize_deserialize_token_stream(
