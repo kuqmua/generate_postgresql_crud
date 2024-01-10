@@ -4036,12 +4036,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
-        let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
-            try_camel_case_stringified,
-            &operation_name_camel_case_stringified,
-            error_named_camel_case_stringified,
-            &proc_macro_name_camel_case_ident_stringified
-        );
         let try_operation_response_variants_token_stream = generate_try_operation_response_variants_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
@@ -4289,26 +4283,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{parameters_token_stream}");
-        let try_operation_error_named_token_stream = {
-            let try_operation_request_error_camel_case_token_stream = generate_try_operation_request_error_camel_case_token_stream(
-                &try_camel_case_stringified,
-                &operation_name_camel_case_stringified,
-                &request_error_camel_case_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
-            quote::quote!{
-                #derive_debug_thiserror_error_occurence_token_stream
-                pub enum #try_operation_error_named_camel_case_token_stream {
-                    #request_error_camel_case_token_stream {
-                        #eo_error_occurence_attribute_token_stream
-                        #request_error_lower_case_token_stream: #try_operation_request_error_camel_case_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    #http_request_error_named_serde_json_to_string_variant_token_stream,
-                }
-            }
-        };
-        // println!("{try_operation_error_named_token_stream}");
         let try_operation_error_with_middleware_error_variants_token_stream = {
             crate::type_variants_from_request_response_generator::type_variants_from_request_response_generator(
                 &desirable_attribute,
@@ -4339,7 +4313,33 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let http_request_token_stream = {
-            generate_try_operation_token_stream(
+            let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
+                try_camel_case_stringified,
+                &operation_name_camel_case_stringified,
+                error_named_camel_case_stringified,
+                &proc_macro_name_camel_case_ident_stringified
+            );
+            let try_operation_error_named_token_stream = {
+                let try_operation_request_error_camel_case_token_stream = generate_try_operation_request_error_camel_case_token_stream(
+                    &try_camel_case_stringified,
+                    &operation_name_camel_case_stringified,
+                    &request_error_camel_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified
+                );
+                quote::quote!{
+                    #derive_debug_thiserror_error_occurence_token_stream
+                    pub enum #try_operation_error_named_camel_case_token_stream {
+                        #request_error_camel_case_token_stream {
+                            #eo_error_occurence_attribute_token_stream
+                            #request_error_lower_case_token_stream: #try_operation_request_error_camel_case_token_stream,
+                            #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                        },
+                        #http_request_error_named_serde_json_to_string_variant_token_stream,
+                    }
+                }
+            };
+            // println!("{try_operation_error_named_token_stream}");
+            let http_request_token_stream = generate_try_operation_token_stream(
                 &try_lower_case_stringified,
                 &operation_name_lower_case_stringified,
                 &proc_macro_name_camel_case_ident_stringified,
@@ -4370,7 +4370,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 },
                 &request_error_variant_initialization_token_stream,
                 &table_name_stringified,
-            )
+            );
+            quote::quote!{
+                #try_operation_error_named_token_stream
+                #http_request_token_stream
+            }
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -4832,7 +4836,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{common_middlewares_error_syn_variants_from_impls}");
         quote::quote!{
             #parameters_token_stream
-            #try_operation_error_named_token_stream
             #try_operation_error_with_middleware_error_variants_token_stream
             #http_request_token_stream
             #route_handler_token_stream
