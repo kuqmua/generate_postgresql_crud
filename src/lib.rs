@@ -2443,6 +2443,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let postgres_transaction_token_stream = quote::quote!{postgres_transaction};
     let order_by_token_stream = quote::quote!{order_by};
     let select_token_stream = quote::quote!{select};
+    let limit_token_stream = quote::quote!{limit};
+    let offset_token_stream = quote::quote!{offset};
     let sqlx_query_sqlx_postgres_token_stream = quote::quote!{sqlx::query::<sqlx::Postgres>};
     let reqwest_client_new_token_stream = quote::quote!{reqwest::Client::new()};
     let axum_extract_state_token_stream = quote::quote!{axum::extract::State};
@@ -4103,12 +4105,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     #derive_debug_to_schema_token_stream
                     pub struct #operation_payload_camel_case_token_stream {
-                        pub #select_token_stream: #column_select_ident_token_stream,
                         pub #primary_key_field_ident: std::option::Option<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
                         #(#fields_with_excluded_primary_key_token_stream)*
+                        pub #select_token_stream: #column_select_ident_token_stream,
                         pub #order_by_token_stream: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
-                        pub limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
-                        pub offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
+                        pub #limit_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
+                        pub #offset_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
                     }
                 }
             };
@@ -4126,12 +4128,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     #derive_debug_serialize_deserialize_token_stream
                     pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream {
-                        select: #column_select_ident_token_stream,
                         #primary_key_field_ident: std::option::Option<std::vec::Vec<#std_string_string_token_stream>>,//todo maybe possible uuid wrapper
                         #(#fields_with_excluded_primary_key_token_stream)*
-                        order_by: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
-                        limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
-                        offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
+                        #select_token_stream: #column_select_ident_token_stream,
+                        #order_by_token_stream: #crate_server_postgres_order_by_order_by_token_stream<#column_ident_token_stream>,
+                        #limit_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
+                        #offset_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
                     }    
                 }
             };
