@@ -2687,18 +2687,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ]
                 )
             };
-            let pool_timed_out_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr408RequestTimeout,
-                "PoolTimedOut",
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        "pool_timed_out", 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            );
+            let pool_timed_out_syn_variant = {
+                let variant_name_camel_case_stringified = "PoolTimedOut";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr408RequestTimeout,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
             let pool_closed_syn_variant = {
                 let variant_name_camel_case_stringified = "PoolClosed";
                 let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
