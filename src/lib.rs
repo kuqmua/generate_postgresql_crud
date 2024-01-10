@@ -897,15 +897,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         // println!("{from_option_self_token_stream}");
+        let not_correct_value_token_stream = quote::quote!{not_correct_value};
+        let supported_values_token_stream = quote::quote!{supported_values};
         let ident_column_select_from_str_error_named_token_stream = {
             quote::quote! {
                 #derive_debug_thiserror_error_occurence_token_stream
                 pub enum #ident_column_select_from_str_error_named_camel_case_token_stream {
                     NotCorrect {
                         #eo_display_with_serialize_deserialize_token_stream
-                        not_correct_value: #std_string_string_token_stream,
+                        #not_correct_value_token_stream: #std_string_string_token_stream,
                         #eo_display_with_serialize_deserialize_token_stream
-                        supported_values: #std_string_string_token_stream,
+                        #supported_values_token_stream: #std_string_string_token_stream,
                         #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                     },
                 }
@@ -966,8 +968,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         match value {
                             #(#match_acceptable_variants_token_stream),*,
                             _ => Err(Self::Err::NotCorrect {
-                                not_correct_value: #std_string_string_token_stream::from(value),
-                                supported_values: #std_string_string_token_stream::from(#supported_values_handle_token_stream),
+                                #not_correct_value_token_stream: #std_string_string_token_stream::from(value),
+                                #supported_values_token_stream: #std_string_string_token_stream::from(#supported_values_handle_token_stream),
                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                             }),
                         }
