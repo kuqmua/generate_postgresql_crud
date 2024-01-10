@@ -899,11 +899,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{from_option_self_token_stream}");
         let not_correct_value_token_stream = quote::quote!{not_correct_value};
         let supported_values_token_stream = quote::quote!{supported_values};
+        let not_correct_camel_case_token_stream = quote::quote!{NotCorrect};
         let ident_column_select_from_str_error_named_token_stream = {
             quote::quote! {
                 #derive_debug_thiserror_error_occurence_token_stream
                 pub enum #ident_column_select_from_str_error_named_camel_case_token_stream {
-                    NotCorrect {
+                    #not_correct_camel_case_token_stream {
                         #eo_display_with_serialize_deserialize_token_stream
                         #not_correct_value_token_stream: #std_string_string_token_stream,
                         #eo_display_with_serialize_deserialize_token_stream
@@ -967,7 +968,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     fn from_str(value: &str) -> Result<Self, Self::Err> {
                         match value {
                             #(#match_acceptable_variants_token_stream),*,
-                            _ => Err(Self::Err::NotCorrect {
+                            _ => Err(Self::Err::#not_correct_camel_case_token_stream {
                                 #not_correct_value_token_stream: #std_string_string_token_stream::from(value),
                                 #supported_values_token_stream: #std_string_string_token_stream::from(#supported_values_handle_token_stream),
                                 #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
@@ -1328,60 +1329,39 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         };
         let ident_order_by_wrapper_from_str_error_named_token_stream = {
+            let variants_token_stream = [
+                "ColumnFromStr",
+                "ColumnNoOffsetValue",
+                "ColumnOffsetSliceGet",
+                "ColumnStringDeserializedGet",
+                "ColumnIndexCheckedAdd",
+                "ColumnStringDeserializedFind",
+                "OrderFromStr",
+                "OrderOffsetSliceGetNone",
+                "OrderStringDeserializedGetNone",
+                "OrderIndexCheckedAdd",
+            ].into_iter().map(|name_camel_case_stringified|{
+                let name_camel_case_token_stream = {
+                    name_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {name_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                let name_lower_case_token_stream = {
+                    let name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&name_camel_case_stringified);
+                    name_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {name_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                };
+                quote::quote!{
+                    #name_camel_case_token_stream {
+                        #eo_display_with_serialize_deserialize_token_stream
+                        #name_lower_case_token_stream: #std_string_string_token_stream,
+                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                    }
+                }
+            }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
             quote::quote!{
                 #derive_debug_thiserror_error_occurence_token_stream
                 pub enum #ident_order_by_wrapper_from_str_error_named_name_token_stream {
-                    ColumnFromStr {
-                        #eo_display_with_serialize_deserialize_token_stream
-                        column_from_str: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    ColumnNoOffsetValue {
-                        #eo_display_with_serialize_deserialize_token_stream
-                        column_no_offset_value: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    ColumnOffsetSliceGet {
-                        #eo_display_with_serialize_deserialize_token_stream
-                        column_offset_slice_get: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    ColumnStringDeserializedGet {
-                        #eo_display_with_serialize_deserialize_token_stream
-                        column_string_deserialized_get: #std_string_string_token_stream,
-                        code_occurence: #crate_common_code_occurence_code_occurence_token_stream,
-                    },   
-                    ColumnIndexCheckedAdd {
-                        #eo_display_with_serialize_deserialize_token_stream
-                        column_index_checked_add: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    ColumnStringDeserializedFind {
-                        #eo_display_with_serialize_deserialize_token_stream
-                        column_string_deserialized_find: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },    
-                    //todo make client explicitly write order and column
-                    OrderFromStr {
-                        #eo_display_with_serialize_deserialize_token_stream
-                        order_from_str: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    OrderOffsetSliceGetNone {
-                        #eo_display_with_serialize_deserialize_token_stream
-                        order_offset_slice_get_none: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    OrderStringDeserializedGetNone {
-                        #eo_display_with_serialize_deserialize_token_stream
-                        order_string_deserialized_get_none: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
-                    OrderIndexCheckedAdd {
-                        #eo_display_with_serialize_deserialize_token_stream
-                        order_index_checked_add: #std_string_string_token_stream,
-                        #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
-                    },
+                    #(#variants_token_stream),*
                 }
             }
         };
