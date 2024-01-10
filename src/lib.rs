@@ -2094,20 +2094,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
         }
     };
-    let checked_add_syn_variant = {
-        let variant_name_camel_case_stringified = "CheckedAdd";
-        let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
-        crate::type_variants_from_request_response_generator::construct_syn_variant(
-            proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-            &variant_name_camel_case_stringified,
-            &code_occurence_field,
-            vec![(
-                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                &variant_name_lower_case_stringified, 
-                std_string_string_syn_punctuated_punctuated.clone()
-            )]
-        )
-    };
+    let checked_add_syn_variant = generate_std_string_string_error_syn_variant(
+        "CheckedAdd",
+        proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+        &code_occurence_field,
+        std_string_string_syn_punctuated_punctuated.clone()
+    );
     let checked_add_variant_initialization_token_stream = {
         let checked_add_camel_case_stringified = "CheckedAdd";
         let checked_add_camel_case_token_stream = {
@@ -9517,4 +9509,25 @@ fn generate_full_additional_http_status_codes_error_variants<'a>(
         handle.push(element);
     }
     handle
+}
+
+fn generate_std_string_string_error_syn_variant(
+    variant_name_camel_case_stringified: &str,
+    attribute: proc_macro_helpers::attribute::Attribute,
+    code_occurence_field: &syn::Field,
+    std_string_string_syn_punctuated_punctuated: syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>,
+) -> syn::Variant {
+    let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+    crate::type_variants_from_request_response_generator::construct_syn_variant(
+        attribute,
+        &variant_name_camel_case_stringified,
+        &code_occurence_field,
+        vec![
+            (
+                proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                &variant_name_lower_case_stringified, 
+                std_string_string_syn_punctuated_punctuated
+            )
+        ]
+    )
 }
