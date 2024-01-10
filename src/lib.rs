@@ -1514,7 +1514,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     // println!("{order_by_wrapper_token_stream}");
     let allow_methods_token_stream = {
         quote::quote!{
-            pub const ALLOW_METHODS: [http::Method;4] = [http::Method::GET, http::Method::POST, http::Method::PATCH, http::Method::DELETE];
+            pub const ALLOW_METHODS: [http::Method;4] = [http::Method::GET, http::Method::POST, http::Method::PATCH, http::Method::DELETE];//todo new axum version does not support it or something - find out
         }
     };
     let ident_column_read_permission_token_stream = {
@@ -2108,10 +2108,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )]
         )
     };
-    let checked_add_variant_initialization_token_stream = quote::quote!{
-        CheckedAdd { //todo remove it? refactor it?
-            checked_add: #std_string_string_token_stream::from("checked_add is None"), 
-            #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
+    let checked_add_variant_initialization_token_stream = {
+        let checked_add_camel_case_stringified = "CheckedAdd";
+        let checked_add_camel_case_token_stream = {
+            checked_add_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {checked_add_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        let checked_add_lower_case_token_stream = {
+            let checked_add_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&checked_add_camel_case_stringified);
+            checked_add_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {checked_add_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
+        quote::quote!{
+            #checked_add_camel_case_token_stream { //todo remove it? refactor it?
+                #checked_add_lower_case_token_stream: #std_string_string_token_stream::from("checked_add is None"), 
+                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream, 
+            }
         }
     };
     let query_and_rollback_failed_syn_variant = crate::type_variants_from_request_response_generator::construct_syn_variant(
