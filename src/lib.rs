@@ -2771,8 +2771,89 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 migrate_syn_variant
             ]
         };
+        let json_body_error_syn_variants = {
+            let json_data_error_syn_variant = {
+                let variant_name_camel_case_stringified = "JsonDataError";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                            &variant_name_lower_case_stringified,
+                            generate_simple_syn_punctuated_punctuated(
+                                &["axum","extract","rejection","JsonDataError"],
+                                &proc_macro_name_camel_case_ident_stringified
+                            ),
+                        )
+                    ]
+                )
+            };
+            let json_syntax_error_syn_variant = {
+                let variant_name_camel_case_stringified = "JsonSyntaxError";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
+                            &variant_name_lower_case_stringified,
+                            generate_simple_syn_punctuated_punctuated(
+                                &["axum","extract","rejection","JsonSyntaxError"],
+                                &proc_macro_name_camel_case_ident_stringified
+                            ),
+                        )
+                    ]
+                )
+            };
+            let missing_json_content_type_syn_variant = {
+                let variant_name_camel_case_stringified = "MissingJsonContentType";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
+            let bytes_rejection_syn_variant = {
+                let variant_name_camel_case_stringified = "BytesRejection";
+                let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
+                crate::type_variants_from_request_response_generator::construct_syn_variant(
+                    proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
+                    &variant_name_camel_case_stringified,
+                    &code_occurence_field,
+                    vec![
+                        (
+                            proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
+                            &variant_name_lower_case_stringified, 
+                            std_string_string_syn_punctuated_punctuated.clone()
+                        )
+                    ]
+                )
+            };
+            [
+                json_data_error_syn_variant,
+                json_syntax_error_syn_variant,
+                missing_json_content_type_syn_variant,
+                bytes_rejection_syn_variant
+            ]
+        };
         let mut common_error_variants_vec = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + postgres_error_syn_variants.len() + 1);
         for element in postgres_error_syn_variants {
+            common_error_variants_vec.push(element);
+        }
+        for element in json_body_error_syn_variants {
             common_error_variants_vec.push(element);
         }
         let unexpected_case_syn_variant = {
@@ -2793,84 +2874,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         };
         common_error_variants_vec.push(unexpected_case_syn_variant);
         common_error_variants_vec
-    };
-    let json_body_error_syn_variants = {
-        let json_data_error_syn_variant = {
-            let variant_name_camel_case_stringified = "JsonDataError";
-            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
-            crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                &variant_name_camel_case_stringified,
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                        &variant_name_lower_case_stringified,
-                        generate_simple_syn_punctuated_punctuated(
-                            &["axum","extract","rejection","JsonDataError"],
-                            &proc_macro_name_camel_case_ident_stringified
-                        ),
-                    )
-                ]
-            )
-        };
-        let json_syntax_error_syn_variant = {
-            let variant_name_camel_case_stringified = "JsonSyntaxError";
-            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
-            crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                &variant_name_camel_case_stringified,
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplay, 
-                        &variant_name_lower_case_stringified,
-                        generate_simple_syn_punctuated_punctuated(
-                            &["axum","extract","rejection","JsonSyntaxError"],
-                            &proc_macro_name_camel_case_ident_stringified
-                        ),
-                    )
-                ]
-            )
-        };
-        let missing_json_content_type_syn_variant = {
-            let variant_name_camel_case_stringified = "MissingJsonContentType";
-            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
-            crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr400BadRequest,
-                &variant_name_camel_case_stringified,
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        &variant_name_lower_case_stringified, 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            )
-        };
-        let bytes_rejection_syn_variant = {
-            let variant_name_camel_case_stringified = "BytesRejection";
-            let variant_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&variant_name_camel_case_stringified);
-            crate::type_variants_from_request_response_generator::construct_syn_variant(
-                proc_macro_helpers::attribute::Attribute::Tvfrr500InternalServerError,
-                &variant_name_camel_case_stringified,
-                &code_occurence_field,
-                vec![
-                    (
-                        proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoDisplayWithSerializeDeserialize, 
-                        &variant_name_lower_case_stringified, 
-                        std_string_string_syn_punctuated_punctuated.clone()
-                    )
-                ]
-            )
-        };
-        [
-            json_data_error_syn_variant,
-            json_syntax_error_syn_variant,
-            missing_json_content_type_syn_variant,
-            bytes_rejection_syn_variant
-        ]
     };
     let fields_named_idents_comma_excluding_primary_key_token_stream = generate_self_fields_token_stream(
         &fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect(),
@@ -2956,13 +2959,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() +
                     3
                 );
                 for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response.push(&bind_query_syn_variant);
@@ -3594,13 +3593,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() +
                     2
                 );
                 for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response.push(&operation_payload_try_from_operation_payload_with_serialize_deserialize_syn_variant);
@@ -4086,14 +4081,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() +
                     not_unique_vec_syn_variants.len() +
                     4
                 );
                 for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
                 for element in &not_unique_vec_syn_variants {
@@ -4931,13 +4922,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() +
                     1
                 );
                 for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response.push(&operation_payload_try_from_operation_payload_with_serialize_deserialize_syn_variant);
@@ -5384,13 +5371,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() +
                     10
                 );
                 for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response.push(&not_unique_primary_keys_syn_variant);
@@ -6080,13 +6063,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() +
                     4
                 );
                 for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
                 type_variants_from_request_response.push(&bind_query_syn_variant);
@@ -6657,14 +6636,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() + 
                     not_unique_vec_syn_variants.len() +
                     12
                 );
                 for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
                 for element in &not_unique_vec_syn_variants {
@@ -7508,13 +7483,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
-                    json_body_error_syn_variants.len() + 
                     2
                 );
                 for element in &common_error_syn_variants {
-                    type_variants_from_request_response.push(element);
-                }
-                for element in &json_body_error_syn_variants {
                     type_variants_from_request_response.push(element);
                 }
                 //todo why no bind query error here?
