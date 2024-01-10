@@ -2946,16 +2946,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ]
         );
         let type_variants_from_request_response_syn_variants = {
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            }; 
+            let full_additional_http_status_codes_error_variants = generate_full_additional_http_status_codes_error_variants(
+                common_middlewares_error_syn_variants.iter().collect(),
+                additional_http_status_codes_error_variants.iter().collect()
+            );
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
@@ -3580,16 +3574,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ]
         );
         let type_variants_from_request_response_syn_variants = {
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
+            let full_additional_http_status_codes_error_variants = generate_full_additional_http_status_codes_error_variants(
+                common_middlewares_error_syn_variants.iter().collect(),
+                additional_http_status_codes_error_variants.iter().collect()
+            );
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
@@ -4068,16 +4056,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ]
         );
         let type_variants_from_request_response_syn_variants = {
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
+            let full_additional_http_status_codes_error_variants = generate_full_additional_http_status_codes_error_variants(
+                common_middlewares_error_syn_variants.iter().collect(),
+                additional_http_status_codes_error_variants.iter().collect()
+            );
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
@@ -4909,16 +4891,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ]
         );
         let type_variants_from_request_response_syn_variants = {
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
+            let full_additional_http_status_codes_error_variants = generate_full_additional_http_status_codes_error_variants(
+                common_middlewares_error_syn_variants.iter().collect(),
+                additional_http_status_codes_error_variants.iter().collect()
+            );
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
@@ -5358,16 +5334,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ]
         );
         let type_variants_from_request_response_syn_variants = {
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
+            let full_additional_http_status_codes_error_variants = generate_full_additional_http_status_codes_error_variants(
+                common_middlewares_error_syn_variants.iter().collect(),
+                additional_http_status_codes_error_variants.iter().collect()
+            );
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
@@ -6050,16 +6020,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ]
         );
         let type_variants_from_request_response_syn_variants = {
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
+            let full_additional_http_status_codes_error_variants = generate_full_additional_http_status_codes_error_variants(
+                common_middlewares_error_syn_variants.iter().collect(),
+                additional_http_status_codes_error_variants.iter().collect()
+            );
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
@@ -6623,16 +6587,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ]
         );
         let type_variants_from_request_response_syn_variants = {
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
+            let full_additional_http_status_codes_error_variants = generate_full_additional_http_status_codes_error_variants(
+                common_middlewares_error_syn_variants.iter().collect(),
+                additional_http_status_codes_error_variants.iter().collect()
+            );
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
@@ -7470,16 +7428,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             ]
         );
         let type_variants_from_request_response_syn_variants = {
-            let full_additional_http_status_codes_error_variants =  {
-                let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants_len + additional_http_status_codes_error_variants.len());
-                for element in &common_middlewares_error_syn_variants {
-                    handle.push(element);
-                }
-                for element in &additional_http_status_codes_error_variants {
-                    handle.push(element);
-                }
-                handle
-            };
+            let full_additional_http_status_codes_error_variants = generate_full_additional_http_status_codes_error_variants(
+                common_middlewares_error_syn_variants.iter().collect(),
+                additional_http_status_codes_error_variants.iter().collect()
+            );
             let type_variants_from_request_response_syn_variants_partial = {
                 let mut type_variants_from_request_response = std::vec::Vec::with_capacity(
                     common_error_syn_variants.len() +
@@ -9120,16 +9072,10 @@ fn generate_common_middlewares_error_syn_variants_from_impls(
     try_operation_camel_case_token_stream: &proc_macro2::TokenStream,
     proc_macro_name_camel_case_ident_stringified: &str,
 ) -> proc_macro2::TokenStream {
-    let error_syn_variants = {
-        let mut error_syn_variants = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants.len() + additional_http_status_codes_error_variants.len());
-        for element in &common_middlewares_error_syn_variants {
-            error_syn_variants.push(element);
-        }
-        for element in &additional_http_status_codes_error_variants {
-            error_syn_variants.push(element);
-        }
-        error_syn_variants
-    };
+    let error_syn_variants = generate_full_additional_http_status_codes_error_variants(
+        common_middlewares_error_syn_variants,
+        additional_http_status_codes_error_variants
+    );
     let value = error_syn_variants.iter().map(|element|{
         let element_path_ident_token_stream = {
             let element_path_ident_stringified = format!("{}{}", element.1, element.0);
@@ -9544,4 +9490,30 @@ fn generate_quotes_token_stream(
     let value_stringified = generate_quotes_stringified(inner_content);
     value_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+}
+
+fn generate_full_additional_http_status_codes_error_variants<'a>(
+    common_middlewares_error_syn_variants: std::vec::Vec::<&'a (
+        syn::Ident,
+        proc_macro2::TokenStream,
+        std::vec::Vec::<syn::Variant>
+    )>,
+    additional_http_status_codes_error_variants: std::vec::Vec::<&'a (
+        syn::Ident,
+        proc_macro2::TokenStream,
+        std::vec::Vec::<syn::Variant>
+    )>,
+) -> std::vec::Vec::<&'a (
+    syn::Ident,
+    proc_macro2::TokenStream,
+    std::vec::Vec::<syn::Variant>
+)> {
+    let mut handle = std::vec::Vec::with_capacity(common_middlewares_error_syn_variants.len() + additional_http_status_codes_error_variants.len());
+    for element in common_middlewares_error_syn_variants {
+        handle.push(element);
+    }
+    for element in additional_http_status_codes_error_variants {
+        handle.push(element);
+    }
+    handle
 }
