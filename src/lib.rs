@@ -2877,11 +2877,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         common_error_variants_vec.push(unexpected_case_syn_variant);
         common_error_variants_vec
     };
-    let fields_named_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect();
-    let fields_named_idents_comma_excluding_primary_key_token_stream = generate_self_fields_token_stream(
-        &fields_named_excluding_primary_key_token_stream,
-        &proc_macro_name_camel_case_ident_stringified,
-    ).iter().map(|element|quote::quote!{#element,}).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    let fields_named_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect::<std::vec::Vec<&syn::Field>>();
+    // let fields_named_idents_comma_excluding_primary_key_token_stream = generate_self_fields_token_stream(
+    //     &fields_named_excluding_primary_key_token_stream,
+    //     &proc_macro_name_camel_case_ident_stringified,
+    // ).iter().map(|element|quote::quote!{#element,}).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let fields_named_idents_comma_token_stream = generate_self_fields_token_stream(
         &fields_named.iter().collect(),
         &proc_macro_name_camel_case_ident_stringified,
@@ -2916,6 +2916,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             payload_camel_case_stringified,
             &try_from_camel_case_stringified,
             with_serialize_deserialize_camel_case_stringified,
+        );
+        let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+            &try_lower_case_stringified,
+            &operation_name_lower_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified,
         );
         let try_operation_response_variants_token_stream = generate_try_operation_response_variants_token_stream(
             try_camel_case_stringified,
@@ -3262,15 +3267,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &tvfrr_extraction_logic_lower_case_stringified,
                 &table_name_stringified,
                 &operation_payload_with_serialize_deserialize_camel_case_token_stream,
+                &try_operation_lower_case_token_stream,
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    //todo reuse it (copy inside generate_http_request_many_token_stream)
-                    let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
-                        &try_lower_case_stringified,
-                        &operation_name_lower_case_stringified,
-                        &proc_macro_name_camel_case_ident_stringified,
-                    );
                     let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
@@ -5343,6 +5343,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             error_named_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+            &try_lower_case_stringified,
+            &operation_name_lower_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let try_operation_response_variants_token_stream = generate_try_operation_response_variants_token_stream(
             &try_camel_case_stringified,
             &operation_name_camel_case_stringified,
@@ -5700,6 +5705,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &tvfrr_extraction_logic_lower_case_stringified,
                 &table_name_stringified,
                 &operation_payload_with_serialize_deserialize_camel_case_token_stream,
+                &try_operation_lower_case_token_stream,
             );
             quote::quote!{
                 #try_operation_error_named_token_stream
@@ -6596,6 +6602,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+            &try_lower_case_stringified,
+            &operation_name_lower_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let try_operation_response_variants_token_stream = generate_try_operation_response_variants_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
@@ -6893,6 +6904,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &tvfrr_extraction_logic_lower_case_stringified,
                 &table_name_stringified,
                 &operation_payload_with_serialize_deserialize_camel_case_token_stream,
+                &try_operation_lower_case_token_stream,
             );
             quote::quote!{
                 #try_operation_error_named_token_stream
@@ -9267,12 +9279,8 @@ fn generate_http_request_many_token_stream(
     tvfrr_extraction_logic_lower_case_stringified: &str,
     table_name_stringified: &str,
     operation_payload_with_serialize_deserialize_camel_case_token_stream: &proc_macro2::TokenStream,
+    try_operation_lower_case_token_stream: &proc_macro2::TokenStream,
 ) -> proc_macro2::TokenStream {
-    let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
-        &try_lower_case_stringified,
-        &operation_name_lower_case_stringified,
-        &proc_macro_name_camel_case_ident_stringified,
-    );
     let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
         &tvfrr_extraction_logic_lower_case_stringified,
         &try_lower_case_stringified,
