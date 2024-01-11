@@ -4438,6 +4438,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
+                        //
+                    let values = match #try_operation_lower_case_token_stream(
+                        "http://127.0.0.1:8080",
+                        //todo - builder pattern?
+                        #operation_parameters_camel_case_token_stream { 
+                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream { 
+                                id: Some(ids.clone()),
+                                name: None,
+                                color: None,
+                                select: super::DogColumnSelect::IdNameColor,
+                                order_by: crate::server::postgres::order_by::OrderBy {
+                                    column: super::DogColumn::Name,
+                                    order: Some(crate::server::postgres::order::Order::Desc),
+                                },
+                                limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
+                                offset: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
+                            } 
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => value,
+                        Err(e) =>  panic!("{e}"),
+                    };
+                        //
                         let ids = match #try_operation_lower_case_token_stream(
                             "http://127.0.0.1:8080",
                             #operation_parameters_camel_case_token_stream { 
