@@ -1544,15 +1544,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[test]
             fn it_works() {
                 async fn find_out_if_it_works() {
-                    //
                     let api_location = std::string::String::from("http://127.0.0.1:8080");
                     let limit = 1000;
                     let offset = 0;
                     println!("--------------try_create_one-----------------");//todo add try_create_many
-                    let id = match crate::repositories_types::tufa_server::routes::api::cats::try_create_one(
+                    let id = match super::try_create_one(
                         &api_location,
-                        crate::repositories_types::tufa_server::routes::api::cats::CreateOneParameters { 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::CreateOnePayload {
+                        super::CreateOneParameters { 
+                            payload: super::CreateOnePayload {
                                 name: String::from("try_create_one_name"),
                                 color: String::from("try_create_one_color"),
                             }
@@ -1569,12 +1568,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     println!("--------------try_read_one-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_one(
+                    match super::try_read_one(
                         &api_location,
-                        crate::repositories_types::tufa_server::routes::api::cats::ReadOneParameters { 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadOnePayload {
+                        super::ReadOneParameters { 
+                            payload: super::ReadOnePayload {
                                 id: id.clone(),
-                                select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor
+                                select: super::DogColumnSelect::IdNameColor
                             }
                         },
                     )
@@ -1586,10 +1585,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }
                     println!("--------------try_update_one------------------");//todo try_update_many
-                    let id = match crate::repositories_types::tufa_server::routes::api::cats::try_update_one(
+                    let id = match super::try_update_one(
                         &api_location,
-                        crate::repositories_types::tufa_server::routes::api::cats::UpdateOneParameters { 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::UpdateOnePayload {
+                        super::UpdateOneParameters { 
+                            payload: super::UpdateOnePayload {
                                 id: id.clone(),
                                 name: Some(std::string::String::from("name")), 
                                 color: Some(std::string::String::from("color")), 
@@ -1605,12 +1604,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => panic!("{e}"),
                     };
                     println!("--------------try_read_one-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_one(
+                    match super::try_read_one(
                         &api_location,
-                        crate::repositories_types::tufa_server::routes::api::cats::ReadOneParameters { 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadOnePayload {
+                        super::ReadOneParameters { 
+                            payload: super::ReadOnePayload {
                                 id: id.clone(),
-                                select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor
+                                select: super::DogColumnSelect::IdNameColor
                             }
                         },
                     )
@@ -1622,10 +1621,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }
                     println!("--------------try_delete_one------------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_delete_one(
+                    match super::try_delete_one(
                         &api_location,
-                        crate::repositories_types::tufa_server::routes::api::cats::DeleteOneParameters { 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::DeleteOnePayload {
+                        super::DeleteOneParameters { 
+                            payload: super::DeleteOnePayload {
                                 id: id.clone()
                             }
                         },
@@ -1636,12 +1635,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => panic!("{e}"),
                     }
                     println!("--------------try_read_one-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_one(
+                    match super::try_read_one(
                         &api_location,
-                        crate::repositories_types::tufa_server::routes::api::cats::ReadOneParameters { 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadOnePayload {
+                        super::ReadOneParameters { 
+                            payload: super::ReadOnePayload {
                                 id,
-                                select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor 
+                                select: super::DogColumnSelect::IdNameColor 
                             }
                         },
                     )
@@ -1654,15 +1653,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                     //
                     println!("--------------try_create_many-----------------");//todo add try_create_many
-                    let ids = match crate::repositories_types::tufa_server::routes::api::cats::try_create_many(
+                    let ids = match super::try_create_many(
                         &api_location,
-                        crate::repositories_types::tufa_server::routes::api::cats::CreateManyParameters { 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::CreateManyPayload(vec![
-                                crate::repositories_types::tufa_server::routes::api::cats::CreateManyPayloadElement{
+                        super::CreateManyParameters { 
+                            payload: super::CreateManyPayload(vec![
+                                super::CreateManyPayloadElement{
                                     name: String::from("try_create_many_name1"),
                                     color: String::from("try_create_many_color1"),
                                 },
-                                crate::repositories_types::tufa_server::routes::api::cats::CreateManyPayloadElement{
+                                super::CreateManyPayloadElement{
                                     name: String::from("try_create_many_name2"),
                                     color: String::from("try_create_many_color2"),
                                 },
@@ -1680,12 +1679,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     };
                     println!("--------------try_read_many-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many(
+                    match super::try_read_many(
                         &api_location,
                         //todo - builder pattern?
-                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyParameters{ 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyPayload { 
-                                select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor,
+                        super::ReadManyParameters{ 
+                            payload: super::ReadManyPayload { 
+                                select: super::DogColumnSelect::IdNameColor,
                                 id: Some(
                                     ids.clone()
                                     // vec![
@@ -1707,7 +1706,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 // }])
                                 ,
                                 order_by: crate::server::postgres::order_by::OrderBy {
-                                    column: crate::repositories_types::tufa_server::routes::api::cats::DogColumn::Name,
+                                    column: super::DogColumn::Name,
                                     order: Some(crate::server::postgres::order::Order::Desc),
                                 },
                                 limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
@@ -1720,12 +1719,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => {
                             println!("{value:#?}");
                             // let vec_cat_id: Vec<
-                            //     crate::repositories_types::tufa_server::routes::api::cats::DogId,
+                            //     super::DogId,
                             // > = value
                             //     .into_iter()
                             //     .filter_map(|value| match value.id {
                             //         Some(id) => Some(
-                            //             crate::repositories_types::tufa_server::routes::api::cats::DogId {
+                            //             super::DogId {
                             //                 id,
                             //             },
                             //         ),
@@ -1739,12 +1738,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }
                     println!("--------------try_update_many------------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_update_many(
+                    match super::try_update_many(
                         &api_location,
-                        crate::repositories_types::tufa_server::routes::api::cats::UpdateManyParameters { 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::UpdateManyPayload(
+                        super::UpdateManyParameters { 
+                            payload: super::UpdateManyPayload(
                                 ids.clone().into_iter().map(|element| {
-                                    crate::repositories_types::tufa_server::routes::api::cats::UpdateManyPayloadElement {
+                                    super::UpdateManyPayloadElement {
                                         id: element,  
                                         name: std::string::String::from("name"), //todo make sure name and color both are not None(make it option<value>, not just a value)
                                         color: std::string::String::from("color"), 
@@ -1761,12 +1760,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         },
                     }
                     println!("--------------try_read_many-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many(
+                    match super::try_read_many(
                         &api_location,
                         //todo - builder pattern?
-                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyParameters{ 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyPayload { 
-                                select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor,
+                        super::ReadManyParameters{ 
+                            payload: super::ReadManyPayload { 
+                                select: super::DogColumnSelect::IdNameColor,
                                 id: Some(
                                     ids.clone()
                                     // vec![
@@ -1788,7 +1787,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 // }])
                                 ,
                                 order_by: crate::server::postgres::order_by::OrderBy {
-                                    column: crate::repositories_types::tufa_server::routes::api::cats::DogColumn::Name,
+                                    column: super::DogColumn::Name,
                                     order: Some(crate::server::postgres::order::Order::Desc),
                                 },
                                 limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
@@ -1801,12 +1800,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => {
                             println!("{value:#?}");
                             // let vec_cat_id: Vec<
-                            //     crate::repositories_types::tufa_server::routes::api::cats::DogId,
+                            //     super::DogId,
                             // > = value
                             //     .into_iter()
                             //     .filter_map(|value| match value.id {
                             //         Some(id) => Some(
-                            //             crate::repositories_types::tufa_server::routes::api::cats::DogId {
+                            //             super::DogId {
                             //                 id,
                             //             },
                             //         ),
@@ -1820,11 +1819,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }
                     println!("--------------try_delete_many-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_delete_many(
+                    match super::try_delete_many(
                         &api_location,
                         //todo - builder pattern?
-                        crate::repositories_types::tufa_server::routes::api::cats::DeleteManyParameters{ 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::DeleteManyPayload { 
+                        super::DeleteManyParameters{ 
+                            payload: super::DeleteManyPayload { 
                                 id: Some(
                                     ids.clone()
                                     // vec![
@@ -1853,12 +1852,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => {
                             println!("{value:#?}");
                             // let vec_cat_id: Vec<
-                            //     crate::repositories_types::tufa_server::routes::api::cats::DogId,
+                            //     super::DogId,
                             // > = value
                             //     .into_iter()
                             //     .filter_map(|value| match value.id {
                             //         Some(id) => Some(
-                            //             crate::repositories_types::tufa_server::routes::api::cats::DogId {
+                            //             super::DogId {
                             //                 id,
                             //             },
                             //         ),
@@ -1872,12 +1871,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }
                     println!("--------------try_read_many-----------------");
-                    match crate::repositories_types::tufa_server::routes::api::cats::try_read_many(
+                    match super::try_read_many(
                         &api_location,
                         //todo - builder pattern?
-                        crate::repositories_types::tufa_server::routes::api::cats::ReadManyParameters{ 
-                            payload: crate::repositories_types::tufa_server::routes::api::cats::ReadManyPayload { 
-                                select: crate::repositories_types::tufa_server::routes::api::cats::DogColumnSelect::IdNameColor,
+                        super::ReadManyParameters{ 
+                            payload: super::ReadManyPayload { 
+                                select: super::DogColumnSelect::IdNameColor,
                                 id: Some(
                                     ids.clone()
                                     // vec![
@@ -1899,7 +1898,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 // }])
                                 ,
                                 order_by: crate::server::postgres::order_by::OrderBy {
-                                    column: crate::repositories_types::tufa_server::routes::api::cats::DogColumn::Name,
+                                    column: super::DogColumn::Name,
                                     order: Some(crate::server::postgres::order::Order::Desc),
                                 },
                                 limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
@@ -1912,12 +1911,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => {
                             println!("{value:#?}");
                             // let vec_cat_id: Vec<
-                            //     crate::repositories_types::tufa_server::routes::api::cats::DogId,
+                            //     super::DogId,
                             // > = value
                             //     .into_iter()
                             //     .filter_map(|value| match value.id {
                             //         Some(id) => Some(
-                            //             crate::repositories_types::tufa_server::routes::api::cats::DogId {
+                            //             super::DogId {
                             //                 id,
                             //             },
                             //         ),
