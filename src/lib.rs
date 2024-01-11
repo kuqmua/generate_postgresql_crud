@@ -2877,8 +2877,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         common_error_variants_vec.push(unexpected_case_syn_variant);
         common_error_variants_vec
     };
+    let fields_named_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect();
     let fields_named_idents_comma_excluding_primary_key_token_stream = generate_self_fields_token_stream(
-        &fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect(),
+        &fields_named_excluding_primary_key_token_stream,
         &proc_macro_name_camel_case_ident_stringified,
     ).iter().map(|element|quote::quote!{#element,}).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let fields_named_idents_comma_token_stream = generate_self_fields_token_stream(
@@ -2903,6 +2904,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &operation_name_camel_case_stringified,
             payload_camel_case_stringified,
             with_serialize_deserialize_camel_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified
+        );
+        let operation_payload_element_camel_case_token_stream = generate_operation_payload_element_camel_case_token_stream(
+            &operation_name_camel_case_stringified,
+            &payload_element_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified = generate_operation_payload_try_from_payload_with_serialize_deserialize_stringified(
@@ -2977,11 +2983,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_camel_case_ident_stringified,
         );
         let parameters_token_stream = {
-            let operation_payload_element_camel_case_token_stream = generate_operation_payload_element_camel_case_token_stream(
-                &operation_name_camel_case_stringified,
-                &payload_element_camel_case_stringified,
-                &proc_macro_name_camel_case_ident_stringified
-            );
             let payload_token_stream = {
                 let operation_payload_element_token_stream = {
                     let fields_with_excluded_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element| generate_pub_field_ident_field_type_token_stream(
@@ -3263,67 +3264,46 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_payload_with_serialize_deserialize_camel_case_token_stream,
             );
             let http_request_test_token_stream = {
-                //todo reuse it (copy inside generate_http_request_many_token_stream)
-                let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
-                    &try_lower_case_stringified,
-                    &operation_name_lower_case_stringified,
-                    &proc_macro_name_camel_case_ident_stringified,
-                );
-                //
-                let test_inner_content = quote::quote!{
-                    let api_location = std::string::String::from("http://127.0.0.1:8080");
-                    println!("--------------try_create_many-----------------");//todo add try_create_many
-                    let ids = match super::#try_operation_lower_case_token_stream(
-                        &api_location,
-                        super::#operation_parameters_camel_case_token_stream { 
-                            payload: super::CreateManyPayload(vec![
-                                super::CreateManyPayloadElement{
-                                    name: String::from("try_create_many_name1"),
-                                    color: String::from("try_create_many_color1"),
-                                },
-                                super::CreateManyPayloadElement{
-                                    name: String::from("try_create_many_name2"),
-                                    color: String::from("try_create_many_color2"),
-                                },
-                            ])
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            value
-                        },
-                        Err(e) => {
-                            panic!("{e}");
+                let test_inner_content_token_stream = {
+                    //todo reuse it (copy inside generate_http_request_many_token_stream)
+                    let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+                        &try_lower_case_stringified,
+                        &operation_name_lower_case_stringified,
+                        &proc_macro_name_camel_case_ident_stringified,
+                    );
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                        let field_ident = element.ident.as_ref()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                            });
+                        let field_type = &element.ty;
+                        quote::quote!{
+                            #field_ident: #field_type::default()
                         }
-                    };
-                };
-                quote::quote!{
-                    #[cfg(test)]
-                    mod test_try_create_many {
-                        #[test]
-                        fn it_works() {
-                            async fn test_try_create_many() {
-                                #test_inner_content
-                            }
-                            match tokio::runtime::Builder::new_multi_thread()
-                                .worker_threads(num_cpus::get())
-                                .enable_all()
-                                .build()
-                            {
-                                Err(e) => {
-                                    panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
-                                }
-                                Ok(runtime) => {
-                                    runtime.block_on(test_try_create_many());
-                                }
-                            }
-                            let result = 2 + 2;
-                            assert_eq!(result, 4);
-                        }
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                    quote::quote!{
+                        let ids = match #try_operation_lower_case_token_stream(
+                            "http://127.0.0.1:8080",
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
+                                    #operation_payload_element_camel_case_token_stream{
+                                        #(#element_fields_initialization_token_stream),*
+                                    }
+                                ])
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => value,
+                            Err(e) => panic!("{e}"),
+                        };
                     }
-                }
+                };
+                generate_async_test_wrapper_token_stream(
+                    &operation_name_lower_case_stringified,
+                    &test_inner_content_token_stream,
+                    &proc_macro_name_camel_case_ident_stringified
+                )
             };
             quote::quote!{
                 #try_operation_error_named_token_stream
@@ -7881,7 +7861,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #order_by_wrapper_token_stream
         #allow_methods_token_stream
         #ident_column_read_permission_token_stream
-        #tests_token_stream
+        // #[cfg(test)]
+        // mod test_try_create_many {
+            #tests_token_stream
+        // }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
@@ -9556,6 +9539,46 @@ fn generate_quotes_token_stream(
     let value_stringified = generate_quotes_stringified(inner_content);
     value_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+}
+
+fn generate_operation_test_lower_case_token_stream(
+    operation_name_lower_case_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str,
+) -> proc_macro2::TokenStream {
+    let value_stringified = format!("{operation_name_lower_case_stringified}_test");
+    value_stringified.parse::<proc_macro2::TokenStream>()
+    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+}
+
+fn generate_async_test_wrapper_token_stream(
+    operation_name_lower_case_stringified: &str,
+    test_inner_content_token_stream: &proc_macro2::TokenStream,
+    proc_macro_name_camel_case_ident_stringified: &str
+) -> proc_macro2::TokenStream {
+    let operation_test_lower_case_token_stream = generate_operation_test_lower_case_token_stream(
+        &operation_name_lower_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified,
+    );
+    quote::quote!{
+        #[test]
+        fn #operation_test_lower_case_token_stream() {
+            match tokio::runtime::Builder::new_multi_thread()
+                .worker_threads(num_cpus::get())
+                .enable_all()
+                .build()
+            {
+                Err(e) => {
+                    panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
+                }
+                Ok(runtime) => {
+                    async fn test() {
+                        #test_inner_content_token_stream
+                    }
+                    runtime.block_on(test());
+                }
+            }
+        }
+    }
 }
 
 fn generate_full_additional_http_status_codes_error_variants<'a>(
