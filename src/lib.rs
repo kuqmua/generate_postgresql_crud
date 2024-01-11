@@ -3263,11 +3263,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_payload_with_serialize_deserialize_camel_case_token_stream,
             );
             let http_request_test_token_stream = {
+                //todo reuse it (copy inside generate_http_request_many_token_stream)
+                let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+                    &try_lower_case_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified,
+                );
+                //
                 let test_inner_content = quote::quote!{
+                    let api_location = std::string::String::from("http://127.0.0.1:8080");
                     println!("--------------try_create_many-----------------");//todo add try_create_many
-                    let ids = match super::try_create_many(
+                    let ids = match super::#try_operation_lower_case_token_stream(
                         &api_location,
-                        super::CreateManyParameters { 
+                        super::#operation_parameters_camel_case_token_stream { 
                             payload: super::CreateManyPayload(vec![
                                 super::CreateManyPayloadElement{
                                     name: String::from("try_create_many_name1"),
@@ -3293,7 +3301,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 quote::quote!{
                     #[cfg(test)]
-                    mod tests {
+                    mod test_try_create_many {
                         #[test]
                         fn it_works() {
                             async fn test_try_create_many() {
@@ -3308,7 +3316,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
                                 }
                                 Ok(runtime) => {
-                                    runtime.block_on(find_out_if_it_works());
+                                    runtime.block_on(test_try_create_many());
                                 }
                             }
                             let result = 2 + 2;
