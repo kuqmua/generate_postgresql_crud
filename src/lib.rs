@@ -3849,9 +3849,46 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &request_error_variant_initialization_token_stream,
                 &table_name_stringified,
             );
+            let http_request_test_token_stream = {
+                let test_inner_content_token_stream = {
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                        let field_ident = element.ident.as_ref()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                            });
+                        let field_type = &element.ty;
+                        quote::quote!{
+                            #field_ident: #field_type::default()
+                        }
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                    quote::quote!{
+                        let ids = match #try_operation_lower_case_token_stream(
+                            "http://127.0.0.1:8080",
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
+                                    #operation_payload_element_camel_case_token_stream{
+                                        #(#element_fields_initialization_token_stream),*
+                                    }
+                                ])
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => value,
+                            Err(e) => panic!("{e}"),
+                        };
+                    }
+                };
+                generate_async_test_wrapper_token_stream(
+                    &operation_name_lower_case_stringified,
+                    &test_inner_content_token_stream,
+                    &proc_macro_name_camel_case_ident_stringified
+                )
+            };
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
+                #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -4390,9 +4427,46 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &request_error_variant_initialization_token_stream,
                 &table_name_stringified,
             );
+            let http_request_test_token_stream = {
+                let test_inner_content_token_stream = {
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                        let field_ident = element.ident.as_ref()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                            });
+                        let field_type = &element.ty;
+                        quote::quote!{
+                            #field_ident: #field_type::default()
+                        }
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                    quote::quote!{
+                        let ids = match #try_operation_lower_case_token_stream(
+                            "http://127.0.0.1:8080",
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
+                                    #operation_payload_element_camel_case_token_stream{
+                                        #(#element_fields_initialization_token_stream),*
+                                    }
+                                ])
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => value,
+                            Err(e) => panic!("{e}"),
+                        };
+                    }
+                };
+                generate_async_test_wrapper_token_stream(
+                    &operation_name_lower_case_stringified,
+                    &test_inner_content_token_stream,
+                    &proc_macro_name_camel_case_ident_stringified
+                )
+            };
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
+                #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -5146,9 +5220,46 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &request_error_variant_initialization_token_stream,
                 &table_name_stringified,
             );
+            let http_request_test_token_stream = {
+                let test_inner_content_token_stream = {
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                        let field_ident = element.ident.as_ref()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                            });
+                        let field_type = &element.ty;
+                        quote::quote!{
+                            #field_ident: #field_type::default()
+                        }
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                    quote::quote!{
+                        let ids = match #try_operation_lower_case_token_stream(
+                            "http://127.0.0.1:8080",
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
+                                    #operation_payload_element_camel_case_token_stream{
+                                        #(#element_fields_initialization_token_stream),*
+                                    }
+                                ])
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => value,
+                            Err(e) => panic!("{e}"),
+                        };
+                    }
+                };
+                generate_async_test_wrapper_token_stream(
+                    &operation_name_lower_case_stringified,
+                    &test_inner_content_token_stream,
+                    &proc_macro_name_camel_case_ident_stringified
+                )
+            };
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
+                #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -5707,9 +5818,46 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_payload_with_serialize_deserialize_camel_case_token_stream,
                 &try_operation_lower_case_token_stream,
             );
+            let http_request_test_token_stream = {
+                let test_inner_content_token_stream = {
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                        let field_ident = element.ident.as_ref()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                            });
+                        let field_type = &element.ty;
+                        quote::quote!{
+                            #field_ident: #field_type::default()
+                        }
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                    quote::quote!{
+                        let ids = match #try_operation_lower_case_token_stream(
+                            "http://127.0.0.1:8080",
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
+                                    #operation_payload_element_camel_case_token_stream{
+                                        #(#element_fields_initialization_token_stream),*
+                                    }
+                                ])
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => value,
+                            Err(e) => panic!("{e}"),
+                        };
+                    }
+                };
+                generate_async_test_wrapper_token_stream(
+                    &operation_name_lower_case_stringified,
+                    &test_inner_content_token_stream,
+                    &proc_macro_name_camel_case_ident_stringified
+                )
+            };
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
+                #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -6329,6 +6477,42 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &request_error_variant_initialization_token_stream,
                 &table_name_stringified,
             );
+            let http_request_test_token_stream = {
+                let test_inner_content_token_stream = {
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                        let field_ident = element.ident.as_ref()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                            });
+                        let field_type = &element.ty;
+                        quote::quote!{
+                            #field_ident: #field_type::default()
+                        }
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                    quote::quote!{
+                        let ids = match #try_operation_lower_case_token_stream(
+                            "http://127.0.0.1:8080",
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
+                                    #operation_payload_element_camel_case_token_stream{
+                                        #(#element_fields_initialization_token_stream),*
+                                    }
+                                ])
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => value,
+                            Err(e) => panic!("{e}"),
+                        };
+                    }
+                };
+                generate_async_test_wrapper_token_stream(
+                    &operation_name_lower_case_stringified,
+                    &test_inner_content_token_stream,
+                    &proc_macro_name_camel_case_ident_stringified
+                )
+            };
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
@@ -6906,9 +7090,46 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_payload_with_serialize_deserialize_camel_case_token_stream,
                 &try_operation_lower_case_token_stream,
             );
+            let http_request_test_token_stream = {
+                let test_inner_content_token_stream = {
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                        let field_ident = element.ident.as_ref()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                            });
+                        let field_type = &element.ty;
+                        quote::quote!{
+                            #field_ident: #field_type::default()
+                        }
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                    quote::quote!{
+                        let ids = match #try_operation_lower_case_token_stream(
+                            "http://127.0.0.1:8080",
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
+                                    #operation_payload_element_camel_case_token_stream{
+                                        #(#element_fields_initialization_token_stream),*
+                                    }
+                                ])
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => value,
+                            Err(e) => panic!("{e}"),
+                        };
+                    }
+                };
+                generate_async_test_wrapper_token_stream(
+                    &operation_name_lower_case_stringified,
+                    &test_inner_content_token_stream,
+                    &proc_macro_name_camel_case_ident_stringified
+                )
+            };
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
+                #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -7690,9 +7911,46 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &request_error_variant_initialization_token_stream,
                 &table_name_stringified,
             );
+            let http_request_test_token_stream = {
+                let test_inner_content_token_stream = {
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                        let field_ident = element.ident.as_ref()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                            });
+                        let field_type = &element.ty;
+                        quote::quote!{
+                            #field_ident: #field_type::default()
+                        }
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                    quote::quote!{
+                        let ids = match #try_operation_lower_case_token_stream(
+                            "http://127.0.0.1:8080",
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
+                                    #operation_payload_element_camel_case_token_stream{
+                                        #(#element_fields_initialization_token_stream),*
+                                    }
+                                ])
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => value,
+                            Err(e) => panic!("{e}"),
+                        };
+                    }
+                };
+                generate_async_test_wrapper_token_stream(
+                    &operation_name_lower_case_stringified,
+                    &test_inner_content_token_stream,
+                    &proc_macro_name_camel_case_ident_stringified
+                )
+            };
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
+                #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
