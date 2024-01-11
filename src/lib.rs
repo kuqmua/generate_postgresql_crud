@@ -3262,9 +3262,65 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
                 &operation_payload_with_serialize_deserialize_camel_case_token_stream,
             );
+            let http_request_test_token_stream = {
+                let test_inner_content = quote::quote!{
+                    println!("--------------try_create_many-----------------");//todo add try_create_many
+                    let ids = match super::try_create_many(
+                        &api_location,
+                        super::CreateManyParameters { 
+                            payload: super::CreateManyPayload(vec![
+                                super::CreateManyPayloadElement{
+                                    name: String::from("try_create_many_name1"),
+                                    color: String::from("try_create_many_color1"),
+                                },
+                                super::CreateManyPayloadElement{
+                                    name: String::from("try_create_many_name2"),
+                                    color: String::from("try_create_many_color2"),
+                                },
+                            ])
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            value
+                        },
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    };
+                };
+                quote::quote!{
+                    #[cfg(test)]
+                    mod tests {
+                        #[test]
+                        fn it_works() {
+                            async fn test_try_create_many() {
+                                #test_inner_content
+                            }
+                            match tokio::runtime::Builder::new_multi_thread()
+                                .worker_threads(num_cpus::get())
+                                .enable_all()
+                                .build()
+                            {
+                                Err(e) => {
+                                    panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
+                                }
+                                Ok(runtime) => {
+                                    runtime.block_on(find_out_if_it_works());
+                                }
+                            }
+                            let result = 2 + 2;
+                            assert_eq!(result, 4);
+                        }
+                    }
+                }
+            };
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
+                #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
