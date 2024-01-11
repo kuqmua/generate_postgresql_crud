@@ -3862,14 +3862,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
-                        let ids = match #try_operation_lower_case_token_stream(
+                        let id = match #try_operation_lower_case_token_stream(
                             "http://127.0.0.1:8080",
                             #operation_parameters_camel_case_token_stream { 
-                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
-                                    #operation_payload_element_camel_case_token_stream{
-                                        #(#element_fields_initialization_token_stream),*
-                                    }
-                                ])
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                                    #(#element_fields_initialization_token_stream),*
+                                }
                             },
                         )
                         .await
