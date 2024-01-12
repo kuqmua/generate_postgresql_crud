@@ -4496,8 +4496,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 
                                     #select_lower_case_token_stream: #column_select_ident_token_stream::#select_full_variant_token_stream,
                                     #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
-                                        #column_lower_case_token_stream: super::DogColumn::Name,
-                                        #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::#order_initialization_token_stream),
+                                        #column_lower_case_token_stream: #ident_column_camel_case_token_stream::Name,
+                                        #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::#order_initialization_token_stream),//todo remove option here
                                     },
                                     #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(#limit_lower_case_token_stream),
                                     #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(#offset_lower_case_token_stream),
