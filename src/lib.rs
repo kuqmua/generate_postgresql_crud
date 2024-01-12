@@ -1710,7 +1710,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
                                 // }])
                                 ,
-                                #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
+                                #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
                                     #column_lower_case_token_stream: super::DogColumn::Name,
                                     #order_lower_case_token_stream: Some(crate::server::postgres::order::Order::Desc),
                                 },
@@ -1791,7 +1791,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
                                 // }])
                                 ,
-                                #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
+                                #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
                                     #column_lower_case_token_stream: super::DogColumn::Name,
                                     #order_lower_case_token_stream: Some(crate::server::postgres::order::Order::Desc),
                                 },
@@ -1902,7 +1902,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
                                 // }])
                                 ,
-                                #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
+                                #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
                                     #column_lower_case_token_stream: super::DogColumn::Name,
                                     #order_lower_case_token_stream: Some(crate::server::postgres::order::Order::Desc),
                                 },
@@ -4495,7 +4495,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     color: None,
 
                                     #select_lower_case_token_stream: #column_select_ident_token_stream::IdNameColor,
-                                    #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
+                                    #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
                                         #column_lower_case_token_stream: super::DogColumn::Name,
                                         #order_lower_case_token_stream: Some(crate::server::postgres::order::Order::Desc),
                                     },
