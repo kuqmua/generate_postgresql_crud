@@ -4282,9 +4282,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         impl std::convert::TryFrom<#operation_payload_with_serialize_deserialize_camel_case_token_stream> for #operation_payload_camel_case_token_stream {
                             type Error = #operation_payload_try_from_operation_payload_with_serialize_deserialize_error_named_camel_case_token_stream;
                             fn try_from(value: #operation_payload_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
-                                let select = value.select;
                                 #primary_key_field_assignment_token_stream
                                 #(#fields_assignment_excluding_primary_key_token_stream)*
+                                let select = value.select;
                                 let order_by = value.order_by;
                                 let limit = value.limit;
                                 let offset = value.offset;
@@ -4321,9 +4321,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 quote::quote!{
                     impl std::convert::From<#operation_payload_camel_case_token_stream> for #operation_payload_with_serialize_deserialize_camel_case_token_stream {
                         fn from(value: #operation_payload_camel_case_token_stream) -> Self {
-                            let select = value.select;
                             #primary_key_field_assignment_token_stream
                             #(#fields_assignment_excluding_primary_key_token_stream)*
+                            let select = value.select;
                             let order_by = value.order_by;
                             let limit = value.limit;
                             let offset = value.offset;
