@@ -1709,8 +1709,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     column: super::DogColumn::Name,
                                     order: Some(crate::server::postgres::order::Order::Desc),
                                 },
-                                limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
-                                offset: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
+                                limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
+                                offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
                             } 
                         },
                     )
@@ -1790,8 +1790,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     column: super::DogColumn::Name,
                                     order: Some(crate::server::postgres::order::Order::Desc),
                                 },
-                                limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
-                                offset: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
+                                limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
+                                offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
                             } 
                         },
                     )
@@ -1901,8 +1901,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     column: super::DogColumn::Name,
                                     order: Some(crate::server::postgres::order::Order::Desc),
                                 },
-                                limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
-                                offset: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
+                                limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
+                                offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
                             } 
                         },
                     )
@@ -3583,6 +3583,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+            &try_lower_case_stringified,
+            &operation_name_lower_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let try_operation_response_variants_token_stream = generate_try_operation_response_variants_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
@@ -4100,6 +4105,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+            &try_lower_case_stringified,
+            &operation_name_lower_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let try_operation_response_variants_token_stream = generate_try_operation_response_variants_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
@@ -4469,32 +4479,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     // });
                     //
                     quote::quote!{
-                        //
-                        // let values = match #try_operation_lower_case_token_stream(
-                        //     "http://127.0.0.1:8080",
-                        //     //todo - builder pattern?
-                        //     #operation_parameters_camel_case_token_stream { 
-                        //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                        let values = match #try_operation_lower_case_token_stream(
+                            "http://127.0.0.1:8080",
+                            //todo - builder pattern?
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
 
-                        //             id: Some(ids.clone()),
-                        //             name: None,
-                        //             color: None,
+                                    id: Some(ids.clone()),
+                                    name: None,
+                                    color: None,
 
-                        //             #select_lower_case_token_stream: #column_select_ident_token_stream::IdNameColor,
-                        //             #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
-                        //                 column: super::DogColumn::Name,
-                        //                 order: Some(crate::server::postgres::order::Order::Desc),
-                        //             },
-                        //             #limit_lower_case_token_stream: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
-                        //             #offset_lower_case_token_stream: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
-                        //         } 
-                        //     },
-                        // )
-                        // .await
-                        // {
-                        //     Ok(value) => value,
-                        //     Err(e) =>  panic!("{e}"),
-                        // };
+                                    #select_lower_case_token_stream: #column_select_ident_token_stream::IdNameColor,
+                                    #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
+                                        column: super::DogColumn::Name,
+                                        order: Some(crate::server::postgres::order::Order::Desc),
+                                    },
+                                    #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
+                                    #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
+                                } 
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => value,
+                            Err(e) =>  panic!("{e}"),
+                        };
                         // //
                         // let ids = match #try_operation_lower_case_token_stream(
                         //     "http://127.0.0.1:8080",
@@ -5030,6 +5039,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
         );
+        let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+            &try_lower_case_stringified,
+            &operation_name_lower_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified,
+        );
         let try_operation_response_variants_token_stream = generate_try_operation_response_variants_token_stream(
             try_camel_case_stringified,
             &operation_name_camel_case_stringified,
@@ -5527,6 +5541,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified,
             error_named_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
+        );
+        let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+            &try_lower_case_stringified,
+            &operation_name_lower_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified,
         );
         let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
             &try_lower_case_stringified,
@@ -6278,6 +6297,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_lower_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_lower_case_token_stream(
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
+        );
+        let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+            &try_lower_case_stringified,
+            &operation_name_lower_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified,
         );
         let try_operation_response_variants_token_stream = generate_try_operation_response_variants_token_stream(
             &try_camel_case_stringified,
@@ -7836,6 +7860,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_lower_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_lower_case_token_stream(
             &operation_payload_try_from_operation_payload_with_serialize_deserialize_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
+        );
+        let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
+            &try_lower_case_stringified,
+            &operation_name_lower_case_stringified,
+            &proc_macro_name_camel_case_ident_stringified,
         );
         let try_operation_response_variants_token_stream = generate_try_operation_response_variants_token_stream(
             &try_camel_case_stringified,
