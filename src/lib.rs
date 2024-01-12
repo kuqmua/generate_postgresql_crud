@@ -4467,6 +4467,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         select_full_variant_stringified.parse::<proc_macro2::TokenStream>()
                         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {select_full_variant_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
+                    let order_initialization_token_stream = Order::Desc.to_token_stream();
                     // let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
                     //     let variant_ident_token_stream = {
                     //         let variant_ident_stringified_handle = column_variant.iter()
@@ -4496,7 +4497,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     #select_lower_case_token_stream: #column_select_ident_token_stream::#select_full_variant_token_stream,
                                     #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
                                         #column_lower_case_token_stream: super::DogColumn::Name,
-                                        #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::Desc),
+                                        #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::#order_initialization_token_stream),
                                     },
                                     #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(#limit_lower_case_token_stream),
                                     #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(#offset_lower_case_token_stream),
@@ -10106,4 +10107,18 @@ fn generate_std_string_string_error_syn_variant(
             )
         ]
     )
+}
+
+enum Order {
+    Asc,
+    Desc,
+}
+
+impl Order {
+    fn to_token_stream(&self) -> proc_macro2::TokenStream {
+        match self {
+            Self::Asc => quote::quote!{Asc},
+            Self::Desc => quote::quote!{Desc},
+        }
+    }
 }
