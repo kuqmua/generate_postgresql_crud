@@ -4439,29 +4439,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
                         //
-                    let values = match #try_operation_lower_case_token_stream(
-                        "http://127.0.0.1:8080",
-                        //todo - builder pattern?
-                        #operation_parameters_camel_case_token_stream { 
-                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream { 
-                                id: Some(ids.clone()),
-                                name: None,
-                                color: None,
-                                select: super::DogColumnSelect::IdNameColor,
-                                order_by: crate::server::postgres::order_by::OrderBy {
-                                    column: super::DogColumn::Name,
-                                    order: Some(crate::server::postgres::order::Order::Desc),
-                                },
-                                limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
-                                offset: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
-                            } 
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => value,
-                        Err(e) =>  panic!("{e}"),
-                    };
+                        let values = match #try_operation_lower_case_token_stream(
+                            "http://127.0.0.1:8080",
+                            //todo - builder pattern?
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+
+                                    id: Some(ids.clone()),
+                                    name: None,
+                                    color: None,
+
+                                    select: super::DogColumnSelect::IdNameColor,
+                                    order_by: crate::server::postgres::order_by::OrderBy {
+                                        column: super::DogColumn::Name,
+                                        order: Some(crate::server::postgres::order::Order::Desc),
+                                    },
+                                    limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
+                                    offset: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
+                                } 
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => value,
+                            Err(e) =>  panic!("{e}"),
+                        };
                         //
                         let ids = match #try_operation_lower_case_token_stream(
                             "http://127.0.0.1:8080",
@@ -5256,6 +5258,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
+                        //
+                        match super::try_read_one(
+                            &api_location,
+                            super::ReadOneParameters { 
+                                payload: super::ReadOnePayload {
+                                    id: id.clone(),
+                                    select: super::DogColumnSelect::IdNameColor
+                                }
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => println!("{value:#?}"),
+                            Err(e) => {
+                                panic!("{e}");
+                            }
+                        }
+                        //
                         let ids = match #try_operation_lower_case_token_stream(
                             "http://127.0.0.1:8080",
                             #operation_parameters_camel_case_token_stream { 
@@ -5854,6 +5874,28 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
+                        match super::try_update_many(
+                            &api_location,
+                            super::UpdateManyParameters { 
+                                payload: super::UpdateManyPayload(
+                                    ids.clone().into_iter().map(|element| {
+                                        super::UpdateManyPayloadElement {
+                                            id: element,  
+                                            name: std::string::String::from("name"), //todo make sure name and color both are not None(make it option<value>, not just a value)
+                                            color: std::string::String::from("color"), 
+                                        }
+                                    }).collect()
+                                )
+                            }
+                        )
+                        .await
+                        {
+                            Ok(value) => println!("{value:#?}"),
+                            Err(e) => {
+                                panic!("{e}");
+                            },
+                        }
+                        //
                         let ids = match #try_operation_lower_case_token_stream(
                             "http://127.0.0.1:8080",
                             #operation_parameters_camel_case_token_stream { 
@@ -6513,6 +6555,25 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
+                        let id = match super::try_update_one(
+                            &api_location,
+                            super::UpdateOneParameters { 
+                                payload: super::UpdateOnePayload {
+                                    id: id.clone(),
+                                    name: Some(std::string::String::from("name")), 
+                                    color: Some(std::string::String::from("color")), 
+                                }
+                            }
+                        )
+                        .await
+                        {
+                            Ok(value) => {
+                                println!("{value:#?}");
+                                value
+                            },
+                            Err(e) => panic!("{e}"),
+                        };
+                        //
                         let ids = match #try_operation_lower_case_token_stream(
                             "http://127.0.0.1:8080",
                             #operation_parameters_camel_case_token_stream { 
@@ -7126,6 +7187,58 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
+                        match super::try_delete_many(
+                            &api_location,
+                            //todo - builder pattern?
+                            super::DeleteManyParameters{ 
+                                payload: super::DeleteManyPayload { 
+                                    id: Some(
+                                        ids.clone()
+                                        // vec![
+                                        //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
+                                        //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
+                                        //     ).unwrap()
+                                        // ]
+                                    ),
+                                    name: None
+                                    // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                                    //     regex: std::string::String::from("test"),
+                                    //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                                    // }])
+                                    ,//or and support
+                                    color: None
+                                    // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                                    //     regex: std::string::String::from("test"),
+                                    //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                                    // }])
+                                    ,
+                                } 
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => {
+                                println!("{value:#?}");
+                                // let vec_cat_id: Vec<
+                                //     super::DogId,
+                                // > = value
+                                //     .into_iter()
+                                //     .filter_map(|value| match value.id {
+                                //         Some(id) => Some(
+                                //             super::DogId {
+                                //                 id,
+                                //             },
+                                //         ),
+                                //         None => None,
+                                //     })
+                                //     .collect();
+                                // println!("{vec_cat_id:#?}");
+                            }
+                            Err(e) => {
+                                println!("{e}");
+                            }
+                        }
+                        //
                         let ids = match #try_operation_lower_case_token_stream(
                             "http://127.0.0.1:8080",
                             #operation_parameters_camel_case_token_stream { 
@@ -7947,6 +8060,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
+                        match super::try_delete_one(
+                            &api_location,
+                            super::DeleteOneParameters { 
+                                payload: super::DeleteOnePayload {
+                                    id: id.clone()
+                                }
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => println!("{value:#?}"),
+                            Err(e) => panic!("{e}"),
+                        }
+                        //
                         let ids = match #try_operation_lower_case_token_stream(
                             "http://127.0.0.1:8080",
                             #operation_parameters_camel_case_token_stream { 
