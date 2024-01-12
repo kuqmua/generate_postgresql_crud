@@ -1143,6 +1143,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     };
     let crate_server_postgres_order_by_order_by_token_stream = quote::quote!{crate::server::postgres::#order_by_lower_case_token_stream::#order_by_camel_case_token_stream};
     let crate_server_postgres_order_order_token_stream = quote::quote!{crate::server::postgres::order::Order};
+    let select_lower_case_token_stream = quote::quote!{select};
+    let limit_lower_case_token_stream = quote::quote!{limit};
+    let offset_lower_case_token_stream = quote::quote!{offset};
     let ident_order_by_wrapper_stringified = format!("{ident}{order_by_camel_case_stringified}Wrapper");
     let ident_order_by_wrapper_name_token_stream = {
         ident_order_by_wrapper_stringified.parse::<proc_macro2::TokenStream>()
