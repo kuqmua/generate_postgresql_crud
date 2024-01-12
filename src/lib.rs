@@ -2882,9 +2882,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         common_error_variants_vec.push(unexpected_case_syn_variant);
         common_error_variants_vec
     };
-    let fields_named_excluding_primary_key_token_stream = fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect::<std::vec::Vec<&syn::Field>>();
+    let fields_named_excluding_primary_key = fields_named_wrappers_excluding_primary_key.iter().map(|element|&element.field).collect::<std::vec::Vec<&syn::Field>>();
     // let fields_named_idents_comma_excluding_primary_key_token_stream = generate_self_fields_token_stream(
-    //     &fields_named_excluding_primary_key_token_stream,
+    //     &fields_named_excluding_primary_key,
     //     &proc_macro_name_camel_case_ident_stringified,
     // ).iter().map(|element|quote::quote!{#element,}).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
     let fields_named_idents_comma_token_stream = generate_self_fields_token_stream(
@@ -3276,7 +3276,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -3861,7 +3861,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -4442,7 +4442,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -4468,6 +4468,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {select_full_variant_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
                     let order_initialization_token_stream = Order::Desc.to_token_stream();
+
+                    // let fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream
+
                     // let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
                     //     let variant_ident_token_stream = {
                     //         let variant_ident_stringified_handle = column_variant.iter()
@@ -5297,7 +5300,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -5918,7 +5921,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -6604,7 +6607,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -7236,7 +7239,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -8114,7 +8117,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream.iter().map(|element|{
+                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
