@@ -4284,16 +4284,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             fn try_from(value: #operation_payload_with_serialize_deserialize_camel_case_token_stream) -> Result<Self, Self::Error> {
                                 #primary_key_field_assignment_token_stream
                                 #(#fields_assignment_excluding_primary_key_token_stream)*
-                                let select = value.select;
-                                let order_by = value.order_by;
-                                let limit = value.limit;
-                                let offset = value.offset;
+                                let #select_lower_case_token_stream = value.#select_lower_case_token_stream;
+                                let #order_by_lower_case_token_stream = value.#order_by_lower_case_token_stream;
+                                let #limit_lower_case_token_stream = value.#limit_lower_case_token_stream;
+                                let #offset_lower_case_token_stream = value.#offset_lower_case_token_stream;
                                 Ok(Self {
-                                    select,
                                     #(#fields_named_idents_comma_token_stream)*
-                                    order_by,
-                                    limit,
-                                    offset,
+                                    #select_lower_case_token_stream,
+                                    #order_by_lower_case_token_stream,
+                                    #limit_lower_case_token_stream,
+                                    #offset_lower_case_token_stream,
                                 })
                             }
                         }
@@ -4323,16 +4323,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         fn from(value: #operation_payload_camel_case_token_stream) -> Self {
                             #primary_key_field_assignment_token_stream
                             #(#fields_assignment_excluding_primary_key_token_stream)*
-                            let select = value.select;
-                            let order_by = value.order_by;
-                            let limit = value.limit;
-                            let offset = value.offset;
+                            let #select_lower_case_token_stream = value.#select_lower_case_token_stream;
+                            let #order_by_lower_case_token_stream = value.#order_by_lower_case_token_stream;
+                            let #limit_lower_case_token_stream = value.#limit_lower_case_token_stream;
+                            let #offset_lower_case_token_stream = value.#offset_lower_case_token_stream;
                             Self{
-                                select,
                                 #(#fields_named_idents_comma_token_stream)*
-                                order_by,
-                                limit,
-                                offset,
+                                #select_lower_case_token_stream,
+                                #order_by_lower_case_token_stream,
+                                #limit_lower_case_token_stream,
+                                #offset_lower_case_token_stream,
                             }
                         }
                     }
@@ -4467,7 +4467,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         select_full_variant_stringified.parse::<proc_macro2::TokenStream>()
                         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {select_full_variant_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
-                    println!("{select_full_variant_token_stream}");
                     // let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
                     //     let variant_ident_token_stream = {
                     //         let variant_ident_stringified_handle = column_variant.iter()
@@ -4494,13 +4493,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     name: None,
                                     color: None,
 
-                                    #select_lower_case_token_stream: #column_select_ident_token_stream::IdNameColor,
+                                    #select_lower_case_token_stream: #column_select_ident_token_stream::#select_full_variant_token_stream,
                                     #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
                                         #column_lower_case_token_stream: super::DogColumn::Name,
                                         #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::Desc),
                                     },
-                                    #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
-                                    #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
+                                    #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(#limit_lower_case_token_stream),
+                                    #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(#offset_lower_case_token_stream),
                                 } 
                             },
                         )
