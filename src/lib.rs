@@ -1146,6 +1146,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     let select_lower_case_token_stream = quote::quote!{select};
     let limit_lower_case_token_stream = quote::quote!{limit};
     let offset_lower_case_token_stream = quote::quote!{offset};
+    let order_lower_case_token_stream = quote::quote!{order};
+    let column_lower_case_token_stream = quote::quote!{column};
     let ident_order_by_wrapper_stringified = format!("{ident}{order_by_camel_case_stringified}Wrapper");
     let ident_order_by_wrapper_name_token_stream = {
         ident_order_by_wrapper_stringified.parse::<proc_macro2::TokenStream>()
@@ -1708,12 +1710,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
                                 // }])
                                 ,
-                                order_by: crate::server::postgres::order_by::OrderBy {
-                                    column: super::DogColumn::Name,
-                                    order: Some(crate::server::postgres::order::Order::Desc),
+                                #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
+                                    #column_lower_case_token_stream: super::DogColumn::Name,
+                                    #order_lower_case_token_stream: Some(crate::server::postgres::order::Order::Desc),
                                 },
-                                limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
-                                offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
+                                #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
+                                #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
                             } 
                         },
                     )
@@ -1789,12 +1791,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
                                 // }])
                                 ,
-                                order_by: crate::server::postgres::order_by::OrderBy {
-                                    column: super::DogColumn::Name,
-                                    order: Some(crate::server::postgres::order::Order::Desc),
+                                #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
+                                    #column_lower_case_token_stream: super::DogColumn::Name,
+                                    #order_lower_case_token_stream: Some(crate::server::postgres::order::Order::Desc),
                                 },
-                                limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
-                                offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
+                                #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
+                                #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
                             } 
                         },
                     )
@@ -1900,12 +1902,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
                                 // }])
                                 ,
-                                order_by: crate::server::postgres::order_by::OrderBy {
-                                    column: super::DogColumn::Name,
-                                    order: Some(crate::server::postgres::order::Order::Desc),
+                                #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
+                                    #column_lower_case_token_stream: super::DogColumn::Name,
+                                    #order_lower_case_token_stream: Some(crate::server::postgres::order::Order::Desc),
                                 },
-                                limit: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
-                                offset: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
+                                #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
+                                #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
                             } 
                         },
                     )
@@ -4494,8 +4496,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 
                                     #select_lower_case_token_stream: #column_select_ident_token_stream::IdNameColor,
                                     #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
-                                        column: super::DogColumn::Name,
-                                        order: Some(crate::server::postgres::order::Order::Desc),
+                                        #column_lower_case_token_stream: super::DogColumn::Name,
+                                        #order_lower_case_token_stream: Some(crate::server::postgres::order::Order::Desc),
                                     },
                                     #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
                                     #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
