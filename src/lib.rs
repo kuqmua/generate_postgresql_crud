@@ -4449,13 +4449,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                     name: None,
                                     color: None,
 
-                                    select: super::DogColumnSelect::IdNameColor,
-                                    order_by: crate::server::postgres::order_by::OrderBy {
+                                    #select_lower_case_token_stream: super::DogColumnSelect::IdNameColor,
+                                    #order_by_lower_case_token_stream: crate::server::postgres::order_by::OrderBy {
                                         column: super::DogColumn::Name,
                                         order: Some(crate::server::postgres::order::Order::Desc),
                                     },
-                                    limit: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
-                                    offset: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
+                                    #limit_lower_case_token_stream: crate::server::postgres::postgres_bigint::PostgresBigint(limit),
+                                    #offset_lower_case_token_stream: crate::server::postgres::postgres_bigint::PostgresBigint(offset),
                                 } 
                             },
                         )
