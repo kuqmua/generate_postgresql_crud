@@ -764,10 +764,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     let column_select_camel_case_stringified = "ColumnSelect";
-    let column_select_ident_token_stream = {
-        let column_select_ident_stringified = format!("{ident}{column_select_camel_case_stringified}");
-        column_select_ident_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {column_select_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    let ident_column_select_camel_case_token_stream = {
+        let ident_column_select_camel_case_stringified = format!("{ident}{column_select_camel_case_stringified}");
+        ident_column_select_camel_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {ident_column_select_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
     let options_try_from_sqlx_row_name_token_stream = quote::quote!{options_try_from_sqlx_row};
     let crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream = quote::quote!{crate::common::serde_urlencoded::SerdeUrlencodedParameter};
@@ -805,7 +805,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             });
             quote::quote! {
                 #[derive(#debug_token_stream, #serde_serialize_token_stream, #serde_deserialize_token_stream, Clone, strum_macros::Display)]
-                pub enum #column_select_ident_token_stream {
+                pub enum #ident_column_select_camel_case_token_stream {
                     #(#column_select_variants_token_stream),*
                 }
             }
@@ -848,7 +848,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote!{
-                impl crate::server::postgres::generate_query::GenerateQuery for #column_select_ident_token_stream {
+                impl crate::server::postgres::generate_query::GenerateQuery for #ident_column_select_camel_case_token_stream {
                     fn generate_query(&self) -> #std_string_string_token_stream {
                         match self {
                             #(#generate_query_variants_token_stream),*
@@ -875,7 +875,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {default_select_variant_ident_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote! {
-                impl std::default::Default for #column_select_ident_token_stream {
+                impl std::default::Default for #ident_column_select_camel_case_token_stream {
                     fn default() -> Self {
                         Self::#default_select_variant_ident_token_stream
                     }
@@ -885,7 +885,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{impl_default_token_stream}");
         let from_option_self_token_stream = {
             quote::quote! {
-                impl std::convert::From<std::option::Option<Self>> for #column_select_ident_token_stream {
+                impl std::convert::From<std::option::Option<Self>> for #ident_column_select_camel_case_token_stream {
                     fn from(option_value: std::option::Option<Self>) -> Self {
                         match option_value {
                             Some(value) => value,
@@ -962,7 +962,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {supported_values_handle_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
             };
             quote::quote! {
-                impl #std_str_from_str_token_stream for #column_select_ident_token_stream {
+                impl #std_str_from_str_token_stream for #ident_column_select_camel_case_token_stream {
                     type Err = #ident_column_select_from_str_error_named_camel_case_token_stream;
                     fn from_str(value: &str) -> Result<Self, Self::Err> {
                         match value {
@@ -980,7 +980,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{impl_std_str_from_str_for_ident_column_select_token_stream}");
         let serde_urlencoded_parameter_token_stream = {
             quote::quote! {
-                impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #column_select_ident_token_stream {
+                impl #crate_common_serde_urlencoded_serde_url_encoded_parameter_token_stream for #ident_column_select_camel_case_token_stream {
                     fn serde_urlencoded_parameter(self) -> #std_string_string_token_stream {
                         self.to_string()
                     }
@@ -1071,7 +1071,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }
             });
             quote::quote! {
-                impl #column_select_ident_token_stream {
+                impl #ident_column_select_camel_case_token_stream {
                     fn #options_try_from_sqlx_row_name_token_stream<'a, R: #sqlx_row_token_stream>(
                         &self,
                         row: &'a R,
@@ -4202,7 +4202,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub struct #operation_payload_camel_case_token_stream {
                         pub #primary_key_field_ident: std::option::Option<#std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream>,
                         #(#fields_with_excluded_primary_key_token_stream)*
-                        pub #select_token_stream: #column_select_ident_token_stream,
+                        pub #select_token_stream: #ident_column_select_camel_case_token_stream,
                         pub #order_by_token_stream: #crate_server_postgres_order_by_order_by_token_stream<#ident_column_camel_case_token_stream>,
                         pub #limit_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
                         pub #offset_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
@@ -4225,7 +4225,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream {
                         #primary_key_field_ident: std::option::Option<std::vec::Vec<#std_string_string_token_stream>>,//todo maybe possible uuid wrapper
                         #(#fields_with_excluded_primary_key_token_stream)*
-                        #select_token_stream: #column_select_ident_token_stream,
+                        #select_token_stream: #ident_column_select_camel_case_token_stream,
                         #order_by_token_stream: #crate_server_postgres_order_by_order_by_token_stream<#ident_column_camel_case_token_stream>,
                         #limit_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
                         #offset_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream,
@@ -4495,7 +4495,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                         ]
                                     ),
                                     #(#fields_initialization_excluding_primary_key_token_stream)*
-                                    #select_lower_case_token_stream: #column_select_ident_token_stream::#select_full_variant_token_stream,
+                                    #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream::#select_full_variant_token_stream,
                                     #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
                                         #column_lower_case_token_stream: #ident_column_camel_case_token_stream::Name,
                                         #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::#order_initialization_token_stream),//todo remove option here
@@ -5103,7 +5103,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #derive_debug_to_schema_token_stream
                     pub struct #operation_payload_camel_case_token_stream {
                         pub #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
-                        pub #select_token_stream: #column_select_ident_token_stream,
+                        pub #select_token_stream: #ident_column_select_camel_case_token_stream,
                     }
                 }
             };
@@ -5113,7 +5113,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #derive_debug_serialize_deserialize_token_stream
                     pub struct #operation_payload_with_serialize_deserialize_camel_case_token_stream {
                         #primary_key_field_ident: #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream,
-                        #select_token_stream: #column_select_ident_token_stream,
+                        #select_token_stream: #ident_column_select_camel_case_token_stream,
                     }    
                 }
             };
@@ -5294,22 +5294,22 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
                         //
-                        // match super::try_read_one(
-                        //     &api_location,
-                        //     super::ReadOneParameters { 
-                        //         payload: super::ReadOnePayload {
-                        //             id: id.clone(),
-                        //             select: super::DogColumnSelect::IdNameColor
-                        //         }
-                        //     },
-                        // )
-                        // .await
-                        // {
-                        //     Ok(value) => println!("{value:#?}"),
-                        //     Err(e) => {
-                        //         panic!("{e}");
-                        //     }
-                        // }
+                        match #try_operation_lower_case_token_stream(
+                            #api_location_test_quotes_token_stream,
+                            super::ReadOneParameters { 
+                                payload: super::ReadOnePayload {
+                                    id: id.clone(),
+                                    #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream super::DogColumnSelect::IdNameColor
+                                }
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => println!("{value:#?}"),
+                            Err(e) => {
+                                panic!("{e}");
+                            }
+                        };
                         // //
                         // let ids = match #try_operation_lower_case_token_stream(
                         //     #api_location_test_quotes_token_stream,
