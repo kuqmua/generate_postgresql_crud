@@ -2892,6 +2892,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         &fields_named.iter().collect(),
         &proc_macro_name_camel_case_ident_stringified,
     ).iter().map(|element|quote::quote!{#element,}).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+    let select_full_variant_token_stream = {
+        let select_full_variant_stringified = fields_named.iter().fold(std::string::String::default(), |mut acc, field| {
+            use convert_case::Casing;
+            let field_ident_stringified = field.ident
+                .as_ref()
+                .unwrap_or_else(|| {
+                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                }).to_string().to_case(convert_case::Case::Title);
+            acc.push_str(&field_ident_stringified);
+            acc
+        });
+        select_full_variant_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {select_full_variant_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    };
     let create_many_token_stream = {
         let operation_name_camel_case_stringified = format!("{create_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
@@ -4453,21 +4467,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             #field_ident: #field_type::default()
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                    //
-                    let select_full_variant_token_stream = {
-                        let select_full_variant_stringified = fields_named.iter().fold(std::string::String::default(), |mut acc, field| {
-                            use convert_case::Casing;
-                            let field_ident_stringified = field.ident
-                                .as_ref()
-                                .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                                }).to_string().to_case(convert_case::Case::Title);
-                            acc.push_str(&field_ident_stringified);
-                            acc
-                        });
-                        select_full_variant_stringified.parse::<proc_macro2::TokenStream>()
-                        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {select_full_variant_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                    };
                     let order_initialization_token_stream = Order::Desc.to_token_stream();
                     let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident
@@ -5293,13 +5292,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
-                        //
                         match #try_operation_lower_case_token_stream(
                             #api_location_test_quotes_token_stream,
-                            super::ReadOneParameters { 
-                                payload: super::ReadOnePayload {
-                                    id: id.clone(),
-                                    #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream super::DogColumnSelect::IdNameColor
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                                    #primary_key_field_ident: id.clone(),//todo
+                                    #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream::#select_full_variant_token_stream
                                 }
                             },
                         )
@@ -5310,22 +5308,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 panic!("{e}");
                             }
                         };
-                        // //
-                        // let ids = match #try_operation_lower_case_token_stream(
-                        //     #api_location_test_quotes_token_stream,
-                        //     #operation_parameters_camel_case_token_stream { 
-                        //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
-                        //             #operation_payload_element_camel_case_token_stream{
-                        //                 #(#element_fields_initialization_token_stream),*
-                        //             }
-                        //         ])
-                        //     },
-                        // )
-                        // .await
-                        // {
-                        //     Ok(value) => value,
-                        //     Err(e) => panic!("{e}"),
-                        // };
                     }
                 };
                 generate_async_test_wrapper_token_stream(
