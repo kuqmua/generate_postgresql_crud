@@ -1543,423 +1543,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         }
     };
     let reference_api_location_test_token_stream = quote::quote!{&api_location};
-    //todo
-    let tests_token_stream = quote::quote!{
-        #[cfg(test)]
-        mod tests {
-            #[test]
-            fn it_works() {
-                async fn find_out_if_it_works() {
-                    let api_location = std::string::String::from("http://127.0.0.1:8080");
-                    let limit = 1000;
-                    let offset = 0;
-                    println!("--------------try_create_many-----------------");//todo add try_create_many
-                    let ids = match super::try_create_many(
-                        &api_location,
-                        super::CreateManyParameters { 
-                            payload: super::CreateManyPayload(vec![
-                                super::CreateManyPayloadElement{
-                                    name: String::from("try_create_many_name1"),
-                                    color: String::from("try_create_many_color1"),
-                                },
-                                super::CreateManyPayloadElement{
-                                    name: String::from("try_create_many_name2"),
-                                    color: String::from("try_create_many_color2"),
-                                },
-                            ])
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            value
-                        },
-                        Err(e) => {
-                            panic!("{e}");
-                        }
-                    };
-                    println!("--------------try_read_many-----------------");
-                    match super::try_read_many(
-                        &api_location,
-                        //todo - builder pattern?
-                        super::ReadManyParameters{ 
-                            payload: super::ReadManyPayload { 
-                                select: super::DogColumnSelect::IdNameColor,
-                                id: Some(
-                                    ids.clone()
-                                    // vec![
-                                    //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
-                                    //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
-                                    //     ).unwrap()
-                                    // ]
-                                ),
-                                name: None
-                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                                //     regex: std::string::String::from("test"),
-                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                                // }])
-                                ,//or and support
-                                color: None
-                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                                //     regex: std::string::String::from("test"),
-                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                                // }])
-                                ,
-                                #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
-                                    #column_lower_case_token_stream: super::DogColumn::Name,
-                                    #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::Desc),
-                                },
-                                #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
-                                #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
-                            } 
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            // let vec_cat_id: Vec<
-                            //     super::DogId,
-                            // > = value
-                            //     .into_iter()
-                            //     .filter_map(|value| match value.id {
-                            //         Some(id) => Some(
-                            //             super::DogId {
-                            //                 id,
-                            //             },
-                            //         ),
-                            //         None => None,
-                            //     })
-                            //     .collect();
-                            // println!("{vec_cat_id:#?}");
-                        }
-                        Err(e) => {
-                            panic!("{e}");
-                        }
-                    }
-                    println!("--------------try_update_many------------------");
-                    match super::try_update_many(
-                        &api_location,
-                        super::UpdateManyParameters { 
-                            payload: super::UpdateManyPayload(
-                                ids.clone().into_iter().map(|element| {
-                                    super::UpdateManyPayloadElement {
-                                        id: element,  
-                                        name: std::string::String::from("name"), //todo make sure name and color both are not None(make it option<value>, not just a value)
-                                        color: std::string::String::from("color"), 
-                                    }
-                                }).collect()
-                            )
-                        }
-                    )
-                    .await
-                    {
-                        Ok(value) => println!("{value:#?}"),
-                        Err(e) => {
-                            panic!("{e}");
-                        },
-                    }
-                    println!("--------------try_read_many-----------------");
-                    match super::try_read_many(
-                        &api_location,
-                        //todo - builder pattern?
-                        super::ReadManyParameters{ 
-                            payload: super::ReadManyPayload { 
-                                select: super::DogColumnSelect::IdNameColor,
-                                id: Some(
-                                    ids.clone()
-                                    // vec![
-                                    //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
-                                    //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
-                                    //     ).unwrap()
-                                    // ]
-                                ),
-                                name: None
-                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                                //     regex: std::string::String::from("test"),
-                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                                // }])
-                                ,//or and support
-                                color: None
-                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                                //     regex: std::string::String::from("test"),
-                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                                // }])
-                                ,
-                                #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
-                                    #column_lower_case_token_stream: super::DogColumn::Name,
-                                    #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::Desc),
-                                },
-                                #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
-                                #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
-                            } 
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            // let vec_cat_id: Vec<
-                            //     super::DogId,
-                            // > = value
-                            //     .into_iter()
-                            //     .filter_map(|value| match value.id {
-                            //         Some(id) => Some(
-                            //             super::DogId {
-                            //                 id,
-                            //             },
-                            //         ),
-                            //         None => None,
-                            //     })
-                            //     .collect();
-                            // println!("{vec_cat_id:#?}");
-                        }
-                        Err(e) => {
-                            panic!("{e}");
-                        }
-                    }
-                    println!("--------------try_delete_many-----------------");
-                    match super::try_delete_many(
-                        &api_location,
-                        //todo - builder pattern?
-                        super::DeleteManyParameters{ 
-                            payload: super::DeleteManyPayload { 
-                                id: Some(
-                                    ids.clone()
-                                    // vec![
-                                    //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
-                                    //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
-                                    //     ).unwrap()
-                                    // ]
-                                ),
-                                name: None
-                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                                //     regex: std::string::String::from("test"),
-                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                                // }])
-                                ,//or and support
-                                color: None
-                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                                //     regex: std::string::String::from("test"),
-                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                                // }])
-                                ,
-                            } 
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            // let vec_cat_id: Vec<
-                            //     super::DogId,
-                            // > = value
-                            //     .into_iter()
-                            //     .filter_map(|value| match value.id {
-                            //         Some(id) => Some(
-                            //             super::DogId {
-                            //                 id,
-                            //             },
-                            //         ),
-                            //         None => None,
-                            //     })
-                            //     .collect();
-                            // println!("{vec_cat_id:#?}");
-                        }
-                        Err(e) => {
-                            println!("{e}");
-                        }
-                    }
-                    println!("--------------try_read_many-----------------");
-                    match super::try_read_many(
-                        &api_location,
-                        //todo - builder pattern?
-                        super::ReadManyParameters{ 
-                            payload: super::ReadManyPayload { 
-                                select: super::DogColumnSelect::IdNameColor,
-                                id: Some(
-                                    ids.clone()
-                                    // vec![
-                                    //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
-                                    //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
-                                    //     ).unwrap()
-                                    // ]
-                                ),
-                                name: None
-                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                                //     regex: std::string::String::from("test"),
-                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                                // }])
-                                ,//or and support
-                                color: None
-                                // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                                //     regex: std::string::String::from("test"),
-                                //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                                // }])
-                                ,
-                                #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
-                                    #column_lower_case_token_stream: super::DogColumn::Name,
-                                    #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::Desc),
-                                },
-                                #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(limit),
-                                #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(offset),
-                            } 
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            // let vec_cat_id: Vec<
-                            //     super::DogId,
-                            // > = value
-                            //     .into_iter()
-                            //     .filter_map(|value| match value.id {
-                            //         Some(id) => Some(
-                            //             super::DogId {
-                            //                 id,
-                            //             },
-                            //         ),
-                            //         None => None,
-                            //     })
-                            //     .collect();
-                            // println!("{vec_cat_id:#?}");
-                        }
-                        Err(e) => {
-                            println!("{e}");
-                        }
-                    }
-                    //
-                    println!("--------------try_create_one-----------------");//todo add try_create_many
-                    let id = match super::try_create_one(
-                        &api_location,
-                        super::CreateOneParameters { 
-                            payload: super::CreateOnePayload {
-                                name: String::from("try_create_one_name"),
-                                color: String::from("try_create_one_color"),
-                            }
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            value
-                        },
-                        Err(e) => {
-                            panic!("{e}");
-                        }
-                    };
-                    println!("--------------try_read_one-----------------");
-                    match super::try_read_one(
-                        &api_location,
-                        super::ReadOneParameters { 
-                            payload: super::ReadOnePayload {
-                                id: id.clone(),
-                                select: super::DogColumnSelect::IdNameColor
-                            }
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => println!("{value:#?}"),
-                        Err(e) => {
-                            panic!("{e}");
-                        }
-                    }
-                    println!("--------------try_update_one------------------");//todo try_update_many
-                    let id = match super::try_update_one(
-                        &api_location,
-                        super::UpdateOneParameters { 
-                            payload: super::UpdateOnePayload {
-                                id: id.clone(),
-                                name: Some(std::string::String::from("name")), 
-                                color: Some(std::string::String::from("color")), 
-                            }
-                        }
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            value
-                        },
-                        Err(e) => panic!("{e}"),
-                    };
-                    println!("--------------try_read_one-----------------");
-                    match super::try_read_one(
-                        &api_location,
-                        super::ReadOneParameters { 
-                            payload: super::ReadOnePayload {
-                                id: id.clone(),
-                                select: super::DogColumnSelect::IdNameColor
-                            }
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => println!("{value:#?}"),
-                        Err(e) => {
-                            panic!("{e}");
-                        }
-                    }
-                    println!("--------------try_delete_one------------------");
-                    match super::try_delete_one(
-                        &api_location,
-                        super::DeleteOneParameters { 
-                            payload: super::DeleteOnePayload {
-                                id: id.clone()
-                            }
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => println!("{value:#?}"),
-                        Err(e) => panic!("{e}"),
-                    }
-                    println!("--------------try_read_one-----------------");
-                    match super::try_read_one(
-                        &api_location,
-                        super::ReadOneParameters { 
-                            payload: super::ReadOnePayload {
-                                id,
-                                select: super::DogColumnSelect::IdNameColor 
-                            }
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => println!("{value:#?}"),
-                        Err(e) => {
-                            println!("{e}");
-                        }
-                    }
-                    // let bot = teloxide::Bot::from_env();
-                    // teloxide::commands_repl(bot, answer, {
-                    //     use teloxide::utils::command::BotCommands;
-                    //     Command::ty()
-                    // })
-                    // .await;
-                    //
-                }
-                match tokio::runtime::Builder::new_multi_thread()
-                    .worker_threads(num_cpus::get())
-                    .enable_all()
-                    .build()
-                {
-                    Err(e) => {
-                        panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
-                    }
-                    Ok(runtime) => {
-                        runtime.block_on(find_out_if_it_works());
-                    }
-                }
-                let result = 2 + 2;
-                assert_eq!(result, 4);
-            }
-        }
-    };
     let additional_http_status_codes_error_variants_lower_case_stringified = "additional_http_status_codes_error_variants";
     let common_middlewares_error_syn_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_proc_macro_attribute(
         &ast,
@@ -5019,7 +4602,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     // );
     let (
         read_one_token_stream,
-        read_one_http_request_test_token_stream
+        read_one_http_request_test_expect_success_token_stream,
+        read_one_http_request_test_expect_fail_token_stream
      ) = {
         let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
@@ -5250,7 +4834,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
         let (
             http_request_token_stream,
-            http_request_test_token_stream
+            http_request_test_expect_success_token_stream,
+            http_request_test_expect_fail_token_stream
          ) = {
             let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
                 try_camel_case_stringified,
@@ -5308,7 +4893,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &request_error_variant_initialization_token_stream,
                 &table_name_stringified,
             );
-            let http_request_test_token_stream = {
+            let http_request_test_expect_success_token_stream = {
                 let test_content_token_stream = quote::quote!{
                     match #try_operation_lower_case_token_stream(
                         #reference_api_location_test_token_stream,
@@ -5332,12 +4917,37 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     &proc_macro_name_camel_case_ident_stringified,
                 )
             };
+            let http_request_test_expect_fail_token_stream = {
+                let test_content_token_stream = quote::quote!{
+                    match #try_operation_lower_case_token_stream(
+                        #reference_api_location_test_token_stream,
+                        #operation_parameters_camel_case_token_stream { 
+                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                                #primary_key_field_ident: #primary_key_token_stream.clone(),//todo
+                                #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream::#select_full_variant_token_stream
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => panic!("{value:#?}"),
+                        Err(e) => println!("{e}")
+                    };
+                };
+                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+                    &test_content_token_stream,
+                    &try_lower_case_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified,
+                )
+            };
             (
                 quote::quote!{
                     #try_operation_error_named_token_stream
                     #http_request_token_stream
                 },
-                http_request_test_token_stream
+                http_request_test_expect_success_token_stream,
+                http_request_test_expect_fail_token_stream
             )
         };
         // println!("{http_request_token_stream}");
@@ -5483,7 +5093,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #route_handler_token_stream
                 #common_middlewares_error_syn_variants_from_impls
             },
-            http_request_test_token_stream
+            http_request_test_expect_success_token_stream,
+            http_request_test_expect_fail_token_stream
         )
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
@@ -8284,11 +7895,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #delete_many_http_request_test_token_stream
                     #read_many_http_request_test_token_stream
                     #create_one_http_request_test_token_stream
-                    #read_one_http_request_test_token_stream
+                    #read_one_http_request_test_expect_success_token_stream
                     #update_one_http_request_test_token_stream
-                    #read_one_http_request_test_token_stream
+                    #read_one_http_request_test_expect_success_token_stream
                     #delete_one_http_request_test_token_stream
-                    #read_one_http_request_test_token_stream
+                    #read_one_http_request_test_expect_fail_token_stream
                 }
                 match tokio::runtime::Builder::new_multi_thread()
                     .worker_threads(num_cpus::get())
@@ -8323,7 +7934,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #ident_column_read_permission_token_stream
         // #[cfg(test)]
         // mod test_try_create_many {
-            // #tests_token_stream
+            #emulate_crud_api_usage_test_vec_parts
         // }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
