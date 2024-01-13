@@ -4489,8 +4489,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
                                     #primary_key_field_ident: Some(
                                         vec![
-                                            crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(//todo
-                                                crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from("9a720963-1a7d-4d42-9189-ec3163cf815c")//todo
+                                            #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(//todo
+                                                #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from("9a720963-1a7d-4d42-9189-ec3163cf815c")//todo
                                             ).unwrap()
                                         ]
                                     ),
