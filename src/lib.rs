@@ -3328,7 +3328,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -3911,7 +3910,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -4457,16 +4455,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
-                        let field_ident = element.ident.as_ref()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                            });
-                        let field_type = &element.ty;
-                        quote::quote!{
-                            #field_ident: #field_type::default()
-                        }
-                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     let order_initialization_token_stream = Order::Desc.to_token_stream();
                     let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident
@@ -4520,7 +4508,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -5281,16 +5268,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
-                        let field_ident = element.ident.as_ref()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                            });
-                        let field_type = &element.ty;
-                        quote::quote!{
-                            #field_ident: #field_type::default()
-                        }
-                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
                         match #try_operation_lower_case_token_stream(
                             #api_location_test_quotes_token_stream,
@@ -5319,7 +5296,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -5513,11 +5489,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_camel_case_stringified,
             error_named_camel_case_stringified,
             &proc_macro_name_camel_case_ident_stringified
-        );
-        let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
-            &try_lower_case_stringified,
-            &operation_name_lower_case_stringified,
-            &proc_macro_name_camel_case_ident_stringified,
         );
         let try_operation_lower_case_token_stream = generate_try_operation_lower_case_token_stream(
             &try_lower_case_stringified,
@@ -5927,7 +5898,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -6593,7 +6563,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -7175,7 +7144,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             });
-                        let field_type = &element.ty;
                         quote::quote!{
                             #field_ident: None
                             //or and support
@@ -7237,7 +7205,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -8026,16 +7993,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
-                        let field_ident = element.ident.as_ref()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                            });
-                        let field_type = &element.ty;
-                        quote::quote!{
-                            #field_ident: #field_type::default()
-                        }
-                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
                         match #try_operation_lower_case_token_stream(
                             #api_location_test_quotes_token_stream,
@@ -8061,7 +8018,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -10005,6 +9961,7 @@ fn generate_std_string_string_error_syn_variant(
     )
 }
 
+//todo test asc desc
 enum Order {
     Asc,
     Desc,
