@@ -3307,7 +3307,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #field_ident: #field_type::default()
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                quote::quote!{
+                let test_content_token_stream = quote::quote!{
                     let #primary_keys_token_stream = match #try_operation_lower_case_token_stream(
                         #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
@@ -3323,7 +3323,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Ok(value) => value,
                         Err(e) => panic!("{e}"),
                     };
-                }
+                };
+                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+                    &test_content_token_stream,
+                    &try_lower_case_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified,
+                )
             };
             (
                 quote::quote!{
@@ -4483,18 +4489,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                 quote::quote!{
-                    let #primary_keys_token_stream = match #try_operation_lower_case_token_stream(
+                    match #try_operation_lower_case_token_stream(
                         #reference_api_location_test_token_stream,
                         //todo - builder pattern?
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
-                                #primary_key_field_ident: Some(
-                                    vec![
-                                        #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(//todo
-                                            #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from("9a720963-1a7d-4d42-9189-ec3163cf815c")//todo
-                                        ).unwrap()
-                                    ]
-                                ),
+                                #primary_key_field_ident: Some(#primary_keys_token_stream.clone()),
                                 #(#fields_initialization_excluding_primary_key_token_stream)*
                                 #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream::#select_full_variant_token_stream,
                                 #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
@@ -5293,7 +5293,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
-                                #primary_key_field_ident: id.clone(),//todo
+                                #primary_key_field_ident: #primary_key_token_stream.clone(),//todo
                                 #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream::#select_full_variant_token_stream
                             }
                         },
@@ -5312,7 +5312,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     #try_operation_error_named_token_stream
                     #http_request_token_stream
                 },
-                 http_request_test_token_stream
+                http_request_test_token_stream
             )
         };
         // println!("{http_request_token_stream}");
@@ -6561,7 +6561,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }); 
                     let field_type = &element.ty;
                     quote::quote!{
-                        #field_ident: #field_type::default()
+                        #field_ident: Some(#field_type::default())
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                 quote::quote!{
@@ -7194,7 +7194,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         //todo - builder pattern?
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream { 
-                                #primary_key_token_stream: Some(
+                                #primary_key_field_ident: Some(
                                     #primary_keys_token_stream.clone()
                                     // vec![
                                     //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
@@ -8228,45 +8228,43 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     // );
     let emulate_crud_api_usage_test_vec_parts = {
         quote::quote! {
-            #[cfg(test)]
-            mod tests {
-                #[test]
-                fn it_works() {
-                    async fn find_out_if_it_works() {
-                        let api_location = std::string::String::from("http://127.0.0.1:8080");
-                        let limit = 1000;
-                        let offset = 0;
-                        #create_many_http_request_test_token_stream
-                        #read_many_http_request_test_token_stream
-                        #update_many_http_request_test_token_stream
-                        #read_many_http_request_test_token_stream
-                        #delete_many_http_request_test_token_stream
-                        #read_many_http_request_test_token_stream
-                        #create_one_http_request_test_token_stream
-                        #read_one_http_request_test_token_stream
-                        #update_one_http_request_test_token_stream
-                        #read_one_http_request_test_token_stream
-                        #delete_one_http_request_test_token_stream
-                        #read_one_http_request_test_token_stream
-                    }
-                    match tokio::runtime::Builder::new_multi_thread()
-                        .worker_threads(num_cpus::get())
-                        .enable_all()
-                        .build()
-                    {
-                        Err(e) => {
-                            panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
-                        }
-                        Ok(runtime) => {
-                            runtime.block_on(find_out_if_it_works());
-                        }
-                    }
-                    let result = 2 + 2;
-                    assert_eq!(result, 4);
+            #[test]
+            fn it_works() {
+                async fn find_out_if_it_works() {
+                    let api_location = std::string::String::from("http://127.0.0.1:8080");
+                    let limit = 1000;
+                    let offset = 0;
+                    #create_many_http_request_test_token_stream
+                    #read_many_http_request_test_token_stream
+                    #update_many_http_request_test_token_stream
+                    #read_many_http_request_test_token_stream
+                    #delete_many_http_request_test_token_stream
+                    #read_many_http_request_test_token_stream
+                    #create_one_http_request_test_token_stream
+                    #read_one_http_request_test_token_stream
+                    #update_one_http_request_test_token_stream
+                    #read_one_http_request_test_token_stream
+                    #delete_one_http_request_test_token_stream
+                    #read_one_http_request_test_token_stream
                 }
+                match tokio::runtime::Builder::new_multi_thread()
+                    .worker_threads(num_cpus::get())
+                    .enable_all()
+                    .build()
+                {
+                    Err(e) => {
+                        panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
+                    }
+                    Ok(runtime) => {
+                        runtime.block_on(find_out_if_it_works());
+                    }
+                }
+                let result = 2 + 2;
+                assert_eq!(result, 4);
             }
         }
     };
+    println!("{emulate_crud_api_usage_test_vec_parts}");
     let common_token_stream = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
@@ -8282,7 +8280,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #ident_column_read_permission_token_stream
         // #[cfg(test)]
         // mod test_try_create_many {
-            #tests_token_stream
+            // #tests_token_stream
         // }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
@@ -8564,14 +8562,82 @@ fn generate_try_operation_with_serialize_deserialize_token_stream(
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_with_serialize_deserialize_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
+fn generate_try_operation_lower_case_stringified(
+    try_lower_case_stringified: &str,
+    operation_name_lower_case_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str,
+) -> std::string::String {
+    format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}")
+}
+
 fn generate_try_operation_lower_case_token_stream(
     try_lower_case_stringified: &str,
     operation_name_lower_case_stringified: &str,
     proc_macro_name_camel_case_ident_stringified: &str,
 ) -> proc_macro2::TokenStream {
-    let try_operation_lower_case_stringified = format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}");
+    let try_operation_lower_case_stringified = generate_try_operation_lower_case_stringified(
+        &try_lower_case_stringified,
+        &operation_name_lower_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified,
+    );
     try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+}
+
+enum TestOperationPrintlnInfo {
+    Start,
+    End
+}
+
+impl std::fmt::Display for TestOperationPrintlnInfo {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Self::Start => write!(f, "start"),
+            Self::End => write!(f, "end")
+        }
+    }
+}
+
+fn generate_try_operation_lower_case_println_token_stream(
+    test_operation_print_in_info: TestOperationPrintlnInfo,
+    try_lower_case_stringified: &str,
+    operation_name_lower_case_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str,
+) -> proc_macro2::TokenStream {
+    let try_operation_lower_case_stringified = generate_try_operation_lower_case_stringified(
+        &try_lower_case_stringified,
+        &operation_name_lower_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified,
+    );
+    let try_operation_lower_case_println_content_stringified = format!("\"---{try_operation_lower_case_stringified} {test_operation_print_in_info}---\"");
+    let try_operation_lower_case_println_content_token_stream = try_operation_lower_case_println_content_stringified.parse::<proc_macro2::TokenStream>()
+    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_println_content_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+    quote::quote!{println!(#try_operation_lower_case_println_content_token_stream);}
+}
+
+fn generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+    test_content_token_stream: &proc_macro2::TokenStream,
+    try_lower_case_stringified: &str,
+    operation_name_lower_case_stringified: &str,
+    proc_macro_name_camel_case_ident_stringified: &str,
+) -> proc_macro2::TokenStream {
+    let start_println_token_stream = generate_try_operation_lower_case_println_token_stream(
+        TestOperationPrintlnInfo::Start,
+        &try_lower_case_stringified,
+        &operation_name_lower_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified,
+    );
+    let end_println_token_stream = generate_try_operation_lower_case_println_token_stream(
+        TestOperationPrintlnInfo::End,
+        &try_lower_case_stringified,
+        &operation_name_lower_case_stringified,
+        &proc_macro_name_camel_case_ident_stringified,
+    );
+    quote::quote!{
+        #start_println_token_stream
+        #test_content_token_stream
+        #end_println_token_stream
+    }
 }
 
 fn generate_tvfrr_extraction_logic_token_stream(
