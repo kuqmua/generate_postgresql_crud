@@ -6554,7 +6554,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
+                    let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -6565,40 +6565,23 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
-                        // let id = match super::try_update_one(
-                        //     &api_location,
-                        //     super::UpdateOneParameters { 
-                        //         payload: super::UpdateOnePayload {
-                        //             id: id.clone(),
-                        //             name: Some(std::string::String::from("name")), 
-                        //             color: Some(std::string::String::from("color")), 
-                        //         }
-                        //     }
-                        // )
-                        // .await
-                        // {
-                        //     Ok(value) => {
-                        //         println!("{value:#?}");
-                        //         value
-                        //     },
-                        //     Err(e) => panic!("{e}"),
-                        // };
-                        // //
-                        // let ids = match #try_operation_lower_case_token_stream(
-                        //     #api_location_test_quotes_token_stream,
-                        //     #operation_parameters_camel_case_token_stream { 
-                        //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
-                        //             #operation_payload_element_camel_case_token_stream{
-                        //                 #(#element_fields_initialization_token_stream),*
-                        //             }
-                        //         ])
-                        //     },
-                        // )
-                        // .await
-                        // {
-                        //     Ok(value) => value,
-                        //     Err(e) => panic!("{e}"),
-                        // };
+                        let id = match #try_operation_lower_case_token_stream(
+                            #api_location_test_quotes_token_stream,
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                                    #primary_key_field_ident: id.clone(),
+                                    #(#fields_initialization_excluding_primary_key_token_stream),*
+                                }
+                            }
+                        )
+                        .await
+                        {
+                            Ok(value) => {
+                                println!("{value:#?}");
+                                value
+                            },
+                            Err(e) => panic!("{e}"),
+                        };
                     }
                 };
                 generate_async_test_wrapper_token_stream(
@@ -7187,84 +7170,62 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
+                    let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
                             });
                         let field_type = &element.ty;
                         quote::quote!{
-                            #field_ident: #field_type::default()
+                            #field_ident: None
+                            //or and support
+                            // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                            //     regex: std::string::String::from("test"),
+                            //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                            // }])
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
-                        // match super::try_delete_many(
-                        //     &api_location,
-                        //     //todo - builder pattern?
-                        //     super::DeleteManyParameters{ 
-                        //         payload: super::DeleteManyPayload { 
-                        //             id: Some(
-                        //                 ids.clone()
-                        //                 // vec![
-                        //                 //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
-                        //                 //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
-                        //                 //     ).unwrap()
-                        //                 // ]
-                        //             ),
-                        //             name: None
-                        //             // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                        //             //     regex: std::string::String::from("test"),
-                        //             //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                        //             // }])
-                        //             ,//or and support
-                        //             color: None
-                        //             // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                        //             //     regex: std::string::String::from("test"),
-                        //             //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                        //             // }])
-                        //             ,
-                        //         } 
-                        //     },
-                        // )
-                        // .await
-                        // {
-                        //     Ok(value) => {
-                        //         println!("{value:#?}");
-                        //         // let vec_cat_id: Vec<
-                        //         //     super::DogId,
-                        //         // > = value
-                        //         //     .into_iter()
-                        //         //     .filter_map(|value| match value.id {
-                        //         //         Some(id) => Some(
-                        //         //             super::DogId {
-                        //         //                 id,
-                        //         //             },
-                        //         //         ),
-                        //         //         None => None,
-                        //         //     })
-                        //         //     .collect();
-                        //         // println!("{vec_cat_id:#?}");
-                        //     }
-                        //     Err(e) => {
-                        //         println!("{e}");
-                        //     }
-                        // }
-                        // //
-                        // let ids = match #try_operation_lower_case_token_stream(
-                        //     #api_location_test_quotes_token_stream,
-                        //     #operation_parameters_camel_case_token_stream { 
-                        //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
-                        //             #operation_payload_element_camel_case_token_stream{
-                        //                 #(#element_fields_initialization_token_stream),*
-                        //             }
-                        //         ])
-                        //     },
-                        // )
-                        // .await
-                        // {
-                        //     Ok(value) => value,
-                        //     Err(e) => panic!("{e}"),
-                        // };
+                        match #try_operation_lower_case_token_stream(
+                            #api_location_test_quotes_token_stream,
+                            //todo - builder pattern?
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream { 
+                                    id: Some(
+                                        ids.clone()
+                                        // vec![
+                                        //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
+                                        //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
+                                        //     ).unwrap()
+                                        // ]
+                                    ),
+                                    #(#fields_initialization_excluding_primary_key_token_stream),*
+                                } 
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => {
+                                println!("{value:#?}");
+                                // let vec_cat_id: Vec<
+                                //     super::DogId,
+                                // > = value
+                                //     .into_iter()
+                                //     .filter_map(|value| match value.id {
+                                //         Some(id) => Some(
+                                //             super::DogId {
+                                //                 id,
+                                //             },
+                                //         ),
+                                //         None => None,
+                                //     })
+                                //     .collect();
+                                // println!("{vec_cat_id:#?}");
+                            }
+                            Err(e) => {
+                                println!("{e}");
+                            }
+                        }
                     }
                 };
                 generate_async_test_wrapper_token_stream(
@@ -8076,35 +8037,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
-                        // match super::try_delete_one(
-                        //     &api_location,
-                        //     super::DeleteOneParameters { 
-                        //         payload: super::DeleteOnePayload {
-                        //             id: id.clone()
-                        //         }
-                        //     },
-                        // )
-                        // .await
-                        // {
-                        //     Ok(value) => println!("{value:#?}"),
-                        //     Err(e) => panic!("{e}"),
-                        // }
-                        // //
-                        // let ids = match #try_operation_lower_case_token_stream(
-                        //     #api_location_test_quotes_token_stream,
-                        //     #operation_parameters_camel_case_token_stream { 
-                        //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
-                        //             #operation_payload_element_camel_case_token_stream{
-                        //                 #(#element_fields_initialization_token_stream),*
-                        //             }
-                        //         ])
-                        //     },
-                        // )
-                        // .await
-                        // {
-                        //     Ok(value) => value,
-                        //     Err(e) => panic!("{e}"),
-                        // };
+                        match #try_operation_lower_case_token_stream(
+                            #api_location_test_quotes_token_stream,
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                                    id: id.clone()
+                                }
+                            },
+                        )
+                        .await
+                        {
+                            Ok(value) => println!("{value:#?}"),
+                            Err(e) => panic!("{e}"),
+                        }
                     }
                 };
                 generate_async_test_wrapper_token_stream(
