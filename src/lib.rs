@@ -1542,6 +1542,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
+    let api_location_test_quotes_token_stream = quote::quote!{"http://127.0.0.1:8080"};
     //todo
     let tests_token_stream = quote::quote!{
         #[cfg(test)]
@@ -1549,7 +1550,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[test]
             fn it_works() {
                 async fn find_out_if_it_works() {
-                    let api_location = std::string::String::from("http://127.0.0.1:8080");
+                    let api_location = std::string::String::from(#api_location_test_quotes_token_stream);
                     let limit = 1000;
                     let offset = 0;
                     println!("--------------try_create_one-----------------");//todo add try_create_many
@@ -3288,7 +3289,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
                         let ids = match #try_operation_lower_case_token_stream(
-                            "http://127.0.0.1:8080",
+                            #api_location_test_quotes_token_stream,
                             #operation_parameters_camel_case_token_stream { 
                                 #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
                                     #operation_payload_element_camel_case_token_stream{
@@ -3873,7 +3874,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
                         let id = match #try_operation_lower_case_token_stream(
-                            "http://127.0.0.1:8080",
+                            #api_location_test_quotes_token_stream,
                             #operation_parameters_camel_case_token_stream { 
                                 #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
                                     #(#element_fields_initialization_token_stream),*
@@ -4488,7 +4489,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     //
                     quote::quote!{
                         let values = match #try_operation_lower_case_token_stream(
-                            "http://127.0.0.1:8080",
+                            #api_location_test_quotes_token_stream,
                             //todo - builder pattern?
                             #operation_parameters_camel_case_token_stream { 
                                 #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
@@ -4514,7 +4515,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         };
                         // //
                         // let ids = match #try_operation_lower_case_token_stream(
-                        //     "http://127.0.0.1:8080",
+                        //     #api_location_test_quotes_token_stream,
                         //     #operation_parameters_camel_case_token_stream { 
                         //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
                         //             #operation_payload_element_camel_case_token_stream{
@@ -5330,7 +5331,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         // }
                         // //
                         // let ids = match #try_operation_lower_case_token_stream(
-                        //     "http://127.0.0.1:8080",
+                        //     #api_location_test_quotes_token_stream,
                         //     #operation_parameters_camel_case_token_stream { 
                         //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
                         //             #operation_payload_element_camel_case_token_stream{
@@ -5955,7 +5956,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                         //
                         let ids = match #try_operation_lower_case_token_stream(
-                            "http://127.0.0.1:8080",
+                            #api_location_test_quotes_token_stream,
                             #operation_parameters_camel_case_token_stream { 
                                 #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
                                     #operation_payload_element_camel_case_token_stream{
@@ -6638,7 +6639,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         // };
                         // //
                         // let ids = match #try_operation_lower_case_token_stream(
-                        //     "http://127.0.0.1:8080",
+                        //     #api_location_test_quotes_token_stream,
                         //     #operation_parameters_camel_case_token_stream { 
                         //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
                         //             #operation_payload_element_camel_case_token_stream{
@@ -7303,7 +7304,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         // }
                         // //
                         // let ids = match #try_operation_lower_case_token_stream(
-                        //     "http://127.0.0.1:8080",
+                        //     #api_location_test_quotes_token_stream,
                         //     #operation_parameters_camel_case_token_stream { 
                         //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
                         //             #operation_payload_element_camel_case_token_stream{
@@ -8143,7 +8144,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         // }
                         // //
                         // let ids = match #try_operation_lower_case_token_stream(
-                        //     "http://127.0.0.1:8080",
+                        //     #api_location_test_quotes_token_stream,
                         //     #operation_parameters_camel_case_token_stream { 
                         //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
                         //             #operation_payload_element_camel_case_token_stream{
