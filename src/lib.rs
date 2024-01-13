@@ -1553,111 +1553,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     let api_location = std::string::String::from(#api_location_test_quotes_token_stream);
                     let limit = 1000;
                     let offset = 0;
-                    println!("--------------try_create_one-----------------");//todo add try_create_many
-                    let id = match super::try_create_one(
-                        &api_location,
-                        super::CreateOneParameters { 
-                            payload: super::CreateOnePayload {
-                                name: String::from("try_create_one_name"),
-                                color: String::from("try_create_one_color"),
-                            }
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            value
-                        },
-                        Err(e) => {
-                            panic!("{e}");
-                        }
-                    };
-                    println!("--------------try_read_one-----------------");
-                    match super::try_read_one(
-                        &api_location,
-                        super::ReadOneParameters { 
-                            payload: super::ReadOnePayload {
-                                id: id.clone(),
-                                select: super::DogColumnSelect::IdNameColor
-                            }
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => println!("{value:#?}"),
-                        Err(e) => {
-                            panic!("{e}");
-                        }
-                    }
-                    println!("--------------try_update_one------------------");//todo try_update_many
-                    let id = match super::try_update_one(
-                        &api_location,
-                        super::UpdateOneParameters { 
-                            payload: super::UpdateOnePayload {
-                                id: id.clone(),
-                                name: Some(std::string::String::from("name")), 
-                                color: Some(std::string::String::from("color")), 
-                            }
-                        }
-                    )
-                    .await
-                    {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            value
-                        },
-                        Err(e) => panic!("{e}"),
-                    };
-                    println!("--------------try_read_one-----------------");
-                    match super::try_read_one(
-                        &api_location,
-                        super::ReadOneParameters { 
-                            payload: super::ReadOnePayload {
-                                id: id.clone(),
-                                select: super::DogColumnSelect::IdNameColor
-                            }
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => println!("{value:#?}"),
-                        Err(e) => {
-                            panic!("{e}");
-                        }
-                    }
-                    println!("--------------try_delete_one------------------");
-                    match super::try_delete_one(
-                        &api_location,
-                        super::DeleteOneParameters { 
-                            payload: super::DeleteOnePayload {
-                                id: id.clone()
-                            }
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => println!("{value:#?}"),
-                        Err(e) => panic!("{e}"),
-                    }
-                    println!("--------------try_read_one-----------------");
-                    match super::try_read_one(
-                        &api_location,
-                        super::ReadOneParameters { 
-                            payload: super::ReadOnePayload {
-                                id,
-                                select: super::DogColumnSelect::IdNameColor 
-                            }
-                        },
-                    )
-                    .await
-                    {
-                        Ok(value) => println!("{value:#?}"),
-                        Err(e) => {
-                            println!("{e}");
-                        }
-                    }
-                    //
+//
                     println!("--------------try_create_many-----------------");//todo add try_create_many
                     let ids = match super::try_create_many(
                         &api_location,
@@ -1935,7 +1831,111 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             println!("{e}");
                         }
                     }
-                    
+                    //
+                    println!("--------------try_create_one-----------------");//todo add try_create_many
+                    let id = match super::try_create_one(
+                        &api_location,
+                        super::CreateOneParameters { 
+                            payload: super::CreateOnePayload {
+                                name: String::from("try_create_one_name"),
+                                color: String::from("try_create_one_color"),
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            value
+                        },
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    };
+                    println!("--------------try_read_one-----------------");
+                    match super::try_read_one(
+                        &api_location,
+                        super::ReadOneParameters { 
+                            payload: super::ReadOnePayload {
+                                id: id.clone(),
+                                select: super::DogColumnSelect::IdNameColor
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    }
+                    println!("--------------try_update_one------------------");//todo try_update_many
+                    let id = match super::try_update_one(
+                        &api_location,
+                        super::UpdateOneParameters { 
+                            payload: super::UpdateOnePayload {
+                                id: id.clone(),
+                                name: Some(std::string::String::from("name")), 
+                                color: Some(std::string::String::from("color")), 
+                            }
+                        }
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            value
+                        },
+                        Err(e) => panic!("{e}"),
+                    };
+                    println!("--------------try_read_one-----------------");
+                    match super::try_read_one(
+                        &api_location,
+                        super::ReadOneParameters { 
+                            payload: super::ReadOnePayload {
+                                id: id.clone(),
+                                select: super::DogColumnSelect::IdNameColor
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    }
+                    println!("--------------try_delete_one------------------");
+                    match super::try_delete_one(
+                        &api_location,
+                        super::DeleteOneParameters { 
+                            payload: super::DeleteOnePayload {
+                                id: id.clone()
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => panic!("{e}"),
+                    }
+                    println!("--------------try_read_one-----------------");
+                    match super::try_read_one(
+                        &api_location,
+                        super::ReadOneParameters { 
+                            payload: super::ReadOnePayload {
+                                id,
+                                select: super::DogColumnSelect::IdNameColor 
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => {
+                            println!("{e}");
+                        }
+                    }
                     // let bot = teloxide::Bot::from_env();
                     // teloxide::commands_repl(bot, answer, {
                     //     use teloxide::utils::command::BotCommands;
@@ -2906,7 +2906,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         select_full_variant_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {select_full_variant_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
-    let create_many_token_stream = {
+    let (
+        create_many_token_stream,
+        create_many_http_request_test_token_stream
+    ) = {
         let operation_name_camel_case_stringified = format!("{create_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let operation_http_method = OperationHttpMethod::Post;
@@ -3234,7 +3237,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
-        let http_request_token_stream = {
+        let (
+            http_request_token_stream,
+            http_request_test_token_stream
+        ) = {
             let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
                 try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -3290,45 +3296,41 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_lower_case_token_stream,
             );
             let http_request_test_token_stream = {
-                let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
-                        let field_ident = element.ident.as_ref()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                            });
-                        let field_type = &element.ty;
-                        quote::quote!{
-                            #field_ident: #field_type::default()
-                        }
-                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
+                    let field_ident = element.ident.as_ref()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                        });
+                    let field_type = &element.ty;
                     quote::quote!{
-                        let ids = match #try_operation_lower_case_token_stream(
-                            #api_location_test_quotes_token_stream,
-                            #operation_parameters_camel_case_token_stream { 
-                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
-                                    #operation_payload_element_camel_case_token_stream{
-                                        #(#element_fields_initialization_token_stream),*
-                                    }
-                                ])
-                            },
-                        )
-                        .await
-                        {
-                            Ok(value) => value,
-                            Err(e) => panic!("{e}"),
-                        };
+                        #field_ident: #field_type::default()
                     }
-                };
-                generate_async_test_wrapper_token_stream(
-                    &operation_name_lower_case_stringified,
-                    &test_inner_content_token_stream,
-                    &proc_macro_name_camel_case_ident_stringified
-                )
+                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                quote::quote!{
+                    let ids = match #try_operation_lower_case_token_stream(
+                        #api_location_test_quotes_token_stream,
+                        #operation_parameters_camel_case_token_stream { 
+                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
+                                #operation_payload_element_camel_case_token_stream{
+                                    #(#element_fields_initialization_token_stream),*
+                                }
+                            ])
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => value,
+                        Err(e) => panic!("{e}"),
+                    };
+                }
             };
-            quote::quote!{
-                #try_operation_error_named_token_stream
-                #http_request_token_stream
-            }
+            (
+                quote::quote!{
+                    #try_operation_error_named_token_stream
+                    #http_request_token_stream
+                },
+                http_request_test_token_stream
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -3554,14 +3556,17 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_camel_case_ident_stringified,
         );
         // println!("{common_middlewares_error_syn_variants_from_impls}");
-        quote::quote!{
-            #parameters_token_stream
-            #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream
-            #try_operation_error_with_middleware_error_variants_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
-            #common_middlewares_error_syn_variants_from_impls
-        }
+        (
+            quote::quote!{
+                #parameters_token_stream
+                #operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_error_unnamed_token_stream
+                #try_operation_error_with_middleware_error_variants_token_stream
+                #http_request_token_stream
+                #route_handler_token_stream
+                #common_middlewares_error_syn_variants_from_impls
+            },
+            http_request_test_token_stream
+        )
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
@@ -3874,38 +3879,31 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
             );
             let http_request_test_token_stream = {
-                let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
-                        let field_ident = element.ident.as_ref()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                            });
-                        let field_type = &element.ty;
-                        quote::quote!{
-                            #field_ident: #field_type::default()
-                        }
-                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
+                    let field_ident = element.ident.as_ref()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                        });
+                    let field_type = &element.ty;
                     quote::quote!{
-                        let id = match #try_operation_lower_case_token_stream(
-                            #api_location_test_quotes_token_stream,
-                            #operation_parameters_camel_case_token_stream { 
-                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
-                                    #(#element_fields_initialization_token_stream),*
-                                }
-                            },
-                        )
-                        .await
-                        {
-                            Ok(value) => value,
-                            Err(e) => panic!("{e}"),
-                        };
+                        #field_ident: #field_type::default()
                     }
-                };
-                generate_async_test_wrapper_token_stream(
-                    &operation_name_lower_case_stringified,
-                    &test_inner_content_token_stream,
-                    &proc_macro_name_camel_case_ident_stringified
-                )
+                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                quote::quote!{
+                    let id = match #try_operation_lower_case_token_stream(
+                        #api_location_test_quotes_token_stream,
+                        #operation_parameters_camel_case_token_stream { 
+                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                                #(#element_fields_initialization_token_stream),*
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => value,
+                        Err(e) => panic!("{e}"),
+                    };
+                }
             };
             quote::quote!{
                 #try_operation_error_named_token_stream
@@ -4454,56 +4452,49 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
             );
             let http_request_test_token_stream = {
-                let test_inner_content_token_stream = {
-                    let order_initialization_token_stream = Order::Desc.to_token_stream();
-                    let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
-                        let field_ident = element.ident
-                            .as_ref()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                            });
-                        quote::quote!{
-                            #field_ident: None,//todo maybe generate all the possible versions for what need to have?
-                        }
-                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                let order_initialization_token_stream = Order::Desc.to_token_stream();
+                let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
+                    let field_ident = element.ident
+                        .as_ref()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                        });
                     quote::quote!{
-                        let limit = 1000;
-                        let offset = 0;
-                        let values = match #try_operation_lower_case_token_stream(
-                            #api_location_test_quotes_token_stream,
-                            //todo - builder pattern?
-                            #operation_parameters_camel_case_token_stream { 
-                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
-                                    #primary_key_field_ident: Some(
-                                        vec![
-                                            #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(//todo
-                                                #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from("9a720963-1a7d-4d42-9189-ec3163cf815c")//todo
-                                            ).unwrap()
-                                        ]
-                                    ),
-                                    #(#fields_initialization_excluding_primary_key_token_stream)*
-                                    #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream::#select_full_variant_token_stream,
-                                    #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
-                                        #column_lower_case_token_stream: #ident_column_camel_case_token_stream::Name,
-                                        #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::#order_initialization_token_stream),//todo remove option here
-                                    },
-                                    #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(#limit_lower_case_token_stream),
-                                    #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(#offset_lower_case_token_stream),
-                                } 
-                            },
-                        )
-                        .await
-                        {
-                            Ok(value) => value,
-                            Err(e) =>  panic!("{e}"),
-                        };
+                        #field_ident: None,//todo maybe generate all the possible versions for what need to have?
                     }
-                };
-                generate_async_test_wrapper_token_stream(
-                    &operation_name_lower_case_stringified,
-                    &test_inner_content_token_stream,
-                    &proc_macro_name_camel_case_ident_stringified
-                )
+                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                quote::quote!{
+                    let limit = 1000;
+                    let offset = 0;
+                    let values = match #try_operation_lower_case_token_stream(
+                        #api_location_test_quotes_token_stream,
+                        //todo - builder pattern?
+                        #operation_parameters_camel_case_token_stream { 
+                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                                #primary_key_field_ident: Some(
+                                    vec![
+                                        #crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream::try_from(//todo
+                                            #crate_server_postgres_uuid_wrapper_possible_uuid_wrapper_token_stream::from("9a720963-1a7d-4d42-9189-ec3163cf815c")//todo
+                                        ).unwrap()
+                                    ]
+                                ),
+                                #(#fields_initialization_excluding_primary_key_token_stream)*
+                                #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream::#select_full_variant_token_stream,
+                                #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
+                                    #column_lower_case_token_stream: #ident_column_camel_case_token_stream::Name,
+                                    #order_lower_case_token_stream: Some(#crate_server_postgres_order_order_token_stream::#order_initialization_token_stream),//todo remove option here
+                                },
+                                #limit_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(#limit_lower_case_token_stream),
+                                #offset_lower_case_token_stream: #crate_server_postgres_postgres_bigint_postgres_bigint_token_stream(#offset_lower_case_token_stream),
+                            } 
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => value,
+                        Err(e) =>  panic!("{e}"),
+                    };
+                }
             };
             quote::quote!{
                 #try_operation_error_named_token_stream
@@ -5267,31 +5258,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
             );
             let http_request_test_token_stream = {
-                let test_inner_content_token_stream = {
-                    quote::quote!{
-                        match #try_operation_lower_case_token_stream(
-                            #api_location_test_quotes_token_stream,
-                            #operation_parameters_camel_case_token_stream { 
-                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
-                                    #primary_key_field_ident: id.clone(),//todo
-                                    #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream::#select_full_variant_token_stream
-                                }
-                            },
-                        )
-                        .await
-                        {
-                            Ok(value) => println!("{value:#?}"),
-                            Err(e) => {
-                                panic!("{e}");
+                quote::quote!{
+                    match #try_operation_lower_case_token_stream(
+                        #api_location_test_quotes_token_stream,
+                        #operation_parameters_camel_case_token_stream { 
+                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                                #primary_key_field_ident: id.clone(),//todo
+                                #select_lower_case_token_stream: #ident_column_select_camel_case_token_stream::#select_full_variant_token_stream
                             }
-                        };
-                    }
-                };
-                generate_async_test_wrapper_token_stream(
-                    &operation_name_lower_case_stringified,
-                    &test_inner_content_token_stream,
-                    &proc_macro_name_camel_case_ident_stringified
-                )
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => {
+                            panic!("{e}");
+                        }
+                    };
+                }
             };
             quote::quote!{
                 #try_operation_error_named_token_stream
@@ -5855,45 +5839,38 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_lower_case_token_stream,
             );
             let http_request_test_token_stream = {
-                let test_inner_content_token_stream = {
-                    let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
-                        let field_ident = element.ident.as_ref()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                            });
-                        let field_type = &element.ty;
-                        quote::quote!{
-                            #field_ident: #field_type::default()
-                        }
-                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
+                    let field_ident = element.ident.as_ref()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                        });
+                    let field_type = &element.ty;
                     quote::quote!{
-                        match #try_operation_lower_case_token_stream(
-                            &api_location,
-                            #operation_parameters_camel_case_token_stream { 
-                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream (
-                                    ids.clone().into_iter().map(|element| {
-                                        #operation_payload_element_camel_case_token_stream {
-                                            #primary_key_field_ident: element,
-                                            #(#fields_initialization_excluding_primary_key_token_stream),*//todo make sure name and color both are not None(make it option<value>, not just a value)
-                                        }
-                                    }).collect()
-                                )
-                            }
-                        )
-                        .await
-                        {
-                            Ok(value) => println!("{value:#?}"),
-                            Err(e) => {
-                                panic!("{e}");
-                            },
-                        }
+                        #field_ident: #field_type::default()
                     }
-                };
-                generate_async_test_wrapper_token_stream(
-                    &operation_name_lower_case_stringified,
-                    &test_inner_content_token_stream,
-                    &proc_macro_name_camel_case_ident_stringified
-                )
+                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                quote::quote!{
+                    match #try_operation_lower_case_token_stream(
+                        &api_location,
+                        #operation_parameters_camel_case_token_stream { 
+                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream (
+                                ids.clone().into_iter().map(|element| {
+                                    #operation_payload_element_camel_case_token_stream {
+                                        #primary_key_field_ident: element,
+                                        #(#fields_initialization_excluding_primary_key_token_stream),*//todo make sure name and color both are not None(make it option<value>, not just a value)
+                                    }
+                                }).collect()
+                            )
+                        }
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => {
+                            panic!("{e}");
+                        },
+                    }
+                }
             };
             quote::quote!{
                 #try_operation_error_named_token_stream
@@ -6523,42 +6500,35 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
             );
             let http_request_test_token_stream = {
-                let test_inner_content_token_stream = {
-                    let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
-                        let field_ident = element.ident.as_ref()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                            });
-                        let field_type = &element.ty;
-                        quote::quote!{
-                            #field_ident: #field_type::default()
-                        }
-                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
+                    let field_ident = element.ident.as_ref()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                        }); 
+                    let field_type = &element.ty;
                     quote::quote!{
-                        let id = match #try_operation_lower_case_token_stream(
-                            #api_location_test_quotes_token_stream,
-                            #operation_parameters_camel_case_token_stream { 
-                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
-                                    #primary_key_field_ident: id.clone(),
-                                    #(#fields_initialization_excluding_primary_key_token_stream),*
-                                }
-                            }
-                        )
-                        .await
-                        {
-                            Ok(value) => {
-                                println!("{value:#?}");
-                                value
-                            },
-                            Err(e) => panic!("{e}"),
-                        };
+                        #field_ident: #field_type::default()
                     }
-                };
-                generate_async_test_wrapper_token_stream(
-                    &operation_name_lower_case_stringified,
-                    &test_inner_content_token_stream,
-                    &proc_macro_name_camel_case_ident_stringified
-                )
+                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                quote::quote!{
+                    let id = match #try_operation_lower_case_token_stream(
+                        #api_location_test_quotes_token_stream,
+                        #operation_parameters_camel_case_token_stream { 
+                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                                #primary_key_field_ident: id.clone(),
+                                #(#fields_initialization_excluding_primary_key_token_stream),*
+                            }
+                        }
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            value
+                        },
+                        Err(e) => panic!("{e}"),
+                    };
+                }
             };
             quote::quote!{
                 #try_operation_error_named_token_stream
@@ -7138,69 +7108,62 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &try_operation_lower_case_token_stream,
             );
             let http_request_test_token_stream = {
-                let test_inner_content_token_stream = {
-                    let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
-                        let field_ident = element.ident.as_ref()
-                            .unwrap_or_else(|| {
-                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
-                            });
-                        quote::quote!{
-                            #field_ident: None
-                            //or and support
-                            // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
-                            //     regex: std::string::String::from("test"),
-                            //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
-                            // }])
-                        }
-                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
+                    let field_ident = element.ident.as_ref()
+                        .unwrap_or_else(|| {
+                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                        });
                     quote::quote!{
-                        match #try_operation_lower_case_token_stream(
-                            #api_location_test_quotes_token_stream,
-                            //todo - builder pattern?
-                            #operation_parameters_camel_case_token_stream { 
-                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream { 
-                                    id: Some(
-                                        ids.clone()
-                                        // vec![
-                                        //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
-                                        //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
-                                        //     ).unwrap()
-                                        // ]
-                                    ),
-                                    #(#fields_initialization_excluding_primary_key_token_stream),*
-                                } 
-                            },
-                        )
-                        .await
-                        {
-                            Ok(value) => {
-                                println!("{value:#?}");
-                                // let vec_cat_id: Vec<
-                                //     super::DogId,
-                                // > = value
-                                //     .into_iter()
-                                //     .filter_map(|value| match value.id {
-                                //         Some(id) => Some(
-                                //             super::DogId {
-                                //                 id,
-                                //             },
-                                //         ),
-                                //         None => None,
-                                //     })
-                                //     .collect();
-                                // println!("{vec_cat_id:#?}");
-                            }
-                            Err(e) => {
-                                println!("{e}");
-                            }
+                        #field_ident: None
+                        //or and support
+                        // Some(vec![crate::server::postgres::regex_filter::RegexFilter {
+                        //     regex: std::string::String::from("test"),
+                        //     conjuctive_operator: crate::server::postgres::conjuctive_operator::ConjunctiveOperator::Or,
+                        // }])
+                    }
+                }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
+                quote::quote!{
+                    match #try_operation_lower_case_token_stream(
+                        #api_location_test_quotes_token_stream,
+                        //todo - builder pattern?
+                        #operation_parameters_camel_case_token_stream { 
+                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream { 
+                                id: Some(
+                                    ids.clone()
+                                    // vec![
+                                    //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
+                                    //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
+                                    //     ).unwrap()
+                                    // ]
+                                ),
+                                #(#fields_initialization_excluding_primary_key_token_stream),*
+                            } 
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            // let vec_cat_id: Vec<
+                            //     super::DogId,
+                            // > = value
+                            //     .into_iter()
+                            //     .filter_map(|value| match value.id {
+                            //         Some(id) => Some(
+                            //             super::DogId {
+                            //                 id,
+                            //             },
+                            //         ),
+                            //         None => None,
+                            //     })
+                            //     .collect();
+                            // println!("{vec_cat_id:#?}");
+                        }
+                        Err(e) => {
+                            println!("{e}");
                         }
                     }
-                };
-                generate_async_test_wrapper_token_stream(
-                    &operation_name_lower_case_stringified,
-                    &test_inner_content_token_stream,
-                    &proc_macro_name_camel_case_ident_stringified
-                )
+                }
             };
             quote::quote!{
                 #try_operation_error_named_token_stream
@@ -7992,28 +7955,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
             );
             let http_request_test_token_stream = {
-                let test_inner_content_token_stream = {
-                    quote::quote!{
-                        match #try_operation_lower_case_token_stream(
-                            #api_location_test_quotes_token_stream,
-                            #operation_parameters_camel_case_token_stream { 
-                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
-                                    id: id.clone()
-                                }
-                            },
-                        )
-                        .await
-                        {
-                            Ok(value) => println!("{value:#?}"),
-                            Err(e) => panic!("{e}"),
-                        }
+                quote::quote!{
+                    match #try_operation_lower_case_token_stream(
+                        #api_location_test_quotes_token_stream,
+                        #operation_parameters_camel_case_token_stream { 
+                            #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
+                                id: id.clone()
+                            }
+                        },
+                    )
+                    .await
+                    {
+                        Ok(value) => println!("{value:#?}"),
+                        Err(e) => panic!("{e}"),
                     }
-                };
-                generate_async_test_wrapper_token_stream(
-                    &operation_name_lower_case_stringified,
-                    &test_inner_content_token_stream,
-                    &proc_macro_name_camel_case_ident_stringified
-                )
+                }
             };
             quote::quote!{
                 #try_operation_error_named_token_stream
@@ -8185,6 +8141,59 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //     &delete_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
+    let emulate_crud_api_usage_test_vec_parts = {
+        quote::quote! {
+            #[cfg(test)]
+            mod tests {
+                #[test]
+                fn it_works() {
+                    async fn find_out_if_it_works() {
+                        let api_location = std::string::String::from(#api_location_test_quotes_token_stream);
+                        let limit = 1000;
+                        let offset = 0;
+
+                        println!("--------------try_create_many-----------------");
+                        
+                        println!("--------------try_read_many-----------------");
+                        
+                        println!("--------------try_update_many------------------");
+                        
+                        println!("--------------try_read_many-----------------");
+    
+                        println!("--------------try_delete_many-----------------");
+                    
+                        println!("--------------try_read_many-----------------");
+                   
+                        println!("--------------try_create_one-----------------");
+                    
+                        println!("--------------try_read_one-----------------");
+                   
+                        println!("--------------try_update_one------------------");
+                    
+                        println!("--------------try_read_one-----------------");
+                 
+                        println!("--------------try_delete_one------------------");
+                    
+                        println!("--------------try_read_one-----------------");
+                    }
+                    match tokio::runtime::Builder::new_multi_thread()
+                        .worker_threads(num_cpus::get())
+                        .enable_all()
+                        .build()
+                    {
+                        Err(e) => {
+                            panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
+                        }
+                        Ok(runtime) => {
+                            runtime.block_on(find_out_if_it_works());
+                        }
+                    }
+                    let result = 2 + 2;
+                    assert_eq!(result, 4);
+                }
+            }
+        }
+    };
     let common_token_stream = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
