@@ -1542,7 +1542,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
         }
     };
-    let api_location_test_quotes_token_stream = quote::quote!{"http://127.0.0.1:8080"};
+    let reference_api_location_test_token_stream = quote::quote!{&api_location};
     //todo
     let tests_token_stream = quote::quote!{
         #[cfg(test)]
@@ -1550,10 +1550,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             #[test]
             fn it_works() {
                 async fn find_out_if_it_works() {
-                    let api_location = std::string::String::from(#api_location_test_quotes_token_stream);
+                    let api_location = std::string::String::from("http://127.0.0.1:8080");
                     let limit = 1000;
                     let offset = 0;
-//
                     println!("--------------try_create_many-----------------");//todo add try_create_many
                     let ids = match super::try_create_many(
                         &api_location,
@@ -2906,6 +2905,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         select_full_variant_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {select_full_variant_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     };
+    let primary_keys_token_stream = quote::quote!{primary_keys};
+    let primary_key_token_stream = quote::quote!{primary_key};
     let (
         create_many_token_stream,
         create_many_http_request_test_token_stream
@@ -3307,8 +3308,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                 quote::quote!{
-                    let ids = match #try_operation_lower_case_token_stream(
-                        #api_location_test_quotes_token_stream,
+                    let #primary_keys_token_stream = match #try_operation_lower_case_token_stream(
+                        #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
                                 #operation_payload_element_camel_case_token_stream{
@@ -3896,8 +3897,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                 quote::quote!{
-                    let id = match #try_operation_lower_case_token_stream(
-                        #api_location_test_quotes_token_stream,
+                    let #primary_key_token_stream = match #try_operation_lower_case_token_stream(
+                        #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
                                 #(#element_fields_initialization_token_stream),*
@@ -4101,7 +4102,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     // );
     let (
         read_many_token_stream,
-        read_many__http_request_test_token_stream
+        read_many_http_request_test_token_stream
     ) = {
         let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
@@ -4482,10 +4483,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                 quote::quote!{
-                    let limit = 1000;
-                    let offset = 0;
-                    let values = match #try_operation_lower_case_token_stream(
-                        #api_location_test_quotes_token_stream,
+                    let #primary_keys_token_stream = match #try_operation_lower_case_token_stream(
+                        #reference_api_location_test_token_stream,
                         //todo - builder pattern?
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
@@ -5291,7 +5290,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let http_request_test_token_stream = {
                 quote::quote!{
                     match #try_operation_lower_case_token_stream(
-                        #api_location_test_quotes_token_stream,
+                        #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
                                 #primary_key_field_ident: id.clone(),//todo
@@ -5897,7 +5896,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         &api_location,
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream (
-                                ids.clone().into_iter().map(|element| {
+                                #primary_keys_token_stream.clone().into_iter().map(|element| {
                                     #operation_payload_element_camel_case_token_stream {
                                         #primary_key_field_ident: element,
                                         #(#fields_initialization_excluding_primary_key_token_stream),*//todo make sure name and color both are not None(make it option<value>, not just a value)
@@ -6566,11 +6565,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                 quote::quote!{
-                    let id = match #try_operation_lower_case_token_stream(
-                        #api_location_test_quotes_token_stream,
+                    let #primary_key_token_stream = match #try_operation_lower_case_token_stream(
+                        #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
-                                #primary_key_field_ident: id.clone(),
+                                #primary_key_field_ident: #primary_key_token_stream.clone(),
                                 #(#fields_initialization_excluding_primary_key_token_stream),*
                             }
                         }
@@ -7191,12 +7190,12 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                 quote::quote!{
                     match #try_operation_lower_case_token_stream(
-                        #api_location_test_quotes_token_stream,
+                        #reference_api_location_test_token_stream,
                         //todo - builder pattern?
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream { 
-                                id: Some(
-                                    ids.clone()
+                                #primary_key_token_stream: Some(
+                                    #primary_keys_token_stream.clone()
                                     // vec![
                                     //     crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(
                                     //         crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from(id)
@@ -8036,10 +8035,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             let http_request_test_token_stream = {
                 quote::quote!{
                     match #try_operation_lower_case_token_stream(
-                        #api_location_test_quotes_token_stream,
+                        #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
                             #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
-                                id: id.clone()
+                                #primary_key_field_ident: #primary_key_token_stream.clone()
                             }
                         },
                     )
@@ -8234,33 +8233,21 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 #[test]
                 fn it_works() {
                     async fn find_out_if_it_works() {
-                        let api_location = std::string::String::from(#api_location_test_quotes_token_stream);
+                        let api_location = std::string::String::from("http://127.0.0.1:8080");
                         let limit = 1000;
                         let offset = 0;
-
-                        println!("--------------try_create_many-----------------");
-                        
-                        println!("--------------try_read_many-----------------");
-                        
-                        println!("--------------try_update_many------------------");
-                        
-                        println!("--------------try_read_many-----------------");
-    
-                        println!("--------------try_delete_many-----------------");
-                    
-                        println!("--------------try_read_many-----------------");
-                   
-                        println!("--------------try_create_one-----------------");
-                    
-                        println!("--------------try_read_one-----------------");
-                   
-                        println!("--------------try_update_one------------------");
-                    
-                        println!("--------------try_read_one-----------------");
-                 
-                        println!("--------------try_delete_one------------------");
-                    
-                        println!("--------------try_read_one-----------------");
+                        #create_many_http_request_test_token_stream
+                        #read_many_http_request_test_token_stream
+                        #update_many_http_request_test_token_stream
+                        #read_many_http_request_test_token_stream
+                        #delete_many_http_request_test_token_stream
+                        #read_many_http_request_test_token_stream
+                        #create_one_http_request_test_token_stream
+                        #read_one_http_request_test_token_stream
+                        #update_one_http_request_test_token_stream
+                        #read_one_http_request_test_token_stream
+                        #delete_one_http_request_test_token_stream
+                        #read_one_http_request_test_token_stream
                     }
                     match tokio::runtime::Builder::new_multi_thread()
                         .worker_threads(num_cpus::get())
