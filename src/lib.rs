@@ -3573,7 +3573,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //     &create_many_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
-    let create_one_token_stream = {
+    let (
+        create_one_token_stream,
+        create_one_http_request_test_token_stream
+     ) = {
         let operation_name_camel_case_stringified = format!("{create_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let operation_http_method = OperationHttpMethod::Post;
@@ -3817,7 +3820,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
-        let http_request_token_stream = {
+        let (
+            http_request_token_stream,
+            http_request_test_token_stream
+         ) = {
             let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
                 try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -3905,10 +3911,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 }
             };
-            quote::quote!{
-                #try_operation_error_named_token_stream
-                #http_request_token_stream
-            }
+            (
+                quote::quote!{
+                    #try_operation_error_named_token_stream
+                    #http_request_token_stream
+                },
+                http_request_test_token_stream
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -4074,20 +4083,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_camel_case_ident_stringified,
         );
         // println!("{common_middlewares_error_syn_variants_from_impls}");
-        quote::quote!{
-            #parameters_token_stream
-            #try_operation_error_with_middleware_error_variants_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
-            #common_middlewares_error_syn_variants_from_impls
-        }
+        (
+            quote::quote!{
+                #parameters_token_stream
+                #try_operation_error_with_middleware_error_variants_token_stream
+                #http_request_token_stream
+                #route_handler_token_stream
+                #common_middlewares_error_syn_variants_from_impls
+            },
+            http_request_test_token_stream
+        )
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
     //     &create_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
-    let read_many_token_stream = {
+    let (
+        read_many_token_stream,
+        read_many__http_request_test_token_stream
+    ) = {
         let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let operation_http_method = OperationHttpMethod::Post;
@@ -4392,7 +4407,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
-        let http_request_token_stream = {
+        let (
+            http_request_token_stream,
+            http_request_test_token_stream
+        ) = {
             let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
                 try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -4496,10 +4514,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 }
             };
-            quote::quote!{
-                #try_operation_error_named_token_stream
-                #http_request_token_stream
-            }
+            (
+                quote::quote!{
+                    #try_operation_error_named_token_stream
+                    #http_request_token_stream
+                },
+                http_request_test_token_stream
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -4959,20 +4980,27 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_camel_case_ident_stringified,
         );
         // println!("{common_middlewares_error_syn_variants_from_impls}");
-        quote::quote!{
-            #parameters_token_stream
-            #try_operation_error_with_middleware_error_variants_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
-            #common_middlewares_error_syn_variants_from_impls
-        }
+        (
+            quote::quote!{
+                #parameters_token_stream
+                #try_operation_error_with_middleware_error_variants_token_stream
+                #http_request_token_stream
+                #route_handler_token_stream
+                #common_middlewares_error_syn_variants_from_impls
+            },
+            http_request_test_token_stream
+        )
+
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
     //     &read_many_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
-    let read_one_token_stream = {
+    let (
+        read_one_token_stream,
+        read_one_http_request_test_token_stream
+     ) = {
         let operation_name_camel_case_stringified = format!("{read_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let operation_http_method = OperationHttpMethod::Post;
@@ -5200,7 +5228,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
-        let http_request_token_stream = {
+        let (
+            http_request_token_stream,
+            http_request_test_token_stream
+         ) = {
             let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
                 try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -5277,10 +5308,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 }
             };
-            quote::quote!{
-                #try_operation_error_named_token_stream
-                #http_request_token_stream
-            }
+            (
+                quote::quote!{
+                    #try_operation_error_named_token_stream
+                    #http_request_token_stream
+                },
+                 http_request_test_token_stream
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -5417,20 +5451,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_camel_case_ident_stringified,
         );
         // println!("{common_middlewares_error_syn_variants_from_impls}");
-        quote::quote!{
-            #parameters_token_stream
-            #try_operation_error_with_middleware_error_variants_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
-            #common_middlewares_error_syn_variants_from_impls
-        }
+        (
+            quote::quote!{
+                #parameters_token_stream
+                #try_operation_error_with_middleware_error_variants_token_stream
+                #http_request_token_stream
+                #route_handler_token_stream
+                #common_middlewares_error_syn_variants_from_impls
+            },
+            http_request_test_token_stream
+        )
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
     //     &read_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
-    let update_many_token_stream = {
+    let (
+        update_many_token_stream,
+        update_many_http_request_test_token_stream
+     ) = {
         let operation_name_camel_case_stringified = format!("{update_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let operation_http_method = OperationHttpMethod::Patch;
@@ -5783,7 +5823,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
-        let http_request_token_stream = {
+        let (
+            http_request_token_stream,
+            http_request_test_token_stream
+         ) = {
             let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -5872,10 +5915,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             };
-            quote::quote!{
-                #try_operation_error_named_token_stream
-                #http_request_token_stream
-            }
+            (
+                quote::quote!{
+                    #try_operation_error_named_token_stream
+                    #http_request_token_stream
+                },
+                http_request_test_token_stream
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -6152,13 +6198,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_camel_case_ident_stringified,
         );
         // println!("{common_middlewares_error_syn_variants_from_impls}");
-        quote::quote!{
-            #parameters_token_stream
-            #try_operation_error_with_middleware_error_variants_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
-            #common_middlewares_error_syn_variants_from_impls
-        }
+        (
+            quote::quote!{
+                #parameters_token_stream
+                #try_operation_error_with_middleware_error_variants_token_stream
+                #http_request_token_stream
+                #route_handler_token_stream
+                #common_middlewares_error_syn_variants_from_impls
+            },
+            http_request_test_token_stream
+        )
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
@@ -6166,7 +6215,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //     &proc_macro_name_camel_case_ident_stringified
     // );
     //todo WHY ITS RETURN SUCCESS EVEN IF ROW DOES NOT EXISTS?
-    let update_one_token_stream = {
+    let (
+        update_one_token_stream,
+        update_one_http_request_test_token_stream
+     ) = {
         let operation_name_camel_case_stringified = format!("{update_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let operation_http_method = OperationHttpMethod::Patch;
@@ -6438,7 +6490,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
-        let http_request_token_stream = {
+        let (
+            http_request_token_stream,
+            http_request_test_token_stream
+         ) = {
             let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -6530,10 +6585,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 }
             };
-            quote::quote!{
-                #try_operation_error_named_token_stream
-                #http_request_token_stream
-            }
+            (
+                quote::quote!{
+                    #try_operation_error_named_token_stream
+                    #http_request_token_stream
+                },
+                http_request_test_token_stream
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -6756,20 +6814,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_camel_case_ident_stringified,
         );
         // println!("{common_middlewares_error_syn_variants_from_impls}");
-        quote::quote!{
-            #parameters_token_stream
-            #try_operation_error_with_middleware_error_variants_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
-            #common_middlewares_error_syn_variants_from_impls
-        }
+        (
+            quote::quote!{
+                #parameters_token_stream
+                #try_operation_error_with_middleware_error_variants_token_stream
+                #http_request_token_stream
+                #route_handler_token_stream
+                #common_middlewares_error_syn_variants_from_impls
+            },
+            http_request_test_token_stream
+        )
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
     //     &update_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
-    let delete_many_token_stream = {
+    let (
+        delete_many_token_stream,
+        delete_many_http_request_test_token_stream
+     ) = {
         let operation_name_camel_case_stringified = format!("{delete_camel_case_stringified}{many_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let operation_http_method = OperationHttpMethod::Delete;
@@ -7052,7 +7116,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
-        let http_request_token_stream = {
+        let (
+            http_request_token_stream,
+            http_request_test_token_stream
+         ) = {
             let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
                 try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -7165,10 +7232,13 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             };
-            quote::quote!{
-                #try_operation_error_named_token_stream
-                #http_request_token_stream
-            }
+            (
+                quote::quote!{
+                    #try_operation_error_named_token_stream
+                    #http_request_token_stream
+                },
+                http_request_test_token_stream
+            )
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -7661,20 +7731,26 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_camel_case_ident_stringified,
         );
         // println!("{common_middlewares_error_syn_variants_from_impls}");
-        quote::quote!{
-            #parameters_token_stream
-            #try_operation_error_with_middleware_error_variants_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
-            #common_middlewares_error_syn_variants_from_impls
-        }
+        (
+            quote::quote!{
+                #parameters_token_stream
+                #try_operation_error_with_middleware_error_variants_token_stream
+                #http_request_token_stream
+                #route_handler_token_stream
+                #common_middlewares_error_syn_variants_from_impls
+            },
+            http_request_test_token_stream
+        )
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
     //     &delete_many_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
-    let delete_one_token_stream = {
+    let (
+        delete_one_token_stream,
+        delete_one_http_request_test_token_stream
+     ) = {
         let operation_name_camel_case_stringified = format!("{delete_camel_case_stringified}{one_camel_case_stringified}");
         let operation_name_lower_case_stringified = proc_macro_helpers::to_lower_snake_case::ToLowerSnakeCase::to_lower_snake_case(&operation_name_camel_case_stringified.to_string());
         let operation_http_method = OperationHttpMethod::Delete;
@@ -7893,7 +7969,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
-        let http_request_token_stream = {
+        let (
+            http_request_token_stream,
+            http_request_test_token_stream
+         ) = {
             let try_operation_error_named_camel_case_token_stream = generate_try_operation_error_named_camel_case_token_stream(
                 &try_camel_case_stringified,
                 &operation_name_camel_case_stringified,
@@ -7971,10 +8050,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     }
                 }
             };
-            quote::quote!{
-                #try_operation_error_named_token_stream
-                #http_request_token_stream
-            }
+            (
+                quote::quote!{
+                    #try_operation_error_named_token_stream
+                    #http_request_token_stream
+                },
+                http_request_test_token_stream
+            )
+
         };
         // println!("{http_request_token_stream}");
         let route_handler_token_stream = {
@@ -8128,13 +8211,16 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             &proc_macro_name_camel_case_ident_stringified,
         );
         // println!("{common_middlewares_error_syn_variants_from_impls}");
-        quote::quote!{
-            #parameters_token_stream
-            #try_operation_error_with_middleware_error_variants_token_stream
-            #http_request_token_stream
-            #route_handler_token_stream
-            #common_middlewares_error_syn_variants_from_impls
-        }
+        (
+            quote::quote!{
+                #parameters_token_stream
+                #try_operation_error_with_middleware_error_variants_token_stream
+                #http_request_token_stream
+                #route_handler_token_stream
+                #common_middlewares_error_syn_variants_from_impls
+            },
+            http_request_test_token_stream
+        )
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
     //     &proc_macro_name_camel_case,
