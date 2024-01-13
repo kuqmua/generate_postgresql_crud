@@ -3314,7 +3314,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                #http_request_test_token_stream
+                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -3897,7 +3897,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                #http_request_test_token_stream
+                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -4469,35 +4469,32 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {select_full_variant_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                     };
                     let order_initialization_token_stream = Order::Desc.to_token_stream();
-
-                    // let fields_initialization_token_stream = fields_named_excluding_primary_key_token_stream
-
-                    // let column_select_variants_token_stream = column_variants.iter().map(|column_variant|{
-                    //     let variant_ident_token_stream = {
-                    //         let variant_ident_stringified_handle = column_variant.iter()
-                    //             .fold(std::string::String::default(), |mut acc, field| {
-                    //                 acc.push_str(&field_ident_stringified);
-                    //                 acc
-                    //             });
-                    //         variant_ident_stringified_handle.parse::<proc_macro2::TokenStream>()
-                    //             .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {variant_ident_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-                    //     };
-                    //     quote::quote! {
-                    //         #variant_ident_token_stream
-                    //     }
-                    // });
-                    //
+                    let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
+                        let field_ident = element.ident
+                            .as_ref()
+                            .unwrap_or_else(|| {
+                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                            });
+                        quote::quote!{
+                            #field_ident: None,//todo maybe generate all the possible versions for what need to have?
+                        }
+                    }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
+                        let limit = 1000;
+                        let offset = 0;
                         let values = match #try_operation_lower_case_token_stream(
                             #api_location_test_quotes_token_stream,
                             //todo - builder pattern?
                             #operation_parameters_camel_case_token_stream { 
                                 #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream {
-
-                                    id: Some(ids.clone()),
-                                    name: None,
-                                    color: None,
-
+                                    #primary_key_field_ident: Some(
+                                        vec![
+                                            crate::server::postgres::uuid_wrapper::UuidWrapper::try_from(//todo
+                                                crate::server::postgres::uuid_wrapper::PossibleUuidWrapper::from("9a720963-1a7d-4d42-9189-ec3163cf815c")//todo
+                                            ).unwrap()
+                                        ]
+                                    ),
+                                    #(#fields_initialization_excluding_primary_key_token_stream)*
                                     #select_lower_case_token_stream: #column_select_ident_token_stream::#select_full_variant_token_stream,
                                     #order_by_lower_case_token_stream: #crate_server_postgres_order_by_order_by_token_stream {
                                         #column_lower_case_token_stream: #ident_column_camel_case_token_stream::Name,
@@ -4513,22 +4510,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             Ok(value) => value,
                             Err(e) =>  panic!("{e}"),
                         };
-                        // //
-                        // let ids = match #try_operation_lower_case_token_stream(
-                        //     #api_location_test_quotes_token_stream,
-                        //     #operation_parameters_camel_case_token_stream { 
-                        //         #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
-                        //             #operation_payload_element_camel_case_token_stream{
-                        //                 #(#element_fields_initialization_token_stream),*
-                        //             }
-                        //         ])
-                        //     },
-                        // )
-                        // .await
-                        // {
-                        //     Ok(value) => value,
-                        //     Err(e) => panic!("{e}"),
-                        // };
                     }
                 };
                 generate_async_test_wrapper_token_stream(
@@ -5356,7 +5337,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                #http_request_test_token_stream
+                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -5981,7 +5962,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                #http_request_test_token_stream
+                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -6664,6 +6645,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
+                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -7329,7 +7311,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                #http_request_test_token_stream
+                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
@@ -8169,7 +8151,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             quote::quote!{
                 #try_operation_error_named_token_stream
                 #http_request_token_stream
-                #http_request_test_token_stream
+                // #http_request_test_token_stream
             }
         };
         // println!("{http_request_token_stream}");
