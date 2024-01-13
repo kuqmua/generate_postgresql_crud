@@ -5885,7 +5885,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             );
             let http_request_test_token_stream = {
                 let test_inner_content_token_stream = {
-                    let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
+                    let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
                         let field_ident = element.ident.as_ref()
                             .unwrap_or_else(|| {
                                 panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
@@ -5896,15 +5896,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         }
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
-                        match super::try_update_many(
+                        match #try_operation_lower_case_token_stream(
                             &api_location,
-                            super::UpdateManyParameters { 
-                                payload: super::UpdateManyPayload(
+                            #operation_parameters_camel_case_token_stream { 
+                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream (
                                     ids.clone().into_iter().map(|element| {
-                                        super::UpdateManyPayloadElement {
-                                            id: element,  
-                                            name: std::string::String::from("name"), //todo make sure name and color both are not None(make it option<value>, not just a value)
-                                            color: std::string::String::from("color"), 
+                                        #operation_payload_element_camel_case_token_stream {
+                                            #primary_key_field_ident: element,
+                                            #(#fields_initialization_excluding_primary_key_token_stream),*//todo make sure name and color both are not None(make it option<value>, not just a value)
                                         }
                                     }).collect()
                                 )
@@ -5917,22 +5916,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                                 panic!("{e}");
                             },
                         }
-                        //
-                        let ids = match #try_operation_lower_case_token_stream(
-                            #api_location_test_quotes_token_stream,
-                            #operation_parameters_camel_case_token_stream { 
-                                #payload_lower_case_token_stream: #operation_payload_camel_case_token_stream(vec![
-                                    #operation_payload_element_camel_case_token_stream{
-                                        #(#element_fields_initialization_token_stream),*
-                                    }
-                                ])
-                            },
-                        )
-                        .await
-                        {
-                            Ok(value) => value,
-                            Err(e) => panic!("{e}"),
-                        };
                     }
                 };
                 generate_async_test_wrapper_token_stream(
