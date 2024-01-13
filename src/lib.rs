@@ -3320,7 +3320,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                     .await
                     {
-                        Ok(value) => value,
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            value
+                        },
                         Err(e) => panic!("{e}"),
                     };
                 };
@@ -3902,7 +3905,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #field_ident: #field_type::default()
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                quote::quote!{
+                let test_content_token_stream = quote::quote!{
                     let #primary_key_token_stream = match #try_operation_lower_case_token_stream(
                         #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
@@ -3913,10 +3916,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                     .await
                     {
-                        Ok(value) => value,
-                        Err(e) => panic!("{e}"),
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            value
+                        },
+                        Err(e) => panic!("{e}")
                     };
-                }
+                };
+                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+                    &test_content_token_stream,
+                    &try_lower_case_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified,
+                )
             };
             (
                 quote::quote!{
@@ -4488,7 +4500,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #field_ident: None,//todo maybe generate all the possible versions for what need to have?
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                quote::quote!{
+                let test_content_token_stream = quote::quote!{
                     match #try_operation_lower_case_token_stream(
                         #reference_api_location_test_token_stream,
                         //todo - builder pattern?
@@ -4508,10 +4520,19 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                     .await
                     {
-                        Ok(value) => value,
-                        Err(e) =>  panic!("{e}"),
+                        Ok(value) => {
+                            println!("{value:#?}");
+                            value
+                        },
+                        Err(e) => panic!("{e}")
                     };
-                }
+                };
+                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+                    &test_content_token_stream,
+                    &try_lower_case_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified,
+                )
             };
             (
                 quote::quote!{
@@ -5288,7 +5309,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
             );
             let http_request_test_token_stream = {
-                quote::quote!{
+                let test_content_token_stream = quote::quote!{
                     match #try_operation_lower_case_token_stream(
                         #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
@@ -5301,11 +5322,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     .await
                     {
                         Ok(value) => println!("{value:#?}"),
-                        Err(e) => {
-                            panic!("{e}");
-                        }
+                        Err(e) => panic!("{e}")
                     };
-                }
+                };
+                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+                    &test_content_token_stream,
+                    &try_lower_case_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified,
+                )
             };
             (
                 quote::quote!{
@@ -5891,7 +5916,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #field_ident: #field_type::default()
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                quote::quote!{
+                let test_content_token_stream = quote::quote!{
                     match #try_operation_lower_case_token_stream(
                         &api_location,
                         #operation_parameters_camel_case_token_stream { 
@@ -5908,11 +5933,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     .await
                     {
                         Ok(value) => println!("{value:#?}"),
-                        Err(e) => {
-                            panic!("{e}");
-                        },
+                        Err(e) => panic!("{e}")
                     }
-                }
+                };
+                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+                    &test_content_token_stream,
+                    &try_lower_case_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified,
+                )
             };
             (
                 quote::quote!{
@@ -6564,7 +6593,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         #field_ident: Some(#field_type::default())
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                quote::quote!{
+                let test_content_token_stream = quote::quote!{
                     let #primary_key_token_stream = match #try_operation_lower_case_token_stream(
                         #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
@@ -6580,9 +6609,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                             println!("{value:#?}");
                             value
                         },
-                        Err(e) => panic!("{e}"),
+                        Err(e) => panic!("{e}")
                     };
-                }
+                };
+                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+                    &test_content_token_stream,
+                    &try_lower_case_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified,
+                )
             };
             (
                 quote::quote!{
@@ -7188,7 +7223,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         // }])
                     }
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-                quote::quote!{
+                let test_content_token_stream = quote::quote!{
                     match #try_operation_lower_case_token_stream(
                         #reference_api_location_test_token_stream,
                         //todo - builder pattern?
@@ -7208,28 +7243,30 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     )
                     .await
                     {
-                        Ok(value) => {
-                            println!("{value:#?}");
-                            // let vec_cat_id: Vec<
-                            //     super::DogId,
-                            // > = value
-                            //     .into_iter()
-                            //     .filter_map(|value| match value.id {
-                            //         Some(id) => Some(
-                            //             super::DogId {
-                            //                 id,
-                            //             },
-                            //         ),
-                            //         None => None,
-                            //     })
-                            //     .collect();
-                            // println!("{vec_cat_id:#?}");
-                        }
-                        Err(e) => {
-                            println!("{e}");
-                        }
+                        Ok(value) => println!("{value:#?}"),
+                        // let vec_cat_id: Vec<
+                        //     super::DogId,
+                        // > = value
+                        //     .into_iter()
+                        //     .filter_map(|value| match value.id {
+                        //         Some(id) => Some(
+                        //             super::DogId {
+                        //                 id,
+                        //             },
+                        //         ),
+                        //         None => None,
+                        //     })
+                        //     .collect();
+                        // println!("{vec_cat_id:#?}");
+                        Err(e) => panic!("{e}")
                     }
-                }
+                };
+                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+                    &test_content_token_stream,
+                    &try_lower_case_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified,
+                )
             };
             (
                 quote::quote!{
@@ -8033,7 +8070,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
             );
             let http_request_test_token_stream = {
-                quote::quote!{
+                let test_content_token_stream = quote::quote!{
                     match #try_operation_lower_case_token_stream(
                         #reference_api_location_test_token_stream,
                         #operation_parameters_camel_case_token_stream { 
@@ -8045,9 +8082,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     .await
                     {
                         Ok(value) => println!("{value:#?}"),
-                        Err(e) => panic!("{e}"),
+                        Err(e) => panic!("{e}")
                     }
-                }
+                };
+                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+                    &test_content_token_stream,
+                    &try_lower_case_stringified,
+                    &operation_name_lower_case_stringified,
+                    &proc_macro_name_camel_case_ident_stringified,
+                )
             };
             (
                 quote::quote!{
@@ -8609,7 +8652,8 @@ fn generate_try_operation_lower_case_println_token_stream(
         &operation_name_lower_case_stringified,
         &proc_macro_name_camel_case_ident_stringified,
     );
-    let try_operation_lower_case_println_content_stringified = format!("\"---{try_operation_lower_case_stringified} {test_operation_print_in_info}---\"");
+    let slashes = "-------";
+    let try_operation_lower_case_println_content_stringified = format!("\"{slashes}{try_operation_lower_case_stringified} {test_operation_print_in_info}{slashes}\"");
     let try_operation_lower_case_println_content_token_stream = try_operation_lower_case_println_content_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_println_content_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
     quote::quote!{println!(#try_operation_lower_case_println_content_token_stream);}
