@@ -24,16 +24,16 @@ pub fn type_variants_from_request_response_generator(
     try_operation_camel_case_stringified: &str,
     request_error_camel_case_stringified: &str,
 ) -> proc_macro2::TokenStream {
-    let try_operation_response_variants_camel_case_stringified = crate::generate_try_operation_response_variants_camel_case_stringified(
+    let try_operation_response_variants_camel_case_stringified = crate::generate_try_operation_response_variants_upper_camel_case_stringified(
         &try_camel_case_stringified,
         &operation_name_camel_case_stringified,
         &response_variants_camel_case_stringified
     );
-    let try_operation_response_variants_camel_case_token_stream = crate::generate_try_operation_response_variants_camel_case_token_stream(
+    let try_operation_response_variants_camel_case_token_stream = crate::generate_try_operation_response_variants_upper_camel_case_token_stream(
         &try_operation_response_variants_camel_case_stringified,
         &proc_macro_name_camel_case_ident_stringified
     );
-    let try_operation_with_serialize_deserialize_camel_case_token_stream = crate::generate_try_operation_with_serialize_deserialize_camel_case_token_stream(
+    let try_operation_with_serialize_deserialize_camel_case_token_stream = crate::generate_try_operation_with_serialize_deserialize_upper_camel_case_token_stream(
         &try_camel_case_stringified,
         &operation_name_camel_case_stringified,
         &with_serialize_deserialize_camel_case_stringified,
