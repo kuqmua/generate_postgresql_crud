@@ -758,7 +758,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             }
             impl std::fmt::Display for #ident_column_upper_camel_case_token_stream {
                 fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-                    write!(f, "{}", Self::to_lower_snake_case(self))
+                    write!(f, "{}", Self::to_snake_case(self))
                 }
             }
         }
