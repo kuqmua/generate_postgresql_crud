@@ -2,7 +2,7 @@ pub fn column_names_factorial(
     original_input: Vec<(usize, &syn::Field)>,
     input: Vec<&syn::Field>,
     output: &mut Vec<Vec<syn::Field>>,
-    proc_macro_name_camel_case_ident_stringified: &std::string::String,
+    proc_macro_name_upper_camel_case_ident_stringified: &std::string::String,
 ) -> Vec<Vec<syn::Field>> {
     let len = input.len();
     match len {
@@ -19,18 +19,18 @@ pub fn column_names_factorial(
                                     a.ident
                                         .clone()
                                         .unwrap_or_else(|| {
-                                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                            panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                         })
                                         == field
                                             .ident
                                             .clone()
                                             .unwrap_or_else(|| {
-                                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                                panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                             })
                                 })
                                 .unwrap_or_else(|| {
                                     panic!(
-                                        "{proc_macro_name_camel_case_ident_stringified} cannot find original input index"
+                                        "{proc_macro_name_upper_camel_case_ident_stringified} cannot find original input index"
                                     )
                                 });
                             let (index_b, _) = original_input
@@ -39,23 +39,23 @@ pub fn column_names_factorial(
                                     b.ident
                                         .clone()
                                         .unwrap_or_else(|| {
-                                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                            panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                         })
                                         == field
                                             .ident
                                             .clone()
                                             .unwrap_or_else(|| {
-                                                panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                                panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                             })
                                 })
                                 .unwrap_or_else(|| {
                                     panic!(
-                                        "{proc_macro_name_camel_case_ident_stringified} cannot find original input index"
+                                        "{proc_macro_name_upper_camel_case_ident_stringified} cannot find original input index"
                                     )
                                 });
                             index_a.partial_cmp(index_b).unwrap_or_else(|| {
                                 panic!(
-                                    "{proc_macro_name_camel_case_ident_stringified} index_a.partial_cmp(index_b) is None"
+                                    "{proc_macro_name_upper_camel_case_ident_stringified} index_a.partial_cmp(index_b) is None"
                                 )
                             })
                         });
@@ -73,7 +73,7 @@ pub fn column_names_factorial(
                                 .ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                 })
                                 .to_string()
                                 .partial_cmp(
@@ -81,7 +81,7 @@ pub fn column_names_factorial(
                                         .ident
                                         .clone()
                                         .unwrap_or_else(|| {
-                                            panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                            panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                         })
                                         .to_string(),
                                 )
@@ -112,7 +112,7 @@ pub fn column_names_factorial(
             end_out.sort_by(|a, b| {
                 a.len().partial_cmp(&b.len()).unwrap_or_else(|| {
                     panic!(
-                        "{proc_macro_name_camel_case_ident_stringified} index_a.partial_cmp(index_b) is None"
+                        "{proc_macro_name_upper_camel_case_ident_stringified} index_a.partial_cmp(index_b) is None"
                     )
                 })
             });
@@ -123,7 +123,7 @@ pub fn column_names_factorial(
         //     original_input.iter().for_each(|(_, element)| {
         //         output_handle.push(vec![element.clone()]);
         //     });
-        //     let first_element = input.get(0).unwrap_or_else(||panic!("{proc_macro_name_camel_case_ident_stringified} input.get(0) is None"));
+        //     let first_element = input.get(0).unwrap_or_else(||panic!("{proc_macro_name_upper_camel_case_ident_stringified} input.get(0) is None"));
         //     output.iter().for_each(
         //         |o| {
         //             if let false = o.contains(first_element) {
@@ -143,7 +143,7 @@ pub fn column_names_factorial(
         _ => {
             let mut output_handle = {
                 let first_element = input.get(0).unwrap_or_else(|| {
-                    panic!("{proc_macro_name_camel_case_ident_stringified} input.get(0) is None")
+                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} input.get(0) is None")
                 });
                 let output_len = output.len();
                 output.iter_mut().fold(std::vec::Vec::with_capacity(output_len * 2), |mut acc, out| {
@@ -152,26 +152,26 @@ pub fn column_names_factorial(
                             let (index_a, _) = original_input.iter().find(|(_, field)|{a.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                 }) == field
                                 .ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                 })
-                            }).unwrap_or_else(||panic!("{proc_macro_name_camel_case_ident_stringified} cannot find original input index"));
+                            }).unwrap_or_else(||panic!("{proc_macro_name_upper_camel_case_ident_stringified} cannot find original input index"));
                             let (index_b, _) = original_input.iter().find(|(_, field)|{b.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                 }) == field
                                 .ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                 })
-                            }).unwrap_or_else(||panic!("{proc_macro_name_camel_case_ident_stringified} cannot find original input index"));
-                            index_a.partial_cmp(index_b).unwrap_or_else(||panic!("{proc_macro_name_camel_case_ident_stringified} index_a.partial_cmp(index_b) is None"))
+                            }).unwrap_or_else(||panic!("{proc_macro_name_upper_camel_case_ident_stringified} cannot find original input index"));
+                            index_a.partial_cmp(index_b).unwrap_or_else(||panic!("{proc_macro_name_upper_camel_case_ident_stringified} index_a.partial_cmp(index_b) is None"))
                         });
                         acc.push(out.clone());
                     }
@@ -182,26 +182,26 @@ pub fn column_names_factorial(
                             let (index_a, _) = original_input.iter().find(|(_, field)|{a.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                 }) == field
                                 .ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                 })
-                            }).unwrap_or_else(||panic!("{proc_macro_name_camel_case_ident_stringified} cannot find original input index"));
+                            }).unwrap_or_else(||panic!("{proc_macro_name_upper_camel_case_ident_stringified} cannot find original input index"));
                             let (index_b, _) = original_input.iter().find(|(_, field)|{b.ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                 }) == field
                                 .ident
                                 .clone()
                                 .unwrap_or_else(|| {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                                 })
-                            }).unwrap_or_else(||panic!("{proc_macro_name_camel_case_ident_stringified} cannot find original input index"));
-                            index_a.partial_cmp(index_b).unwrap_or_else(||panic!("{proc_macro_name_camel_case_ident_stringified} index_a.partial_cmp(index_b) is None"))
+                            }).unwrap_or_else(||panic!("{proc_macro_name_upper_camel_case_ident_stringified} cannot find original input index"));
+                            index_a.partial_cmp(index_b).unwrap_or_else(||panic!("{proc_macro_name_upper_camel_case_ident_stringified} index_a.partial_cmp(index_b) is None"))
                         });
                         if !acc.contains(&cl) {
                             acc.push(cl);
@@ -226,7 +226,7 @@ pub fn column_names_factorial(
                 original_input,
                 new_input_vec,
                 &mut output_handle,
-                proc_macro_name_camel_case_ident_stringified,
+                proc_macro_name_upper_camel_case_ident_stringified,
             )
         }
     }
