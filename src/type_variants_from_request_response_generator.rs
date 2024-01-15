@@ -3,9 +3,9 @@ pub fn type_variants_from_request_response_generator(
     desirable_token_stream: &proc_macro2::TokenStream,
     desirable_type_token_stream: &proc_macro2::TokenStream,
     try_operation_upper_camel_case_token_stream: &proc_macro2::TokenStream,
-    operation_lower_case_stringified: &std::string::String,
-    code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
-    code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
+    operation_snake_case_stringified: &std::string::String,
+    code_occurence_snake_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
+    code_occurence_snake_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
     error_named_derive_token_stream: &proc_macro2::TokenStream,
     eo_display_token_stream: &proc_macro2::TokenStream,
     eo_display_foreign_type_token_stream: &proc_macro2::TokenStream,
@@ -15,7 +15,7 @@ pub fn type_variants_from_request_response_generator(
     type_variants_from_request_response_syn_variants: std::vec::Vec<&syn::Variant>,
     proc_macro_name_upper_camel_case_ident_stringified: &std::string::String,
     code_occurence_upper_camel_case_stringified: &std::string::String,
-    code_occurence_lower_case_stringified: &std::string::String,
+    code_occurence_snake_case_stringified: &std::string::String,
     try_upper_camel_case_stringified: &str,
     operation_name_upper_camel_case_stringified: &str,
     response_variants_upper_camel_case_stringified: &str,
@@ -80,7 +80,7 @@ pub fn type_variants_from_request_response_generator(
                     "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                     proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                 ));
-                let error_occurence_attribute = match field_ident == code_occurence_lower_case_stringified {
+                let error_occurence_attribute = match field_ident == code_occurence_snake_case_stringified {
                     true => quote::quote! {},
                     false => {
                         let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
@@ -144,7 +144,7 @@ pub fn type_variants_from_request_response_generator(
                     "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                     proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                 ));
-                let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case_stringified {
+                let field_type_with_serialize_deserialize = match field_ident == code_occurence_snake_case_stringified {
                     true => {
                         let code_occurence_type_token_stream = {
                             if let syn::Type::Path(type_path) = &field.ty {
@@ -173,7 +173,7 @@ pub fn type_variants_from_request_response_generator(
                             else {
                                 let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
                                 panic!(
-                                    "{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
+                                    "{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_snake_case_stringified} {} {syn_type_path_stringified}",
                                     proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
                                 );
                             }
@@ -330,7 +330,7 @@ pub fn type_variants_from_request_response_generator(
                             "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                         ));
-                        let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case_stringified {
+                        let field_type_with_serialize_deserialize = match field_ident == code_occurence_snake_case_stringified {
                             true => {
                                 let code_occurence_type_token_stream = {
                                     if let syn::Type::Path(type_path) = &field.ty {
@@ -359,7 +359,7 @@ pub fn type_variants_from_request_response_generator(
                                     else {
                                         let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
                                         panic!(
-                                            "{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
+                                            "{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_snake_case_stringified} {} {syn_type_path_stringified}",
                                             proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
                                         );
                                     }
@@ -527,7 +527,7 @@ pub fn type_variants_from_request_response_generator(
                             "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                         ));
-                        let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case_stringified {
+                        let field_type_with_serialize_deserialize = match field_ident == code_occurence_snake_case_stringified {
                             true => {
                                 let code_occurence_type_token_stream = {
                                     if let syn::Type::Path(type_path) = &field.ty {
@@ -556,7 +556,7 @@ pub fn type_variants_from_request_response_generator(
                                     else {
                                         let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
                                         panic!(
-                                            "{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
+                                            "{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_snake_case_stringified} {} {syn_type_path_stringified}",
                                             proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
                                         );
                                     }
@@ -643,8 +643,8 @@ pub fn type_variants_from_request_response_generator(
         };
         let api_request_unexpected_error_module_path_token_stream = quote::quote! { crate::common::api_request_unexpected_error };
         let api_request_unexpected_error_path_token_stream = quote::quote! { #api_request_unexpected_error_module_path_token_stream::ApiRequestUnexpectedError };
-        let try_from_response_operation_lower_case_token_stream = {
-            let ident_response_variants_attribute_stingified = format!("try_from_response_try_{operation_lower_case_stringified}");
+        let try_from_response_operation_snake_case_token_stream = {
+            let ident_response_variants_attribute_stingified = format!("try_from_response_try_{operation_snake_case_stringified}");
             ident_response_variants_attribute_stingified
             .parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {ident_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -754,7 +754,7 @@ pub fn type_variants_from_request_response_generator(
             status_code_enums_try_from_variants
         };
         quote::quote! {
-            async fn #try_from_response_operation_lower_case_token_stream(response: reqwest::Response) -> Result<#try_operation_response_variants_upper_camel_case_token_stream, #api_request_unexpected_error_path_token_stream> {
+            async fn #try_from_response_operation_snake_case_token_stream(response: reqwest::Response) -> Result<#try_operation_response_variants_upper_camel_case_token_stream, #api_request_unexpected_error_path_token_stream> {
                 let status_code = response.status();
                 let headers = response.headers().clone();
                 #(#status_code_enums_try_from)*
@@ -809,7 +809,7 @@ pub fn type_variants_from_request_response_generator(
                 ExpectedType {
                     #eo_display_with_serialize_deserialize_token_stream
                     expected_type: #try_operation_with_serialize_deserialize_token_stream,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                    #code_occurence_snake_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 UnexpectedStatusCode {
                     #eo_display_token_stream
@@ -818,7 +818,7 @@ pub fn type_variants_from_request_response_generator(
                     headers: #reqwest_header_header_map_token_stream,
                     #eo_display_foreign_type_token_stream
                     response_text_result: #crate_common_api_request_unexpected_error_response_text_result_token_stream,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                    #code_occurence_snake_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 FailedToGetResponseText {
                     #eo_display_foreign_type_token_stream
@@ -827,7 +827,7 @@ pub fn type_variants_from_request_response_generator(
                     status_code: #http_status_code_token_stream,
                     #eo_display_foreign_type_token_stream
                     headers: #reqwest_header_header_map_token_stream,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                    #code_occurence_snake_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 DeserializeResponse {
                     #eo_display_token_stream
@@ -838,49 +838,49 @@ pub fn type_variants_from_request_response_generator(
                     headers: #reqwest_header_header_map_token_stream,
                     #eo_display_with_serialize_deserialize_token_stream
                     response_text: std::string::String,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                    #code_occurence_snake_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
                 Reqwest {
                     #eo_display_foreign_type_token_stream
                     reqwest: #reqwest_error_token_stream,
-                    #code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
+                    #code_occurence_snake_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream,
                 },
             }
         }
     };
     let extraction_logic_token_stream_handle_token_stream = {
-        let tvfrr_extraction_logic_try_operation_lower_case_token_stream = {
-            let tvfrr_extraction_logic_try_operation_lower_case_stringified = format!("tvfrr_extraction_logic_try_{operation_lower_case_stringified}");
-            tvfrr_extraction_logic_try_operation_lower_case_stringified
+        let tvfrr_extraction_logic_try_operation_snake_case_token_stream = {
+            let tvfrr_extraction_logic_try_operation_snake_case_stringified = format!("tvfrr_extraction_logic_try_{operation_snake_case_stringified}");
+            tvfrr_extraction_logic_try_operation_snake_case_stringified
             .parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {tvfrr_extraction_logic_try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {tvfrr_extraction_logic_try_operation_snake_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let try_from_response_try_operation_lower_case_token_stream = {
-            let try_from_response_try_operation_lower_case_stringified =
-                format!("try_from_response_try_{operation_lower_case_stringified}");
-            try_from_response_try_operation_lower_case_stringified
+        let try_from_response_try_operation_snake_case_token_stream = {
+            let try_from_response_try_operation_snake_case_stringified =
+                format!("try_from_response_try_{operation_snake_case_stringified}");
+            try_from_response_try_operation_snake_case_stringified
             .parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_from_response_try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_from_response_try_operation_snake_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
-        let try_from_response_try_operation_lower_case_token_stream_result_ok_token_stream = quote::quote!{
+        let try_from_response_try_operation_snake_case_token_stream_result_ok_token_stream = quote::quote!{
             match #desirable_type_token_stream::try_from(variants){
                 Ok(value) => Ok(value),
                 Err(e) => Err(#try_operation_request_error_token_stream::ExpectedType {
                     expected_type: e,
-                    #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+                    #code_occurence_snake_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                 }),
             }
         };
         quote::quote! {
-            async fn #tvfrr_extraction_logic_try_operation_lower_case_token_stream<'a>(
+            async fn #tvfrr_extraction_logic_try_operation_snake_case_token_stream<'a>(
                 future: impl std::future::Future<Output = Result<reqwest::Response, #reqwest_error_token_stream>>,
             ) -> Result<
                 #desirable_type_token_stream,
                 #try_operation_request_error_token_stream,
             > {
                 match future.await {
-                    Ok(response) => match #try_from_response_try_operation_lower_case_token_stream(response).await {
-                        Ok(variants) => #try_from_response_try_operation_lower_case_token_stream_result_ok_token_stream,
+                    Ok(response) => match #try_from_response_try_operation_snake_case_token_stream(response).await {
+                        Ok(variants) => #try_from_response_try_operation_snake_case_token_stream_result_ok_token_stream,
                         Err(e) => match e {
                             #crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::StatusCode {
                                 status_code,
@@ -890,7 +890,7 @@ pub fn type_variants_from_request_response_generator(
                                 status_code,
                                 headers,
                                 response_text_result,
-                                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
+                                #code_occurence_snake_case_crate_code_occurence_tufa_common_macro_call_token_stream
                             }),
                             #crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::FailedToGetResponseText {
                                 reqwest,
@@ -900,7 +900,7 @@ pub fn type_variants_from_request_response_generator(
                                 reqwest,
                                 status_code,
                                 headers,
-                                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
+                                #code_occurence_snake_case_crate_code_occurence_tufa_common_macro_call_token_stream
                             }),
                             #crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream::DeserializeBody {
                                 serde,
@@ -912,13 +912,13 @@ pub fn type_variants_from_request_response_generator(
                                 status_code,
                                 headers,
                                 response_text,
-                                #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream
+                                #code_occurence_snake_case_crate_code_occurence_tufa_common_macro_call_token_stream
                             }),
                         },
                     },
                     Err(e) => Err(#try_operation_request_error_token_stream::Reqwest {
                         reqwest: e,
-                        #code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream,
+                        #code_occurence_snake_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                     }),
                 }
             }
