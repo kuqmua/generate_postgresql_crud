@@ -7880,10 +7880,15 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     //     &delete_one_token_stream,
     //     &proc_macro_name_camel_case_ident_stringified
     // );
-    let emulate_crud_api_usage_test_vec_parts = {
+    let emulate_crud_api_usage_test_token_stream = {
+        let ident_emulate_crud_api_usage_test_lower_case_token_stream = {
+            let ident_emulate_crud_api_usage_test_lower_case_stringified = format!("{ident_lower_case_stringified}_emulate_crud_api_usage_test");
+            ident_emulate_crud_api_usage_test_lower_case_stringified.parse::<proc_macro2::TokenStream>()
+            .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {ident_emulate_crud_api_usage_test_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        };
         quote::quote! {
             #[test]
-            fn it_works() {
+            fn #ident_emulate_crud_api_usage_test_lower_case_token_stream() {
                 async fn find_out_if_it_works() {
                     let api_location = std::string::String::from("http://127.0.0.1:8080");
                     let limit = 1000;
@@ -7913,12 +7918,10 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         runtime.block_on(find_out_if_it_works());
                     }
                 }
-                let result = 2 + 2;
-                assert_eq!(result, 4);
             }
         }
     };
-    println!("{emulate_crud_api_usage_test_vec_parts}");
+    // println!("{emulate_crud_api_usage_test_token_stream}");
     let common_token_stream = quote::quote! {
         #table_name_declaration_token_stream
         #struct_options_token_stream
@@ -7934,7 +7937,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         #ident_column_read_permission_token_stream
         // #[cfg(test)]
         // mod test_try_create_many {
-            #emulate_crud_api_usage_test_vec_parts
+            #emulate_crud_api_usage_test_token_stream
         // }
     };
     // proc_macro_helpers::write_token_stream_into_file::write_token_stream_into_file(
@@ -8219,7 +8222,6 @@ fn generate_try_operation_with_serialize_deserialize_token_stream(
 fn generate_try_operation_lower_case_stringified(
     try_lower_case_stringified: &str,
     operation_name_lower_case_stringified: &str,
-    proc_macro_name_camel_case_ident_stringified: &str,
 ) -> std::string::String {
     format!("{try_lower_case_stringified}_{operation_name_lower_case_stringified}")
 }
@@ -8232,7 +8234,6 @@ fn generate_try_operation_lower_case_token_stream(
     let try_operation_lower_case_stringified = generate_try_operation_lower_case_stringified(
         &try_lower_case_stringified,
         &operation_name_lower_case_stringified,
-        &proc_macro_name_camel_case_ident_stringified,
     );
     try_operation_lower_case_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -8261,7 +8262,6 @@ fn generate_try_operation_lower_case_println_token_stream(
     let try_operation_lower_case_stringified = generate_try_operation_lower_case_stringified(
         &try_lower_case_stringified,
         &operation_name_lower_case_stringified,
-        &proc_macro_name_camel_case_ident_stringified,
     );
     let slashes = "-------";
     let try_operation_lower_case_println_content_stringified = format!("\"{slashes}{try_operation_lower_case_stringified} {test_operation_print_in_info}{slashes}\"");
@@ -9677,20 +9677,19 @@ fn generate_quotes_token_stream(
     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
-fn generate_operation_test_lower_case_token_stream(
-    operation_name_lower_case_stringified: &str,
-    proc_macro_name_camel_case_ident_stringified: &str,
-) -> proc_macro2::TokenStream {
-    let value_stringified = format!("{operation_name_lower_case_stringified}_test");
-    value_stringified.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-}
-
 fn generate_async_test_wrapper_token_stream(
     operation_name_lower_case_stringified: &str,
     test_inner_content_token_stream: &proc_macro2::TokenStream,
     proc_macro_name_camel_case_ident_stringified: &str
 ) -> proc_macro2::TokenStream {
+    fn generate_operation_test_lower_case_token_stream(
+        operation_name_lower_case_stringified: &str,
+        proc_macro_name_camel_case_ident_stringified: &str,
+    ) -> proc_macro2::TokenStream {
+        let value_stringified = format!("{operation_name_lower_case_stringified}_test");
+        value_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+    }
     let operation_test_lower_case_token_stream = generate_operation_test_lower_case_token_stream(
         &operation_name_lower_case_stringified,
         &proc_macro_name_camel_case_ident_stringified,
