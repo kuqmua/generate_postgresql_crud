@@ -1031,7 +1031,7 @@ pub fn construct_syn_variant(
                     segments: {
                         let mut handle = syn::punctuated::Punctuated::new();
                         handle.push(syn::PathSegment {
-                            ident: proc_macro2::Ident::new(&tvfrr_status_attribute.to_string_lower_case(), proc_macro2::Span::call_site()),
+                            ident: proc_macro2::Ident::new(&tvfrr_status_attribute.to_snake_case(), proc_macro2::Span::call_site()),
                             arguments: syn::PathArguments::None,
                         });
                        handle
