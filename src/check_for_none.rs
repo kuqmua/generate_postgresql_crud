@@ -1,9 +1,9 @@
 pub fn check_for_none(
     fields_named: &syn::punctuated::Punctuated<syn::Field, syn::token::Comma>,
     id_field: &syn::Field,
-    proc_macro_name_camel_case_ident_stringified: &std::string::String,
+    proc_macro_name_upper_camel_case_ident_stringified: &std::string::String,
     dot_space: &str,
-    try_ident_response_variants_camel_case_token_stream: &proc_macro2::TokenStream,
+    try_ident_response_variants_upper_camel_case_token_stream: &proc_macro2::TokenStream,
     should_exclude_primary_key: bool
 ) -> proc_macro2::TokenStream {
     let (none_elements, match_elements) = {
@@ -19,7 +19,7 @@ pub fn check_for_none(
             ), |mut acc, (index, field)| {
                 let field_ident = field.ident.clone()
                     .unwrap_or_else(|| {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} field.ident is None")
+                        panic!("{proc_macro_name_upper_camel_case_ident_stringified} field.ident is None")
                     });
                 let possible_dot_space = match (index + 1) == fields_named_handle_len {
                     true => "",
@@ -31,9 +31,9 @@ pub fn check_for_none(
             })
     };
     let none_elements_token_stream = none_elements.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {none_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {none_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
     let match_elements_token_stream = match_elements.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {match_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {match_elements} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
     let response_variant_token_stream = quote::quote!{
         NoPayloadFields {
             no_payload_fields: std::string::String::from("no payload fields"), 
@@ -42,7 +42,7 @@ pub fn check_for_none(
     };
     quote::quote!{
         if let (#none_elements_token_stream) = (#match_elements_token_stream) {
-            return #try_ident_response_variants_camel_case_token_stream::#response_variant_token_stream;
+            return #try_ident_response_variants_upper_camel_case_token_stream::#response_variant_token_stream;
         }
     }
 }
