@@ -2,7 +2,7 @@ pub fn type_variants_from_request_response_generator(
     desirable_attribute: &proc_macro_helpers::attribute::Attribute,
     desirable_token_stream: &proc_macro2::TokenStream,
     desirable_type_token_stream: &proc_macro2::TokenStream,
-    try_operation_camel_case_token_stream: &proc_macro2::TokenStream,
+    try_operation_upper_camel_case_token_stream: &proc_macro2::TokenStream,
     operation_lower_case_stringified: &std::string::String,
     code_occurence_lower_case_double_dot_space_crate_common_code_occurence_code_occurence_token_stream: &proc_macro2::TokenStream,
     code_occurence_lower_case_crate_code_occurence_tufa_common_macro_call_token_stream: &proc_macro2::TokenStream,
@@ -13,49 +13,49 @@ pub fn type_variants_from_request_response_generator(
     derive_debug_serialize_deserialize_token_stream: &proc_macro2::TokenStream,
     derive_debug_serialize_deserialize_to_schema_token_stream: &proc_macro2::TokenStream,
     type_variants_from_request_response_syn_variants: std::vec::Vec<&syn::Variant>,
-    proc_macro_name_camel_case_ident_stringified: &std::string::String,
-    code_occurence_camel_case_stringified: &std::string::String,
+    proc_macro_name_upper_camel_case_ident_stringified: &std::string::String,
+    code_occurence_upper_camel_case_stringified: &std::string::String,
     code_occurence_lower_case_stringified: &std::string::String,
-    try_camel_case_stringified: &str,
-    operation_name_camel_case_stringified: &str,
-    response_variants_camel_case_stringified: &str,
+    try_upper_camel_case_stringified: &str,
+    operation_name_upper_camel_case_stringified: &str,
+    response_variants_upper_camel_case_stringified: &str,
     ident: &syn::Ident,
-    with_serialize_deserialize_camel_case_stringified: &str,
-    try_operation_camel_case_stringified: &str,
-    request_error_camel_case_stringified: &str,
+    with_serialize_deserialize_upper_camel_case_stringified: &str,
+    try_operation_upper_camel_case_stringified: &str,
+    request_error_upper_camel_case_stringified: &str,
 ) -> proc_macro2::TokenStream {
-    let try_operation_response_variants_camel_case_stringified = crate::generate_try_operation_response_variants_upper_camel_case_stringified(
-        &try_camel_case_stringified,
-        &operation_name_camel_case_stringified,
-        &response_variants_camel_case_stringified
+    let try_operation_response_variants_upper_camel_case_stringified = crate::generate_try_operation_response_variants_upper_camel_case_stringified(
+        &try_upper_camel_case_stringified,
+        &operation_name_upper_camel_case_stringified,
+        &response_variants_upper_camel_case_stringified
     );
-    let try_operation_response_variants_camel_case_token_stream = crate::generate_try_operation_response_variants_upper_camel_case_token_stream(
-        &try_operation_response_variants_camel_case_stringified,
-        &proc_macro_name_camel_case_ident_stringified
+    let try_operation_response_variants_upper_camel_case_token_stream = crate::generate_try_operation_response_variants_upper_camel_case_token_stream(
+        &try_operation_response_variants_upper_camel_case_stringified,
+        &proc_macro_name_upper_camel_case_ident_stringified
     );
-    let try_operation_with_serialize_deserialize_camel_case_token_stream = crate::generate_try_operation_with_serialize_deserialize_upper_camel_case_token_stream(
-        &try_camel_case_stringified,
-        &operation_name_camel_case_stringified,
-        &with_serialize_deserialize_camel_case_stringified,
-        &proc_macro_name_camel_case_ident_stringified
+    let try_operation_with_serialize_deserialize_upper_camel_case_token_stream = crate::generate_try_operation_with_serialize_deserialize_upper_camel_case_token_stream(
+        &try_upper_camel_case_stringified,
+        &operation_name_upper_camel_case_stringified,
+        &with_serialize_deserialize_upper_camel_case_stringified,
+        &proc_macro_name_upper_camel_case_ident_stringified
     );
     let try_operation_response_variants_desirable_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
         &ident,
-        &try_camel_case_stringified,
-        &operation_name_camel_case_stringified,
-        &response_variants_camel_case_stringified,
+        &try_upper_camel_case_stringified,
+        &operation_name_upper_camel_case_stringified,
+        &response_variants_upper_camel_case_stringified,
         &desirable_attribute,
-        &proc_macro_name_camel_case_ident_stringified
+        &proc_macro_name_upper_camel_case_ident_stringified
     );
     let try_operation_request_error_token_stream = crate::generate_try_operation_request_error_token_stream(
-        &try_operation_camel_case_stringified,
-        &request_error_camel_case_stringified,
-        &proc_macro_name_camel_case_ident_stringified
+        &try_operation_upper_camel_case_stringified,
+        &request_error_upper_camel_case_stringified,
+        &proc_macro_name_upper_camel_case_ident_stringified
     );
     let try_operation_with_serialize_deserialize_token_stream = crate::generate_try_operation_with_serialize_deserialize_token_stream(
-        &try_operation_camel_case_stringified,
-        &with_serialize_deserialize_camel_case_stringified,
-        &proc_macro_name_camel_case_ident_stringified
+        &try_operation_upper_camel_case_stringified,
+        &with_serialize_deserialize_upper_camel_case_stringified,
+        &proc_macro_name_upper_camel_case_ident_stringified
     );
     let axum_http_status_code_quote_token_stream = desirable_attribute.to_axum_http_status_code_token_stream();
     let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_token_stream();
@@ -73,11 +73,11 @@ pub fn type_variants_from_request_response_generator(
                 fields_named
             }
             else {
-                panic!("{proc_macro_name_camel_case_ident_stringified} expected fields would be named");
+                panic!("{proc_macro_name_upper_camel_case_ident_stringified} expected fields would be named");
             };
             let fields_mapped_into_token_stream = fields_named.named.iter().map(|field|{
                 let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-                    "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
+                    "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                     proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                 ));
                 let error_occurence_attribute = match field_ident == code_occurence_lower_case_stringified {
@@ -86,13 +86,13 @@ pub fn type_variants_from_request_response_generator(
                         let mut error_occurence_attribute: Option<proc_macro_helpers::error_occurence::named_attribute::NamedAttribute> = None;
                         for element in &field.attrs {
                             if let true = element.path.segments.len() == 1 {
-                                let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_camel_case_ident_stringified} element.path.segments.get(0) is None")});
+                                let segment = element.path.segments.first().unwrap_or_else(|| {panic!("{proc_macro_name_upper_camel_case_ident_stringified} element.path.segments.get(0) is None")});
                                 if let Ok(value) = {
                                     use std::str::FromStr;
                                     proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::from_str(&segment.ident.to_string())
                                 } {
                                     match error_occurence_attribute {
-                                        Some(value) => panic!("{proc_macro_name_camel_case_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
+                                        Some(value) => panic!("{proc_macro_name_upper_camel_case_ident_stringified} duplicated attributes ({}) are not supported", value.to_string()),
                                         None => {
                                             error_occurence_attribute = Some(value);
                                         }
@@ -102,7 +102,7 @@ pub fn type_variants_from_request_response_generator(
                         }
                         match error_occurence_attribute {
                             Some(value) => value.to_attribute_view_token_stream(),
-                            None => panic!("{proc_macro_name_camel_case_ident_stringified} {variant_ident} no supported attribute"),
+                            None => panic!("{proc_macro_name_upper_camel_case_ident_stringified} {variant_ident} no supported attribute"),
                         }
                     }
                 };
@@ -125,7 +125,7 @@ pub fn type_variants_from_request_response_generator(
                 error_occurence::ErrorOccurence,
                 from_sqlx_postgres_error::FromSqlxPostgresError,
             )]
-            pub enum #try_operation_camel_case_token_stream {
+            pub enum #try_operation_upper_camel_case_token_stream {
                 #(#try_operation_mapped_token_stream),*
             }
         }
@@ -137,11 +137,11 @@ pub fn type_variants_from_request_response_generator(
                 fields_named
             }
             else {
-                panic!("{proc_macro_name_camel_case_ident_stringified} expected fields would be named");
+                panic!("{proc_macro_name_upper_camel_case_ident_stringified} expected fields would be named");
             };
             let fields_mapped_into_token_stream = fields_named.named.iter().map(|field|{
                 let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-                    "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
+                    "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                     proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                 ));
                 let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case_stringified {
@@ -152,10 +152,10 @@ pub fn type_variants_from_request_response_generator(
                                 let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
                                 .fold(String::from(""), |mut acc, path_segment| {
                                     let path_segment_ident = &path_segment.ident;
-                                    match *path_segment_ident == code_occurence_camel_case_stringified {
+                                    match *path_segment_ident == code_occurence_upper_camel_case_stringified {
                                         true => {
                                             if code_occurence_type_repeat_checker {
-                                                panic!("{proc_macro_name_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case_stringified} inside type path");
+                                                panic!("{proc_macro_name_upper_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_upper_camel_case_stringified} inside type path");
                                             }
                                             acc.push_str(&path_segment_ident.to_string());
                                             code_occurence_type_repeat_checker = true;
@@ -165,15 +165,15 @@ pub fn type_variants_from_request_response_generator(
                                     acc
                                 });
                                 if !code_occurence_type_repeat_checker {
-                                    panic!("{proc_macro_name_camel_case_ident_stringified} no {code_occurence_camel_case_stringified} named field");
+                                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} no {code_occurence_upper_camel_case_stringified} named field");
                                 }
                                 code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
-                                .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                                .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                             }
                             else {
                                 let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
                                 panic!(
-                                    "{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
+                                    "{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
                                     proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
                                 );
                             }
@@ -185,7 +185,7 @@ pub fn type_variants_from_request_response_generator(
                             let mut option_attribute = None;
                             field.attrs.iter().for_each(|attr|{
                                 if let true = attr.path.segments.len() == 1 {
-                                    let error_message = format!("{proc_macro_name_camel_case_ident_stringified} two or more supported attributes!");
+                                    let error_message = format!("{proc_macro_name_upper_camel_case_ident_stringified} two or more supported attributes!");
                                     let attr_ident = match attr.path.segments.iter().next() {
                                         Some(path_segment) => &path_segment.ident,
                                         None => panic!("attr.path.segments.iter().next() is None"),
@@ -207,18 +207,18 @@ pub fn type_variants_from_request_response_generator(
                                 }//other attributes are not for this proc_macro
                             });
                             option_attribute.unwrap_or_else(|| panic!(
-                                "{proc_macro_name_camel_case_ident_stringified} option attribute {}",
+                                "{proc_macro_name_upper_camel_case_ident_stringified} option attribute {}",
                                 proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                             ))
                         };
                         let supported_container = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_supported_container(
                             &field,
-                            &proc_macro_name_camel_case_ident_stringified,
+                            &proc_macro_name_upper_camel_case_ident_stringified,
                         );
                         let field_type_with_serialize_deserialize = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_field_type_with_serialize_deserialize_version(
                             attribute,
                             supported_container,
-                            &proc_macro_name_camel_case_ident_stringified,
+                            &proc_macro_name_upper_camel_case_ident_stringified,
                         );
                         field_type_with_serialize_deserialize
                     },
@@ -233,7 +233,7 @@ pub fn type_variants_from_request_response_generator(
         }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();      
         quote::quote! {
             #derive_debug_serialize_deserialize_token_stream
-            pub enum #try_operation_response_variants_camel_case_token_stream {
+            pub enum #try_operation_response_variants_upper_camel_case_token_stream {
                 #desirable_token_stream(#desirable_type_token_stream),
                 #(#enum_with_serialize_deserialize_logic_mapped_token_stream),*
             }
@@ -246,17 +246,17 @@ pub fn type_variants_from_request_response_generator(
                 fields_named
             }
             else {
-                panic!("{proc_macro_name_camel_case_ident_stringified} expected fields would be named");
+                panic!("{proc_macro_name_upper_camel_case_ident_stringified} expected fields would be named");
             };
             let fields_name_mapped_into_token_stream = fields_named.named.iter().map(|field|{
                 let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-                    "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
+                    "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                     proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                 ));
                 quote::quote! {#field_ident}
             }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
             quote::quote! {
-                #try_operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+                #try_operation_with_serialize_deserialize_upper_camel_case_token_stream::#variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
                 } => Self::#variant_ident {
                     #(#fields_name_mapped_into_token_stream),*
@@ -264,8 +264,8 @@ pub fn type_variants_from_request_response_generator(
             }
         }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            impl std::convert::From<#try_operation_camel_case_token_stream> for #try_operation_response_variants_camel_case_token_stream {
-                fn from(value: #try_operation_camel_case_token_stream) -> Self {
+            impl std::convert::From<#try_operation_upper_camel_case_token_stream> for #try_operation_response_variants_upper_camel_case_token_stream {
+                fn from(value: #try_operation_upper_camel_case_token_stream) -> Self {
                     match value.into_serialize_deserialize_version() {
                         #(#from_logic_token_stream_mapped_token_stream),*
                     }
@@ -282,26 +282,26 @@ pub fn type_variants_from_request_response_generator(
                     fields_named
                 }
                 else {
-                    panic!("{proc_macro_name_camel_case_ident_stringified} expected fields would be named");
+                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} expected fields would be named");
                 };
                 let fields_anonymous_types_mapped_into_token_stream = fields_named.named.iter().map(|field|{
                     let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-                        "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
+                        "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                         proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                     ));
                     quote::quote! {#field_ident: _}
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                 quote::quote! {
-                    #try_operation_response_variants_camel_case_token_stream::#variant_ident {
+                    #try_operation_response_variants_upper_camel_case_token_stream::#variant_ident {
                         #(#fields_anonymous_types_mapped_into_token_stream),*
                     } => #axum_http_status_code_quote_token_stream
                 }
             }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            impl std::convert::From<&#try_operation_response_variants_camel_case_token_stream> for #axum_http_status_code_token_stream {
-                fn from(value: &#try_operation_response_variants_camel_case_token_stream) -> Self {
+            impl std::convert::From<&#try_operation_response_variants_upper_camel_case_token_stream> for #axum_http_status_code_token_stream {
+                fn from(value: &#try_operation_response_variants_upper_camel_case_token_stream) -> Self {
                     match value {
-                        #try_operation_response_variants_camel_case_token_stream::#desirable_token_stream(_) => #axum_http_status_code_quote_token_stream,
+                        #try_operation_response_variants_upper_camel_case_token_stream::#desirable_token_stream(_) => #axum_http_status_code_quote_token_stream,
                         #(#impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_mapped_token_stream),*//todo maybe something wrong with status codes? check it later (for all variants was axum::http::StatusCode::OK)
                     }
                 }
@@ -318,16 +318,16 @@ pub fn type_variants_from_request_response_generator(
                 |mut acc, element| {
                     let variant_ident = &element.ident;
                     let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
-                    .unwrap_or_else(|e| {panic!("{proc_macro_name_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
+                    .unwrap_or_else(|e| {panic!("{proc_macro_name_upper_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
                     let fields_named = if let syn::Fields::Named(fields_named) = &element.fields {
                         fields_named
                     }
                     else {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} expected fields would be named");
+                        panic!("{proc_macro_name_upper_camel_case_ident_stringified} expected fields would be named");
                     };
                     let error_variant_fields = fields_named.named.iter().map(|field|{
                         let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-                            "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
+                            "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                         ));
                         let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case_stringified {
@@ -338,10 +338,10 @@ pub fn type_variants_from_request_response_generator(
                                         let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
                                         .fold(String::from(""), |mut acc, path_segment| {
                                             let path_segment_ident = &path_segment.ident;
-                                            match *path_segment_ident == code_occurence_camel_case_stringified {
+                                            match *path_segment_ident == code_occurence_upper_camel_case_stringified {
                                                 true => {
                                                     if code_occurence_type_repeat_checker {
-                                                        panic!("{proc_macro_name_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case_stringified} inside type path");
+                                                        panic!("{proc_macro_name_upper_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_upper_camel_case_stringified} inside type path");
                                                     }
                                                     acc.push_str(&path_segment_ident.to_string());
                                                     code_occurence_type_repeat_checker = true;
@@ -351,15 +351,15 @@ pub fn type_variants_from_request_response_generator(
                                             acc
                                         });
                                         if !code_occurence_type_repeat_checker {
-                                            panic!("{proc_macro_name_camel_case_ident_stringified} no {code_occurence_camel_case_stringified} named field");
+                                            panic!("{proc_macro_name_upper_camel_case_ident_stringified} no {code_occurence_upper_camel_case_stringified} named field");
                                         }
                                         code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
-                                        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                                        .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                                     }
                                     else {
                                         let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
                                         panic!(
-                                            "{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
+                                            "{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
                                             proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
                                         );
                                     }
@@ -371,7 +371,7 @@ pub fn type_variants_from_request_response_generator(
                                     let mut option_attribute = None;
                                     field.attrs.iter().for_each(|attr|{
                                         if let true = attr.path.segments.len() == 1 {
-                                            let error_message = format!("{proc_macro_name_camel_case_ident_stringified} two or more supported attributes!");
+                                            let error_message = format!("{proc_macro_name_upper_camel_case_ident_stringified} two or more supported attributes!");
                                             let attr_ident = match attr.path.segments.iter().next() {
                                                 Some(path_segment) => &path_segment.ident,
                                                 None => panic!("attr.path.segments.iter().next() is None"),
@@ -393,18 +393,18 @@ pub fn type_variants_from_request_response_generator(
                                         }//other attributes are not for this proc_macro
                                     });
                                     option_attribute.unwrap_or_else(|| panic!(
-                                        "{proc_macro_name_camel_case_ident_stringified} option attribute {}",
+                                        "{proc_macro_name_upper_camel_case_ident_stringified} option attribute {}",
                                         proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                                     ))
                                 };
                                 let supported_container = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_supported_container(
                                     &field,
-                                    &proc_macro_name_camel_case_ident_stringified,
+                                    &proc_macro_name_upper_camel_case_ident_stringified,
                                 );
                                 proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_field_type_with_serialize_deserialize_version(
                                     attribute,
                                     supported_container,
-                                    &proc_macro_name_camel_case_ident_stringified,
+                                    &proc_macro_name_upper_camel_case_ident_stringified,
                                 )
                             },
                         };
@@ -427,18 +427,18 @@ pub fn type_variants_from_request_response_generator(
             )
             .into_iter().map(|(key,value)|{
                 let try_operation_response_variants_attribute_token_stream = {
-                    let try_operation_response_variants_attribute_stingified = format!("{try_operation_response_variants_camel_case_stringified}{key}");
+                    let try_operation_response_variants_attribute_stingified = format!("{try_operation_response_variants_upper_camel_case_stringified}{key}");
                     try_operation_response_variants_attribute_stingified
                     .parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_operation_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 // let try_operation_response_variants_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
                 //     &ident,
-                //     &try_camel_case_stringified,
-                //     &operation_name_camel_case_stringified,
-                //     &response_variants_camel_case_stringified,
+                //     &try_upper_camel_case_stringified,
+                //     &operation_name_upper_camel_case_stringified,
+                //     &response_variants_upper_camel_case_stringified,
                 //     &key,
-                //     &proc_macro_name_camel_case_ident_stringified
+                //     &proc_macro_name_upper_camel_case_ident_stringified
                 // );
                 let enum_variants_token_stream = value.iter().map(|element|{
                     let error_variant_ident = &element.0;
@@ -472,7 +472,7 @@ pub fn type_variants_from_request_response_generator(
                     pub enum #try_operation_response_variants_attribute_token_stream {
                         #(#enum_variants_token_stream),*
                     }
-                    impl std::convert::From<#try_operation_response_variants_attribute_token_stream> for #try_operation_response_variants_camel_case_token_stream {
+                    impl std::convert::From<#try_operation_response_variants_attribute_token_stream> for #try_operation_response_variants_upper_camel_case_token_stream {
                         fn from(value: #try_operation_response_variants_attribute_token_stream) -> Self {
                             match value {
                                 #(#std_convert_from_match_variants_token_stream),*
@@ -491,7 +491,7 @@ pub fn type_variants_from_request_response_generator(
             pub enum #try_operation_response_variants_desirable_attribute_token_stream {
                 #desirable_token_stream(#desirable_type_token_stream),
             }
-            impl std::convert::From<#try_operation_response_variants_desirable_attribute_token_stream> for #try_operation_response_variants_camel_case_token_stream {
+            impl std::convert::From<#try_operation_response_variants_desirable_attribute_token_stream> for #try_operation_response_variants_upper_camel_case_token_stream {
                 fn from(value: #try_operation_response_variants_desirable_attribute_token_stream) -> Self {
                     match value {
                         #try_operation_response_variants_desirable_attribute_token_stream::#desirable_token_stream(i) => Self::#desirable_token_stream(i),
@@ -515,16 +515,16 @@ pub fn type_variants_from_request_response_generator(
                 |mut acc, element| {
                     let variant_ident = &element.ident;
                     let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
-                    .unwrap_or_else(|e| {panic!("{proc_macro_name_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
+                    .unwrap_or_else(|e| {panic!("{proc_macro_name_upper_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
                     let fields_named = if let syn::Fields::Named(fields_named) = &element.fields {
                         fields_named
                     }
                     else {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} expected fields would be named");
+                        panic!("{proc_macro_name_upper_camel_case_ident_stringified} expected fields would be named");
                     };
                     let error_variant_fields = fields_named.named.iter().map(|field|{
                         let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-                            "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
+                            "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                         ));
                         let field_type_with_serialize_deserialize = match field_ident == code_occurence_lower_case_stringified {
@@ -535,10 +535,10 @@ pub fn type_variants_from_request_response_generator(
                                         let code_occurence_segments_stringified_handle = type_path.path.segments.iter()
                                         .fold(String::from(""), |mut acc, path_segment| {
                                             let path_segment_ident = &path_segment.ident;
-                                            match *path_segment_ident == code_occurence_camel_case_stringified {
+                                            match *path_segment_ident == code_occurence_upper_camel_case_stringified {
                                                 true => {
                                                     if code_occurence_type_repeat_checker {
-                                                        panic!("{proc_macro_name_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_camel_case_stringified} inside type path");
+                                                        panic!("{proc_macro_name_upper_camel_case_ident_stringified} code_occurence_ident detected more than one {code_occurence_upper_camel_case_stringified} inside type path");
                                                     }
                                                     acc.push_str(&path_segment_ident.to_string());
                                                     code_occurence_type_repeat_checker = true;
@@ -548,15 +548,15 @@ pub fn type_variants_from_request_response_generator(
                                             acc
                                         });
                                         if !code_occurence_type_repeat_checker {
-                                            panic!("{proc_macro_name_camel_case_ident_stringified} no {code_occurence_camel_case_stringified} named field");
+                                            panic!("{proc_macro_name_upper_camel_case_ident_stringified} no {code_occurence_upper_camel_case_stringified} named field");
                                         }
                                         code_occurence_segments_stringified_handle.parse::<proc_macro2::TokenStream>()
-                                        .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                                        .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_segments_stringified_handle} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                                     }
                                     else {
                                         let syn_type_path_stringified = proc_macro_helpers::error_occurence::hardcode::syn_type_path_stringified();
                                         panic!(
-                                            "{proc_macro_name_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
+                                            "{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_lower_case_stringified} {} {syn_type_path_stringified}",
                                             proc_macro_helpers::error_occurence::hardcode::SUPPORTS_ONLY_STRINGIFIED
                                         );
                                     }
@@ -568,7 +568,7 @@ pub fn type_variants_from_request_response_generator(
                                     let mut option_attribute = None;
                                     field.attrs.iter().for_each(|attr|{
                                         if let true = attr.path.segments.len() == 1 {
-                                            let error_message = format!("{proc_macro_name_camel_case_ident_stringified} two or more supported attributes!");
+                                            let error_message = format!("{proc_macro_name_upper_camel_case_ident_stringified} two or more supported attributes!");
                                             let attr_ident = match attr.path.segments.iter().next() {
                                                 Some(path_segment) => &path_segment.ident,
                                                 None => panic!("attr.path.segments.iter().next() is None"),
@@ -590,18 +590,18 @@ pub fn type_variants_from_request_response_generator(
                                         }//other attributes are not for this proc_macro
                                     });
                                     option_attribute.unwrap_or_else(|| panic!(
-                                        "{proc_macro_name_camel_case_ident_stringified} option attribute {}",
+                                        "{proc_macro_name_upper_camel_case_ident_stringified} option attribute {}",
                                         proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                                     ))
                                 };
                                 let supported_container = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_supported_container(
                                     &field,
-                                    &proc_macro_name_camel_case_ident_stringified,
+                                    &proc_macro_name_upper_camel_case_ident_stringified,
                                 );
                                 let field_type_with_serialize_deserialize = proc_macro_helpers::error_occurence::generate_with_serialize_deserialize_version::generate_field_type_with_serialize_deserialize_version(
                                     attribute,
                                     supported_container,
-                                    &proc_macro_name_camel_case_ident_stringified,
+                                    &proc_macro_name_upper_camel_case_ident_stringified,
                                 );
                                 field_type_with_serialize_deserialize
                             },
@@ -625,7 +625,7 @@ pub fn type_variants_from_request_response_generator(
             );
             let unique_status_codes_len = hashmap_unique_status_codes.len();
             if unique_status_codes_len < 1 {
-                panic!("{proc_macro_name_camel_case_ident_stringified} unique_status_codes_len < 1 {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE);
+                panic!("{proc_macro_name_upper_camel_case_ident_stringified} unique_status_codes_len < 1 {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE);
             }
             let unique_status_codes_len_minus_one = unique_status_codes_len - 1;
             let unique_status_codes = hashmap_unique_status_codes.into_iter().map(|(key, _)|key).collect::<std::vec::Vec<proc_macro_helpers::attribute::Attribute>>();
@@ -636,10 +636,10 @@ pub fn type_variants_from_request_response_generator(
             )
         };
         let desirable_enum_name = {
-            let status_code_enum_name_stingified = format!("{try_operation_response_variants_camel_case_token_stream}{desirable_attribute}");
+            let status_code_enum_name_stingified = format!("{try_operation_response_variants_upper_camel_case_token_stream}{desirable_attribute}");
             status_code_enum_name_stingified
             .parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {status_code_enum_name_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {status_code_enum_name_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         let api_request_unexpected_error_module_path_token_stream = quote::quote! { crate::common::api_request_unexpected_error };
         let api_request_unexpected_error_path_token_stream = quote::quote! { #api_request_unexpected_error_module_path_token_stream::ApiRequestUnexpectedError };
@@ -647,14 +647,14 @@ pub fn type_variants_from_request_response_generator(
             let ident_response_variants_attribute_stingified = format!("try_from_response_try_{operation_lower_case_stringified}");
             ident_response_variants_attribute_stingified
             .parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {ident_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {ident_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         let status_code_enums_try_from = {
             let mut is_last_element_found = false;
             let desirable_status_code_case_token_stream = quote::quote! {
                 match response.text().await {
                     Ok(response_text) => match serde_json::from_str::<#desirable_enum_name>(&response_text){
-                        Ok(value) => Ok(#try_operation_response_variants_camel_case_token_stream::from(value)), 
+                        Ok(value) => Ok(#try_operation_response_variants_upper_camel_case_token_stream::from(value)), 
                         Err(e) => Err(
                             #api_request_unexpected_error_path_token_stream::DeserializeBody{ 
                                 serde: e,
@@ -682,17 +682,17 @@ pub fn type_variants_from_request_response_generator(
             .into_iter()
             .enumerate()
             .for_each(|(index, status_code_attribute)|{
-                // let status_code_enum_name_stringified = format!("{try_operation_response_variants_camel_case_token_stream}{status_code_attribute}");
+                // let status_code_enum_name_stringified = format!("{try_operation_response_variants_upper_camel_case_token_stream}{status_code_attribute}");
                 // let status_code_enum_name_token_stream = status_code_enum_name_stringified
                 //     .parse::<proc_macro2::TokenStream>()
-                //     .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {status_code_enum_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+                //     .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {status_code_enum_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
                 let try_operation_response_variants_desirable_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
                     &ident,
-                    &try_camel_case_stringified,
-                    &operation_name_camel_case_stringified,
-                    &response_variants_camel_case_stringified,
+                    &try_upper_camel_case_stringified,
+                    &operation_name_upper_camel_case_stringified,
+                    &response_variants_upper_camel_case_stringified,
                     &status_code_attribute,
-                    &proc_macro_name_camel_case_ident_stringified
+                    &proc_macro_name_upper_camel_case_ident_stringified
                 );
                 let http_status_code_token_stream = status_code_attribute.to_http_status_code_token_stream();
                 match index == unique_status_codes_len_minus_one{
@@ -725,7 +725,7 @@ pub fn type_variants_from_request_response_generator(
                                 else if status_code == #http_status_code_token_stream {
                                     match response.text().await {
                                         Ok(response_text) => match serde_json::from_str::<#try_operation_response_variants_desirable_attribute_token_stream>(&response_text){
-                                            Ok(value) => Ok(#try_operation_response_variants_camel_case_token_stream::from(value)), 
+                                            Ok(value) => Ok(#try_operation_response_variants_upper_camel_case_token_stream::from(value)), 
                                             Err(e) => Err(
                                                 #api_request_unexpected_error_path_token_stream::DeserializeBody{ 
                                                     serde: e,
@@ -749,12 +749,12 @@ pub fn type_variants_from_request_response_generator(
                 }
             });
             if let false = is_last_element_found {
-                panic!("{proc_macro_name_camel_case_ident_stringified} false = is_last_element_found");
+                panic!("{proc_macro_name_upper_camel_case_ident_stringified} false = is_last_element_found");
             }
             status_code_enums_try_from_variants
         };
         quote::quote! {
-            async fn #try_from_response_operation_lower_case_token_stream(response: reqwest::Response) -> Result<#try_operation_response_variants_camel_case_token_stream, #api_request_unexpected_error_path_token_stream> {
+            async fn #try_from_response_operation_lower_case_token_stream(response: reqwest::Response) -> Result<#try_operation_response_variants_upper_camel_case_token_stream, #api_request_unexpected_error_path_token_stream> {
                 let status_code = response.status();
                 let headers = response.headers().clone();
                 #(#status_code_enums_try_from)*
@@ -771,19 +771,19 @@ pub fn type_variants_from_request_response_generator(
                         fields_named
                     }
                     else {
-                        panic!("{proc_macro_name_camel_case_ident_stringified} expected fields would be named");
+                        panic!("{proc_macro_name_upper_camel_case_ident_stringified} expected fields would be named");
                     };
                     let fields_name_mapped_into_token_stream = fields_named.named.iter().map(|field|{
                         let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-                            "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
+                            "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                             proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                         ));
                         quote::quote! {#field_ident}
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote! {
-                        #try_operation_response_variants_camel_case_token_stream::#variant_ident {
+                        #try_operation_response_variants_upper_camel_case_token_stream::#variant_ident {
                             #(#fields_name_mapped_into_token_stream),*
-                        } => Err(#try_operation_with_serialize_deserialize_camel_case_token_stream::#variant_ident {
+                        } => Err(#try_operation_with_serialize_deserialize_upper_camel_case_token_stream::#variant_ident {
                             #(#fields_name_mapped_into_token_stream),*
                         })
                     }
@@ -791,11 +791,11 @@ pub fn type_variants_from_request_response_generator(
             )
             .collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            impl TryFrom<#try_operation_response_variants_camel_case_token_stream> for #desirable_type_token_stream {
-                type Error = #try_operation_with_serialize_deserialize_camel_case_token_stream;
-                fn try_from(value: #try_operation_response_variants_camel_case_token_stream) -> Result<Self, Self::Error> {
+            impl TryFrom<#try_operation_response_variants_upper_camel_case_token_stream> for #desirable_type_token_stream {
+                type Error = #try_operation_with_serialize_deserialize_upper_camel_case_token_stream;
+                fn try_from(value: #try_operation_response_variants_upper_camel_case_token_stream) -> Result<Self, Self::Error> {
                     match value {
-                        #try_operation_response_variants_camel_case_token_stream::#desirable_token_stream(i) => Ok(i),
+                        #try_operation_response_variants_upper_camel_case_token_stream::#desirable_token_stream(i) => Ok(i),
                         #(#impl_try_from_ident_response_variants_token_stream_for_desirable_logic_handle_mapped_token_stream),*
                     }
                 }
@@ -853,14 +853,14 @@ pub fn type_variants_from_request_response_generator(
             let tvfrr_extraction_logic_try_operation_lower_case_stringified = format!("tvfrr_extraction_logic_try_{operation_lower_case_stringified}");
             tvfrr_extraction_logic_try_operation_lower_case_stringified
             .parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {tvfrr_extraction_logic_try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {tvfrr_extraction_logic_try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         let try_from_response_try_operation_lower_case_token_stream = {
             let try_from_response_try_operation_lower_case_stringified =
                 format!("try_from_response_try_{operation_lower_case_stringified}");
             try_from_response_try_operation_lower_case_stringified
             .parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {try_from_response_try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_from_response_try_operation_lower_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         let try_from_response_try_operation_lower_case_token_stream_result_ok_token_stream = quote::quote!{
             match #desirable_type_token_stream::try_from(variants){
@@ -925,29 +925,29 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let enum_status_codes_checker_name_logic_token_stream_handle_token_stream = {
-        let enum_status_codes_checker_camel_case_token_stream = {
-            let enum_status_codes_checker_camel_case_stringified = format!("{try_operation_camel_case_token_stream}StatusCodesChecker");
-            enum_status_codes_checker_camel_case_stringified
+        let enum_status_codes_checker_upper_camel_case_token_stream = {
+            let enum_status_codes_checker_upper_camel_case_stringified = format!("{try_operation_upper_camel_case_token_stream}StatusCodesChecker");
+            enum_status_codes_checker_upper_camel_case_stringified
             .parse::<proc_macro2::TokenStream>()
-            .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {enum_status_codes_checker_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+            .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {enum_status_codes_checker_upper_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
         };
         let enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant_attribute| {
                 let variant_ident = &error_variant_attribute.ident;
                 let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(error_variant_attribute)
-                .unwrap_or_else(|e| {panic!("{proc_macro_name_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
-                let variant_ident_attribute_camel_case_token_stream = {
-                    let variant_ident_attribute_camel_case_stringified = format!("{variant_ident}{error_variant_attribute}");
-                    variant_ident_attribute_camel_case_stringified
+                .unwrap_or_else(|e| {panic!("{proc_macro_name_upper_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
+                let variant_ident_attribute_upper_camel_case_token_stream = {
+                    let variant_ident_attribute_upper_camel_case_stringified = format!("{variant_ident}{error_variant_attribute}");
+                    variant_ident_attribute_upper_camel_case_stringified
                     .parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_camel_case_ident_stringified} {variant_ident_attribute_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {variant_ident_attribute_upper_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 quote::quote! {
-                    #variant_ident_attribute_camel_case_token_stream,
+                    #variant_ident_attribute_upper_camel_case_token_stream,
                 }
             },
         ).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            pub enum #enum_status_codes_checker_camel_case_token_stream {
+            pub enum #enum_status_codes_checker_upper_camel_case_token_stream {
                 #(#enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream)*
             }
         }
@@ -960,17 +960,17 @@ pub fn type_variants_from_request_response_generator(
                     fields_named
                 }
                 else {
-                    panic!("{proc_macro_name_camel_case_ident_stringified} expected fields would be named");
+                    panic!("{proc_macro_name_upper_camel_case_ident_stringified} expected fields would be named");
                 };
                 let fields_anonymous_types_mapped_into_token_stream = fields_named.named.iter().map(|field|{
                     let field_ident = field.ident.clone().unwrap_or_else(|| panic!(
-                        "{proc_macro_name_camel_case_ident_stringified} field.ident {}",
+                        "{proc_macro_name_upper_camel_case_ident_stringified} field.ident {}",
                         proc_macro_helpers::error_occurence::hardcode::IS_NONE_STRINGIFIED
                     ));
                     quote::quote! {#field_ident: _}
                 }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                 quote::quote! {
-                    #try_operation_response_variants_camel_case_token_stream::#variant_ident {
+                    #try_operation_response_variants_upper_camel_case_token_stream::#variant_ident {
                         #(#fields_anonymous_types_mapped_into_token_stream),*
                     } => {
                         let mut res = axum::Json(self).into_response();
@@ -980,10 +980,10 @@ pub fn type_variants_from_request_response_generator(
                 }
             }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
         quote::quote! {
-            impl axum::response::IntoResponse for #try_operation_response_variants_camel_case_token_stream {
+            impl axum::response::IntoResponse for #try_operation_response_variants_upper_camel_case_token_stream {
                 fn into_response(self) -> axum::response::Response {
                     match &self {
-                        #try_operation_response_variants_camel_case_token_stream::#desirable_token_stream(_) => {
+                        #try_operation_response_variants_upper_camel_case_token_stream::#desirable_token_stream(_) => {
                             let mut res = axum::Json(self).into_response();
                             *res.status_mut() = #axum_http_status_code_quote_token_stream;
                             res
