@@ -9648,8 +9648,8 @@ fn generate_swagger_open_api_token_stream(
 
 #[derive(
     Debug,
-    proc_macro_assistants::GenerateToUpperCamelCase
-    proc_macro_assistants::GenerateToSnakeCase
+    proc_macro_assistants::GenerateToUpperCamelCase,
+    proc_macro_assistants::GenerateToSnakeCase,
 )]
 enum Operation {
     CreateMany,
