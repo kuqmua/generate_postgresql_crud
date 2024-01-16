@@ -9649,6 +9649,7 @@ fn generate_swagger_open_api_token_stream(
 #[derive(
     Debug,
     proc_macro_assistants::GenerateToUpperCamelCase
+    proc_macro_assistants::GenerateToSnakeCase
 )]
 enum Operation {
     CreateMany,
@@ -9659,34 +9660,6 @@ enum Operation {
     UpdateOne,
     DeleteMany,
     DeleteOne,
-}
-
-impl Operation {
-    //todo maybe write simple proc macro for it?
-    // fn to_upper_camel_case(&self) -> &str {
-    //     match self {
-    //         Self::CreateMany => "CreateMany",
-    //         Self::CreateOne => "CreateOne",
-    //         Self::ReadMany => "ReadMany",
-    //         Self::ReadOne => "ReadOne",
-    //         Self::UpdateMany => "UpdateMany",
-    //         Self::UpdateOne => "UpdateOne",
-    //         Self::DeleteMany => "DeleteMany",
-    //         Self::DeleteOne => "DeleteOne",
-    //     }
-    // }
-    fn to_snake_case(&self) -> &str {
-        match self {
-            Self::CreateMany => "create_many",
-            Self::CreateOne => "create_one",
-            Self::ReadMany => "read_many",
-            Self::ReadOne => "read_one",
-            Self::UpdateMany => "update_many",
-            Self::UpdateOne => "update_one",
-            Self::DeleteMany => "delete_many",
-            Self::DeleteOne => "delete_one",
-        }
-    }
 }
 
 enum OperationHttpMethod {
