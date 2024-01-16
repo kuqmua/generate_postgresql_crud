@@ -9662,6 +9662,21 @@ enum Operation {
     DeleteOne,
 }
 
+impl Operation {
+    fn operation_http_method(&self) -> OperationHttpMethod {
+        match self {
+            Self::CreateMany => OperationHttpMethod::Post,
+            Self::CreateOne => OperationHttpMethod::Post,
+            Self::ReadMany => OperationHttpMethod::Post,
+            Self::ReadOne => OperationHttpMethod::Post,
+            Self::UpdateMany => OperationHttpMethod::Patch,
+            Self::UpdateOne => OperationHttpMethod::Patch,
+            Self::DeleteMany => OperationHttpMethod::Delete,
+            Self::DeleteOne => OperationHttpMethod::Delete,
+        }
+    }
+}
+
 enum OperationHttpMethod {
     Post,
     Patch,
