@@ -6480,9 +6480,9 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         delete_many_http_request_test_token_stream
      ) = {
         let operation = Operation::DeleteMany;
-        let operation_name_upper_camel_case_stringified = operation.to_upper_camel_case();//format!("{delete_upper_camel_case_stringified}{many_upper_camel_case_stringified}")
-        let operation_name_snake_case_stringified = operation.to_snake_case();//proc_macro_helpers::naming_conventions::ToSnakeCase::to_snake_case(&operation_name_upper_camel_case_stringified.to_string())
-        let operation_http_method = operation.operation_http_method();//OperationHttpMethod::Delete
+        let operation_name_upper_camel_case_stringified = operation.to_upper_camel_case();
+        let operation_name_snake_case_stringified = operation.to_snake_case();
+        let operation_http_method = operation.http_method();
         let operation_parameters_upper_camel_case_token_stream = generate_operation_parameters_upper_camel_case_token_stream(
             &operation_name_upper_camel_case_stringified,
             parameters_upper_camel_case_stringified,
@@ -9649,8 +9649,8 @@ fn generate_swagger_open_api_token_stream(
 
 #[derive(
     Debug,
-    proc_macro_assistants::GenerateToUpperCamelCase,
-    proc_macro_assistants::GenerateToSnakeCase,
+    proc_macro_assistants::ToUpperCamelCase,
+    proc_macro_assistants::ToSnakeCase,
 )]
 enum Operation {
     CreateMany,
@@ -9664,7 +9664,7 @@ enum Operation {
 }
 
 impl Operation {
-    fn operation_http_method(&self) -> OperationHttpMethod {
+    fn http_method(&self) -> OperationHttpMethod {
         match self {
             Self::CreateMany => OperationHttpMethod::Post,
             Self::CreateOne => OperationHttpMethod::Post,
