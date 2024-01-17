@@ -6485,12 +6485,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_http_method = operation.http_method();
         let operation_parameters_upper_camel_case_token_stream = operation.parameters_upper_camel_case_token_stream();
         let operation_payload_upper_camel_case_token_stream = operation.payload_upper_camel_case_token_stream();
-        let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = generate_operation_payload_with_serialize_deserialize_upper_camel_case_token_stream(
-            &operation_name_upper_camel_case_stringified,
-            payload_upper_camel_case_stringified,
-            with_serialize_deserialize_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
+        let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = operation.payload_with_serialize_deserialize_upper_camel_case_token_stream();
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = generate_operation_payload_try_from_payload_with_serialize_deserialize_stringified(
             &operation_name_upper_camel_case_stringified,
             payload_upper_camel_case_stringified,
@@ -9645,6 +9640,7 @@ fn generate_swagger_open_api_token_stream(
     proc_macro_assistants::ToSnakeCase,
     proc_macro_assistants::ParametersUpperCamelCaseTokenStream,
     proc_macro_assistants::PayloadUpperCamelCaseTokenStream,
+    proc_macro_assistants::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream,
 )]
 enum Operation {
     CreateMany,
