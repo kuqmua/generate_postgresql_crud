@@ -9638,9 +9638,10 @@ fn generate_swagger_open_api_token_stream(
     Debug,
     proc_macro_assistants::ToUpperCamelCase,
     proc_macro_assistants::ToSnakeCase,
-    proc_macro_assistants::ParametersUpperCamelCaseTokenStream,
+    // proc_macro_assistants::ParametersUpperCamelCaseTokenStream,
     proc_macro_assistants::PayloadUpperCamelCaseTokenStream,
     proc_macro_assistants::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream,
+    //todo use trait code gen instead
 )]
 enum Operation {
     CreateMany,
@@ -9684,44 +9685,63 @@ impl OperationHttpMethod {
     }
 }
 
-fn generate_async_test_wrapper_token_stream(
-    operation_name_snake_case_stringified: &str,
-    test_inner_content_token_stream: &proc_macro2::TokenStream,
-    proc_macro_name_upper_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    fn generate_operation_test_snake_case_token_stream(
-        operation_name_snake_case_stringified: &str,
-        proc_macro_name_upper_camel_case_ident_stringified: &str,
-    ) -> proc_macro2::TokenStream {
-        let value_stringified = format!("{operation_name_snake_case_stringified}_test");
-        value_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    }
-    let operation_test_snake_case_token_stream = generate_operation_test_snake_case_token_stream(
-        &operation_name_snake_case_stringified,
-        &proc_macro_name_upper_camel_case_ident_stringified,
-    );
-    quote::quote!{
-        #[test]
-        fn #operation_test_snake_case_token_stream() {
-            match tokio::runtime::Builder::new_multi_thread()
-                .worker_threads(num_cpus::get())
-                .enable_all()
-                .build()
-            {
-                Err(e) => {
-                    panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
-                }
-                Ok(runtime) => {
-                    async fn test() {
-                        #test_inner_content_token_stream
-                    }
-                    runtime.block_on(test());
-                }
-            }
-        }
+trait ParametersUpperCamelCaseTokenStream {
+    fn parameters_upper_camel_case_token_stream(&self) -> proc_macro2::TokenStream;
+}
+
+impl<Generic> ParametersUpperCamelCaseTokenStream for Generic 
+    where Generic: proc_macro_helpers::naming_conventions::ToUpperCamelCase
+{
+    fn parameters_upper_camel_case_token_stream(&self) -> proc_macro2::TokenStream {
+        let parameters_upper_camel_case_stringified = "Parameters";
+        let value = format!(
+            "{}{parameters_upper_camel_case_stringified}",
+            self.to_upper_camel_case()
+        );
+        value.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{value} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
     }
 }
+
+
+// fn generate_async_test_wrapper_token_stream(
+//     operation_name_snake_case_stringified: &str,
+//     test_inner_content_token_stream: &proc_macro2::TokenStream,
+//     proc_macro_name_upper_camel_case_ident_stringified: &str
+// ) -> proc_macro2::TokenStream {
+//     fn generate_operation_test_snake_case_token_stream(
+//         operation_name_snake_case_stringified: &str,
+//         proc_macro_name_upper_camel_case_ident_stringified: &str,
+//     ) -> proc_macro2::TokenStream {
+//         let value_stringified = format!("{operation_name_snake_case_stringified}_test");
+//         value_stringified.parse::<proc_macro2::TokenStream>()
+//         .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {value_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+//     }
+//     let operation_test_snake_case_token_stream = generate_operation_test_snake_case_token_stream(
+//         &operation_name_snake_case_stringified,
+//         &proc_macro_name_upper_camel_case_ident_stringified,
+//     );
+//     quote::quote!{
+//         #[test]
+//         fn #operation_test_snake_case_token_stream() {
+//             match tokio::runtime::Builder::new_multi_thread()
+//                 .worker_threads(num_cpus::get())
+//                 .enable_all()
+//                 .build()
+//             {
+//                 Err(e) => {
+//                     panic!("tokio::runtime::Builder::new_multi_thread().worker_threads(num_cpus::get()).enable_all().build() failed, error: {e:#?}")
+//                 }
+//                 Ok(runtime) => {
+//                     async fn test() {
+//                         #test_inner_content_token_stream
+//                     }
+//                     runtime.block_on(test());
+//                 }
+//             }
+//         }
+//     }
+// }
 
 fn generate_full_additional_http_status_codes_error_variants<'a>(
     common_middlewares_error_syn_variants: std::vec::Vec::<&'a (
