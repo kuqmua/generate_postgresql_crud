@@ -6481,7 +6481,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
      ) = {
         let operation = Operation::DeleteMany;
         let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCase::to_upper_camel_case(&operation);
-        let operation_name_snake_case_stringified = operation.to_snake_case();
+        let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCase::to_snake_case(&operation);
         let operation_http_method = operation.http_method();
         let operation_parameters_upper_camel_case_token_stream = operation.parameters_upper_camel_case_token_stream();
         let operation_payload_upper_camel_case_token_stream = operation.payload_upper_camel_case_token_stream();
