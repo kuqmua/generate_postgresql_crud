@@ -9669,6 +9669,9 @@ impl Operation {
     }
 }
 
+#[derive(
+    proc_macro_assistants::ToSnakeCase,
+)]
 enum OperationHttpMethod {
     Post,
     Patch,
@@ -9677,11 +9680,14 @@ enum OperationHttpMethod {
 
 impl OperationHttpMethod {
     fn to_token_stream(&self) -> proc_macro2::TokenStream {
-        match self {
-            Self::Post => quote::quote!{post},
-            Self::Patch => quote::quote!{patch},
-            Self::Delete => quote::quote!{delete},
-        }
+        let value_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCase::to_snake_case(self);
+        value_snake_case_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{value_snake_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+        // match self {
+        //     Self::Post => quote::quote!{post},
+        //     Self::Patch => quote::quote!{patch},
+        //     Self::Delete => quote::quote!{delete},
+        // }
     }
 }
 
