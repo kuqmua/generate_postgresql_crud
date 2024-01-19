@@ -9403,7 +9403,7 @@ fn generate_http_request_many_token_stream(
         &operation_name_snake_case_stringified,
         &proc_macro_name_upper_camel_case_ident_stringified
     );
-    let operation_http_method_token_stream = operation_http_method.to_token_stream();
+    let operation_http_method_snake_case_token_stream = proc_macro_helpers::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(operation_http_method);
     let url_handle_token_stream = generate_url_handle_token_stream(
         &table_name_stringified,
         &operation_name_snake_case_stringified,
@@ -9429,7 +9429,7 @@ fn generate_http_request_many_token_stream(
             // println!("{}", url);
             match #tvfrr_extraction_logic_token_stream(
                 #reqwest_client_new_token_stream
-                .#operation_http_method_token_stream(&url)
+                .#operation_http_method_snake_case_token_stream(&url)
                 #project_commit_header_addition_token_stream
                 #content_type_application_json_header_addition_token_stream
                 .body(#payload_snake_case_token_stream)
@@ -9495,7 +9495,7 @@ fn generate_try_operation_token_stream(
         &operation_name_snake_case_stringified,
         &proc_macro_name_upper_camel_case_ident_stringified
     );
-    let operation_http_method_token_stream = operation_http_method.to_token_stream();
+    let operation_http_method_snake_case_token_stream = proc_macro_helpers::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(operation_http_method);
     let url_handle_token_stream = generate_url_handle_token_stream(
         &table_name_stringified,
         &operation_name_snake_case_stringified,
@@ -9514,7 +9514,7 @@ fn generate_try_operation_token_stream(
             // println!("{}", url);
             match #tvfrr_extraction_logic_token_stream(
                 #reqwest_client_new_token_stream
-                .#operation_http_method_token_stream(&url)
+                .#operation_http_method_snake_case_token_stream(&url)
                 #project_commit_header_addition_token_stream
                 #content_type_application_json_header_addition_token_stream
                 .body(#payload_snake_case_token_stream)
@@ -9615,14 +9615,14 @@ fn generate_swagger_open_api_token_stream(
             (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = #application_json_quotes_token_stream)
         }
     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
-    let method_token_stream = operation_http_method.to_token_stream();
+    let method_snake_case_token_stream = proc_macro_helpers::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(operation_http_method);
     let request_body_token_stream = match request_body_option_token_stream {
         Some(value) => value,
         None => proc_macro2::TokenStream::new()
     };
     quote::quote!{
         #[utoipa::path(
-            #method_token_stream,
+            #method_snake_case_token_stream,
             path = #swagger_url_path_quotes_token_stream,
             operation_id = #swagger_url_path_quotes_token_stream,
             tag = #table_name_quotes_token_stream,
@@ -9676,19 +9676,6 @@ enum OperationHttpMethod {
     Post,
     Patch,
     Delete
-}
-
-impl OperationHttpMethod {
-    fn to_token_stream(&self) -> proc_macro2::TokenStream {
-        let value_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(self);
-        value_snake_case_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{value_snake_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-        // match self {
-        //     Self::Post => quote::quote!{post},
-        //     Self::Patch => quote::quote!{patch},
-        //     Self::Delete => quote::quote!{delete},
-        // }
-    }
 }
 
 trait ParametersUpperCamelCaseTokenStream {
