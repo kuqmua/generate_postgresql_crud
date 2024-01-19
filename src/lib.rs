@@ -6492,17 +6492,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationSnakeCaseTokenStream::try_operation_snake_case_token_stream(&operation);
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TryOperationResponseVariantsUpperCamelCaseTokenStream::try_operation_response_variants_upper_camel_case_token_stream(&operation);
         let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TryOperationUpperCamelCaseString::try_operation_upper_camel_case_string(&operation);
-        
-        
-        
-        // generate_try_operation_upper_camel_case_stringified(
-        //     &try_upper_camel_case_stringified,
-        //     &operation_name_upper_camel_case_stringified,
-        // );
-        let try_operation_upper_camel_case_token_stream = generate_try_operation_upper_camel_case_token_stream(
-            &try_operation_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
+        let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationUpperCamelCaseTokenStream::try_operation_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
             &operation_name_snake_case_stringified,
