@@ -4977,12 +4977,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_upper_camel_case_token_stream = 
         proc_macro_helpers::naming_conventions::PayloadElementTryFromPayloadElementWithSerializeDeserializeUpperCamelCaseTokenStream::payload_element_try_from_payload_element_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         let operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_snake_case_token_stream = proc_macro_helpers::naming_conventions::PayloadElementTryFromPayloadElementWithSerializeDeserializeSnakeCaseTokenStream::payload_element_try_from_payload_element_with_serialize_deserialize_snake_sase_token_stream(&operation);
-        //todo generate trait
-        let operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_error_named_upper_camel_case_token_stream = generate_payload_element_try_from_payload_element_with_serialize_deserialize_error_named_upper_camel_case_token_stream(
-            &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_upper_camel_case_stringified,
-            error_named_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
+        let operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadElementTryFromPayloadElementWithSerializeDeserializeErrorNamedUpperCamelCaseTokenStream::payload_element_try_from_payload_element_with_serialize_deserialize_error_named_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
             &operation_name_snake_case_stringified,
@@ -7798,18 +7793,6 @@ fn generate_payload_try_from_payload_with_serialize_deserialize_snake_case_token
     proc_macro_name_upper_camel_case_ident_stringified: &str
 ) -> proc_macro2::TokenStream {
     let value = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&payload_try_from_payload_with_serialize_deserialize_upper_camel_case_stringified);
-    value.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {value} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-}
-
-fn generate_payload_element_try_from_payload_element_with_serialize_deserialize_error_named_upper_camel_case_token_stream(
-    payload_element_try_from_payload_element_with_serialize_deserialize_upper_camel_case_stringified: &str,
-    error_named_upper_camel_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    let value = format!(
-        "{payload_element_try_from_payload_element_with_serialize_deserialize_upper_camel_case_stringified}{error_named_upper_camel_case_stringified}"
-    );
     value.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {value} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
