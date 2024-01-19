@@ -6483,7 +6483,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCaseString::to_upper_camel_case_string(&operation);
         let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation);
         let operation_http_method = operation.http_method();
-        let operation_parameters_upper_camel_case_token_stream = operation.parameters_upper_camel_case_token_stream();
+        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::ParametersUpperCamelCaseTokenStream::parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = operation.payload_upper_camel_case_token_stream();
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = operation.payload_with_serialize_deserialize_upper_camel_case_token_stream();
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = generate_operation_payload_try_from_payload_with_serialize_deserialize_stringified(
@@ -9677,25 +9677,6 @@ enum OperationHttpMethod {
     Patch,
     Delete
 }
-
-trait ParametersUpperCamelCaseTokenStream {
-    fn parameters_upper_camel_case_token_stream(&self) -> proc_macro2::TokenStream;
-}
-
-impl<Generic> ParametersUpperCamelCaseTokenStream for Generic 
-    where Generic: proc_macro_helpers::naming_conventions::ToUpperCamelCaseString
-{
-    fn parameters_upper_camel_case_token_stream(&self) -> proc_macro2::TokenStream {
-        let parameters_upper_camel_case_stringified = "Parameters";
-        let value = format!(
-            "{}{parameters_upper_camel_case_stringified}",
-            self.to_upper_camel_case_string()
-        );
-        value.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{value} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-    }
-}
-
 
 // fn generate_async_test_wrapper_token_stream(
 //     operation_name_snake_case_stringified: &str,
