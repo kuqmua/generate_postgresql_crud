@@ -4977,7 +4977,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_upper_camel_case_token_stream = 
         proc_macro_helpers::naming_conventions::PayloadElementTryFromPayloadElementWithSerializeDeserializeUpperCamelCaseTokenStream::payload_element_try_from_payload_element_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         //todo generate trait
-        let operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_snake_case_token_stream = generate_payload_element_try_from_payload_element_with_serialize_deserialize_snake_case_token_stream(
+        let operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_snake_case_token_stream = 
+        
+        proc_macro_helpers::naming_conventions::PayloadElementTryFromPayloadElementWithSerializeDeserializeSnakeCaseTokenStream::payload_element_try_from_payload_element_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
+        
+        generate_payload_element_try_from_payload_element_with_serialize_deserialize_snake_case_token_stream(
             &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_upper_camel_case_stringified,
             &proc_macro_name_upper_camel_case_ident_stringified
         );
