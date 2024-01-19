@@ -2508,12 +2508,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TryOperationResponseVariantsUpperCamelCaseTokenStream::try_operation_response_variants_upper_camel_case_token_stream(&operation);
         let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TryOperationUpperCamelCaseString::try_operation_upper_camel_case_string(&operation);
         let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationUpperCamelCaseTokenStream::try_operation_upper_camel_case_token_stream(&operation);
-        //todo make trait in naming conventions instead
-        let operation_payload_element_upper_camel_case_token_stream = generate_operation_payload_element_upper_camel_case_token_stream(
-            &operation_name_upper_camel_case_stringified,
-            &payload_element_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
+        let operation_payload_element_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadElementUpperCamelCaseTokenStream::payload_element_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
             &operation_name_snake_case_stringified,
@@ -4977,12 +4972,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TryOperationResponseVariantsUpperCamelCaseTokenStream::try_operation_response_variants_upper_camel_case_token_stream(&operation);
         let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TryOperationUpperCamelCaseString::try_operation_upper_camel_case_string(&operation);
         let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationUpperCamelCaseTokenStream::try_operation_upper_camel_case_token_stream(&operation);
-        //todo generate trait
-        let operation_payload_element_upper_camel_case_token_stream = generate_operation_payload_element_upper_camel_case_token_stream(
-            &operation_name_upper_camel_case_stringified,
-            &payload_element_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
+        let operation_payload_element_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadElementUpperCamelCaseTokenStream::payload_element_upper_camel_case_token_stream(&operation);
         //todo generate trait
         let operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_upper_camel_case_stringified = generate_operation_payload_element_try_from_payload_element_with_serialize_deserialize_upper_camel_case_stringified(
             &operation_name_upper_camel_case_stringified,
@@ -7744,16 +7734,6 @@ fn generate_with_error_named_postfix_stringified(
     error_named_upper_camel_case_stringified: &str,
 ) -> std::string::String {
     format!("{value}{error_named_upper_camel_case_stringified}")
-}
-
-fn generate_operation_payload_element_upper_camel_case_token_stream(
-    operation_name_upper_camel_case_stringified: &str,
-    payload_element_upper_camel_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    let value = format!("{operation_name_upper_camel_case_stringified}{payload_element_upper_camel_case_stringified}");
-    value.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {value} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))   
 }
 
 fn generate_operation_payload_element_with_serialize_deserialize_upper_camel_case_token_stream(
