@@ -6491,10 +6491,14 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_snake_case_token_stream = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeSnakeCaseTokenStream::payload_try_from_payload_with_serialize_deserialize_snake_case_token_stream(&operation);
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationSnakeCaseTokenStream::try_operation_snake_case_token_stream(&operation);
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TryOperationResponseVariantsUpperCamelCaseTokenStream::try_operation_response_variants_upper_camel_case_token_stream(&operation);
-        let try_operation_upper_camel_case_stringified = generate_try_operation_upper_camel_case_stringified(
-            &try_upper_camel_case_stringified,
-            &operation_name_upper_camel_case_stringified,
-        );
+        let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TryOperationUpperCamelCaseString::try_operation_upper_camel_case_string(&operation);
+        
+        
+        
+        // generate_try_operation_upper_camel_case_stringified(
+        //     &try_upper_camel_case_stringified,
+        //     &operation_name_upper_camel_case_stringified,
+        // );
         let try_operation_upper_camel_case_token_stream = generate_try_operation_upper_camel_case_token_stream(
             &try_operation_upper_camel_case_stringified,
             &proc_macro_name_upper_camel_case_ident_stringified
