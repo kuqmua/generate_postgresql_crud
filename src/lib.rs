@@ -7360,58 +7360,20 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         delete_one_token_stream,
         delete_one_http_request_test_token_stream
      ) = {
-        let operation_name_upper_camel_case_stringified = format!("{delete_upper_camel_case_stringified}{one_upper_camel_case_stringified}");
-        let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation_name_upper_camel_case_stringified.to_string());
-        let operation_http_method = OperationHttpMethod::Delete;
-        let operation_parameters_upper_camel_case_token_stream = generate_operation_parameters_upper_camel_case_token_stream(
-            &operation_name_upper_camel_case_stringified,
-            parameters_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
-        let operation_payload_upper_camel_case_token_stream = generate_operation_payload_upper_camel_case_token_stream(
-            &operation_name_upper_camel_case_stringified,
-            payload_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
-        let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = generate_operation_payload_with_serialize_deserialize_upper_camel_case_token_stream(//todo rename to generate_operation_payload...
-            &operation_name_upper_camel_case_stringified,
-            payload_upper_camel_case_stringified,
-            with_serialize_deserialize_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
-        let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = generate_operation_payload_try_from_payload_with_serialize_deserialize_stringified(
-            &operation_name_upper_camel_case_stringified,
-            payload_upper_camel_case_stringified,
-            &try_from_upper_camel_case_stringified,
-            with_serialize_deserialize_upper_camel_case_stringified,
-        );
-        let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_upper_camel_case_token_stream(
-            &operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
-        let operation_payload_try_from_operation_payload_with_serialize_deserialize_snake_case_token_stream = generate_payload_try_from_payload_with_serialize_deserialize_snake_case_token_stream(
-            &operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
-        let try_operation_snake_case_token_stream = generate_try_operation_snake_case_token_stream(
-            &try_snake_case_stringified,
-            &operation_name_snake_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified,
-        );
-        let try_operation_response_variants_token_stream = generate_try_operation_response_variants_token_stream(
-            &try_upper_camel_case_stringified,
-            &operation_name_upper_camel_case_stringified,
-            &response_variants_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
-        let try_operation_upper_camel_case_stringified = generate_try_operation_upper_camel_case_stringified(
-            &try_upper_camel_case_stringified,
-            &operation_name_upper_camel_case_stringified,
-        );
-        let try_operation_upper_camel_case_token_stream = generate_try_operation_upper_camel_case_token_stream(
-            &try_operation_upper_camel_case_stringified,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
+        let operation = Operation::DeleteOne;
+        let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCaseString::to_upper_camel_case_string(&operation);
+        let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation);
+        let operation_http_method = operation.http_method();
+        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::ParametersUpperCamelCaseTokenStream::parameters_upper_camel_case_token_stream(&operation);
+        let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadUpperCamelCaseTokenStream::payload_upper_camel_case_token_stream(&operation);
+        let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream::payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
+        let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeString::payload_try_from_payload_with_serialize_deserialize_string(&operation);
+        let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeTokenStream::payload_try_from_payload_with_serialize_deserialize_token_stream(&operation);
+        let operation_payload_try_from_operation_payload_with_serialize_deserialize_snake_case_token_stream = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeSnakeCaseTokenStream::payload_try_from_payload_with_serialize_deserialize_snake_case_token_stream(&operation);
+        let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationSnakeCaseTokenStream::try_operation_snake_case_token_stream(&operation);
+        let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TryOperationResponseVariantsUpperCamelCaseTokenStream::try_operation_response_variants_upper_camel_case_token_stream(&operation);
+        let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TryOperationUpperCamelCaseString::try_operation_upper_camel_case_string(&operation);
+        let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationUpperCamelCaseTokenStream::try_operation_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
             &operation_name_snake_case_stringified,
