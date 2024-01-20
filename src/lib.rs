@@ -500,7 +500,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             })
             .collect::<std::vec::Vec<proc_macro2::TokenStream>>()
     };
-    let code_occurence_upper_camel_case_stringified = format!("Code{}", proc_macro_helpers::error_occurence::hardcode::OCCURENCE_UPPER_CAMEL_CASE);
+    let code_occurence_upper_camel_case_stringified = format!("Code{}", proc_macro_helpers::naming_conventions::OCCURENCE_UPPER_CAMEL_CASE);
     let code_occurence_upper_camel_case_token_stream = code_occurence_upper_camel_case_stringified.parse::<proc_macro2::TokenStream>()
         .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {code_occurence_upper_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
     let code_occurence_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&code_occurence_upper_camel_case_stringified);
@@ -2491,7 +2491,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCaseString::to_upper_camel_case_string(&operation);
         let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation);
         let operation_http_method = operation.http_method();
-        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::ParametersUpperCamelCaseTokenStream::parameters_upper_camel_case_token_stream(&operation);
+        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadUpperCamelCaseTokenStream::payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream::payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeString::payload_try_from_payload_with_serialize_deserialize_string(&operation);
@@ -3131,7 +3131,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCaseString::to_upper_camel_case_string(&operation);
         let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation);
         let operation_http_method = operation.http_method();
-        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::ParametersUpperCamelCaseTokenStream::parameters_upper_camel_case_token_stream(&operation);
+        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadUpperCamelCaseTokenStream::payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream::payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeString::payload_try_from_payload_with_serialize_deserialize_string(&operation);
@@ -3628,7 +3628,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCaseString::to_upper_camel_case_string(&operation);
         let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation);
         let operation_http_method = operation.http_method();
-        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::ParametersUpperCamelCaseTokenStream::parameters_upper_camel_case_token_stream(&operation);
+        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadUpperCamelCaseTokenStream::payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream::payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeString::payload_try_from_payload_with_serialize_deserialize_string(&operation);
@@ -4490,7 +4490,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCaseString::to_upper_camel_case_string(&operation);
         let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation);
         let operation_http_method = operation.http_method();
-        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::ParametersUpperCamelCaseTokenStream::parameters_upper_camel_case_token_stream(&operation);
+        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadUpperCamelCaseTokenStream::payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream::payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeString::payload_try_from_payload_with_serialize_deserialize_string(&operation);
@@ -4953,7 +4953,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCaseString::to_upper_camel_case_string(&operation);
         let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation);
         let operation_http_method = operation.http_method();
-        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::ParametersUpperCamelCaseTokenStream::parameters_upper_camel_case_token_stream(&operation);
+        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadUpperCamelCaseTokenStream::payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream::payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationSnakeCaseTokenStream::try_operation_snake_case_token_stream(&operation);
@@ -5660,7 +5660,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCaseString::to_upper_camel_case_string(&operation);
         let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation);
         let operation_http_method = operation.http_method();
-        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::ParametersUpperCamelCaseTokenStream::parameters_upper_camel_case_token_stream(&operation);
+        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadUpperCamelCaseTokenStream::payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream::payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeString::payload_try_from_payload_with_serialize_deserialize_string(&operation);
@@ -6243,7 +6243,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCaseString::to_upper_camel_case_string(&operation);
         let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation);
         let operation_http_method = operation.http_method();
-        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::ParametersUpperCamelCaseTokenStream::parameters_upper_camel_case_token_stream(&operation);
+        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadUpperCamelCaseTokenStream::payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream::payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeString::payload_try_from_payload_with_serialize_deserialize_string(&operation);
@@ -7124,7 +7124,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_name_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::ToUpperCamelCaseString::to_upper_camel_case_string(&operation);
         let operation_name_snake_case_stringified = proc_macro_helpers::naming_conventions::ToSnakeCaseString::to_snake_case_string(&operation);
         let operation_http_method = operation.http_method();
-        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::ParametersUpperCamelCaseTokenStream::parameters_upper_camel_case_token_stream(&operation);
+        let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadUpperCamelCaseTokenStream::payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::PayloadWithSerializeDeserializeUpperCamelCaseTokenStream::payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::PayloadTryFromPayloadWithSerializeDeserializeString::payload_try_from_payload_with_serialize_deserialize_string(&operation);
