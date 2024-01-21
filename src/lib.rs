@@ -7480,18 +7480,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-fn generate_try_operation_with_serialize_deserialize_token_stream(
-    try_operation_upper_camel_case_stringified: &str,
-    with_serialize_deserialize_upper_camel_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    let try_operation_with_serialize_deserialize_stringified =
-        format!("{try_operation_upper_camel_case_stringified}{with_serialize_deserialize_upper_camel_case_stringified}");
-    try_operation_with_serialize_deserialize_stringified
-    .parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_with_serialize_deserialize_stringified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-}
-
 fn generate_try_operation_snake_case_stringified(
     try_snake_case_stringified: &str,
     operation_name_snake_case_stringified: &str,
