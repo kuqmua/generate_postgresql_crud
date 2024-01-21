@@ -25,19 +25,7 @@ pub fn type_variants_from_request_response_generator(
     let try_operation_response_variants_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(operation);
     let try_operation_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationWithSerializeDeserializeUpperCamelCaseTokenStream::try_operation_with_serialize_deserialize_upper_camel_case_token_stream(operation);
     let try_operation_response_variants_desirable_attribute_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsDesirableAttributeTokenStream::try_self_response_variants_desirable_attribute_token_stream(operation, &desirable_attribute);
-    
-    // crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
-    //     &try_upper_camel_case_stringified,
-    //     &operation_name_upper_camel_case_stringified,
-    //     &response_variants_upper_camel_case_stringified,
-    //     &desirable_attribute,
-    //     &proc_macro_name_upper_camel_case_ident_stringified
-    // );
-    let try_operation_request_error_token_stream = crate::generate_try_operation_request_error_token_stream(
-        &try_operation_upper_camel_case_stringified,
-        &request_error_upper_camel_case_stringified,
-        &proc_macro_name_upper_camel_case_ident_stringified
-    );
+    let try_operation_request_error_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(operation);
     let try_operation_with_serialize_deserialize_token_stream = crate::generate_try_operation_with_serialize_deserialize_token_stream(
         &try_operation_upper_camel_case_stringified,
         &with_serialize_deserialize_upper_camel_case_stringified,
