@@ -26,10 +26,7 @@ pub fn type_variants_from_request_response_generator(
     operation: &crate::Operation,
 ) -> proc_macro2::TokenStream {
     let try_operation_response_variants_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseStringified::try_self_response_variants_upper_camel_case_stringified(operation);
-    let try_operation_response_variants_upper_camel_case_token_stream = crate::generate_try_operation_response_variants_upper_camel_case_token_stream(
-        &try_operation_response_variants_upper_camel_case_stringified,
-        &proc_macro_name_upper_camel_case_ident_stringified
-    );
+    let try_operation_response_variants_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(operation);
     let try_operation_with_serialize_deserialize_upper_camel_case_token_stream = crate::generate_try_operation_with_serialize_deserialize_upper_camel_case_token_stream(
         &try_upper_camel_case_stringified,
         &operation_name_upper_camel_case_stringified,
