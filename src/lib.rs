@@ -2766,6 +2766,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_upper_camel_case_stringified,
                 &try_operation_upper_camel_case_stringified,
                 &request_error_upper_camel_case_stringified,
+                &operation,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -3306,6 +3307,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_upper_camel_case_stringified,
                 &try_operation_upper_camel_case_stringified,
                 &request_error_upper_camel_case_stringified,
+                &operation,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -3850,6 +3852,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_upper_camel_case_stringified,
                 &try_operation_upper_camel_case_stringified,
                 &request_error_upper_camel_case_stringified,
+                &operation,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -4621,6 +4624,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_upper_camel_case_stringified,
                 &try_operation_upper_camel_case_stringified,
                 &request_error_upper_camel_case_stringified,
+                &operation,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -5187,6 +5191,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_upper_camel_case_stringified,
                 &try_operation_upper_camel_case_stringified,
                 &request_error_upper_camel_case_stringified,
+                &operation,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -5806,6 +5811,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_upper_camel_case_stringified,
                 &try_operation_upper_camel_case_stringified,
                 &request_error_upper_camel_case_stringified,
+                &operation,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -6386,6 +6392,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_upper_camel_case_stringified,
                 &try_operation_upper_camel_case_stringified,
                 &request_error_upper_camel_case_stringified,
+                &operation,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -7189,6 +7196,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &with_serialize_deserialize_upper_camel_case_stringified,
                 &try_operation_upper_camel_case_stringified,
                 &request_error_upper_camel_case_stringified,
+                &operation,
             )
         };
         // println!("{try_operation_error_with_middleware_error_variants_token_stream}");
@@ -7532,14 +7540,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // );
     // }
     gen.into()
-}
-
-fn generate_try_operation_response_variants_upper_camel_case_stringified(
-    try_upper_camel_case_stringified: &str,
-    operation_name_upper_camel_case_stringified: &str,
-    response_variants_upper_camel_case_stringified: &str
-) -> std::string::String {
-    format!("{try_upper_camel_case_stringified}{operation_name_upper_camel_case_stringified}{response_variants_upper_camel_case_stringified}")
 }
 
 fn generate_try_operation_response_variants_upper_camel_case_token_stream(
