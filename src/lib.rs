@@ -2779,12 +2779,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         ) = {
             let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfErrorNamedUpperCamelCaseTokenStream::try_self_error_named_upper_camel_case_token_stream(&operation);
             let try_operation_error_named_token_stream = {
-                let try_operation_request_error_upper_camel_case_token_stream = generate_try_operation_request_error_upper_camel_case_token_stream(
-                    &try_upper_camel_case_stringified,
-                    &operation_name_upper_camel_case_stringified,
-                    &request_error_upper_camel_case_stringified,
-                    &proc_macro_name_upper_camel_case_ident_stringified
-                );
+                let try_operation_request_error_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(&operation);
                 quote::quote!{
                     #derive_debug_thiserror_error_occurence_token_stream
                     pub enum #try_operation_error_named_upper_camel_case_token_stream {
@@ -3328,12 +3323,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
          ) = {
             let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfErrorNamedUpperCamelCaseTokenStream::try_self_error_named_upper_camel_case_token_stream(&operation);
             let try_operation_error_named_token_stream = {
-                let try_operation_request_error_upper_camel_case_token_stream = generate_try_operation_request_error_upper_camel_case_token_stream(
-                    &try_upper_camel_case_stringified,
-                    &operation_name_upper_camel_case_stringified,
-                    &request_error_upper_camel_case_stringified,
-                    &proc_macro_name_upper_camel_case_ident_stringified
-                );
+                let try_operation_request_error_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(&operation);
                 quote::quote!{
                     #derive_debug_thiserror_error_occurence_token_stream
                     pub enum #try_operation_error_named_upper_camel_case_token_stream {
@@ -3881,12 +3871,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         ) = {
             let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfErrorNamedUpperCamelCaseTokenStream::try_self_error_named_upper_camel_case_token_stream(&operation);
             let try_operation_error_named_token_stream = {
-                let try_operation_request_error_upper_camel_case_token_stream = generate_try_operation_request_error_upper_camel_case_token_stream(
-                    &try_upper_camel_case_stringified,
-                    &operation_name_upper_camel_case_stringified,
-                    &request_error_upper_camel_case_stringified,
-                    &proc_macro_name_upper_camel_case_ident_stringified
-                );
+                let try_operation_request_error_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(&operation);
                 quote::quote!{
                     #derive_debug_thiserror_error_occurence_token_stream
                     pub enum #try_operation_error_named_upper_camel_case_token_stream {
@@ -4662,12 +4647,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
          ) = {
             let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfErrorNamedUpperCamelCaseTokenStream::try_self_error_named_upper_camel_case_token_stream(&operation);
             let try_operation_error_named_token_stream = {
-                let try_operation_request_error_upper_camel_case_token_stream = generate_try_operation_request_error_upper_camel_case_token_stream(
-                    &try_upper_camel_case_stringified,
-                    &operation_name_upper_camel_case_stringified,
-                    &request_error_upper_camel_case_stringified,
-                    &proc_macro_name_upper_camel_case_ident_stringified
-                );
+                let try_operation_request_error_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(&operation);
                 quote::quote!{
                     #derive_debug_thiserror_error_occurence_token_stream
                     pub enum #try_operation_error_named_upper_camel_case_token_stream {
@@ -5232,12 +5212,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
          ) = {
             let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfErrorNamedUpperCamelCaseTokenStream::try_self_error_named_upper_camel_case_token_stream(&operation);
             let try_operation_error_named_token_stream = {
-                let try_operation_request_error_upper_camel_case_token_stream = generate_try_operation_request_error_upper_camel_case_token_stream(
-                    &try_upper_camel_case_stringified,
-                    &operation_name_upper_camel_case_stringified,
-                    &request_error_upper_camel_case_stringified,
-                    &proc_macro_name_upper_camel_case_ident_stringified
-                );
+                let try_operation_request_error_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(&operation);
                 quote::quote!{
                     #derive_debug_thiserror_error_occurence_token_stream
                     pub enum #try_operation_error_named_upper_camel_case_token_stream {
@@ -5860,12 +5835,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
          ) = {
             let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfErrorNamedUpperCamelCaseTokenStream::try_self_error_named_upper_camel_case_token_stream(&operation);
             let try_operation_error_named_token_stream = {
-                let try_operation_request_error_upper_camel_case_token_stream = generate_try_operation_request_error_upper_camel_case_token_stream(
-                    &try_upper_camel_case_stringified,
-                    &operation_name_upper_camel_case_stringified,
-                    &request_error_upper_camel_case_stringified,
-                    &proc_macro_name_upper_camel_case_ident_stringified
-                );
+                let try_operation_request_error_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(&operation);
                 quote::quote!{
                     #derive_debug_thiserror_error_occurence_token_stream
                     pub enum #try_operation_error_named_upper_camel_case_token_stream {
@@ -6449,12 +6419,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
          ) = {
             let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfErrorNamedUpperCamelCaseTokenStream::try_self_error_named_upper_camel_case_token_stream(&operation);
             let try_operation_error_named_token_stream = {
-                let try_operation_request_error_upper_camel_case_token_stream = generate_try_operation_request_error_upper_camel_case_token_stream(
-                    &try_upper_camel_case_stringified,
-                    &operation_name_upper_camel_case_stringified,
-                    &request_error_upper_camel_case_stringified,
-                    &proc_macro_name_upper_camel_case_ident_stringified
-                );
+                let try_operation_request_error_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(&operation);
                 quote::quote!{
                     #derive_debug_thiserror_error_occurence_token_stream
                     pub enum #try_operation_error_named_upper_camel_case_token_stream {
@@ -7261,12 +7226,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
          ) = {
             let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfErrorNamedUpperCamelCaseTokenStream::try_self_error_named_upper_camel_case_token_stream(&operation);
             let try_operation_error_named_token_stream = {
-                let try_operation_request_error_upper_camel_case_token_stream = generate_try_operation_request_error_upper_camel_case_token_stream(
-                    &try_upper_camel_case_stringified,
-                    &operation_name_upper_camel_case_stringified,
-                    &request_error_upper_camel_case_stringified,
-                    &proc_macro_name_upper_camel_case_ident_stringified
-                );
+                let try_operation_request_error_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(&operation);
                 quote::quote!{
                     #derive_debug_thiserror_error_occurence_token_stream
                     pub enum #try_operation_error_named_upper_camel_case_token_stream {
@@ -7600,17 +7560,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // );
     // }
     gen.into()
-}
-
-fn generate_try_operation_request_error_upper_camel_case_token_stream(
-    try_upper_camel_case_stringified: &str,
-    operation_name_upper_camel_case_stringified: &str,
-    request_error_upper_camel_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    let try_operation_request_error_upper_camel_case_stringified = format!("{try_upper_camel_case_stringified}{operation_name_upper_camel_case_stringified}{request_error_upper_camel_case_stringified}");
-    try_operation_request_error_upper_camel_case_stringified.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_request_error_upper_camel_case_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
 fn generate_payload_try_from_payload_with_serialize_deserialize_error_named_upper_camel_case_token_stream(
