@@ -2497,7 +2497,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeStringified::self_payload_try_from_self_payload_with_serialize_deserialize_stringified(&operation);
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(&operation);
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(&operation);
-        let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseStringified::try_self_upper_camel_case_stringified(&operation);
         let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseTokenStream::try_self_upper_camel_case_token_stream(&operation);
         let operation_payload_element_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadElementUpperCamelCaseTokenStream::self_payload_element_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
@@ -2759,9 +2758,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_upper_camel_case_ident_stringified,
                 &code_occurence_upper_camel_case_stringified,
                 &code_occurence_snake_case_stringified,
-                &with_serialize_deserialize_upper_camel_case_stringified,
-                &try_operation_upper_camel_case_stringified,
-                &request_error_upper_camel_case_stringified,
                 &operation,
             )
         };
@@ -2847,8 +2843,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &try_snake_case_stringified,
-                    &operation_name_snake_case_stringified,
                     &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
@@ -3114,7 +3108,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_snake_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeSnakeCaseTokenStream::self_payload_try_from_self_payload_with_serialize_deserialize_snake_case_token_stream(&operation);
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(&operation);
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(&operation);
-        let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseStringified::try_self_upper_camel_case_stringified(&operation);
         let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseTokenStream::try_self_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
@@ -3293,9 +3286,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_upper_camel_case_ident_stringified,
                 &code_occurence_upper_camel_case_stringified,
                 &code_occurence_snake_case_stringified,
-                &with_serialize_deserialize_upper_camel_case_stringified,
-                &try_operation_upper_camel_case_stringified,
-                &request_error_upper_camel_case_stringified,
                 &operation,
             )
         };
@@ -3386,8 +3376,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &try_snake_case_stringified,
-                    &operation_name_snake_case_stringified,
                     &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
@@ -3592,7 +3580,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_snake_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeSnakeCaseTokenStream::self_payload_try_from_self_payload_with_serialize_deserialize_snake_case_token_stream(&operation);
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(&operation);
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(&operation);
-        let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseStringified::try_self_upper_camel_case_stringified(&operation);
         let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseTokenStream::try_self_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
@@ -3832,9 +3819,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_upper_camel_case_ident_stringified,
                 &code_occurence_upper_camel_case_stringified,
                 &code_occurence_snake_case_stringified,
-                &with_serialize_deserialize_upper_camel_case_stringified,
-                &try_operation_upper_camel_case_stringified,
-                &request_error_upper_camel_case_stringified,
                 &operation,
             )
         };
@@ -3933,8 +3917,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &try_snake_case_stringified,
-                    &operation_name_snake_case_stringified,
                     &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
@@ -4435,7 +4417,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_snake_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeSnakeCaseTokenStream::self_payload_try_from_self_payload_with_serialize_deserialize_snake_case_token_stream(&operation);
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(&operation);
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(&operation);
-        let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseStringified::try_self_upper_camel_case_stringified(&operation);
         let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseTokenStream::try_self_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
@@ -4598,9 +4579,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_upper_camel_case_ident_stringified,
                 &code_occurence_upper_camel_case_stringified,
                 &code_occurence_snake_case_stringified,
-                &with_serialize_deserialize_upper_camel_case_stringified,
-                &try_operation_upper_camel_case_stringified,
-                &request_error_upper_camel_case_stringified,
                 &operation,
             )
         };
@@ -4676,8 +4654,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &try_snake_case_stringified,
-                    &operation_name_snake_case_stringified,
                     &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
@@ -4701,8 +4677,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &try_snake_case_stringified,
-                    &operation_name_snake_case_stringified,
                     &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
@@ -4878,7 +4852,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadWithSerializeDeserializeUpperCamelCaseTokenStream::self_payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(&operation);
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(&operation);
-        let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseStringified::try_self_upper_camel_case_stringified(&operation);
         let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseTokenStream::try_self_upper_camel_case_token_stream(&operation);
         let operation_payload_element_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadElementUpperCamelCaseTokenStream::self_payload_element_upper_camel_case_token_stream(&operation);
         let operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::SelfPayloadElementTryFromSelfPayloadElementWithSerializeDeserializeUpperCamelCaseStringified::self_payload_element_try_from_self_payload_element_with_serialize_deserialize_upper_camel_case_stringified(&operation);
@@ -5161,9 +5134,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_upper_camel_case_ident_stringified,
                 &code_occurence_upper_camel_case_stringified,
                 &code_occurence_snake_case_stringified,
-                &with_serialize_deserialize_upper_camel_case_stringified,
-                &try_operation_upper_camel_case_stringified,
-                &request_error_upper_camel_case_stringified,
                 &operation,
             )
         };
@@ -5249,8 +5219,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &try_snake_case_stringified,
-                    &operation_name_snake_case_stringified,
                     &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
@@ -5567,7 +5535,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_snake_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeSnakeCaseTokenStream::self_payload_try_from_self_payload_with_serialize_deserialize_snake_case_token_stream(&operation);
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(&operation);
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(&operation);
-        let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseStringified::try_self_upper_camel_case_stringified(&operation);
         let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseTokenStream::try_self_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
@@ -5774,9 +5741,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_upper_camel_case_ident_stringified,
                 &code_occurence_upper_camel_case_stringified,
                 &code_occurence_snake_case_stringified,
-                &with_serialize_deserialize_upper_camel_case_stringified,
-                &try_operation_upper_camel_case_stringified,
-                &request_error_upper_camel_case_stringified,
                 &operation,
             )
         };
@@ -5868,8 +5832,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &try_snake_case_stringified,
-                    &operation_name_snake_case_stringified,
                     &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
@@ -6131,7 +6093,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_snake_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeSnakeCaseTokenStream::self_payload_try_from_self_payload_with_serialize_deserialize_snake_case_token_stream(&operation);
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(&operation);
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(&operation);
-        let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseStringified::try_self_upper_camel_case_stringified(&operation);
         let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseTokenStream::try_self_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
@@ -6349,9 +6310,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_upper_camel_case_ident_stringified,
                 &code_occurence_upper_camel_case_stringified,
                 &code_occurence_snake_case_stringified,
-                &with_serialize_deserialize_upper_camel_case_stringified,
-                &try_operation_upper_camel_case_stringified,
-                &request_error_upper_camel_case_stringified,
                 &operation,
             )
         };
@@ -6459,8 +6417,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &try_snake_case_stringified,
-                    &operation_name_snake_case_stringified,
                     &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
@@ -6992,7 +6948,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation_payload_try_from_operation_payload_with_serialize_deserialize_snake_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeSnakeCaseTokenStream::self_payload_try_from_self_payload_with_serialize_deserialize_snake_case_token_stream(&operation);
         let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(&operation);
         let try_operation_response_variants_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(&operation);
-        let try_operation_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseStringified::try_self_upper_camel_case_stringified(&operation);
         let try_operation_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfUpperCamelCaseTokenStream::try_self_upper_camel_case_token_stream(&operation);
         let additional_http_status_codes_error_variants = crate::extract_syn_variants_from_proc_macro_attribute::extract_syn_variants_from_method_proc_macro_attribute(
             &ast,
@@ -7146,9 +7101,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &proc_macro_name_upper_camel_case_ident_stringified,
                 &code_occurence_upper_camel_case_stringified,
                 &code_occurence_snake_case_stringified,
-                &with_serialize_deserialize_upper_camel_case_stringified,
-                &try_operation_upper_camel_case_stringified,
-                &request_error_upper_camel_case_stringified,
                 &operation,
             )
         };
@@ -7226,8 +7178,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &try_snake_case_stringified,
-                    &operation_name_snake_case_stringified,
                     &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
@@ -7494,29 +7444,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-// fn generate_try_operation_snake_case_stringified(
-//     try_snake_case_stringified: &str,
-//     operation_name_snake_case_stringified: &str,
-// ) -> std::string::String {
-//     format!("{try_snake_case_stringified}_{operation_name_snake_case_stringified}")
-// }
-
-// fn generate_try_operation_snake_case_token_stream(
-//     try_snake_case_stringified: &str,
-//     operation_name_snake_case_stringified: &str,
-//     proc_macro_name_upper_camel_case_ident_stringified: &str,
-//     operation: &Operation,
-// ) -> proc_macro2::TokenStream {
-//     let try_operation_snake_case_stringified = 
-    
-//     // generate_try_operation_snake_case_stringified(
-//     //     &try_snake_case_stringified,
-//     //     &operation_name_snake_case_stringified,
-//     // );
-//     try_operation_snake_case_stringified.parse::<proc_macro2::TokenStream>()
-//     .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_snake_case_stringified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-// }
-
 enum TestOperationPrintlnInfo {
     Start,
     End
@@ -7531,39 +7458,30 @@ impl std::fmt::Display for TestOperationPrintlnInfo {
     }
 }
 
-fn generate_try_operation_snake_case_println_token_stream(
-    test_operation_print_in_info: TestOperationPrintlnInfo,
-    try_snake_case_stringified: &str,
-    operation_name_snake_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str,
-    operation: &Operation,
-) -> proc_macro2::TokenStream {
-    let try_operation_snake_case_stringified = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseStringified::try_self_snake_case_stringified(operation);
-    let slashes = "-------";
-    let try_operation_snake_case_println_content_stringified = format!("\"{slashes}{try_operation_snake_case_stringified} {test_operation_print_in_info}{slashes}\"");
-    let try_operation_snake_case_println_content_token_stream = try_operation_snake_case_println_content_stringified.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_snake_case_println_content_stringified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-    quote::quote!{println!(#try_operation_snake_case_println_content_token_stream);}
-}
-
 fn generate_wrapped_into_start_end_println_operation_test_content_token_stream(
     test_content_token_stream: &proc_macro2::TokenStream,
-    try_snake_case_stringified: &str,
-    operation_name_snake_case_stringified: &str,
     proc_macro_name_upper_camel_case_ident_stringified: &str,
     operation: &Operation
 ) -> proc_macro2::TokenStream {
+    fn generate_try_operation_snake_case_println_token_stream(
+        test_operation_print_in_info: TestOperationPrintlnInfo,
+        proc_macro_name_upper_camel_case_ident_stringified: &str,
+        operation: &Operation,
+    ) -> proc_macro2::TokenStream {
+        let try_operation_snake_case_stringified = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseStringified::try_self_snake_case_stringified(operation);
+        let slashes = "-------";
+        let try_operation_snake_case_println_content_stringified = format!("\"{slashes}{try_operation_snake_case_stringified} {test_operation_print_in_info}{slashes}\"");
+        let try_operation_snake_case_println_content_token_stream = try_operation_snake_case_println_content_stringified.parse::<proc_macro2::TokenStream>()
+        .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_snake_case_println_content_stringified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
+        quote::quote!{println!(#try_operation_snake_case_println_content_token_stream);}
+    }
     let start_println_token_stream = generate_try_operation_snake_case_println_token_stream(
         TestOperationPrintlnInfo::Start,
-        &try_snake_case_stringified,
-        &operation_name_snake_case_stringified,
         &proc_macro_name_upper_camel_case_ident_stringified,
         &operation,
     );
     let end_println_token_stream = generate_try_operation_snake_case_println_token_stream(
         TestOperationPrintlnInfo::End,
-        &try_snake_case_stringified,
-        &operation_name_snake_case_stringified,
         &proc_macro_name_upper_camel_case_ident_stringified,
         &operation,
     );

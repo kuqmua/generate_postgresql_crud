@@ -16,9 +16,6 @@ pub fn type_variants_from_request_response_generator(
     proc_macro_name_upper_camel_case_ident_stringified: &str,
     code_occurence_upper_camel_case_stringified: &str,
     code_occurence_snake_case_stringified: &str,
-    with_serialize_deserialize_upper_camel_case_stringified: &str,
-    try_operation_upper_camel_case_stringified: &str,
-    request_error_upper_camel_case_stringified: &str,
     operation: &crate::Operation,
 ) -> proc_macro2::TokenStream {
     let try_operation_response_variants_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseStringified::try_self_response_variants_upper_camel_case_stringified(operation);
