@@ -7612,13 +7612,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-fn generate_with_error_named_postfix_stringified(
-    value: &str,
-    error_named_upper_camel_case_stringified: &str,
-) -> std::string::String {
-    format!("{value}{error_named_upper_camel_case_stringified}")
-}
-
 fn generate_operation_payload_element_with_serialize_deserialize_upper_camel_case_token_stream(
     operation_name_upper_camel_case_stringified: &str,
     payload_element_upper_camel_case_stringified: &str,
@@ -7829,10 +7822,7 @@ fn generate_operation_handle_try_from_operation_handle_with_serialize_deserializ
     handle.push_value(
         syn::PathSegment {
             ident: proc_macro2::Ident::new(
-                &generate_with_error_named_postfix_stringified(
-                    &operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case_stringified,
-                    &error_named_upper_camel_case_stringified,
-                ),
+                &format!("{operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case_stringified}{error_named_upper_camel_case_stringified}"),
                 proc_macro2::Span::call_site()
             ),
             arguments: syn::PathArguments::None,
