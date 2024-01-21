@@ -3044,6 +3044,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ),
                 }),
                 &operation_http_method,
+                &operation,
             );
             quote::quote!{
                 #swagger_open_api_token_stream
@@ -3519,6 +3520,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ),
                 }),
                 &operation_http_method,
+                &operation,
             );
             quote::quote!{
                 #swagger_open_api_token_stream
@@ -4366,6 +4368,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ),
                 }),
                 &operation_http_method,
+                &operation,
             );
             quote::quote!{
                 #swagger_open_api_token_stream
@@ -4817,6 +4820,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ),
                 }),
                 &operation_http_method,
+                &operation,
             );
             quote::quote!{
                 #swagger_open_api_token_stream
@@ -5504,6 +5508,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ),
                 }),
                 &operation_http_method,
+                &operation,
             );
             quote::quote!{
                 #swagger_open_api_token_stream
@@ -6081,6 +6086,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ),
                 }),
                 &operation_http_method,
+                &operation,
             );
             quote::quote!{
                 #swagger_open_api_token_stream
@@ -6949,6 +6955,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ),
                 }),
                 &operation_http_method,
+                &operation,
             );
             quote::quote!{
                 #swagger_open_api_token_stream
@@ -7384,6 +7391,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     ),
                 }),
                 &operation_http_method,
+                &operation,
             );
             quote::quote!{
                 #swagger_open_api_token_stream
@@ -7541,23 +7549,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // );
     // }
     gen.into()
-}
-
-fn generate_try_operation_response_variants_desirable_attribute_token_stream(
-    try_upper_camel_case_stringified: &str,
-    operation_name_upper_camel_case_stringified: &str,
-    response_variants_upper_camel_case_stringified: &str,
-    desirable_attribute: &proc_macro_helpers::attribute::Attribute,
-    proc_macro_name_upper_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    let try_operation_response_variants_desirable_attribute_stringified =
-        format!("{try_upper_camel_case_stringified}{operation_name_upper_camel_case_stringified}{response_variants_upper_camel_case_stringified}{desirable_attribute}");
-    //todo add ident prefix
-    // let try_operation_response_variants_desirable_attribute_stringified =
-    //     format!("{ident}{try_upper_camel_case_stringified}{operation_name_upper_camel_case_stringified}{response_variants_upper_camel_case_stringified}{desirable_attribute}");
-    try_operation_response_variants_desirable_attribute_stringified
-    .parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_response_variants_desirable_attribute_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
 fn generate_try_operation_request_error_token_stream(
@@ -8967,6 +8958,7 @@ fn generate_swagger_open_api_token_stream(
     table_name_quotes_token_stream: &proc_macro2::TokenStream,
     request_body_option_token_stream: std::option::Option<proc_macro2::TokenStream>,
     operation_http_method: &OperationHttpMethod,
+    operation: &Operation,
 ) -> proc_macro2::TokenStream {
     let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
         &table_name_stringified,
@@ -8976,13 +8968,7 @@ fn generate_swagger_open_api_token_stream(
     let responses_token_stream = unique_attributes.iter().map(|element|{
         let status_token_stream = element.to_status_code_token_stream();
         let description_token_stream = element.to_status_code_description_token_stream();
-        let body_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
-            &try_upper_camel_case_stringified,
-            &operation_name_upper_camel_case_stringified,
-            &response_variants_upper_camel_case_stringified,
-            &element,
-            &proc_macro_name_upper_camel_case_ident_stringified
-        );
+        let body_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsDesirableAttributeTokenStream::try_self_response_variants_desirable_attribute_token_stream(operation, &element);
         quote::quote!{
             (status = #status_token_stream, description = #description_token_stream, body = #body_token_stream, content_type = #application_json_quotes_token_stream)
         }
