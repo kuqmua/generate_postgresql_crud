@@ -25,7 +25,7 @@ pub fn type_variants_from_request_response_generator(
     let try_operation_response_variants_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(operation);
     let try_operation_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationWithSerializeDeserializeUpperCamelCaseTokenStream::try_operation_with_serialize_deserialize_upper_camel_case_token_stream(operation);
     let try_operation_response_variants_desirable_attribute_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsDesirableAttributeTokenStream::try_self_response_variants_desirable_attribute_token_stream(operation, &desirable_attribute);
-    let try_operation_request_error_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(operation);
+    let try_operation_request_error_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(operation);
     let try_operation_with_serialize_deserialize_token_stream = crate::generate_try_operation_with_serialize_deserialize_token_stream(
         &try_operation_upper_camel_case_stringified,
         &with_serialize_deserialize_upper_camel_case_stringified,
@@ -779,7 +779,7 @@ pub fn type_variants_from_request_response_generator(
     let ident_request_error_logic_token_stream_handle_token_stream = {
         quote::quote! {
             #error_named_derive_token_stream
-            pub enum #try_operation_request_error_token_stream {
+            pub enum #try_operation_request_error_upper_camel_case_token_stream {
                 ExpectedType {
                     #eo_display_with_serialize_deserialize_token_stream
                     expected_type: #try_operation_with_serialize_deserialize_token_stream,
@@ -839,7 +839,7 @@ pub fn type_variants_from_request_response_generator(
         let try_from_response_try_operation_snake_case_token_stream_result_ok_token_stream = quote::quote!{
             match #desirable_type_token_stream::try_from(variants){
                 Ok(value) => Ok(value),
-                Err(e) => Err(#try_operation_request_error_token_stream::ExpectedType {
+                Err(e) => Err(#try_operation_request_error_upper_camel_case_token_stream::ExpectedType {
                     expected_type: e,
                     #code_occurence_snake_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                 }),
@@ -850,7 +850,7 @@ pub fn type_variants_from_request_response_generator(
                 future: impl std::future::Future<Output = Result<reqwest::Response, #reqwest_error_token_stream>>,
             ) -> Result<
                 #desirable_type_token_stream,
-                #try_operation_request_error_token_stream,
+                #try_operation_request_error_upper_camel_case_token_stream,
             > {
                 match future.await {
                     Ok(response) => match #try_from_response_try_operation_snake_case_token_stream(response).await {
@@ -860,7 +860,7 @@ pub fn type_variants_from_request_response_generator(
                                 status_code,
                                 headers,
                                 response_text_result,
-                            } => Err(#try_operation_request_error_token_stream::UnexpectedStatusCode {
+                            } => Err(#try_operation_request_error_upper_camel_case_token_stream::UnexpectedStatusCode {
                                 status_code,
                                 headers,
                                 response_text_result,
@@ -870,7 +870,7 @@ pub fn type_variants_from_request_response_generator(
                                 reqwest,
                                 status_code,
                                 headers
-                            } => Err(#try_operation_request_error_token_stream::FailedToGetResponseText {
+                            } => Err(#try_operation_request_error_upper_camel_case_token_stream::FailedToGetResponseText {
                                 reqwest,
                                 status_code,
                                 headers,
@@ -881,7 +881,7 @@ pub fn type_variants_from_request_response_generator(
                                 status_code,
                                 headers,
                                 response_text,
-                            } => Err(#try_operation_request_error_token_stream::DeserializeResponse {
+                            } => Err(#try_operation_request_error_upper_camel_case_token_stream::DeserializeResponse {
                                 serde,
                                 status_code,
                                 headers,
@@ -890,7 +890,7 @@ pub fn type_variants_from_request_response_generator(
                             }),
                         },
                     },
-                    Err(e) => Err(#try_operation_request_error_token_stream::Reqwest {
+                    Err(e) => Err(#try_operation_request_error_upper_camel_case_token_stream::Reqwest {
                         reqwest: e,
                         #code_occurence_snake_case_crate_code_occurence_tufa_common_macro_call_token_stream,
                     }),
