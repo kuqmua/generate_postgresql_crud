@@ -29,7 +29,6 @@ pub fn type_variants_from_request_response_generator(
     let try_operation_response_variants_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(operation);
     let try_operation_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TryOperationWithSerializeDeserializeUpperCamelCaseTokenStream::try_operation_with_serialize_deserialize_upper_camel_case_token_stream(operation);
     let try_operation_response_variants_desirable_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
-        &ident,
         &try_upper_camel_case_stringified,
         &operation_name_upper_camel_case_stringified,
         &response_variants_upper_camel_case_stringified,
@@ -422,7 +421,6 @@ pub fn type_variants_from_request_response_generator(
                     .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_response_variants_attribute_stingified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
                 // let try_operation_response_variants_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
-                //     &ident,
                 //     &try_upper_camel_case_stringified,
                 //     &operation_name_upper_camel_case_stringified,
                 //     &response_variants_upper_camel_case_stringified,
@@ -676,7 +674,6 @@ pub fn type_variants_from_request_response_generator(
                 //     .parse::<proc_macro2::TokenStream>()
                 //     .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {status_code_enum_name_stringified} {}", proc_macro_helpers::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
                 let try_operation_response_variants_desirable_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
-                    &ident,
                     &try_upper_camel_case_stringified,
                     &operation_name_upper_camel_case_stringified,
                     &response_variants_upper_camel_case_stringified,

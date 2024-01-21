@@ -67,6 +67,7 @@ mod extract_syn_variants_from_proc_macro_attribute;
 //todo need to add utoipa::ToSchema annotation #[schema(value_type = YourToSchemaTraitImplStruct)] for all fields
 //todo remove useless derives like useless serde::Serialize and Deserialize
 //todo maybe add private generated code in specific mod in case of some compilation error - to show info like "no struct BlaBla found in mod ..." ?
+//todo add ident prefix to public functions structs and other
 
 #[proc_macro_attribute]
 pub fn create_many_additional_http_status_codes_error_variants(
@@ -7543,7 +7544,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 }
 
 fn generate_try_operation_response_variants_desirable_attribute_token_stream(
-    _ident: &syn::Ident,//todo add prefix - but need to modify TypeVariantsFromReqwestResponseFromChecker or do something else
     try_upper_camel_case_stringified: &str,
     operation_name_upper_camel_case_stringified: &str,
     response_variants_upper_camel_case_stringified: &str,
@@ -8977,7 +8977,6 @@ fn generate_swagger_open_api_token_stream(
         let status_token_stream = element.to_status_code_token_stream();
         let description_token_stream = element.to_status_code_description_token_stream();
         let body_token_stream = generate_try_operation_response_variants_desirable_attribute_token_stream(
-            &ident,
             &try_upper_camel_case_stringified,
             &operation_name_upper_camel_case_stringified,
             &response_variants_upper_camel_case_stringified,
