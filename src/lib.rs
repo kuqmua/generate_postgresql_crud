@@ -2840,7 +2840,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
             };
@@ -3371,7 +3370,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
             };
@@ -3910,7 +3908,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
             };
@@ -4645,7 +4642,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
             };
@@ -4668,7 +4664,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
             };
@@ -5209,7 +5204,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
             };
@@ -5820,7 +5814,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
             };
@@ -6404,7 +6397,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
             };
@@ -7163,7 +7155,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 };
                 generate_wrapped_into_start_end_println_operation_test_content_token_stream(
                     &test_content_token_stream,
-                    &proc_macro_name_upper_camel_case_ident_stringified,
                     &operation,
                 )
             };
@@ -7431,7 +7422,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
 
 fn generate_wrapped_into_start_end_println_operation_test_content_token_stream(
     test_content_token_stream: &proc_macro2::TokenStream,
-    proc_macro_name_upper_camel_case_ident_stringified: &str,
     operation: &Operation
 ) -> proc_macro2::TokenStream {
     let start_println_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCasePrintlnTokenStream::try_self_snake_case_println_token_stream(
