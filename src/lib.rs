@@ -7434,30 +7434,13 @@ fn generate_wrapped_into_start_end_println_operation_test_content_token_stream(
     proc_macro_name_upper_camel_case_ident_stringified: &str,
     operation: &Operation
 ) -> proc_macro2::TokenStream {
-    fn generate_try_operation_snake_case_println_token_stream(
-        test_operation_print_in_info: proc_macro_helpers::TestOperationPrintlnInfo,
-        proc_macro_name_upper_camel_case_ident_stringified: &str,
-        operation: &Operation,
-    ) -> proc_macro2::TokenStream {
-        let try_operation_snake_case_stringified = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseStringified::try_self_snake_case_stringified(operation);
-        let slashes = "-------";
-        let try_operation_snake_case_println_content_stringified = format!("
-            \"{slashes}{try_operation_snake_case_stringified} {}{slashes}\"",
-            proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&test_operation_print_in_info)
-        );
-        let try_operation_snake_case_println_content_token_stream = try_operation_snake_case_println_content_stringified.parse::<proc_macro2::TokenStream>()
-        .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_snake_case_println_content_stringified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-        quote::quote!{println!(#try_operation_snake_case_println_content_token_stream);}
-    }
-    let start_println_token_stream = generate_try_operation_snake_case_println_token_stream(
-        proc_macro_helpers::TestOperationPrintlnInfo::Start,
-        &proc_macro_name_upper_camel_case_ident_stringified,
-        &operation,
+    let start_println_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCasePrintlnTokenStream::try_self_snake_case_println_token_stream(
+        operation,
+        &proc_macro_helpers::TestOperationPrintlnInfo::Start,
     );
-    let end_println_token_stream = generate_try_operation_snake_case_println_token_stream(
-        proc_macro_helpers::TestOperationPrintlnInfo::End,
-        &proc_macro_name_upper_camel_case_ident_stringified,
-        &operation,
+    let end_println_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCasePrintlnTokenStream::try_self_snake_case_println_token_stream(
+        operation,
+        &proc_macro_helpers::TestOperationPrintlnInfo::End,
     );
     quote::quote!{
         #start_println_token_stream
