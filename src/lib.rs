@@ -3009,8 +3009,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // println!("{try_operation_token_stream}");
             let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
                 &table_name_stringified,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &unique_attributes,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
@@ -3465,8 +3463,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(//todo different parameters
                 &table_name_stringified,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &unique_attributes,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
@@ -4293,8 +4289,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // println!("{try_operation_token_stream}");
             let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
                 &table_name_stringified,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &unique_attributes,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
@@ -4720,8 +4714,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // println!("{try_operation_token_stream}");
             let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
                 &table_name_stringified,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &unique_attributes,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
@@ -5389,8 +5381,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // println!("{try_operation_token_stream}");
             let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
                 &table_name_stringified,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &unique_attributes,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
@@ -5947,8 +5937,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // println!("{try_operation_token_stream}");
             let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
                 &table_name_stringified,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &unique_attributes,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
@@ -6796,8 +6784,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // println!("{try_operation_token_stream}");
             let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
                 &table_name_stringified,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &unique_attributes,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
@@ -7212,8 +7198,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             // println!("{try_operation_token_stream}");
             let swagger_open_api_token_stream = generate_swagger_open_api_token_stream(
                 &table_name_stringified,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &unique_attributes,
                 &application_json_quotes_token_stream,
                 &table_name_quotes_token_stream,
@@ -8622,8 +8606,6 @@ fn generate_unique_attributes(
 
 fn generate_swagger_open_api_token_stream(
     table_name_stringified: &str,
-    operation_name_snake_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str,
     unique_attributes: &std::vec::Vec<proc_macro_helpers::attribute::Attribute>,
     application_json_quotes_token_stream: &proc_macro2::TokenStream,
     table_name_quotes_token_stream: &proc_macro2::TokenStream,
