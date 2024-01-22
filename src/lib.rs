@@ -2838,10 +2838,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => panic!("{e}"),
                     };
                 };
-                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-                    &test_content_token_stream,
-                    &operation,
-                )
+                proc_macro_helpers::naming_conventions::WrapIntoStartEndPrintlnSelfTokenStream::wrap_into_start_end_println_self_token_stream(&operation, &test_content_token_stream)
             };
             (
                 quote::quote!{
@@ -3368,10 +3365,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => panic!("{e}")
                     };
                 };
-                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-                    &test_content_token_stream,
-                    &operation,
-                )
+                proc_macro_helpers::naming_conventions::WrapIntoStartEndPrintlnSelfTokenStream::wrap_into_start_end_println_self_token_stream(&operation, &test_content_token_stream)
             };
             (
                 quote::quote!{
@@ -3906,10 +3900,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => panic!("{e}")
                     };
                 };
-                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-                    &test_content_token_stream,
-                    &operation,
-                )
+                proc_macro_helpers::naming_conventions::WrapIntoStartEndPrintlnSelfTokenStream::wrap_into_start_end_println_self_token_stream(&operation, &test_content_token_stream)
             };
             (
                 quote::quote!{
@@ -4640,10 +4631,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => panic!("{e}")
                     };
                 };
-                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-                    &test_content_token_stream,
-                    &operation,
-                )
+                proc_macro_helpers::naming_conventions::WrapIntoStartEndPrintlnSelfTokenStream::wrap_into_start_end_println_self_token_stream(&operation, &test_content_token_stream)
             };
             let http_request_test_expect_fail_token_stream = {
                 let test_content_token_stream = quote::quote!{
@@ -4662,10 +4650,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => println!("{e}")
                     };
                 };
-                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-                    &test_content_token_stream,
-                    &operation,
-                )
+                proc_macro_helpers::naming_conventions::WrapIntoStartEndPrintlnSelfTokenStream::wrap_into_start_end_println_self_token_stream(&operation, &test_content_token_stream)
             };
             (
                 quote::quote!{
@@ -5202,10 +5187,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => panic!("{e}")
                     }
                 };
-                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-                    &test_content_token_stream,
-                    &operation,
-                )
+                proc_macro_helpers::naming_conventions::WrapIntoStartEndPrintlnSelfTokenStream::wrap_into_start_end_println_self_token_stream(&operation, &test_content_token_stream)
             };
             (
                 quote::quote!{
@@ -5812,10 +5794,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => panic!("{e}")
                     };
                 };
-                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-                    &test_content_token_stream,
-                    &operation,
-                )
+                proc_macro_helpers::naming_conventions::WrapIntoStartEndPrintlnSelfTokenStream::wrap_into_start_end_println_self_token_stream(&operation, &test_content_token_stream)
             };
             (
                 quote::quote!{
@@ -6395,10 +6374,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => panic!("{e}")
                     }
                 };
-                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-                    &test_content_token_stream,
-                    &operation,
-                )
+                proc_macro_helpers::naming_conventions::WrapIntoStartEndPrintlnSelfTokenStream::wrap_into_start_end_println_self_token_stream(&operation, &test_content_token_stream)
             };
             (
                 quote::quote!{
@@ -7153,10 +7129,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         Err(e) => panic!("{e}")
                     }
                 };
-                generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-                    &test_content_token_stream,
-                    &operation,
-                )
+                proc_macro_helpers::naming_conventions::WrapIntoStartEndPrintlnSelfTokenStream::wrap_into_start_end_println_self_token_stream(&operation, &test_content_token_stream)
             };
             (
                 quote::quote!{
@@ -7420,24 +7393,24 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-fn generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-    test_content_token_stream: &proc_macro2::TokenStream,
-    operation: &Operation
-) -> proc_macro2::TokenStream {
-    let start_println_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCasePrintlnTokenStream::try_self_snake_case_println_token_stream(
-        operation,
-        &proc_macro_helpers::TestOperationPrintlnInfo::Start,
-    );
-    let end_println_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCasePrintlnTokenStream::try_self_snake_case_println_token_stream(
-        operation,
-        &proc_macro_helpers::TestOperationPrintlnInfo::End,
-    );
-    quote::quote!{
-        #start_println_token_stream
-        #test_content_token_stream
-        #end_println_token_stream
-    }
-}
+// fn generate_wrapped_into_start_end_println_operation_test_content_token_stream(
+//     test_content_token_stream: &proc_macro2::TokenStream,
+//     operation: &Operation
+// ) -> proc_macro2::TokenStream {
+//     let start_println_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCasePrintlnTokenStream::try_self_snake_case_println_token_stream(
+//         operation,
+//         &proc_macro_helpers::TestOperationPrintlnInfo::Start,
+//     );
+//     let end_println_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCasePrintlnTokenStream::try_self_snake_case_println_token_stream(
+//         operation,
+//         &proc_macro_helpers::TestOperationPrintlnInfo::End,
+//     );
+//     quote::quote!{
+//         #start_println_token_stream
+//         #test_content_token_stream
+//         #end_println_token_stream
+//     }
+// }
 
 fn generate_url_path(table_name_stringified: &str) -> std::string::String {
     format!("{{}}/{table_name_stringified}")
