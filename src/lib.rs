@@ -2809,6 +2809,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
                 &operation_payload_with_serialize_deserialize_upper_camel_case_token_stream,
                 &try_operation_snake_case_token_stream,
+                &operation,
             );
             let http_request_test_token_stream = {
                 let element_fields_initialization_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
@@ -5185,6 +5186,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
                 &operation_payload_with_serialize_deserialize_upper_camel_case_token_stream,
                 &try_operation_snake_case_token_stream,
+                &operation,
             );
             let http_request_test_token_stream = {
                 let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
@@ -6361,6 +6363,7 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &table_name_stringified,
                 &operation_payload_with_serialize_deserialize_upper_camel_case_token_stream,
                 &try_operation_snake_case_token_stream,
+                &operation,
             );
             let http_request_test_token_stream = {
                 let fields_initialization_excluding_primary_key_token_stream = fields_named_excluding_primary_key.iter().map(|element|{
@@ -7492,18 +7495,6 @@ fn generate_wrapped_into_start_end_println_operation_test_content_token_stream(
     }
 }
 
-fn generate_tvfrr_extraction_logic_token_stream(
-    tvfrr_extraction_logic_snake_case_stringified: &str,
-    try_snake_case_stringified: &str,
-    operation_name_snake_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    let tvfrr_extraction_logic_stringified = format!("{tvfrr_extraction_logic_snake_case_stringified}_{try_snake_case_stringified}_{operation_name_snake_case_stringified}");
-    tvfrr_extraction_logic_stringified
-    .parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {tvfrr_extraction_logic_stringified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-}
-
 fn generate_url_path(table_name_stringified: &str) -> std::string::String {
     format!("{{}}/{table_name_stringified}")
 }
@@ -8602,13 +8593,9 @@ fn generate_http_request_many_token_stream(
     table_name_stringified: &str,
     operation_payload_with_serialize_deserialize_upper_camel_case_token_stream: &proc_macro2::TokenStream,
     try_operation_snake_case_token_stream: &proc_macro2::TokenStream,
+    operation: &Operation,
 ) -> proc_macro2::TokenStream {
-    let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
-        &tvfrr_extraction_logic_snake_case_stringified,
-        &try_snake_case_stringified,
-        &operation_name_snake_case_stringified,
-        &proc_macro_name_upper_camel_case_ident_stringified
-    );
+    let tvfrr_extraction_logic_token_stream = proc_macro_helpers::naming_conventions::TvfrrExtractionLogicTrySelfSnakeCaseTokenStream::tvfrr_extraction_logic_try_self_snake_case_token_stream(operation);
     let operation_http_method_snake_case_token_stream = proc_macro_common::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(operation_http_method);
     let url_handle_token_stream = generate_url_handle_token_stream(
         &table_name_stringified,
@@ -8692,12 +8679,7 @@ fn generate_try_operation_token_stream(
     operation: &Operation,
 ) -> proc_macro2::TokenStream {
     let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(operation);
-    let tvfrr_extraction_logic_token_stream = generate_tvfrr_extraction_logic_token_stream(
-        &tvfrr_extraction_logic_snake_case_stringified,
-        &try_snake_case_stringified,
-        &operation_name_snake_case_stringified,
-        &proc_macro_name_upper_camel_case_ident_stringified
-    );
+    let tvfrr_extraction_logic_token_stream = proc_macro_helpers::naming_conventions::TvfrrExtractionLogicTrySelfSnakeCaseTokenStream::tvfrr_extraction_logic_try_self_snake_case_token_stream(operation);
     let operation_http_method_snake_case_token_stream = proc_macro_common::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(operation_http_method);
     let url_handle_token_stream = generate_url_handle_token_stream(
         &table_name_stringified,
