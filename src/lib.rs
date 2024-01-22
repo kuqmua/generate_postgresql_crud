@@ -3019,7 +3019,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         content_type = #application_json_quotes_token_stream
                     ),
                 }),
-                &operation_http_method,
                 &operation,
             );
             quote::quote!{
@@ -3473,7 +3472,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         content_type = #application_json_quotes_token_stream
                     ),
                 }),
-                &operation_http_method,
                 &operation,
             );
             quote::quote!{
@@ -4299,7 +4297,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         content_type = #application_json_quotes_token_stream
                     ),
                 }),
-                &operation_http_method,
                 &operation,
             );
             quote::quote!{
@@ -4724,7 +4721,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         content_type = #application_json_quotes_token_stream
                     ),
                 }),
-                &operation_http_method,
                 &operation,
             );
             quote::quote!{
@@ -5391,7 +5387,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         content_type = #application_json_quotes_token_stream
                     ),
                 }),
-                &operation_http_method,
                 &operation,
             );
             quote::quote!{
@@ -5947,7 +5942,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         content_type = #application_json_quotes_token_stream
                     ),
                 }),
-                &operation_http_method,
                 &operation,
             );
             quote::quote!{
@@ -6794,7 +6788,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         content_type = #application_json_quotes_token_stream
                     ),
                 }),
-                &operation_http_method,
                 &operation,
             );
             quote::quote!{
@@ -7208,7 +7201,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                         content_type = #application_json_quotes_token_stream
                     ),
                 }),
-                &operation_http_method,
                 &operation,
             );
             quote::quote!{
@@ -8610,7 +8602,6 @@ fn generate_swagger_open_api_token_stream(
     application_json_quotes_token_stream: &proc_macro2::TokenStream,
     table_name_quotes_token_stream: &proc_macro2::TokenStream,
     request_body_option_token_stream: std::option::Option<proc_macro2::TokenStream>,
-    operation_http_method: &OperationHttpMethod,
     operation: &Operation,
 ) -> proc_macro2::TokenStream {
     let swagger_url_path_quotes_token_stream = proc_macro_helpers::naming_conventions::SwaggerUrlPathSelfQuotesTokenStream::swagger_url_path_self_quotes_token_stream(operation, &table_name_stringified);
