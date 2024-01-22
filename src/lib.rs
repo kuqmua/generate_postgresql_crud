@@ -2512,9 +2512,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 (
                     proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                     &proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified),
-                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case(
-                        &operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified,
-                        &error_named_upper_camel_case_stringified
+                    proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeUpperCamelCasePunctuated::self_payload_try_from_self_payload_with_serialize_deserialize_upper_camel_case_punctuated(
+                        &operation
                     )
                 )
             ]
@@ -3117,9 +3116,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 (
                     proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                     &proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified),
-                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case(
-                        &operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified,
-                        &error_named_upper_camel_case_stringified
+                    proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeUpperCamelCasePunctuated::self_payload_try_from_self_payload_with_serialize_deserialize_upper_camel_case_punctuated(
+                        &operation
                     )
                 )
             ]
@@ -3583,9 +3581,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 (
                     proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                     &proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified),
-                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case(
-                        &operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified,
-                        &error_named_upper_camel_case_stringified
+                    proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeUpperCamelCasePunctuated::self_payload_try_from_self_payload_with_serialize_deserialize_upper_camel_case_punctuated(
+                        &operation
                     )
                 )
             ]
@@ -4414,9 +4411,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 (
                     proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                     &proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified),
-                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case(
-                        &operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified,
-                        &error_named_upper_camel_case_stringified
+                    proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeUpperCamelCasePunctuated::self_payload_try_from_self_payload_with_serialize_deserialize_upper_camel_case_punctuated(
+                        &operation
                     )
                 )
             ]
@@ -4845,9 +4841,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 (
                     proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                     &proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_upper_camel_case_stringified),
-                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case(
-                        &operation_payload_element_try_from_operation_payload_element_with_serialize_deserialize_upper_camel_case_stringified,
-                        &error_named_upper_camel_case_stringified
+                    proc_macro_helpers::naming_conventions::SelfPayloadElementTryFromSelfPayloadElementWithSerializeDeserializeUpperCamelCasePunctuated::self_payload_element_try_from_self_payload_element_with_serialize_deserialize_upper_camel_case_punctuated(
+                        &operation
                     )
                 )
             ]
@@ -5517,9 +5512,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 (
                     proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                     &proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified),
-                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case(
-                        &operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified,
-                        &error_named_upper_camel_case_stringified
+                    proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeUpperCamelCasePunctuated::self_payload_try_from_self_payload_with_serialize_deserialize_upper_camel_case_punctuated(
+                        &operation
                     )
                 )
             ]
@@ -6069,9 +6063,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 (
                     proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                     &proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified),
-                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case(
-                        &operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified,
-                        &error_named_upper_camel_case_stringified
+                    proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeUpperCamelCasePunctuated::self_payload_try_from_self_payload_with_serialize_deserialize_upper_camel_case_punctuated(
+                        &operation
                     )
                 )
             ]
@@ -6919,9 +6912,8 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 (
                     proc_macro_helpers::error_occurence::named_attribute::NamedAttribute::EoErrorOccurence, 
                     &proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified),
-                    generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case(
-                        &operation_payload_try_from_operation_payload_with_serialize_deserialize_upper_camel_case_stringified,
-                        &error_named_upper_camel_case_stringified
+                    proc_macro_helpers::naming_conventions::SelfPayloadTryFromSelfPayloadWithSerializeDeserializeUpperCamelCasePunctuated::self_payload_try_from_self_payload_with_serialize_deserialize_upper_camel_case_punctuated(
+                        &operation
                     )
                 )
             ]
@@ -7391,23 +7383,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         // );
     // }
     gen.into()
-}
-
-fn generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case(
-    operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case_stringified: &str,
-    error_named_upper_camel_case_stringified: &str
-) -> syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2> {
-    let mut handle = syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>::new();
-    handle.push_value(
-        syn::PathSegment {
-            ident: proc_macro2::Ident::new(
-                &format!("{operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case_stringified}{error_named_upper_camel_case_stringified}"),
-                proc_macro2::Span::call_site()
-            ),
-            arguments: syn::PathArguments::None,
-        }
-    );
-    handle
 }
 
 fn generate_simple_syn_punctuated_punctuated(
