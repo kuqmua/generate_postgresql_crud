@@ -7393,16 +7393,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-fn generate_swagger_url_path_quotes_token_stream(
-    table_name_stringified: &str,
-    operation_name_snake_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str
-) -> proc_macro2::TokenStream {
-    let value = proc_macro_common::generate_quotes::generate_quotes_stringified(&format!("/{table_name_stringified}/{operation_name_snake_case_stringified}"));
-    value.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {value} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
-}
-
 fn generate_operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case(
     operation_handle_try_from_operation_handle_with_serialize_deserialize_upper_camel_case_stringified: &str,
     error_named_upper_camel_case_stringified: &str
@@ -8666,11 +8656,7 @@ fn generate_swagger_open_api_token_stream(
     operation_http_method: &OperationHttpMethod,
     operation: &Operation,
 ) -> proc_macro2::TokenStream {
-    let swagger_url_path_quotes_token_stream = generate_swagger_url_path_quotes_token_stream(
-        &table_name_stringified,
-        &operation_name_snake_case_stringified,
-        &proc_macro_name_upper_camel_case_ident_stringified
-    );
+    let swagger_url_path_quotes_token_stream = proc_macro_helpers::naming_conventions::SwaggerUrlPathSelfQuotesTokenStream::swagger_url_path_self_quotes_token_stream(operation, &table_name_stringified);
     let responses_token_stream = unique_attributes.iter().map(|element|{
         let status_token_stream = element.to_status_code_token_stream();
         let description_token_stream = element.to_status_code_description_token_stream();
