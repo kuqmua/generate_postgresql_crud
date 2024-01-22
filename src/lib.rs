@@ -7393,29 +7393,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
     gen.into()
 }
 
-// fn generate_wrapped_into_start_end_println_operation_test_content_token_stream(
-//     test_content_token_stream: &proc_macro2::TokenStream,
-//     operation: &Operation
-// ) -> proc_macro2::TokenStream {
-//     let start_println_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCasePrintlnTokenStream::try_self_snake_case_println_token_stream(
-//         operation,
-//         &proc_macro_helpers::TestOperationPrintlnInfo::Start,
-//     );
-//     let end_println_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCasePrintlnTokenStream::try_self_snake_case_println_token_stream(
-//         operation,
-//         &proc_macro_helpers::TestOperationPrintlnInfo::End,
-//     );
-//     quote::quote!{
-//         #start_println_token_stream
-//         #test_content_token_stream
-//         #end_println_token_stream
-//     }
-// }
-
-fn generate_url_path(table_name_stringified: &str) -> std::string::String {
-    format!("{{}}/{table_name_stringified}")
-}
-
 fn generate_swagger_url_path_quotes_token_stream(
     table_name_stringified: &str,
     operation_name_snake_case_stringified: &str,
@@ -8632,8 +8609,7 @@ fn generate_url_handle_token_stream(
     operation_name_snake_case_stringified: &str,
     proc_macro_name_upper_camel_case_ident_stringified: &str,
 ) -> proc_macro2::TokenStream {
-    let url_path = generate_url_path(&table_name_stringified);
-    let url_handle_stringified = format!("\"{url_path}/{operation_name_snake_case_stringified}\"");
+    let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/{operation_name_snake_case_stringified}\"");
     url_handle_stringified.parse::<proc_macro2::TokenStream>()
     .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
