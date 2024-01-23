@@ -3295,7 +3295,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
-                &operation_parameters_upper_camel_case_token_stream,
                 &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                 &try_operation_error_named_upper_camel_case_token_stream,
                 &quote::quote!{
@@ -3814,7 +3813,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
-                &operation_parameters_upper_camel_case_token_stream,
                 &quote::quote!{std::vec::Vec<#struct_options_ident_token_stream>},
                 &try_operation_error_named_upper_camel_case_token_stream,
                 &quote::quote!{
@@ -4562,7 +4560,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
-                &operation_parameters_upper_camel_case_token_stream,
                 &struct_options_ident_token_stream,
                 &try_operation_error_named_upper_camel_case_token_stream,
                 &quote::quote!{
@@ -5690,7 +5687,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
-                &operation_parameters_upper_camel_case_token_stream,
                 &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                 &try_operation_error_named_upper_camel_case_token_stream,
                 &quote::quote!{
@@ -7020,7 +7016,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
-                &operation_parameters_upper_camel_case_token_stream,
                 &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
                 &try_operation_error_named_upper_camel_case_token_stream,
                 &quote::quote!{
@@ -8448,7 +8443,6 @@ fn generate_try_operation_token_stream(
     server_location_name_token_stream: &proc_macro2::TokenStream,
     server_location_type_token_stream: &proc_macro2::TokenStream,
     parameters_snake_case_token_stream: &proc_macro2::TokenStream,
-    operation_parameters_upper_camel_case_token_stream: &proc_macro2::TokenStream,
     return_result_ok_type_token_stream: &proc_macro2::TokenStream,
     try_operation_error_named_upper_camel_case_token_stream: &proc_macro2::TokenStream,
     payload_variable_initialization_token_stream: &proc_macro2::TokenStream,
@@ -8462,7 +8456,7 @@ fn generate_try_operation_token_stream(
     operation: &Operation,
 ) -> proc_macro2::TokenStream {
     // let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(operation);
-    // let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(operation);
+    let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(operation);
     let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(operation);
     let tvfrr_extraction_logic_token_stream = proc_macro_helpers::naming_conventions::TvfrrExtractionLogicTrySelfSnakeCaseTokenStream::tvfrr_extraction_logic_try_self_snake_case_token_stream(operation);
     let operation_http_method_snake_case_token_stream = proc_macro_common::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(&operation.http_method());
