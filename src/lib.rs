@@ -2799,8 +2799,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_upper_camel_case_token_stream,
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream,
                 &request_error_variant_initialization_token_stream,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &table_name_stringified,
                 &operation_payload_with_serialize_deserialize_upper_camel_case_token_stream,
                 &try_operation_snake_case_token_stream,
@@ -3300,8 +3298,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             // println!("{try_operation_error_named_token_stream}");
             let http_request_token_stream = generate_try_operation_token_stream(
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
@@ -3822,8 +3818,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             // println!("{try_operation_error_named_token_stream}");
             let http_request_token_stream = generate_try_operation_token_stream(
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
@@ -4573,8 +4567,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             // println!("{try_operation_error_named_token_stream}");
             let http_request_token_stream = generate_try_operation_token_stream(
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
@@ -5132,8 +5124,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_upper_camel_case_token_stream,
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream,
                 &request_error_variant_initialization_token_stream,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &table_name_stringified,
                 &operation_payload_with_serialize_deserialize_upper_camel_case_token_stream,
                 &try_operation_snake_case_token_stream,
@@ -5712,8 +5702,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             // println!("{try_operation_error_named_token_stream}");
             let http_request_token_stream = generate_try_operation_token_stream(
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
@@ -6289,8 +6277,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_upper_camel_case_token_stream,
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream,
                 &request_error_variant_initialization_token_stream,
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &table_name_stringified,
                 &operation_payload_with_serialize_deserialize_upper_camel_case_token_stream,
                 &try_operation_snake_case_token_stream,
@@ -7053,8 +7039,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
             };
             // println!("{try_operation_error_named_token_stream}");
             let http_request_token_stream = generate_try_operation_token_stream(
-                &operation_name_snake_case_stringified,
-                &proc_macro_name_upper_camel_case_ident_stringified,
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
@@ -8421,8 +8405,6 @@ fn generate_http_request_many_token_stream(
     operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_upper_camel_case_token_stream: &proc_macro2::TokenStream,
     operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream: &proc_macro2::TokenStream,
     request_error_variant_initialization_token_stream: &proc_macro2::TokenStream,
-    operation_name_snake_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str,
     table_name_stringified: &str,
     operation_payload_with_serialize_deserialize_upper_camel_case_token_stream: &proc_macro2::TokenStream,
     try_operation_snake_case_token_stream: &proc_macro2::TokenStream,
@@ -8486,8 +8468,6 @@ fn generate_http_request_many_token_stream(
 }
 
 fn generate_try_operation_token_stream(
-    operation_name_snake_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str,
     server_location_name_token_stream: &proc_macro2::TokenStream,
     server_location_type_token_stream: &proc_macro2::TokenStream,
     parameters_snake_case_token_stream: &proc_macro2::TokenStream,
