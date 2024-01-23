@@ -2488,7 +2488,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation = Operation::CreateMany;
         let operation_name_upper_camel_case_stringified = proc_macro_common::naming_conventions::ToUpperCamelCaseStringified::to_upper_camel_case_stringified(&operation);
         let operation_name_snake_case_stringified = proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation);
-        let operation_http_method = operation.http_method();
         let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadUpperCamelCaseTokenStream::self_payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadWithSerializeDeserializeUpperCamelCaseTokenStream::self_payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
@@ -2784,14 +2783,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
-                &operation_parameters_upper_camel_case_token_stream,
                 &std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
-                &try_operation_error_named_upper_camel_case_token_stream,
                 &payload_snake_case_token_stream,
                 &serde_json_to_string_token_stream,
                 &serde_json_to_string_variant_initialization_token_stream,
                 &reqwest_client_new_token_stream,
-                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
@@ -2800,8 +2796,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream,
                 &request_error_variant_initialization_token_stream,
                 &table_name_stringified,
-                &operation_payload_with_serialize_deserialize_upper_camel_case_token_stream,
-                &try_operation_snake_case_token_stream,
                 &operation,
             );
             let http_request_test_token_stream = {
@@ -4793,7 +4787,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
         let operation = Operation::UpdateMany;
         let operation_name_upper_camel_case_stringified = proc_macro_common::naming_conventions::ToUpperCamelCaseStringified::to_upper_camel_case_stringified(&operation);
         let operation_name_snake_case_stringified = proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation);
-        let operation_http_method = operation.http_method();
         let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadUpperCamelCaseTokenStream::self_payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadWithSerializeDeserializeUpperCamelCaseTokenStream::self_payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
@@ -5109,14 +5102,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
-                &operation_parameters_upper_camel_case_token_stream,
                 &std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
-                &try_operation_error_named_upper_camel_case_token_stream,
                 &payload_snake_case_token_stream,
                 &serde_json_to_string_token_stream,
                 &serde_json_to_string_variant_initialization_token_stream,
                 &reqwest_client_new_token_stream,
-                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
@@ -5125,8 +5115,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream,
                 &request_error_variant_initialization_token_stream,
                 &table_name_stringified,
-                &operation_payload_with_serialize_deserialize_upper_camel_case_token_stream,
-                &try_operation_snake_case_token_stream,
                 &operation,
             );
             let http_request_test_token_stream = {
@@ -6008,7 +5996,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
      ) = {
         let operation = Operation::DeleteMany;
         let operation_name_snake_case_stringified = proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&operation);
-        let operation_http_method = operation.http_method();
         let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(&operation);
         let operation_payload_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadUpperCamelCaseTokenStream::self_payload_upper_camel_case_token_stream(&operation);
         let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadWithSerializeDeserializeUpperCamelCaseTokenStream::self_payload_with_serialize_deserialize_upper_camel_case_token_stream(&operation);
@@ -6262,14 +6249,11 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &server_location_name_token_stream,
                 &server_location_type_token_stream,
                 &parameters_snake_case_token_stream,
-                &operation_parameters_upper_camel_case_token_stream,
                 &std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
-                &try_operation_error_named_upper_camel_case_token_stream,
                 &payload_snake_case_token_stream,
                 &serde_json_to_string_token_stream,
                 &serde_json_to_string_variant_initialization_token_stream,
                 &reqwest_client_new_token_stream,
-                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream,
@@ -6278,8 +6262,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                 &operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream,
                 &request_error_variant_initialization_token_stream,
                 &table_name_stringified,
-                &operation_payload_with_serialize_deserialize_upper_camel_case_token_stream,
-                &try_operation_snake_case_token_stream,
                 &operation,
             );
             let http_request_test_token_stream = {
@@ -8390,14 +8372,11 @@ fn generate_http_request_many_token_stream(
     server_location_name_token_stream: &proc_macro2::TokenStream,
     server_location_type_token_stream: &proc_macro2::TokenStream,
     parameters_snake_case_token_stream: &proc_macro2::TokenStream,
-    operation_parameters_upper_camel_case_token_stream: &proc_macro2::TokenStream,
     std_vec_vec_crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream: &proc_macro2::TokenStream,
-    try_operation_error_named_upper_camel_case_token_stream: &proc_macro2::TokenStream,
     payload_snake_case_token_stream: &proc_macro2::TokenStream,
     serde_json_to_string_token_stream: &proc_macro2::TokenStream,
     serde_json_to_string_variant_initialization_token_stream: &proc_macro2::TokenStream,
     reqwest_client_new_token_stream: &proc_macro2::TokenStream,
-    operation_http_method: &OperationHttpMethod,
     project_commit_header_addition_token_stream: &proc_macro2::TokenStream,
     content_type_application_json_header_addition_token_stream: &proc_macro2::TokenStream,
     crate_server_postgres_uuid_wrapper_uuid_wrapper_token_stream: &proc_macro2::TokenStream,
@@ -8406,13 +8385,15 @@ fn generate_http_request_many_token_stream(
     operation_done_but_cannot_convert_uuid_wrapper_from_possible_uuid_wrapper_in_client_many_initialization_token_stream: &proc_macro2::TokenStream,
     request_error_variant_initialization_token_stream: &proc_macro2::TokenStream,
     table_name_stringified: &str,
-    operation_payload_with_serialize_deserialize_upper_camel_case_token_stream: &proc_macro2::TokenStream,
-    try_operation_snake_case_token_stream: &proc_macro2::TokenStream,
     operation: &Operation,
 ) -> proc_macro2::TokenStream {
     let tvfrr_extraction_logic_token_stream = proc_macro_helpers::naming_conventions::TvfrrExtractionLogicTrySelfSnakeCaseTokenStream::tvfrr_extraction_logic_try_self_snake_case_token_stream(operation);
-    let operation_http_method_snake_case_token_stream = proc_macro_common::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(operation_http_method);
+    let operation_http_method_snake_case_token_stream = proc_macro_common::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(&operation.http_method());
     let url_handle_token_stream = proc_macro_helpers::naming_conventions::UrlHandleSelfSnakeCaseTokenStream::url_handle_self_snake_case_token_stream(operation, &table_name_stringified);
+    let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(operation);
+    let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(operation);
+    let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfErrorNamedUpperCamelCaseTokenStream::try_self_error_named_upper_camel_case_token_stream(operation);
+    let operation_payload_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfPayloadWithSerializeDeserializeUpperCamelCaseTokenStream::self_payload_with_serialize_deserialize_upper_camel_case_token_stream(operation);
     quote::quote!{
         pub async fn #try_operation_snake_case_token_stream<'a>(
             #server_location_name_token_stream: #server_location_type_token_stream,
