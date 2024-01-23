@@ -1,5 +1,5 @@
 pub fn type_variants_from_request_response_generator(
-    desirable_attribute: &proc_macro_helpers::attribute::Attribute,
+    desirable_status_code: &proc_macro_helpers::status_code::StatusCode,
     desirable_token_stream: &proc_macro2::TokenStream,
     desirable_type_token_stream: &proc_macro2::TokenStream,
     try_operation_upper_camel_case_token_stream: &proc_macro2::TokenStream,
@@ -21,11 +21,11 @@ pub fn type_variants_from_request_response_generator(
     let try_operation_response_variants_upper_camel_case_stringified = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseStringified::try_self_response_variants_upper_camel_case_stringified(operation);
     let try_operation_response_variants_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsUpperCamelCaseTokenStream::try_self_response_variants_upper_camel_case_token_stream(operation);
     let try_operation_with_serialize_deserialize_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfWithSerializeDeserializeUpperCamelCaseTokenStream::try_self_with_serialize_deserialize_upper_camel_case_token_stream(operation);
-    let try_operation_response_variants_desirable_attribute_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsDesirableAttributeTokenStream::try_self_response_variants_desirable_attribute_token_stream(operation, &desirable_attribute);
+    let try_operation_response_variants_desirable_status_code_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsStatusCodeTokenStream::try_self_response_variants_status_code_token_stream(operation, &desirable_status_code);
     let try_operation_request_error_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfRequestErrorUpperCamelCaseTokenStream::try_self_request_error_upper_camel_case_token_stream(operation);
     let try_operation_with_serialize_deserialize_token_stream = proc_macro_helpers::naming_conventions::TrySelfWithSerializeDeserializeTokenStream::try_self_with_serialize_deserialize_token_stream(operation);
-    let axum_http_status_code_quote_token_stream = desirable_attribute.to_axum_http_status_code_token_stream();
-    let http_status_code_quote_token_stream = desirable_attribute.to_http_status_code_token_stream();
+    let axum_http_status_code_quote_token_stream = desirable_status_code.to_axum_http_status_code_token_stream();
+    let http_status_code_quote_token_stream = desirable_status_code.to_http_status_code_token_stream();
     let axum_http_status_code_token_stream = quote::quote!{axum::http::StatusCode};
     let http_status_code_token_stream = quote::quote!{http::StatusCode};
     let reqwest_header_header_map_token_stream = quote::quote!{reqwest::header::HeaderMap};
@@ -34,9 +34,9 @@ pub fn type_variants_from_request_response_generator(
     let crate_common_api_request_unexpected_error_api_request_unexpected_error_token_stream = quote::quote! {crate::common::api_request_unexpected_error::ApiRequestUnexpectedError};
     let crate_common_api_request_unexpected_error_response_text_result_token_stream = quote::quote! {crate::common::api_request_unexpected_error::ResponseTextResult};
     let try_operation_token_stream = {
-        let try_operation_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant_attribute| {
-            let variant_ident = &error_variant_attribute.ident;
-            let fields_named = if let syn::Fields::Named(fields_named) = &error_variant_attribute.fields {
+        let try_operation_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant| {
+            let variant_ident = &error_variant.ident;
+            let fields_named = if let syn::Fields::Named(fields_named) = &error_variant.fields {
                 fields_named
             }
             else {
@@ -98,9 +98,9 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let enum_with_serialize_deserialize_logic_token_stream_handle_token_stream = {
-        let enum_with_serialize_deserialize_logic_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant_attribute| {
-            let variant_ident = &error_variant_attribute.ident;
-            let fields_named = if let syn::Fields::Named(fields_named) = &error_variant_attribute.fields {
+        let enum_with_serialize_deserialize_logic_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant| {
+            let variant_ident = &error_variant.ident;
+            let fields_named = if let syn::Fields::Named(fields_named) = &error_variant.fields {
                 fields_named
             }
             else {
@@ -207,9 +207,9 @@ pub fn type_variants_from_request_response_generator(
         }
     };
     let from_logic_token_stream_handle_token_stream = {
-        let from_logic_token_stream_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant_attribute| {
-            let variant_ident = &error_variant_attribute.ident;
-            let fields_named = if let syn::Fields::Named(fields_named) = &error_variant_attribute.fields {
+        let from_logic_token_stream_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant| {
+            let variant_ident = &error_variant.ident;
+            let fields_named = if let syn::Fields::Named(fields_named) = &error_variant.fields {
                 fields_named
             }
             else {
@@ -243,9 +243,9 @@ pub fn type_variants_from_request_response_generator(
     let impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_token_stream = {
         let impl_std_convert_from_ident_response_variants_token_stream_for_http_status_code_logic_token_stream_handle_mapped_token_stream = type_variants_from_request_response_syn_variants
             .iter()
-            .map(|error_variant_attribute| {
-                let variant_ident = &error_variant_attribute.ident;
-                let fields_named = if let syn::Fields::Named(fields_named) = &error_variant_attribute.fields {
+            .map(|error_variant| {
+                let variant_ident = &error_variant.ident;
+                let fields_named = if let syn::Fields::Named(fields_named) = &error_variant.fields {
                     fields_named
                 }
                 else {
@@ -278,13 +278,13 @@ pub fn type_variants_from_request_response_generator(
     let generated_status_code_enums_with_from_impls_logic_token_stream_handle_token_stream = {
         let generated_status_code_enums_with_from_impls_logic_token_stream = {
             let status_code_enums_with_from_impls_logic_token_stream = type_variants_from_request_response_syn_variants.iter().fold(
-                std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<(
+                std::collections::HashMap::<proc_macro_helpers::status_code::StatusCode, std::vec::Vec<(
                     &syn::Ident,
                     std::vec::Vec<(syn::Ident, proc_macro2::TokenStream)>,
                 )>>::with_capacity(type_variants_from_request_response_syn_variants_len),
                 |mut acc, element| {
                     let variant_ident = &element.ident;
-                    let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
+                    let error_variant_status_code = proc_macro_helpers::status_code::StatusCode::try_from(element)
                     .unwrap_or_else(|e| {panic!("{proc_macro_name_upper_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
                     let fields_named = if let syn::Fields::Named(fields_named) = &element.fields {
                         fields_named
@@ -381,24 +381,25 @@ pub fn type_variants_from_request_response_generator(
                         variant_ident,
                         error_variant_fields
                     );
-                    match acc.get_mut(&error_variant_attribute) {
+                    match acc.get_mut(&error_variant_status_code) {
                         Some(value) => {
                             value.push(error_variant);
                         },
                         None => {
-                            acc.insert(error_variant_attribute, vec![error_variant]);
+                            acc.insert(error_variant_status_code, vec![error_variant]);
                         }
                     }
                     acc
                 },
             )
             .into_iter().map(|(key,value)|{
-                let try_operation_response_variants_attribute_token_stream = {
-                    let try_operation_response_variants_attribute_stingified = format!("{try_operation_response_variants_upper_camel_case_stringified}{key}");
-                    try_operation_response_variants_attribute_stingified
+                let try_operation_response_variants_status_code_token_stream = {
+                    let try_operation_response_variants_status_code_stingified = format!("{try_operation_response_variants_upper_camel_case_stringified}{key}");
+                    try_operation_response_variants_status_code_stingified
                     .parse::<proc_macro2::TokenStream>()
-                    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_response_variants_attribute_stingified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
+                    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {try_operation_response_variants_status_code_stingified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
                 };
+                // let try_operation_response_variants_desirable_attribute_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsStatusCodeTokenStream::try_self_response_variants_status_code_token_stream(operation, &status_code_attribute);
                 // let try_operation_response_variants_attribute_token_stream = crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
                 //     &try_upper_camel_case_stringified,
                 //     &operation_name_upper_camel_case_stringified,
@@ -426,7 +427,7 @@ pub fn type_variants_from_request_response_generator(
                         quote::quote! {#field_name_token_stream}
                     }).collect::<std::vec::Vec<proc_macro2::TokenStream>>();
                     quote::quote!{
-                        #try_operation_response_variants_attribute_token_stream::#error_variant_ident {
+                        #try_operation_response_variants_status_code_token_stream::#error_variant_ident {
                             #(#fields_name_mapped_into_token_stream),*
                         } => Self::#error_variant_ident {
                             #(#fields_name_mapped_into_token_stream),*
@@ -435,11 +436,11 @@ pub fn type_variants_from_request_response_generator(
                 });
                 quote::quote!{
                     #derive_debug_serialize_deserialize_to_schema_token_stream
-                    pub enum #try_operation_response_variants_attribute_token_stream {
+                    pub enum #try_operation_response_variants_status_code_token_stream {
                         #(#enum_variants_token_stream),*
                     }
-                    impl std::convert::From<#try_operation_response_variants_attribute_token_stream> for #try_operation_response_variants_upper_camel_case_token_stream {
-                        fn from(value: #try_operation_response_variants_attribute_token_stream) -> Self {
+                    impl std::convert::From<#try_operation_response_variants_status_code_token_stream> for #try_operation_response_variants_upper_camel_case_token_stream {
+                        fn from(value: #try_operation_response_variants_status_code_token_stream) -> Self {
                             match value {
                                 #(#std_convert_from_match_variants_token_stream),*
                             }
@@ -454,13 +455,13 @@ pub fn type_variants_from_request_response_generator(
         //todo need to add table name prefix to enum names
         quote::quote! {
             #derive_debug_serialize_deserialize_to_schema_token_stream
-            pub enum #try_operation_response_variants_desirable_attribute_token_stream {
+            pub enum #try_operation_response_variants_desirable_status_code_token_stream {
                 #desirable_token_stream(#desirable_type_token_stream),
             }
-            impl std::convert::From<#try_operation_response_variants_desirable_attribute_token_stream> for #try_operation_response_variants_upper_camel_case_token_stream {
-                fn from(value: #try_operation_response_variants_desirable_attribute_token_stream) -> Self {
+            impl std::convert::From<#try_operation_response_variants_desirable_status_code_token_stream> for #try_operation_response_variants_upper_camel_case_token_stream {
+                fn from(value: #try_operation_response_variants_desirable_status_code_token_stream) -> Self {
                     match value {
-                        #try_operation_response_variants_desirable_attribute_token_stream::#desirable_token_stream(i) => Self::#desirable_token_stream(i),
+                        #try_operation_response_variants_desirable_status_code_token_stream::#desirable_token_stream(i) => Self::#desirable_token_stream(i),
                     }
                 }
             }
@@ -474,13 +475,13 @@ pub fn type_variants_from_request_response_generator(
             unique_status_codes_len_minus_one
          ) = {
             let hashmap_unique_status_codes = type_variants_from_request_response_syn_variants.iter().fold(//todo maybe not need hashmap here? maybe just unique vec?
-                std::collections::HashMap::<proc_macro_helpers::attribute::Attribute, std::vec::Vec<(
+                std::collections::HashMap::<proc_macro_helpers::status_code::StatusCode, std::vec::Vec<(
                     &syn::Ident,
                     std::vec::Vec<(syn::Ident, proc_macro2::TokenStream)>,
                 )>>::with_capacity(type_variants_from_request_response_syn_variants_len),
                 |mut acc, element| {
                     let variant_ident = &element.ident;
-                    let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(element)
+                    let error_variant_attribute = proc_macro_helpers::status_code::StatusCode::try_from(element)
                     .unwrap_or_else(|e| {panic!("{proc_macro_name_upper_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
                     let fields_named = if let syn::Fields::Named(fields_named) = &element.fields {
                         fields_named
@@ -594,7 +595,7 @@ pub fn type_variants_from_request_response_generator(
                 panic!("{proc_macro_name_upper_camel_case_ident_stringified} unique_status_codes_len < 1 {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE);
             }
             let unique_status_codes_len_minus_one = unique_status_codes_len - 1;
-            let unique_status_codes = hashmap_unique_status_codes.into_iter().map(|(key, _)|key).collect::<std::vec::Vec<proc_macro_helpers::attribute::Attribute>>();
+            let unique_status_codes = hashmap_unique_status_codes.into_iter().map(|(key, _)|key).collect::<std::vec::Vec<proc_macro_helpers::status_code::StatusCode>>();
             (
                 unique_status_codes,
                 unique_status_codes_len,
@@ -602,7 +603,7 @@ pub fn type_variants_from_request_response_generator(
             )
         };
         let desirable_enum_name = {
-            let status_code_enum_name_stingified = format!("{try_operation_response_variants_upper_camel_case_token_stream}{desirable_attribute}");
+            let status_code_enum_name_stingified = format!("{try_operation_response_variants_upper_camel_case_token_stream}{desirable_status_code}");
             status_code_enum_name_stingified
             .parse::<proc_macro2::TokenStream>()
             .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {status_code_enum_name_stingified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
@@ -652,7 +653,7 @@ pub fn type_variants_from_request_response_generator(
                 // let status_code_enum_name_token_stream = status_code_enum_name_stringified
                 //     .parse::<proc_macro2::TokenStream>()
                 //     .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {status_code_enum_name_stringified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE));
-                let try_operation_response_variants_desirable_attribute_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsDesirableAttributeTokenStream::try_self_response_variants_desirable_attribute_token_stream(operation, &status_code_attribute);
+                let try_operation_response_variants_desirable_attribute_token_stream = proc_macro_helpers::naming_conventions::TrySelfResponseVariantsStatusCodeTokenStream::try_self_response_variants_status_code_token_stream(operation, &status_code_attribute);
                 
                 // crate::generate_try_operation_response_variants_desirable_attribute_token_stream(
                 //     &try_upper_camel_case_stringified,
@@ -687,7 +688,7 @@ pub fn type_variants_from_request_response_generator(
                         });
                     },
                     false => {
-                        if let false = *desirable_attribute == status_code_attribute {
+                        if let false = *desirable_status_code == status_code_attribute {
                             status_code_enums_try_from_variants.push(quote::quote! {
                                 else if status_code == #http_status_code_token_stream {
                                     match response.text().await {
@@ -900,7 +901,7 @@ pub fn type_variants_from_request_response_generator(
         };
         let enum_status_codes_checker_name_logic_token_stream_handle_mapped_token_stream = type_variants_from_request_response_syn_variants.iter().map(|error_variant_attribute| {
                 let variant_ident = &error_variant_attribute.ident;
-                let error_variant_attribute = proc_macro_helpers::attribute::Attribute::try_from(error_variant_attribute)
+                let error_variant_attribute = proc_macro_helpers::status_code::StatusCode::try_from(error_variant_attribute)
                 .unwrap_or_else(|e| {panic!("{proc_macro_name_upper_camel_case_ident_stringified} variant {variant_ident} failed: {e}")});
                 let variant_ident_attribute_upper_camel_case_token_stream = {
                     let variant_ident_attribute_upper_camel_case_stringified = format!("{variant_ident}{error_variant_attribute}");
@@ -978,7 +979,7 @@ pub fn type_variants_from_request_response_generator(
 }
 
 pub fn construct_syn_variant(
-    tvfrr_status_attribute: proc_macro_helpers::attribute::Attribute,
+    tvfrr_status_code: proc_macro_helpers::status_code::StatusCode,
     variant_name: &str,
     code_occurence_field: &syn::Field,
     fields: std::vec::Vec<(proc_macro_helpers::error_occurence::named_attribute::NamedAttribute, &str, syn::punctuated::Punctuated::<syn::PathSegment, syn::token::Colon2>)>
@@ -998,7 +999,7 @@ pub fn construct_syn_variant(
                     segments: {
                         let mut handle = syn::punctuated::Punctuated::new();
                         handle.push(syn::PathSegment {
-                            ident: proc_macro2::Ident::new(&proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&tvfrr_status_attribute), proc_macro2::Span::call_site()),
+                            ident: proc_macro2::Ident::new(&proc_macro_common::naming_conventions::ToSnakeCaseStringified::to_snake_case_stringified(&tvfrr_status_code), proc_macro2::Span::call_site()),
                             arguments: syn::PathArguments::None,
                         });
                        handle
