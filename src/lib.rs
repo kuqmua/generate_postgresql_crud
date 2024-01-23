@@ -8430,11 +8430,7 @@ fn generate_http_request_many_token_stream(
 ) -> proc_macro2::TokenStream {
     let tvfrr_extraction_logic_token_stream = proc_macro_helpers::naming_conventions::TvfrrExtractionLogicTrySelfSnakeCaseTokenStream::tvfrr_extraction_logic_try_self_snake_case_token_stream(operation);
     let operation_http_method_snake_case_token_stream = proc_macro_common::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(operation_http_method);
-    let url_handle_token_stream = generate_url_handle_token_stream(
-        &table_name_stringified,
-        &operation_name_snake_case_stringified,
-        &proc_macro_name_upper_camel_case_ident_stringified,
-    );
+    let url_handle_token_stream = proc_macro_helpers::naming_conventions::UrlHandleSelfSnakeCaseTokenStream::url_handle_self_snake_case_token_stream(operation, &table_name_stringified);
     quote::quote!{
         pub async fn #try_operation_snake_case_token_stream<'a>(
             #server_location_name_token_stream: #server_location_type_token_stream,
@@ -8512,11 +8508,7 @@ fn generate_try_operation_token_stream(
     let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(operation);
     let tvfrr_extraction_logic_token_stream = proc_macro_helpers::naming_conventions::TvfrrExtractionLogicTrySelfSnakeCaseTokenStream::tvfrr_extraction_logic_try_self_snake_case_token_stream(operation);
     let operation_http_method_snake_case_token_stream = proc_macro_common::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(operation_http_method);
-    let url_handle_token_stream = generate_url_handle_token_stream(
-        &table_name_stringified,
-        &operation_name_snake_case_stringified,
-        &proc_macro_name_upper_camel_case_ident_stringified,
-    );
+    let url_handle_token_stream = proc_macro_helpers::naming_conventions::UrlHandleSelfSnakeCaseTokenStream::url_handle_self_snake_case_token_stream(operation, &table_name_stringified);
     quote::quote!{
         pub async fn #try_operation_snake_case_token_stream<'a>(
             #server_location_name_token_stream: #server_location_type_token_stream,
@@ -8543,16 +8535,6 @@ fn generate_try_operation_token_stream(
             }
         }
     }
-}
-
-fn generate_url_handle_token_stream(
-    table_name_stringified: &str,
-    operation_name_snake_case_stringified: &str,
-    proc_macro_name_upper_camel_case_ident_stringified: &str,
-) -> proc_macro2::TokenStream {
-    let url_handle_stringified = format!("\"{{}}/{table_name_stringified}/{operation_name_snake_case_stringified}\"");
-    url_handle_stringified.parse::<proc_macro2::TokenStream>()
-    .unwrap_or_else(|_| panic!("{proc_macro_name_upper_camel_case_ident_stringified} {url_handle_stringified} {}", proc_macro_common::global_variables::hardcode::PARSE_PROC_MACRO2_TOKEN_STREAM_FAILED_MESSAGE))
 }
 
 fn generate_type_variants_from_request_response_syn_variants<'a>(
