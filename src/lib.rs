@@ -3307,7 +3307,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 },
                 &reqwest_client_new_token_stream,
-                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &payload_snake_case_token_stream,
@@ -3829,7 +3828,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 },
                 &reqwest_client_new_token_stream,
-                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &payload_snake_case_token_stream,
@@ -4576,7 +4574,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 },
                 &reqwest_client_new_token_stream,
-                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &payload_snake_case_token_stream,
@@ -5705,7 +5702,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 },
                 &reqwest_client_new_token_stream,
-                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &payload_snake_case_token_stream,
@@ -7036,7 +7032,6 @@ pub fn generate_postgresql_crud(input: proc_macro::TokenStream) -> proc_macro::T
                     };
                 },
                 &reqwest_client_new_token_stream,
-                &operation_http_method,
                 &project_commit_header_addition_token_stream,
                 &content_type_application_json_header_addition_token_stream,
                 &payload_snake_case_token_stream,
@@ -8458,7 +8453,6 @@ fn generate_try_operation_token_stream(
     try_operation_error_named_upper_camel_case_token_stream: &proc_macro2::TokenStream,
     payload_variable_initialization_token_stream: &proc_macro2::TokenStream,
     reqwest_client_new_token_stream: &proc_macro2::TokenStream,
-    operation_http_method: &OperationHttpMethod,
     project_commit_header_addition_token_stream: &proc_macro2::TokenStream,
     content_type_application_json_header_addition_token_stream: &proc_macro2::TokenStream,
     payload_snake_case_token_stream: &proc_macro2::TokenStream,
@@ -8467,9 +8461,11 @@ fn generate_try_operation_token_stream(
     table_name_stringified: &str,
     operation: &Operation,
 ) -> proc_macro2::TokenStream {
+    // let try_operation_error_named_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(operation);
+    // let operation_parameters_upper_camel_case_token_stream = proc_macro_helpers::naming_conventions::SelfParametersUpperCamelCaseTokenStream::self_parameters_upper_camel_case_token_stream(operation);
     let try_operation_snake_case_token_stream = proc_macro_helpers::naming_conventions::TrySelfSnakeCaseTokenStream::try_self_snake_case_token_stream(operation);
     let tvfrr_extraction_logic_token_stream = proc_macro_helpers::naming_conventions::TvfrrExtractionLogicTrySelfSnakeCaseTokenStream::tvfrr_extraction_logic_try_self_snake_case_token_stream(operation);
-    let operation_http_method_snake_case_token_stream = proc_macro_common::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(operation_http_method);
+    let operation_http_method_snake_case_token_stream = proc_macro_common::naming_conventions::ToSnakeCaseTokenStream::to_snake_case_token_stream(&operation.http_method());
     let url_handle_token_stream = proc_macro_helpers::naming_conventions::UrlHandleSelfSnakeCaseTokenStream::url_handle_self_snake_case_token_stream(operation, &table_name_stringified);
     quote::quote!{
         pub async fn #try_operation_snake_case_token_stream<'a>(
