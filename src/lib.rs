@@ -5,7 +5,7 @@ mod from_log_and_return_error;
 mod generate_postgres_transaction;
 mod type_variants_from_request_response_generator;
 mod extract_syn_variants_from_proc_macro_attribute;
-
+//todo eprintln! first then compile_time! 
 // trait Something {
 //     fn something();
 // }
